@@ -9,8 +9,14 @@ This repository is **public**: everything committed or pushed is published.
 - Never read, copy or commit secrets: `.env`, `.env.*` (except `.env.example`), `*.pem`, `*.key`, `credentials*.json`.
 - Never commit or push directly to `main`. All work goes through a short-lived branch and a pull request. `main` should be protected on GitHub (pull request required, required CI checks, no force-push).
 - Agents may push their own feature branches (`feat/*`, `fix/*`, `chore/*`, `task/*`) without asking when lint, typecheck and tests pass locally and the diff contains no secret, local path, private identifier or data file. Never force-push.
+- Ask the user before: changing repository settings or visibility, deleting a remote branch, deploying, or running anything that calls a paid API at scale.
 
 ## Pull requests: agent review, auto-merge (standing approval from the user, 2026-10-29)
+
+- Agents open pull requests for their own branches without asking.
+- The lead agent reviews every pull request it did not write (`/code-review`) and posts the result as a PR comment. A pull request written by the lead is reviewed by another chat.
+- When every required check is green and the review found no blocking issue, the lead squash-merges (or enables auto-merge) and adds one line under "Done" in `.handoff/INBOX.md` with the PR number and the undo (`git revert <merge commit>` by pull request).
+- The user must still merge any pull request that touches `CLAUDE.md`, `.github/`, `infra/`, deploy config, dependency lockfiles, or anything involving secrets or money.
 
 ## Working in several chats
 
