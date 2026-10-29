@@ -9,7 +9,8 @@ This repository is **public**: everything committed or pushed is published.
 - Never read, copy or commit secrets: `.env`, `.env.*` (except `.env.example`), `*.pem`, `*.key`, `credentials*.json`.
 - Never commit or push directly to `main`. All work goes through a short-lived branch and a pull request. `main` should be protected on GitHub (pull request required, required CI checks, no force-push).
 - Agents may push their own feature branches (`feat/*`, `fix/*`, `chore/*`, `task/*`) without asking when lint, typecheck and tests pass locally and the diff contains no secret, local path, private identifier or data file. Never force-push.
-- Ask the user before: opening or merging a pull request, changing repository settings or visibility, deleting a remote branch, or running anything that calls a paid API at scale.
+
+## Pull requests: agent review, auto-merge (standing approval from the user, 2026-10-29)
 
 ## Working in several chats
 
