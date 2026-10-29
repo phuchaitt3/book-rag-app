@@ -29,5 +29,26 @@ services:
       db:
         condition: service_healthy
 
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: sync
+          path: ./apps/web/src
+          target: /app/apps/web/src
+        - action: sync
+          path: ./apps/web/public
+          target: /app/apps/web/public
+        - action: rebuild
+          path: ./apps/web/package.json
+
 volumes:
   db-data:
