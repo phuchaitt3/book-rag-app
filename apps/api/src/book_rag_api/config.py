@@ -11,6 +11,8 @@ class Settings(BaseSettings):
 
     environment: str = "development"
     database_url: str = "postgresql+asyncpg://bookrag:bookrag@localhost:5432/bookrag"
+    # Direct (non-pooler) connection for migrations; falls back to `database_url`.
+    database_url_unpooled: str | None = None
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
 
 
