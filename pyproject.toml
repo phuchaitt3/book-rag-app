@@ -41,6 +41,6 @@ mypy_path = ["apps/api/src", "packages/rag/src"]
 packages = ["book_rag_api", "book_rag"]
 
 [tool.pytest.ini_options]
-testpaths = ["apps/api/tests", "packages/rag/tests"]
+testpaths = ["apps/api/tests", "packages/rag/tests", ".claude/hooks"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
