@@ -3,9 +3,12 @@
   "private": true,
   "packageManager": "pnpm@12.16.1",
   "scripts": {
+    "stack:up": "docker compose up -d --build",
+    "stack:dev": "docker compose up --build --watch",
+    "stack:down": "docker compose down",
     "dev:web": "pnpm --filter web dev",
     "build:web": "pnpm --filter web build",
     "lint:web": "pnpm --filter web lint",
-    "typecheck:web": "pnpm --filter web exec tsc --noEmit"
+    "typecheck:web": "pnpm --filter web exec next typegen && pnpm --filter web exec tsc --noEmit"
   }
 }

@@ -24,12 +24,12 @@ infra/          database init and deploy configs
 
 ## Run locally
 
-Requires Docker, [uv](https://docs.astral.sh/uv/) and pnpm.
+Requires Docker and pnpm. [uv](https://docs.astral.sh/uv/) is needed only for the checks below.
 
 ```sh
-docker compose up -d --build    # Postgres + pgvector, API on :8000
-pnpm install
-pnpm dev:web                    # web on :3000
+pnpm stack:up      # Postgres + pgvector, API on :8000, web on :3000 (all in Docker)
+pnpm stack:down    # stop and remove everything (data is kept in the db-data volume)
+pnpm stack:dev     # same as up, in the foreground with hot reload (docker compose watch)
 ```
 
 The home page shows whether the API is reachable. `GET /healthz` is liveness; `GET /readyz` also checks the database.
