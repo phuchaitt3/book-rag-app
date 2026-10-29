@@ -4,6 +4,16 @@ Ask questions about Vietnamese books and get answers with citations to the secti
 
 > Work in progress. This is the rebuild of a [university project](https://github.com/phuchaitt3/book-rag) (v1).
 
+## Goals and priorities
+
+This is a portfolio project built to show production-grade engineering, so **scalability and operability come before features**. When two choices conflict, the order is:
+
+1. **Scales without redesign:** stateless API behind autoscaling compute, pooled database connections, an index strategy for vector search, and slow work (ingestion) kept off the request path.
+2. **Measured, not assumed:** answer quality is tracked with an evaluation set in CI, and performance claims come with numbers.
+3. **Reproducible:** one command runs it locally, CI runs the same checks as pre-commit, and deploy configuration lives in git.
+4. **Portable:** plain Postgres and containers, so no single vendor is required. Vendor-specific tooling is adopted only when it earns its place.
+5. **Features** follow, in small reviewed pull requests.
+
 ## Stack
 
 | Layer | Tech |
