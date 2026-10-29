@@ -37,6 +37,22 @@ jobs:
       - run: pnpm typecheck:web
       - run: pnpm build:web
 
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: uv sync --frozen
+      - run: pnpm install --frozen-lockfile
+      - run: uvx pre-commit run --all-files
+
   api-image:
     runs-on: ubuntu-latest
     steps:

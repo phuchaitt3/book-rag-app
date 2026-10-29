@@ -41,3 +41,13 @@ uv sync
 uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pytest
 pnpm lint:web && pnpm typecheck:web && pnpm build:web
 ```
+
+### Pre-commit
+
+The same checks run on every commit (ruff, ruff format, mypy, and web lint and typecheck when `apps/web` changes), and CI runs them on all files.
+
+```sh
+uv tool install pre-commit
+pre-commit install
+pre-commit run --all-files    # run by hand
+```
