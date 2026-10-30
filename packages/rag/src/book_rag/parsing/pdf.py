@@ -1,4 +1,4 @@
-"""Text PDF parsing with PyMuPDF. Sections come from the PDF outline (bookmarks).
+"""Text PDF parsing with pypdfium2 (BSD/Apache). Sections come from the PDF outline (bookmarks).
 
 A PDF without an outline becomes one section. Scanned PDFs have no text layer and are out of
 scope here (OCR is a later experiment): they raise `NoTextError`.
@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import pymupdf
+import pypdfium2 as pdfium
 
 from book_rag.parsing.models import PageText, ParsedBook, Section
 
@@ -35,14 +35,24 @@ def _heading_offset(page_text: str, title: str, after: int) -> int:
 
 def parse_pdf(source: Path | bytes, title: str | None = None) -> ParsedBook:
     """Parse a text PDF into sections of page-tagged text."""
-    if isinstance(source, bytes):
-        doc = pymupdf.open(stream=source, filetype="pdf")
-    else:
-        doc = pymupdf.open(source)
-    with doc:
-        pages = [_norm(page.get_text("text")) for page in doc.pages()]
-        outline = [(lvl, name, pg) for lvl, name, pg in doc.get_toc() if 1 <= pg <= len(pages)]
-        meta_title = (doc.metadata or {}).get("title") or ""
+    doc = pdfium.PdfDocument(source)
+    try:
+        pages = []
+        for page in doc:
+            textpage = page.get_textpage()
+            pages.append(_norm(textpage.get_text_bounded()))
+            textpage.close()
+            page.close()
+        outline = [
+            (mark.level + 1, mark.get_title(), index + 1)
+            for mark in doc.get_toc()
+            if (dest := mark.get_dest()) is not None
+            and (index := dest.get_index()) is not None
+            and 0 <= index < len(pages)
+        ]
+        meta_title = doc.get_metadata_value("Title")
+    finally:
+        doc.close()
     if not any(pages):
         raise NoTextError("no text layer found; scanned PDFs need OCR")
     fallback = source.stem if isinstance(source, Path) else "Untitled"

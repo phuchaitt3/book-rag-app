@@ -1,8 +1,21 @@
-import pymupdf
+import io
+from pathlib import Path
+
+import font_roboto
 import pytest
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.utils import simpleSplit
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfgen.canvas import Canvas
 
 from book_rag.chunking import chunk_book
 from book_rag.parsing import NoTextError, ParsedBook, parse_pdf
+
+FONT = "Roboto"  # has Vietnamese glyphs; the base-14 fonts do not
+pdfmetrics.registerFont(
+    TTFont(FONT, str(Path(font_roboto.__file__).parent / "files" / "Roboto-Regular.ttf"))
+)
 
 SENTENCES = [
     "Việt Nam là một đất nước nằm ở Đông Nam Á.",
@@ -16,17 +29,39 @@ def _paragraph(seed: str, count: int = 12) -> str:
     return " ".join(f"{SENTENCES[i % len(SENTENCES)]} ({seed}{i})" for i in range(count))
 
 
+Block = tuple[str, str]  # (heading, body)
+
+
+def build_pdf(pages: list[list[Block]], toc: list[tuple[int, str, int]] | None = None) -> bytes:
+    """One PDF page per entry. `toc` is the outline as (level, title, page), levels from 1."""
+    buffer = io.BytesIO()
+    canvas = Canvas(buffer, pageSize=A4)
+    for number, blocks in enumerate(pages, start=1):
+        for level, title, page in toc or []:
+            if page == number:
+                key = f"bookmark-{title}"
+                canvas.bookmarkPage(key)
+                canvas.addOutlineEntry(title, key, level=level - 1)
+        y = 800.0
+        for heading, body in blocks:
+            if heading:
+                canvas.setFont(FONT, 16)
+                canvas.drawString(40, y, heading)
+                y -= 26
+            canvas.setFont(FONT, 11)
+            for line in simpleSplit(body, FONT, 11, 515):
+                canvas.drawString(40, y, line)
+                y -= 15
+            y -= 12
+        canvas.showPage()
+    canvas.save()
+    return buffer.getvalue()
+
+
 def make_pdf(chapters: list[tuple[str, int, str]], *, outline: bool = True) -> bytes:
-    """One chapter per page: (title, level, body). Text is laid out with MuPDF's own fonts."""
-    doc = pymupdf.open()
-    for title, _, body in chapters:
-        page = doc.new_page()
-        page.insert_htmlbox(pymupdf.Rect(40, 40, 555, 800), f"<h2>{title}</h2><p>{body}</p>")
-    if outline:
-        doc.set_toc([[lvl, title, i + 1] for i, (title, lvl, _) in enumerate(chapters)])
-    data = doc.tobytes()
-    doc.close()
-    return data
+    """One chapter per page: (title, level, body)."""
+    toc = [(lvl, title, i + 1) for i, (title, lvl, _) in enumerate(chapters)] if outline else None
+    return build_pdf([[(title, body)] for title, _, body in chapters], toc)
 
 
 @pytest.fixture
@@ -77,14 +112,11 @@ def test_no_chunk_crosses_a_section_boundary(book: ParsedBook) -> None:
 
 
 def test_two_sections_on_one_page_are_split_at_the_heading() -> None:
-    doc = pymupdf.open()
-    page = doc.new_page()
-    page.insert_htmlbox(
-        pymupdf.Rect(40, 40, 555, 800),
-        "<h2>Mục A</h2><p>Nội dung của mục A.</p><h2>Mục B</h2><p>Nội dung của mục B.</p>",
+    pdf = build_pdf(
+        [[("Mục A", "Nội dung của mục A."), ("Mục B", "Nội dung của mục B.")]],
+        [(1, "Mục A", 1), (1, "Mục B", 1)],
     )
-    doc.set_toc([[1, "Mục A", 1], [1, "Mục B", 1]])
-    book = parse_pdf(doc.tobytes())
+    book = parse_pdf(pdf)
     a, b = book.sections
     assert "mục A" in a.segments[0].text and "mục B" not in a.segments[0].text
     assert "mục B" in b.segments[0].text and "mục A" not in b.segments[0].text
@@ -110,21 +142,14 @@ def test_pdf_without_outline_is_one_section() -> None:
 
 
 def test_text_before_the_first_heading_is_front_matter() -> None:
-    doc = pymupdf.open()
-    doc.new_page().insert_htmlbox(pymupdf.Rect(40, 40, 555, 800), "<p>Lời tựa ngắn.</p>")
-    doc.new_page().insert_htmlbox(
-        pymupdf.Rect(40, 40, 555, 800), "<h2>Chương 1</h2><p>Nội dung.</p>"
-    )
-    doc.set_toc([[1, "Chương 1", 2]])
-    book = parse_pdf(doc.tobytes())
+    pdf = build_pdf([[("", "Lời tựa ngắn.")], [("Chương 1", "Nội dung.")]], [(1, "Chương 1", 2)])
+    book = parse_pdf(pdf)
     assert [s.title for s in book.sections] == ["(front matter)", "Chương 1"]
 
 
 def test_scanned_pdf_without_text_is_rejected() -> None:
-    doc = pymupdf.open()
-    doc.new_page()
     with pytest.raises(NoTextError):
-        parse_pdf(doc.tobytes())
+        parse_pdf(build_pdf([[]]))
 
 
 def test_long_sentence_is_cut_to_fit() -> None:

@@ -21,6 +21,8 @@ dev = [
     "pytest>=8.3",
     "pytest-asyncio>=0.24",
     "ruff>=0.8",
+    "reportlab>=5.1.0",
+    "font-roboto>=0.0.1",
 ]
 
 [tool.ruff]
@@ -40,10 +42,10 @@ plugins = ["pydantic.mypy"]
 mypy_path = ["apps/api/src", "packages/rag/src"]
 packages = ["book_rag_api", "book_rag"]
 
-# PyMuPDF ships partial type hints.
+# pypdfium2, reportlab and font_roboto ship no py.typed marker.
 [[tool.mypy.overrides]]
-module = "book_rag.parsing.pdf"
-disallow_untyped_calls = false
+module = ["pypdfium2.*", "reportlab.*", "font_roboto"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["apps/api/tests", "packages/rag/tests"]
