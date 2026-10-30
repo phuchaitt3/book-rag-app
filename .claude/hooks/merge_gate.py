@@ -2,8 +2,14 @@
 
 Reads the hook JSON on stdin. For a Bash command that runs `gh pr merge` (or merges through
 `gh api`), it refuses `--admin` always, and otherwise asks `gh pr diff --name-only` for the
-changed files and refuses when any of them is on the user-merge list in CLAUDE.md. It fails
-closed: if the files cannot be listed, the merge is refused.
+changed files and refuses when any of them is on the user-merge list in CLAUDE.md. If the files
+cannot be listed, or the hook itself fails on a command that mentions "merge", the merge is
+refused.
+
+This is a guardrail against mistakes, not a security boundary: an agent can still override it in
+an untracked `.claude/settings.local.json`, and a push that adds a protected file after the check
+is merged by `--auto` unseen. The hard gates are GitHub's required checks and the user-merge rule.
+It needs `python` on PATH; without it the hook command errors and the gate is absent.
 """
 
 from __future__ import annotations
@@ -25,7 +31,7 @@ USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"^infra/", "infra/"),
     (r"(^|/)Dockerfile[^/]*$", "deploy config (Dockerfile)"),
     (r"(^|/)\.dockerignore$", "deploy config (.dockerignore)"),
-    (r"(^|/)docker-compose[^/]*\.ya?ml$", "deploy config (docker-compose)"),
+    (r"(^|/)(docker-)?compose[^/]*\.ya?ml$", "deploy config (compose)"),
     (r"(^|/)(neon\.ts|vercel\.json)$", "deploy config"),
     (r"(^|/)(pnpm-lock\.yaml|uv\.lock|package-lock\.json|yarn\.lock|poetry\.lock)$", "lockfile"),
     (r"(^|/)\.env(?!\.example$)(\..*)?$", "secrets (.env)"),
@@ -38,8 +44,10 @@ USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"^README\.md$", "public positioning (README.md)"),
 )
 
-_SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|\n]")
-_API_MERGE = re.compile(r"\bgh\s+api\b.*\bpulls/\d+/merge\b")
+_SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|&\n()`]")
+_API_MERGE = re.compile(r"\bgh(\.exe)?\s+api\b.*(merge|enablePullRequestAutoMerge)", re.I | re.S)
+# `gh` flags before the subcommand that take a value (`gh -R o/r pr merge 9`).
+_GH_GLOBAL_VALUE_FLAGS = {"-R", "--repo", "--hostname"}
 # Flags of `gh pr merge` that take a value, so the value is not mistaken for the PR argument.
 _VALUE_FLAGS = {
     "-b",
@@ -70,18 +78,41 @@ def gh_changed_files(pr_args: Sequence[str]) -> list[str]:
     return [line.strip() for line in result.stdout.splitlines() if line.strip()]
 
 
+def _is_gh(token: str) -> bool:
+    name = token.replace("\\", "/").rsplit("/", 1)[-1].lower()
+    return name in ("gh", "gh.exe")
+
+
+def _gh_merge_args(tokens: Sequence[str]) -> list[str] | None:
+    """Arguments after `gh [global flags] pr merge`, or None if `tokens` is not that."""
+    for i, token in enumerate(tokens):
+        if not _is_gh(token):
+            continue
+        j = i + 1
+        while j < len(tokens) and tokens[j].startswith("-"):
+            j += 2 if tokens[j] in _GH_GLOBAL_VALUE_FLAGS else 1
+        if tokens[j : j + 2] == ["pr", "merge"]:
+            return list(tokens[j + 2 :])
+    return None
+
+
 def _merge_segments(command: str) -> list[list[str]]:
-    """Token lists for each `gh pr merge ...` in a (possibly chained) shell command."""
+    """Token lists for each `gh pr merge ...` in a shell command.
+
+    Looks through chains (`&&`, `;`, `|`), `$(...)`, backticks and quoted `-c` arguments.
+    """
     found: list[list[str]] = []
-    for segment in _SEGMENT_SPLIT.split(command):
+    for segment in _SEGMENT_SPLIT.split(command.replace("$(", ";")):
         try:
             tokens = shlex.split(segment, posix=True)
         except ValueError:
             tokens = segment.split()
-        for i in range(len(tokens) - 2):
-            if tokens[i : i + 3] == ["gh", "pr", "merge"]:
-                found.append(tokens[i + 3 :])
-                break
+        args = _gh_merge_args(tokens)
+        if args is not None:
+            found.append(args)
+        for token in tokens:
+            if " " in token and "merge" in token:
+                found.extend(_merge_segments(token))
     return found
 
 
@@ -147,19 +178,7 @@ def check(command: str, files_fn: FilesFn = gh_changed_files) -> str | None:
     return None
 
 
-def main() -> int:
-    try:
-        payload = json.load(sys.stdin)
-    except json.JSONDecodeError:
-        return 0
-    if payload.get("tool_name") != "Bash":
-        return 0
-    command = str(payload.get("tool_input", {}).get("command", ""))
-    if "gh" not in command:
-        return 0
-    reason = check(command)
-    if reason is None:
-        return 0
+def _deny(reason: str) -> None:
     json.dump(
         {
             "hookSpecificOutput": {
@@ -170,6 +189,25 @@ def main() -> int:
         },
         sys.stdout,
     )
+
+
+def main() -> int:
+    try:
+        payload = json.load(sys.stdin)
+    except json.JSONDecodeError:
+        return 0
+    if not isinstance(payload, dict) or payload.get("tool_name") != "Bash":
+        return 0
+    tool_input = payload.get("tool_input")
+    command = str(tool_input.get("command", "")) if isinstance(tool_input, dict) else ""
+    if "merge" not in command.lower():
+        return 0
+    try:
+        reason = check(command)
+    except Exception as exc:  # fail closed: an exit code other than 0 or 2 would let it through
+        reason = f"The merge gate failed ({type(exc).__name__}: {exc}), so the merge is refused."
+    if reason is not None:
+        _deny(reason)
     return 0
 
 
