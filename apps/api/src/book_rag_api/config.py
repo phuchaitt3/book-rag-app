@@ -5,9 +5,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Runtime settings, read from environment variables (and `.env` in development)."""
+    """Runtime settings, read from environment variables (and `.env`, `.env.local` in development).
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    `neon env pull` writes `.env.local`, so a pulled Neon `DATABASE_URL` wins over `.env`.
+    Real environment variables (Compose, Cloud Run) win over both files.
+    """
+
+    model_config = SettingsConfigDict(
+        env_file=(".env", ".env.local"), env_file_encoding="utf-8", extra="ignore"
+    )
 
     environment: str = "development"
     database_url: str = "postgresql+asyncpg://bookrag:bookrag@localhost:5432/bookrag"
