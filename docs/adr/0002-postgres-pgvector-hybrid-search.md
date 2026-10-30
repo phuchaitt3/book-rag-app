@@ -2,6 +2,8 @@
 
 **Status:** Accepted
 
+**Decided by:** agents, before study-design mode; not yet reviewed by the owner
+
 ## Context
 Retrieval needs vector similarity and keyword matching (hybrid search), plus ordinary relational data for books, sections, chunks and jobs. Dedicated vector databases (Pinecone, Qdrant, Weaviate) are an option.
 

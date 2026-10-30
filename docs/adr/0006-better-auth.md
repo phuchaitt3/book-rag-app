@@ -2,6 +2,8 @@
 
 **Status:** Planned
 
+**Decided by:** agents, before study-design mode; not yet reviewed by the owner
+
 ## Context
 Uploading and per-user libraries need accounts. Hosted identity providers charge per user; Auth.js lacks two-factor and passkeys, and its documented pattern predates the Next.js 16 `proxy.ts` rename.
 

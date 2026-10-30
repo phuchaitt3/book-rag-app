@@ -2,6 +2,8 @@
 
 **Status:** Accepted
 
+**Decided by:** agents, before study-design mode; not yet reviewed by the owner
+
 ## Context
 The first version of this project (a university project) used techniques that are now two years old, and nothing proved they helped.
 
