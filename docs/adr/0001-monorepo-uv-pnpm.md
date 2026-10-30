@@ -2,6 +2,8 @@
 
 **Status:** Accepted
 
+**Decided by:** agents, before study-design mode; not yet reviewed by the owner
+
 ## Context
 The project has a Next.js frontend, a FastAPI backend and a pure-Python RAG core that should be testable on its own.
 

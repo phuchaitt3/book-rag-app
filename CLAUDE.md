@@ -2,6 +2,8 @@
 
 Tier: **solo-fast** (confirmed by the user 2026-10-29; see the user-level working rules, "Project tiers").
 
+Mode: **study-design** (chosen by the user 2026-10-30; see the user-level working rules, "Project mode"). Design briefs go in `docs/design/`, decisions in `docs/adr/`; [docs/design/README.md](docs/design/README.md) describes the process.
+
 Monorepo: `apps/api` (Python, FastAPI), `apps/web` (Next.js), `packages/rag`, `infra/`. Python tooling is uv (`uv sync --frozen`, `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`, `uv run pytest`); web tooling is pnpm (`pnpm lint:web`, `pnpm typecheck:web`, `pnpm build:web`). CI (`.github/workflows/ci.yml`) runs exactly these.
 
 This repository is **public**: everything committed or pushed is published.
