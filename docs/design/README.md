@@ -4,6 +4,8 @@ This project has two goals: a working book Q&A app, and a way for its owner to l
 
 ## How a design decision is made
 
+Work items live in GitHub issues, not in files. A decision waiting for the owner is an issue from the "Design decision" template, and a review of an agent-decided ADR is an issue in the "ADR review" milestone; both carry `needs-you` when they block work. The ADR text itself stays in [docs/adr](../adr/README.md), and a PR that updates it says `Closes #n`.
+
 1. **Brief (agent).** When work needs a choice that changes the architecture (a new service, store, queue, protocol, data model, or a scaling or consistency choice), an agent writes a brief in this folder using the template below and stops for the owner. Other work goes on.
 2. **Decision (owner).** The owner reads the brief and the suggested reading, picks an option (or a different one), and writes the ADR in [docs/adr](../adr/README.md) in their own words. The agent may correct facts in it, not the reasoning.
 3. **Build (agent).** The agent implements the decision. Details inside the agreed design are the agent's call.
