@@ -1,0 +1,20 @@
+[project]
+name = "book-rag-worker"
+version = "0.1.0"
+description = "Ingestion worker: parse, chunk, embed and store a book"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "book-rag",
+    "book-rag-api",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/book_rag_worker"]
+
+[tool.uv.sources]
+book-rag = { workspace = true }
+book-rag-api = { workspace = true }

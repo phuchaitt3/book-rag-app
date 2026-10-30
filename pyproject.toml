@@ -5,15 +5,17 @@ description = "Question answering over Vietnamese books, with citations"
 requires-python = ">=3.12,<3.13"
 
 [tool.uv.workspace]
-members = ["apps/api", "packages/rag"]
+members = ["apps/api", "apps/worker", "packages/rag"]
 
 [tool.uv.sources]
 book-rag = { workspace = true }
 book-rag-api = { workspace = true }
+book-rag-worker = { workspace = true }
 
 [dependency-groups]
 dev = [
     "book-rag-api",
+    "book-rag-worker",
     "book-rag",
     "httpx>=0.28",
     "mypy>=1.13",
@@ -34,14 +36,14 @@ target-version = "py312"
 select = ["E", "F", "I", "B", "UP", "SIM", "ASYNC", "RUF"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["book_rag", "book_rag_api"]
+known-first-party = ["book_rag", "book_rag_api", "book_rag_worker"]
 
 [tool.mypy]
 python_version = "3.12"
 strict = true
 plugins = ["pydantic.mypy"]
-mypy_path = ["apps/api/src", "packages/rag/src"]
-packages = ["book_rag_api", "book_rag"]
+mypy_path = ["apps/api/src", "apps/worker/src", "packages/rag/src"]
+packages = ["book_rag_api", "book_rag_worker", "book_rag"]
 
 # pypdfium2, reportlab and font_roboto ship no py.typed marker.
 [[tool.mypy.overrides]]
@@ -49,6 +51,6 @@ module = ["pypdfium2.*", "reportlab.*", "font_roboto"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-testpaths = ["apps/api/tests", "packages/rag/tests", ".claude/hooks"]
+testpaths = ["apps/api/tests", "apps/worker/tests", "packages/rag/tests", ".claude/hooks"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

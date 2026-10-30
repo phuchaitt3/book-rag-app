@@ -29,6 +29,23 @@ services:
       db:
         condition: service_healthy
 
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+asyncpg://bookrag:bookrag@db:5432/bookrag
+      STORAGE_DIR: /storage
+      # The host's Ollama; set EMBEDDING_PROVIDER=fake to run without a model.
+      OLLAMA_URL: http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - uploads:/storage
+    depends_on:
+      db:
+        condition: service_healthy
+
   web:
     build:
       context: .
@@ -52,3 +69,4 @@ services:
 
 volumes:
   db-data:
+  uploads:

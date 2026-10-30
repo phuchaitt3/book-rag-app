@@ -1,6 +1,6 @@
 # 0004: Ingestion queue in Postgres
 
-**Status:** Planned
+**Status:** Accepted
 
 ## Context
 Parsing, chunking and embedding a book is slow and must stay off the request path. A conventional queue (arq, Taskiq) needs Redis, which is one more service on a free tier.
