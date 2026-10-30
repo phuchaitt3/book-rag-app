@@ -3,7 +3,9 @@ name = "book-rag"
 version = "0.1.0"
 description = "RAG core: parsing, chunking, retrieval, reranking and prompts"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "pymupdf>=1.26,<2",
+]
 
 [build-system]
 requires = ["hatchling"]

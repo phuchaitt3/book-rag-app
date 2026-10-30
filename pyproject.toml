@@ -40,6 +40,11 @@ plugins = ["pydantic.mypy"]
 mypy_path = ["apps/api/src", "packages/rag/src"]
 packages = ["book_rag_api", "book_rag"]
 
+# PyMuPDF ships partial type hints.
+[[tool.mypy.overrides]]
+module = "book_rag.parsing.pdf"
+disallow_untyped_calls = false
+
 [tool.pytest.ini_options]
 testpaths = ["apps/api/tests", "packages/rag/tests"]
 asyncio_mode = "auto"
