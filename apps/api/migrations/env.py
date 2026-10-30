@@ -6,6 +6,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from book_rag_api.config import get_settings
+from book_rag_api.db import to_asyncpg_url
 from book_rag_api.models import Base
 
 target_metadata = Base.metadata
@@ -34,7 +35,7 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_migrations_online() -> None:
-    engine = create_async_engine(get_url(), poolclass=pool.NullPool)
+    engine = create_async_engine(to_asyncpg_url(get_url()), poolclass=pool.NullPool)
     async with engine.connect() as connection:
         await connection.run_sync(do_run_migrations)
     await engine.dispose()

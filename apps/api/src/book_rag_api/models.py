@@ -12,6 +12,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    UniqueConstraint,
     func,
 )
 from sqlalchemy.dialects.postgresql import TSVECTOR, UUID
@@ -67,6 +68,8 @@ class Section(Base):
 
     book: Mapped[Book] = relationship(back_populates="sections")
 
+    __table_args__ = (UniqueConstraint("book_id", "ordinal", name="uq_sections_book_id_ordinal"),)
+
 
 class Chunk(Base):
     __tablename__ = "chunks"
@@ -93,6 +96,7 @@ class Chunk(Base):
     book: Mapped[Book] = relationship(back_populates="chunks")
 
     __table_args__ = (
+        UniqueConstraint("book_id", "ordinal", name="uq_chunks_book_id_ordinal"),
         Index(
             "ix_chunks_embedding_hnsw",
             "embedding",

@@ -6,6 +6,7 @@ import pytest
 from alembic import command
 from alembic.config import Config
 from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import create_async_engine
 from testcontainers.community.postgres import PostgresContainer
 
@@ -88,5 +89,30 @@ async def test_downgrade_drops_tables(database_url: str) -> None:
                 )
             ).scalars()
             assert {"books", "chunks"}.isdisjoint(set(tables))
+    finally:
+        await engine.dispose()
+
+
+async def test_ordinals_are_unique_per_book(database_url: str) -> None:
+    await asyncio.to_thread(command.upgrade, alembic_config(database_url), "head")
+
+    engine = create_async_engine(database_url)
+    try:
+        async with engine.begin() as conn:
+            book_id = (
+                await conn.execute(
+                    text(
+                        "INSERT INTO books (id, title) VALUES (gen_random_uuid(), 'U') RETURNING id"
+                    )
+                )
+            ).scalar_one()
+        insert = text(
+            "INSERT INTO chunks (id, book_id, ordinal, text) VALUES (gen_random_uuid(), :b, 7, 'x')"
+        )
+        async with engine.begin() as conn:
+            await conn.execute(insert, {"b": book_id})
+        with pytest.raises(IntegrityError):
+            async with engine.begin() as conn:
+                await conn.execute(insert, {"b": book_id})
     finally:
         await engine.dispose()
