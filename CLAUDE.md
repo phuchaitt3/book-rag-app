@@ -1,8 +1,8 @@
 # book-rag-app
 
-Tier: **solo-fast** (confirmed by the user 2026-10-29; see the user-level working rules, "Project tiers").
+Tier: **solo-fast** (confirmed by the user 2026-10-29; see the `workflow:new-project` skill).
 
-Mode: **study-design** (chosen by the user 2026-10-30; see the user-level working rules, "Project mode"). Design briefs go in `docs/design/`, decisions in `docs/adr/`; [docs/design/README.md](docs/design/README.md) describes the process.
+Mode: **study-design** (chosen by the user 2026-10-30; see the `workflow:new-project` skill). Design briefs go in `docs/design/`, decisions in `docs/adr/`; [docs/design/README.md](docs/design/README.md) describes the process.
 
 Monorepo: `apps/api` (Python, FastAPI), `apps/web` (Next.js), `packages/rag`, `infra/`. Python tooling is uv (`uv sync --frozen`, `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`, `uv run pytest`); web tooling is pnpm (`pnpm lint:web`, `pnpm typecheck:web`, `pnpm build:web`). CI (`.github/workflows/ci.yml`) runs exactly these.
 
@@ -17,9 +17,9 @@ This repository is **public**: everything committed or pushed is published.
 
 ## Pull requests: agent review, auto-merge (standing approval from the user, 2026-10-29)
 
-- Agents open pull requests for their own branches without asking.
-- Reviews come from a pool, not a dedicated reviewer (like GitHub's team review auto-assignment): any chat other than the author claims the oldest open row in the "Review queue" of `.handoff/INBOX.md`, runs `/code-review`, and posts the result as a PR comment. An author never reviews its own pull request. Depth follows risk: user-merge items get `/security-review` or `/code-review high`, everything else `/code-review medium`. The lead takes a row no other chat picks up, except a pull request the lead wrote, which goes to the user.
-- When the review found no blocking issue and the pull request is not a user-merge item, the reviewer enables auto-merge (`gh pr merge <n> --auto --squash`), so the required checks are the final gate, and adds one line to `.handoff/DONE.md` with the PR number and the undo (`git revert <merge commit>` by pull request). Run `gh pr` commands plain, not chained after `cd … &&`, or they miss the allow rules.
+Agents open pull requests for their own branches without asking, and review and merge them as the `workflow:pr-review` skill says (review from a pool, depth by risk, auto-merge when the review finds no blocking issue and the pull request is not a user-merge item). This project adds:
+
+- When the reviewer enables auto-merge, it also adds one line to `.handoff/DONE.md` with the PR number and the undo (`git revert <merge commit>` by pull request).
 - The user must still merge any pull request that touches `CLAUDE.md`, `infra/`, deploy config, public positioning of the project (README claims, profile text), or anything involving secrets or money.
 - Dependency lockfiles (`uv.lock`, `pnpm-lock.yaml`) are drawn by risk, like `.github/` (proposed 2026-10-30, needs the user's merge of this change; standard: supply-chain guidance says to review lockfile diffs as carefully as code, not that the owner must merge them; checked 2026-10-30). The reviewer reads the lockfile diff, lists every package it adds, removes or changes (name, old to new version) in the PR comment, and may merge when all of these hold: every changed package is named in the PR description; each is a new package or a patch or minor bump; all come from the default registry (PyPI, npm) with hashes kept; the PR touches no other user-merge path; and CI is green. The user merges a major bump, a package the PR does not name, a new registry or git source, or removed hashes.
 - Under `.github/` the line is drawn by risk, not by path (user's decision, 2026-10-29; looser than GitHub's CODEOWNERS-on-all-workflows baseline because this repo is solo-fast, and a strict-tier project keeps the full gate). The user merges any change that touches secrets, `permissions:`, triggers (`on:`), `runs-on:`, deploy or release steps, adds or changes a third-party action, or puts a `${{ }}` expression from untrusted input (`github.event.*`, `github.head_ref`) into a `run:` step, and any `.github/` file that is not a workflow (CODEOWNERS, dependabot, templates). The reviewer may merge a workflow change limited to lint, test or build jobs after review and green CI, and states in the PR comment that none of the user-merge items is touched.
