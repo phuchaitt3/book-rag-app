@@ -16,6 +16,8 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
+    # No dedupe step: no real database existed when this was written. Before running it on one,
+    # check for duplicate (book_id, ordinal) rows, or the constraint creation will fail.
     op.create_unique_constraint("uq_sections_book_id_ordinal", "sections", ["book_id", "ordinal"])
     op.create_unique_constraint("uq_chunks_book_id_ordinal", "chunks", ["book_id", "ordinal"])
 
