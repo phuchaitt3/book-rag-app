@@ -24,6 +24,8 @@ class WorkerSettings(BaseSettings):
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://localhost:11434"
     embed_batch_size: int = 32
+    # A job queued or running longer than this is failed by the periodic sweep.
+    stuck_job_minutes: int = 60
 
 
 @lru_cache
