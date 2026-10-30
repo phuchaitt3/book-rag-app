@@ -164,7 +164,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      '@neon/config':
+        specifier: ^1.9.5
+        version: 1.9.5
 
   apps/web:
     dependencies:
@@ -536,6 +540,14 @@ packages:
     peerDependencies:
       '@emnapi/core': ^1.7.1 || 2.0.0-beta.2
       '@emnapi/runtime': ^1.7.1 || 2.0.0-beta.2
+
+  '@neon/config@1.9.5':
+    resolution: {integrity: sha512-KK105CxGBrcNGJfUgmjINKTykizGbWh9fdjkaEflls10Q8VsBSMt/AXagECH9spYr/mI8o/UCtr6AOMwpKTsRw==}
+    engines: {node: '>=20.19.0'}
+
+  '@neon/sdk@7.6.0':
+    resolution: {integrity: sha512-CqNhupvYjP2KeO8v7aMy5hcDQuo118+KsNGkZd8UUyjYpC+MpLH1eot4uzTjITGPXBZ6yrfwtqnByVJOtuAmqg==}
+    engines: {node: '>=20.19.0'}
 
   '@next/env@16.4.3':
     resolution: {integrity: sha512-a7tz1QCcWWkwC/rPJcPMJk/UNRu9CFhDd3OHYE5hddbJrs8BqRTalxI6GlKCWEGzRLHN+S/B7a4PAHCtm25aBQ==}
@@ -2488,6 +2500,14 @@ snapshots:
       '@emnapi/runtime': 1.10.0
       '@tybys/wasm-util': 0.10.4
     optional: true
+
+  '@neon/config@1.9.5':
+    dependencies:
+      '@neon/sdk': 7.6.0
+      jiti: 2.7.0
+      zod: 4.6.7
+
+  '@neon/sdk@7.6.0': {}
 
   '@next/env@16.4.3': {}
 
