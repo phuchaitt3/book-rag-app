@@ -5,8 +5,10 @@ description = "FastAPI backend for book-rag-app"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "book-rag",
+    "alembic>=1.14",
     "asyncpg>=0.30",
     "fastapi>=0.115",
+    "pgvector>=0.3",
     "pydantic-settings>=2.6",
     "sqlalchemy[asyncio]>=2.0.36",
     "uvicorn[standard]>=0.32",

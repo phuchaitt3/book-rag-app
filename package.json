@@ -10,5 +10,8 @@
     "build:web": "pnpm --filter web build",
     "lint:web": "pnpm --filter web lint",
     "typecheck:web": "pnpm --filter web exec next typegen && pnpm --filter web exec tsc --noEmit"
+  },
+  "devDependencies": {
+    "@neon/config": "^1.9.5"
   }
 }

@@ -1,0 +1,10 @@
+# Paths the owner merges (see CLAUDE.md, "Pull requests"). With "Require review from
+# Code Owners" on in the protect-main ruleset, GitHub enforces this list.
+/CLAUDE.md          @phuchaitt3
+/.github/           @phuchaitt3
+/infra/             @phuchaitt3
+/README.md          @phuchaitt3
+/LICENSE            @phuchaitt3
+/SECURITY.md        @phuchaitt3
+/uv.lock            @phuchaitt3
+/pnpm-lock.yaml     @phuchaitt3
