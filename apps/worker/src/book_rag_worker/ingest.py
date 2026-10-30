@@ -52,25 +52,18 @@ def _section_rows(book_id: uuid.UUID, parsed: ParsedBook) -> list[Section]:
 def _chunk_rows(
     book_id: uuid.UUID, sections: list[Section], chunks: list[ParsedChunk]
 ) -> list[Chunk]:
-    """Chunks come out in section order, so each one belongs to the first section with its path
-    at or after the previous chunk's section (a path can repeat within a book)."""
-    rows: list[Chunk] = []
-    index = 0
-    for chunk in chunks:
-        while sections[index].path != chunk.section_path:
-            index += 1
-        rows.append(
-            Chunk(
-                id=uuid.uuid4(),
-                book_id=book_id,
-                section_id=sections[index].id,
-                ordinal=chunk.ordinal,
-                text=chunk.text,
-                page=chunk.page_start,
-                section_path=chunk.section_path,
-            )
+    return [
+        Chunk(
+            id=uuid.uuid4(),
+            book_id=book_id,
+            section_id=sections[chunk.section_index].id,
+            ordinal=chunk.ordinal,
+            text=chunk.text,
+            page=chunk.page_start,
+            section_path=chunk.section_path,
         )
-    return rows
+        for chunk in chunks
+    ]
 
 
 async def _set_stage(engine: AsyncEngine, job_id: uuid.UUID, stage: str) -> None:

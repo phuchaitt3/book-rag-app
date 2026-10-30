@@ -194,3 +194,24 @@ def test_storage_refuses_keys_outside_its_directory(tmp_path: Path) -> None:
     storage = LocalStorage(tmp_path / "root")
     with pytest.raises(ValueError, match="outside"):
         storage.read("../secret.txt")
+
+
+async def test_two_jobs_for_one_book_both_finish(worker: Worker) -> None:
+    book_id = await add_book(worker.engine, "book.pdf")
+    first = await enqueue_ingestion(worker.engine, worker.app, book_id)
+    second = await enqueue_ingestion(worker.engine, worker.app, book_id)
+    await run_queue(worker)
+    await run_queue(worker)  # the lock may defer the second job to a later pass
+
+    async with AsyncSession(worker.engine) as session:
+        statuses = [
+            (await session.get(IngestionJob, job_id)).status  # type: ignore[union-attr]
+            for job_id in (first, second)
+        ]
+        ordinals = (
+            (await session.execute(select(Chunk.ordinal).where(Chunk.book_id == book_id)))
+            .scalars()
+            .all()
+        )
+    assert statuses == ["succeeded", "succeeded"]
+    assert sorted(ordinals) == list(range(len(ordinals)))

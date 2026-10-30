@@ -40,7 +40,8 @@ async def enqueue_ingestion(
         await session.flush()
         job_id = job.id
         await session.commit()
-    await queue.configure_task(INGEST_TASK).defer_async(job_id=str(job_id))
+    # One lock per book: two jobs for the same book never run at the same time.
+    await queue.configure_task(INGEST_TASK, lock=str(book_id)).defer_async(job_id=str(job_id))
     return job_id
 
 

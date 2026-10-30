@@ -162,3 +162,13 @@ def test_long_sentence_is_cut_to_fit() -> None:
 def test_bad_chunk_settings_are_rejected(book: ParsedBook, max_chars: int, overlap: int) -> None:
     with pytest.raises(ValueError):
         chunk_book(book, max_chars=max_chars, overlap=overlap)
+
+
+def test_chunks_of_sections_sharing_a_path_keep_their_own_section_index() -> None:
+    from book_rag.parsing import PageText, Section
+
+    def section(page: int) -> Section:
+        return Section("Phụ lục", "Phụ lục", 1, (PageText(page, "Một câu ngắn."),))
+
+    chunks = chunk_book(ParsedBook("Sách", 2, (section(1), section(2))))
+    assert [c.section_index for c in chunks] == [0, 1]
