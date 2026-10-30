@@ -22,6 +22,39 @@ packages/rag    RAG core (pure Python, unit-tested)
 infra/          database init and deploy configs
 ```
 
+## Architecture
+
+Target design; see [Status](#status) for what exists today. Decisions behind it: [docs/adr/](docs/adr/).
+
+```mermaid
+flowchart LR
+    U[Browser] --> W[Next.js web]
+    W -->|SSE stream| A[FastAPI API]
+    A --> DB[(PostgreSQL + pgvector)]
+    A -->|enqueue ingestion| Q[Postgres queue]
+    Q --> K[Worker: parse, chunk, embed]
+    K --> DB
+    A --> P[Provider interfaces]
+    K --> P
+    P --> M[LLM, embedder, reranker: fake, Ollama or hosted]
+```
+
+An answer is built from hybrid retrieval (vector search plus Postgres full-text search), a rerank step, and a streamed LLM reply that cites book, section and page. Every model sits behind an interface, so local, test and production runs differ only in configuration.
+
+## Status
+
+| Area | State |
+|---|---|
+| Skeleton: monorepo, Docker Compose, health checks, CI, pre-commit | done |
+| Provider interfaces (LLM, embedder) with fake and Ollama providers | done |
+| Database schema and first migration | in review |
+| Upload, PDF parsing and chunking, ingestion worker | planned |
+| Hybrid retrieval and streamed, cited answers | planned |
+| Evaluation set and CI eval job | planned |
+| Authentication, per-user libraries, hosted demo | planned |
+
+The milestone plan and open work are tracked in this repository's pull requests and issues.
+
 ## Run locally
 
 Requires Docker and pnpm. [uv](https://docs.astral.sh/uv/) is needed only for the checks below.
@@ -51,3 +84,26 @@ uv tool install pre-commit
 pre-commit install
 pre-commit run --all-files    # run by hand
 ```
+
+## Configuration
+
+Settings are read from environment variables. Copy [.env.example](.env.example) to `.env` (git-ignored) to override the defaults; the Docker Compose stack works without it.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `ENVIRONMENT` | `development` | Runtime environment name |
+| `DATABASE_URL` | local Compose Postgres (`postgresql+asyncpg://...`) | Async SQLAlchemy connection URL |
+| `CORS_ORIGINS` | `["http://localhost:3000"]` | Origins allowed to call the API (JSON list) |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | API address the web app calls (set in `apps/web/.env.local`) |
+
+Never commit `.env` files or keys.
+
+## Contributing and documentation
+
+- [CONTRIBUTING.md](CONTRIBUTING.md): workflow, checks and branch naming
+- [docs/adr/](docs/adr/): architecture decision records
+- [SECURITY.md](SECURITY.md): reporting a vulnerability
+
+## License
+
+[MIT](LICENSE)
