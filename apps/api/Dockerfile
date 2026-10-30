@@ -11,6 +11,8 @@ COPY packages/rag/pyproject.toml packages/rag/
 RUN uv sync --frozen --no-dev --package book-rag-api --no-install-workspace
 
 COPY apps/api/src apps/api/src
+COPY apps/api/alembic.ini apps/api/
+COPY apps/api/migrations apps/api/migrations
 COPY packages/rag/src packages/rag/src
 RUN uv sync --frozen --no-dev --package book-rag-api
 
