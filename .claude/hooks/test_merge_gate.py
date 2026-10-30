@@ -49,8 +49,6 @@ def test_admin_always_refused(command: str) -> None:
 @pytest.mark.parametrize(
     "path",
     [
-        "uv.lock",
-        "apps/web/pnpm-lock.yaml",
         "infra/main.tf",
         ".github/workflows/ci.yml",
         ".github/CODEOWNERS",
@@ -75,6 +73,8 @@ def test_user_merge_paths_refused(path: str) -> None:
         "packages/rag/src/x.py",
         "apps/web/README.md",
         ".env.example",
+        "uv.lock",
+        "apps/web/pnpm-lock.yaml",
     ],
 )
 def test_ordinary_paths_pass(path: str) -> None:
