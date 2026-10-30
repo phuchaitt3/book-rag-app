@@ -21,3 +21,4 @@ credentials*.json
 .DS_Store
 Thumbs.db
 .idea/
+.neon
