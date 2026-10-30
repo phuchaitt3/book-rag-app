@@ -45,9 +45,9 @@ plugins = ["pydantic.mypy"]
 mypy_path = ["apps/api/src", "apps/worker/src", "packages/rag/src"]
 packages = ["book_rag_api", "book_rag_worker", "book_rag"]
 
-# pypdfium2, reportlab and font_roboto ship no py.typed marker.
+# pypdfium2, reportlab, font_roboto and boto3 ship no py.typed marker.
 [[tool.mypy.overrides]]
-module = ["pypdfium2.*", "reportlab.*", "font_roboto"]
+module = ["pypdfium2.*", "reportlab.*", "font_roboto", "boto3.*", "botocore.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

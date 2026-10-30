@@ -20,6 +20,14 @@ class Settings(BaseSettings):
     # Direct (non-pooler) connection for migrations; falls back to `database_url`.
     database_url_unpooled: str | None = None
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
+    # S3-compatible object storage: SeaweedFS locally, Cloudflare R2 in production.
+    s3_endpoint_url: str = "http://localhost:8333"
+    s3_bucket: str = "books"
+    s3_access_key: str = "local"
+    s3_secret_key: str = "local"
+    s3_region: str = "auto"
+    max_upload_bytes: int = 50 * 1024 * 1024
+    max_upload_pages: int = 1000
 
 
 @lru_cache
