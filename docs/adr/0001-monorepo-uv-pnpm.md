@@ -22,7 +22,7 @@ One repository: `apps/web` (pnpm), `apps/api`, `apps/worker` and `packages/rag` 
 - Easier PR management: a change that touches several parts is one PR, not PRs across repos.
 - One developer and one bot (several chats, in fact), so there is no multi-team orchestration and no individual schedules to coordinate.
 - `packages/rag` is a central place for shared Python code: the Python packages share it easily, there is no duplicated package, and it is tracked in one place only.
-- *[agent-added]* `packages/rag` also declares no outside dependencies (`dependencies = []`), so its tests run without a database or web server. A separate package keeps that boundary visible.
+- *[agent-added]* `packages/rag` declares only one outside dependency (`pypdfium2`, for reading PDFs) and imports no web framework, database or queue code, so its tests run without a database or web server. A separate package keeps that boundary visible: adding such an import would also mean adding the library to its `pyproject.toml`.
 
 ## Consequences
 - One pull request can change the API and the web app together, and one clone runs everything.
