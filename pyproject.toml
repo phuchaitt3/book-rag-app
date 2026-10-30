@@ -22,6 +22,8 @@ dev = [
     "pytest-asyncio>=0.24",
     "testcontainers[postgres]>=4.8",
     "ruff>=0.8",
+    "reportlab>=5.1.0",
+    "font-roboto>=0.0.1",
 ]
 
 [tool.ruff]
@@ -40,6 +42,11 @@ strict = true
 plugins = ["pydantic.mypy"]
 mypy_path = ["apps/api/src", "packages/rag/src"]
 packages = ["book_rag_api", "book_rag"]
+
+# pypdfium2, reportlab and font_roboto ship no py.typed marker.
+[[tool.mypy.overrides]]
+module = ["pypdfium2.*", "reportlab.*", "font_roboto"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["apps/api/tests", "packages/rag/tests", ".claude/hooks"]

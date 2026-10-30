@@ -3,7 +3,9 @@ name = "book-rag"
 version = "0.1.0"
 description = "RAG core: parsing, chunking, retrieval, reranking and prompts"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "pypdfium2>=4.30,<6",
+]
 
 [build-system]
 requires = ["hatchling"]
