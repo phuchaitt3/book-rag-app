@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 from book_rag_api.config import Settings, get_settings
 from book_rag_api.db import create_engine, ping
+from book_rag_api.jobs import router as jobs_router
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -28,6 +29,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    app.include_router(jobs_router)
 
     @app.get("/healthz", tags=["health"])
     async def healthz() -> dict[str, str]:

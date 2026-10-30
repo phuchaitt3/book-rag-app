@@ -20,6 +20,7 @@ class Chunk:
     text: str
     page_start: int
     page_end: int
+    section_index: int  # position of the section in `ParsedBook.sections`
 
 
 def _sentences(text: str, max_chars: int) -> list[tuple[int, int]]:
@@ -42,7 +43,12 @@ def _sentences(text: str, max_chars: int) -> list[tuple[int, int]]:
 
 
 def _chunk_section(
-    book_title: str, section: Section, ordinal: int, max_chars: int, overlap: int
+    book_title: str,
+    section: Section,
+    section_index: int,
+    ordinal: int,
+    max_chars: int,
+    overlap: int,
 ) -> list[Chunk]:
     text = ""
     page_starts: list[int] = []
@@ -74,6 +80,7 @@ def _chunk_section(
                 text[start:end],
                 page_at(start),
                 page_at(end - 1),
+                section_index,
             )
         )
         if last + 1 >= len(spans):
@@ -91,6 +98,6 @@ def chunk_book(book: ParsedBook, max_chars: int = 1200, overlap: int = 150) -> l
     if max_chars <= 0 or not 0 <= overlap < max_chars:
         raise ValueError("need max_chars > 0 and 0 <= overlap < max_chars")
     chunks: list[Chunk] = []
-    for section in book.sections:
-        chunks.extend(_chunk_section(book.title, section, len(chunks), max_chars, overlap))
+    for index, section in enumerate(book.sections):
+        chunks.extend(_chunk_section(book.title, section, index, len(chunks), max_chars, overlap))
     return chunks
