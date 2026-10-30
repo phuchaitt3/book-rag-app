@@ -27,6 +27,11 @@ Agents open pull requests for their own branches without asking, and review and 
 
 ## Working in several chats
 
-Several Claude chats may work here at once. Use the `workflow:multi-chat` skill. The handoff folder is `.handoff/` in the main checkout (git-excluded). `RULES.md` holds the orchestration rules, `INBOX.md` is the user's one-screen status page, `tickets/` holds one file per task or decision, and `DONE.md` is the done log.
+Several Claude chats may work here at once. Use the `workflow:multi-chat` skill. The handoff folder is `.handoff/` in the main checkout (git-excluded). Rules about what a chat may do live in this file, so a change to them is a pull request the user merges. `RULES.md` holds facts and claims only (paths, reserved slots, machine state, procedures); `INBOX.md` is the user's one-screen status page, `tickets/` holds one file per task or decision, and `DONE.md` is the done log.
 
 Branching is trunk-based: `main` is the integration branch; each task is one short-lived branch in its own worktree, merged by pull request.
+
+- Only one open pull request may change `CLAUDE.md` at a time. A second change waits for the first to merge, or joins the open PR with its author's agreement (user's decision, 2026-10-30, after #9 and #10 conflicted).
+- Dependency changes (`pnpm-lock.yaml`, `uv.lock`) are their own task, one in progress at a time.
+- `.handoff/` is its own private git repo, nested here and git-excluded. Never copy its contents into this repository, never put `.env*` or other secrets in it, and never push it anywhere else.
+- The limits on items waiting for the user (3 items, 2 days, the daily digest) are the `workflow:multi-chat` skill's defaults; changing them needs the user's yes.
