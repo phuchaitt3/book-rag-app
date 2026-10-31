@@ -34,7 +34,7 @@ Numbers (estimates, not measurements; the real corpus is small):
 
 The corpus sizes, traffic and quality target are assumptions made when this ADR was written, not measurements or numbers set elsewhere in the repo.
 
-Every search is limited to one book (`WHERE book_id = ...`), so a query ranks about 1,000 chunks, not all of them. This shapes the decision below.
+Today every search is limited to one book (`WHERE book_id = ...`; the chat endpoint is `POST /books/{book_id}/chat`), so a query ranks about 1,000 chunks, not all of them. This shapes the decision below. It is a property of the current product, not a law: a user may well want to ask one question across several books. That feature does not exist and is not planned yet; [#89](https://github.com/phuchaitt3/book-rag-app/issues/89) tracks it at low priority. What it would change is in "At 1000x the load": a question over a chosen handful of books (`book_id = ANY(...)`, a few thousand chunks) stays small and fits this decision, while a question over every book at once is the case that grows the search to the whole corpus.
 
 Constraints: a free or near-free production tier, one developer, and a local setup that runs from one `docker compose up`.
 
@@ -123,11 +123,11 @@ What breaks first, in order:
 3. **Query concurrency.** Search shares CPU and connections with everything else. Connection pooling and a read replica (a second copy that serves only searches) are the first, cheap steps.
 
 Next steps, cheapest first:
-- *Partition* the table by book (split it into per-book pieces) so each query touches one small piece and can use an exact scan. This works because no query crosses books.
+- *Partition* the table by book (split it into per-book pieces) so each query touches one small piece and can use an exact scan. This works while each query touches one book, or a few chosen ones (the database then reads only those pieces).
 - Store vectors in fewer bytes (pgvector's `halfvec` uses 2 bytes per number, half the memory) or use fewer dimensions.
 - Move the vectors to a dedicated store behind `ChunkSearcher`, keeping Postgres as the source of truth for text and metadata; the vector store is then a derived copy that can be rebuilt from Postgres. This is option B, taken only when the numbers above force it.
 
-If a feature ever needs search across all books at once, the per-book trick stops working and the memory problem arrives earlier.
+If a feature ever needs search across all books at once ([#89](https://github.com/phuchaitt3/book-rag-app/issues/89)), the per-book trick stops working and the memory problem arrives earlier.
 
 ## Read more
 
@@ -151,3 +151,9 @@ Questions and answers go here, dated, from [#35](https://github.com/phuchaitt3/b
 
 **2026-10-31, owner:** "A chunk and its metadata must be written together and never half-written." What does half-written mean? Update the ADR.
 **Answer:** A write that stops partway, leaving some chunks or some of a chunk's fields saved. Added a worked example to "Context". Review of PR #80 found that the example is not only hypothetical: the worker commits vectors in batches, so "Context", option A and "Consequences" now say the all-or-nothing write is not in place; tracked in #81.
+
+**2026-10-31, owner:** "Every search is limited to one book" might not hold, since users may want to ask about several books at once. Add it to the to-do list at low priority?
+**Answer:** Agreed. The limit is true of the product today but is not a property of the design. Filed [#89](https://github.com/phuchaitt3/book-rag-app/issues/89) (`priority:later`). Changed: "Context" now says it is a current limit, and "At 1000x the load" separates a chosen set of books (still fits) from every book at once (does not).
+
+**2026-10-31, owner:** A dedicated vector database is a sought-after skill. Should we implement one for the resume? And is option C worth considering with cheap options; should a new chat in plan mode research them?
+**Answer:** The decision is unchanged: at this size a second store adds the consistency work described in option B and gives nothing back. A bounded experiment is a fair way to learn the skill without changing the architecture: a second `ChunkSearcher` behind the existing interface, compared with Postgres on the eval set, with Postgres staying the source of truth. Research is filed as [#90](https://github.com/phuchaitt3/book-rag-app/issues/90) (`priority:later`); it needs no plan mode, since it is read-only. Whether to build the experiment is the owner's call after that report.
