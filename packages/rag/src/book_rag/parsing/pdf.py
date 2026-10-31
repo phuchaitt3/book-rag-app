@@ -24,13 +24,41 @@ def _norm(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-def _heading_offset(page_text: str, title: str, after: int) -> int:
-    """Where the heading `title` starts in `page_text` (at or after `after`), else `after`."""
+def _norm_lines(text: str) -> tuple[str, frozenset[int]]:
+    """`_norm(text)` plus the offsets in it where a line of the original begins."""
+    parts: list[str] = []
+    starts: set[int] = set()
+    length = 0
+    for line in text.splitlines():
+        line = _norm(line)
+        if not line:
+            continue
+        if parts:
+            length += 1  # the joining space
+        starts.add(length)
+        parts.append(line)
+        length += len(line)
+    return " ".join(parts), frozenset(starts)
+
+
+def _heading_offset(
+    page_text: str, title: str, after: int, line_starts: frozenset[int] = frozenset()
+) -> int:
+    """Where the heading `title` starts in `page_text` (at or after `after`), else `after`.
+
+    A match that begins a line wins over an earlier one inside a sentence (a quote, a running
+    header); with no such match, the first one is used.
+    """
     needle = _norm(title)
     if not needle:
         return after
-    index = page_text.find(needle, after)
-    return index if index >= 0 else after
+    first = page_text.find(needle, after)
+    index = first
+    while index >= 0 and index not in line_starts:
+        index = page_text.find(needle, index + 1)
+    if index >= 0:
+        return index
+    return first if first >= 0 else after
 
 
 def parse_pdf(source: Path | bytes, title: str | None = None) -> ParsedBook:
@@ -38,9 +66,12 @@ def parse_pdf(source: Path | bytes, title: str | None = None) -> ParsedBook:
     doc = pdfium.PdfDocument(source)
     try:
         pages = []
+        line_starts: list[frozenset[int]] = []
         for page in doc:
             textpage = page.get_textpage()
-            pages.append(_norm(textpage.get_text_bounded()))
+            text, heads = _norm_lines(textpage.get_text_bounded())
+            pages.append(text)
+            line_starts.append(heads)
             textpage.close()
             page.close()
         outline = [
@@ -67,7 +98,7 @@ def parse_pdf(source: Path | bytes, title: str | None = None) -> ParsedBook:
     for _, name, pg in outline:
         page_index = max(pg - 1, previous[0])
         floor = previous[1] if page_index == previous[0] else 0
-        offset = _heading_offset(pages[page_index], name, floor)
+        offset = _heading_offset(pages[page_index], name, floor, line_starts[page_index])
         previous = (page_index, offset)
         starts.append(previous)
 

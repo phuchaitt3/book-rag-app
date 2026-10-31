@@ -122,6 +122,16 @@ def test_two_sections_on_one_page_are_split_at_the_heading() -> None:
     assert "mục B" in b.segments[0].text and "mục A" not in b.segments[0].text
 
 
+def test_a_heading_text_quoted_earlier_on_the_page_does_not_cut_the_section() -> None:
+    pdf = build_pdf(
+        [[("Mục A", "Xem thêm Mục B ở phần sau."), ("Mục B", "Nội dung của mục B.")]],
+        [(1, "Mục A", 1), (1, "Mục B", 1)],
+    )
+    a, b = parse_pdf(pdf).sections
+    assert "Xem thêm Mục B ở phần sau." in a.segments[0].text
+    assert "Xem thêm" not in b.segments[0].text
+
+
 def test_overlap_repeats_trailing_sentences(book: ParsedBook) -> None:
     chunks = [
         c
