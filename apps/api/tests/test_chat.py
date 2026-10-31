@@ -18,7 +18,7 @@ from book_rag.providers import FakeEmbedder, FakeLLM, Message
 from book_rag.retrieval import RetrievedChunk
 from book_rag_api.config import Settings
 from book_rag_api.main import create_app
-from book_rag_api.models import EMBEDDING_DIM, Book, Chunk
+from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob
 from book_rag_api.prompts import NO_PASSAGES_REPLY, build_messages
 from book_rag_api.routers.chat import sse
 
@@ -133,6 +133,36 @@ async def test_unknown_book_is_404(client: AsyncClient) -> None:
     response = await client.post(f"/books/{uuid4()}/chat", json={"question": "hi"})
 
     assert response.status_code == 404
+
+
+@pytest.mark.parametrize("job_status", ["queued", "running", "failed"])
+async def test_book_whose_latest_ingestion_has_not_succeeded_is_409(
+    client: AsyncClient, database_url: str, book_id: UUID, job_status: str
+) -> None:
+    engine = create_async_engine(database_url)
+    # Two transactions, so `now()` gives the re-run a later `created_at`.
+    for status in ("succeeded", job_status):
+        async with AsyncSession(engine) as session, session.begin():
+            session.add(IngestionJob(book_id=book_id, status=status))
+    await engine.dispose()
+
+    response = await client.post(f"/books/{book_id}/chat", json={"question": "sông Hồng"})
+
+    assert response.status_code == 409
+    assert job_status in response.json()["detail"]
+
+
+async def test_book_whose_latest_ingestion_succeeded_is_answered(
+    client: AsyncClient, database_url: str, book_id: UUID
+) -> None:
+    engine = create_async_engine(database_url)
+    async with AsyncSession(engine) as session, session.begin():
+        session.add(IngestionJob(book_id=book_id, status="succeeded"))
+    await engine.dispose()
+
+    response = await client.post(f"/books/{book_id}/chat", json={"question": "sông Hồng"})
+
+    assert response.status_code == 200
 
 
 async def test_empty_question_is_rejected(client: AsyncClient, book_id: UUID) -> None:
