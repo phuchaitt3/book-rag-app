@@ -13,7 +13,7 @@ from testcontainers.community.postgres import PostgresContainer
 from book_rag.providers import FakeEmbedder, FakeReranker
 from book_rag.retrieval import HybridRetriever
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk
-from book_rag_api.retrieval import SqlChunkSearcher, or_query
+from book_rag_api.retrieval import SqlChunkSearcher, or_query, supports_iterative_scan
 
 ALEMBIC_INI = Path(__file__).parents[1] / "alembic.ini"
 
@@ -27,6 +27,23 @@ TEXTS = [
 def test_or_query_keeps_only_words() -> None:
     assert or_query("sông Hồng: 'Hà Nội' & !x") == "sông | Hồng | Hà | Nội | x"
     assert or_query("?! &") == ""
+
+
+@pytest.mark.parametrize(
+    ("version", "expected"),
+    [
+        ("0.8.0", True),
+        ("0.8.0-dev", True),
+        ("0.10.1", True),
+        ("1.0.0", True),
+        ("0.7.4", False),
+        ("0.7", False),
+        ("", False),
+        (None, False),
+    ],
+)
+def test_iterative_scan_needs_pgvector_0_8(version: str | None, expected: bool) -> None:
+    assert supports_iterative_scan(version) is expected
 
 
 @pytest.fixture
@@ -122,7 +139,7 @@ async def test_vector_search_returns_the_books_chunks_when_only_the_hnsw_index_a
         # New connections pick up the database-level setting.
         admin = create_async_engine(url, isolation_level="AUTOCOMMIT")
         async with admin.connect() as conn:
-            await conn.execute(text("ALTER DATABASE test SET enable_seqscan = off"))
+            await conn.execute(text(f"ALTER DATABASE {pg.dbname} SET enable_seqscan = off"))
         await admin.dispose()
 
         engine = create_async_engine(url)
