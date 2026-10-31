@@ -8,19 +8,20 @@
 
 The project has two programs that talk over HTTP: the API (Python, FastAPI) and the web app (TypeScript, Next.js). The API decides what each request must contain and what each reply looks like: the *shape*, meaning field names, types and which fields may be missing. The web app has to agree with that shape exactly. If the API renames `page_count` to `pages`, the web app does not fail to compile; it shows an empty value or crashes in the browser. The two live in different languages, so no compiler checks them against each other. A written description both sides are held to is called a *contract*.
 
-Today the contract does not exist. `apps/web/src/app/api-status.tsx` hardcodes the API address and the path `/healthz` as strings, and nothing checks that the endpoint exists or that its reply has the shape the web app reads. That cost one health check so far. The next task, the upload page and streaming chat (#21), makes the web app depend on three real endpoints and one stream, so the cost starts to grow with every field.
+Today the contract does not exist. `apps/web/src/app/api-status.tsx` reads the API address from `NEXT_PUBLIC_API_URL` (default `http://localhost:8000`) but hardcodes the path `/healthz` as a string, and nothing checks that the endpoint exists or that its reply has the shape the web app reads. That cost one health check so far. The next task, the upload page and streaming chat (#21), makes the web app depend on three real endpoints and one stream, so the cost starts to grow with every field.
 
 What the API offers today (checked against `main`):
 
 | Route | Reply |
 |---|---|
-| `GET /healthz`, `GET /readyz` | a small status object |
+| `GET /healthz` | `{"status": "ok"}`, typed in the code only as `dict[str, str]` |
+| `GET /readyz` | a small status object, returned as a bare `JSONResponse`, so the code does not describe it |
 | `POST /books` (multipart form: a PDF file, optional title, author, language) | `UploadedBook`: the book and the id of its ingestion job |
 | `GET /books` | a list of `BookOut` |
 | `GET /ingestion-jobs/{id}` | `IngestionProgress`: status, stage, error, and how many chunks are embedded |
 | `POST /books/{id}/chat` (JSON: question, `top_k`) | a *server-sent event* stream: a way for a server to push a series of messages down one open HTTP reply. Events: `citations` once, then many `token`, then `done` or `error` |
 
-All replies except the stream are Pydantic models in the API code. FastAPI already turns those models into an **OpenAPI** document at `/openapi.json`: a machine-readable description (a JSON file) of every route, request and reply, following the OpenAPI standard. That file is the natural contract, because it is produced from the same Python models that produce the replies, so it cannot disagree with the code.
+Three of the routes are fully typed: `POST /books`, `GET /books` and `GET /ingestion-jobs/{id}` return Pydantic models (`UploadedBook`, `BookOut`, `IngestionProgress`), and the chat request is one too (`ChatRequest`). `/healthz` is typed only as a dictionary of strings, `/readyz` has no declared reply, and the stream is not described at all (see the Decision). FastAPI already turns the typed models into an **OpenAPI** document at `/openapi.json`: a machine-readable description (a JSON file) of every route, request and reply, following the OpenAPI standard. That file is the natural contract, because it is produced from the same Python models that produce the replies, so it cannot disagree with the code.
 
 Numbers (today, and at 1000x, meaning ten times the team and a public API; these are assumptions, nothing here has been measured):
 
@@ -65,11 +66,11 @@ Use option B. The Python models stay the single source of the contract.
 
 - A script in the API package prints the app's OpenAPI document. A `pnpm` script saves it as `apps/web/src/api/openapi.json` and generates `apps/web/src/api/schema.d.ts` from it with `openapi-typescript`.
 - Both files are committed. CI regenerates them and fails if `git diff` is not empty, in a job that has both Python and Node (the existing jobs are separate, so this is one new job).
-- The web app builds requests and reads replies using the generated types, through one small module (`apps/web/src/api/client.ts`) that also owns the base URL (`NEXT_PUBLIC_API_URL`, replacing the hardcoded string).
-- **The stream is the exception.** The OpenAPI document cannot describe a series of events, so the payload shapes of `citations`, `token`, `done` and `error` need another route into the same file: the API declares them as Pydantic models and the export script adds their JSON Schema to the document's components. The web app's event parser then uses the generated types for each event. The exact mechanism is for the build (#21) to settle; the rule is that the models in Python remain the only place the shapes are written.
+- The web app builds requests and reads replies using the generated types, through one small module (`apps/web/src/api/client.ts`) that owns the base URL (`NEXT_PUBLIC_API_URL`, which `api-status.tsx` already reads) and the route paths, so the hardcoded `/healthz` moves there too.
+- **The stream is the exception.** The OpenAPI document cannot describe a series of events, so the payload shapes of `citations`, `token`, `done` and `error` need another route into the same file. Today only the `citations` payload is a model (`Citation` in `routers/chat.py`); `token`, `done` and `error` are inline dictionaries passed to `sse(event, data: Any)`. The build gives each of them a Pydantic model (the JSON on the wire stays the same) and the export script adds their JSON Schema to the document's components. The web app's event parser then uses the generated types for each event. The exact mechanism is for the build (#77) to settle; the rule is that the models in Python remain the only place the shapes are written.
 - Option D is not adopted now. Add Schemathesis against a test database when the API has a second client or when a bug of the "API broke its own schema" kind appears (see "At 1000x the load").
 
-This ADR does not change the API. It describes how the web app learns the API's shape.
+This ADR changes no code. The build (#77) makes one small API-side change: models for the stream's `token`, `done` and `error` payloads and for the two health replies, with the same JSON on the wire.
 
 ## Why
 
