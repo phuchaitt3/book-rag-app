@@ -16,6 +16,16 @@ services:
       timeout: 3s
       retries: 10
 
+  # S3-compatible store for uploads. SeaweedFS, because MinIO no longer publishes free images.
+  # No auth locally; production uses Cloudflare R2.
+  s3:
+    image: chrislusf/seaweedfs:latest
+    command: server -s3 -dir=/data
+    ports:
+      - "8333:8333"
+    volumes:
+      - s3-data:/data
+
   api:
     build:
       context: .
@@ -23,11 +33,14 @@ services:
     environment:
       DATABASE_URL: postgresql+asyncpg://bookrag:bookrag@db:5432/bookrag
       CORS_ORIGINS: '["http://localhost:3000"]'
+      S3_ENDPOINT_URL: http://s3:8333
     ports:
       - "8000:8080"
     depends_on:
       db:
         condition: service_healthy
+      s3:
+        condition: service_started
 
   worker:
     build:
@@ -35,16 +48,16 @@ services:
       dockerfile: apps/worker/Dockerfile
     environment:
       DATABASE_URL: postgresql+asyncpg://bookrag:bookrag@db:5432/bookrag
-      STORAGE_DIR: /storage
+      S3_ENDPOINT_URL: http://s3:8333
       # The host's Ollama; set EMBEDDING_PROVIDER=fake to run without a model.
       OLLAMA_URL: http://host.docker.internal:11434
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    volumes:
-      - uploads:/storage
     depends_on:
       db:
         condition: service_healthy
+      s3:
+        condition: service_started
 
   web:
     build:
@@ -69,4 +82,4 @@ services:
 
 volumes:
   db-data:
-  uploads:
+  s3-data:

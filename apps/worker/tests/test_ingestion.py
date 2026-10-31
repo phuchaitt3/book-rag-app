@@ -1,6 +1,7 @@
 import io
 import uuid
-from collections.abc import AsyncIterator, Iterator
+from collections.abc import AsyncIterator, Iterator, Sequence
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import font_roboto
@@ -24,6 +25,7 @@ from book_rag_api.main import create_app
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, Section
 from book_rag_worker.__main__ import init_schema
 from book_rag_worker.config import WorkerSettings
+from book_rag_worker.ingest import MAX_RETRIES, fail_stuck_jobs
 from book_rag_worker.storage import LocalStorage
 from book_rag_worker.worker import Worker, build_worker
 
@@ -215,3 +217,136 @@ async def test_two_jobs_for_one_book_both_finish(worker: Worker) -> None:
         )
     assert statuses == ["succeeded", "succeeded"]
     assert sorted(ordinals) == list(range(len(ordinals)))
+
+
+class FlakyEmbedder(FakeEmbedder):
+    """Fails with a connection error for the first `failures` calls, then works."""
+
+    def __init__(self, failures: int) -> None:
+        super().__init__(EMBEDDING_DIM)
+        self.failures = failures
+        self.calls = 0
+
+    async def embed(self, texts: Sequence[str]) -> list[list[float]]:
+        self.calls += 1
+        if self.calls <= self.failures:
+            raise ConnectionRefusedError("ollama is down")
+        return await super().embed(texts)
+
+
+@pytest.fixture
+async def flaky_worker(
+    database_url: str, storage: Path, request: pytest.FixtureRequest
+) -> AsyncIterator[tuple[Worker, FlakyEmbedder]]:
+    embedder = FlakyEmbedder(failures=request.param)
+    settings = WorkerSettings(database_url=database_url, storage_dir=storage, embed_batch_size=4)
+    w = build_worker(settings, embedder=embedder)
+    await init_schema(w)
+    async with w.app.open_async():
+        yield w, embedder
+    await w.engine.dispose()
+
+
+async def run_with_retries(w: Worker, passes: int) -> None:
+    """Run the queue, making any job waiting out its backoff due again before each pass."""
+    for _ in range(passes):
+        await w.app.connector.execute_query_async(
+            "UPDATE procrastinate_jobs SET scheduled_at = now() WHERE status = 'todo'"
+        )
+        await run_queue(w)
+
+
+@pytest.mark.parametrize("flaky_worker", [1], indirect=True)
+async def test_a_transient_embedder_error_is_retried_and_succeeds(
+    flaky_worker: tuple[Worker, FlakyEmbedder],
+) -> None:
+    w, embedder = flaky_worker
+    book_id = await add_book(w.engine, "book.pdf")
+    job_id = await enqueue_ingestion(w.engine, w.app, book_id)
+
+    await run_queue(w)  # first run fails; the job goes back to the queue with a note
+    async with AsyncSession(w.engine) as session:
+        job = await session.get(IngestionJob, job_id)
+        assert job is not None
+        assert (job.status, job.error) == (
+            "queued",
+            "retrying after ConnectionRefusedError: ollama is down",
+        )
+
+    await run_with_retries(w, 1)
+    async with AsyncSession(w.engine) as session:
+        job = await session.get(IngestionJob, job_id)
+        assert job is not None
+        assert (job.status, job.error) == ("succeeded", None)
+        embedded = (
+            await session.execute(
+                select(Chunk.embedding).where(Chunk.book_id == book_id, Chunk.embedding.is_(None))
+            )
+        ).all()
+    assert embedded == []
+    assert embedder.calls > 1
+
+
+@pytest.mark.parametrize("flaky_worker", [100], indirect=True)
+async def test_a_transient_error_that_never_clears_fails_after_the_retries(
+    flaky_worker: tuple[Worker, FlakyEmbedder],
+) -> None:
+    w, embedder = flaky_worker
+    book_id = await add_book(w.engine, "book.pdf")
+    job_id = await enqueue_ingestion(w.engine, w.app, book_id)
+
+    await run_with_retries(w, MAX_RETRIES + 2)
+
+    async with AsyncSession(w.engine) as session:
+        job = await session.get(IngestionJob, job_id)
+        assert job is not None
+        assert job.status == "failed"
+        assert job.error and "ConnectionRefusedError" in job.error
+    assert embedder.calls == MAX_RETRIES + 1
+
+
+@pytest.mark.parametrize("flaky_worker", [0], indirect=True)
+async def test_a_bad_pdf_fails_at_once_without_retrying(
+    flaky_worker: tuple[Worker, FlakyEmbedder],
+) -> None:
+    w, _ = flaky_worker
+    book_id = await add_book(w.engine, "broken.pdf")
+    job_id = await enqueue_ingestion(w.engine, w.app, book_id)
+
+    await run_queue(w)
+
+    async with AsyncSession(w.engine) as session:
+        job = await session.get(IngestionJob, job_id)
+        assert job is not None
+        assert job.status == "failed"
+    rows = await w.app.connector.execute_query_all_async(
+        "SELECT attempts, status FROM procrastinate_jobs WHERE args->>'job_id' = %(id)s",
+        id=str(job_id),
+    )
+    assert [(r["attempts"], r["status"]) for r in rows] == [(1, "succeeded")]  # one run, no retry
+
+
+async def test_the_sweep_fails_old_unfinished_jobs_only(worker: Worker) -> None:
+    book_id = await add_book(worker.engine, "book.pdf")
+    old = datetime.now(UTC) - timedelta(hours=3)
+    async with AsyncSession(worker.engine) as session:
+        stuck_queued = IngestionJob(book_id=book_id, status="queued", created_at=old)
+        stuck_running = IngestionJob(book_id=book_id, status="running", started_at=old)
+        fresh_queued = IngestionJob(book_id=book_id, status="queued")
+        fresh_running = IngestionJob(
+            book_id=book_id, status="running", started_at=datetime.now(UTC)
+        )
+        old_done = IngestionJob(book_id=book_id, status="succeeded", created_at=old, started_at=old)
+        jobs = [stuck_queued, stuck_running, fresh_queued, fresh_running, old_done]
+        session.add_all(jobs)
+        await session.flush()
+        ids = [j.id for j in jobs]
+        await session.commit()
+
+    assert await fail_stuck_jobs(worker.engine, timedelta(hours=1)) == 2
+
+    async with AsyncSession(worker.engine) as session:
+        statuses = [(await session.get(IngestionJob, i)).status for i in ids]  # type: ignore[union-attr]
+        error = (await session.get(IngestionJob, ids[0])).error  # type: ignore[union-attr]
+    assert statuses == ["failed", "failed", "queued", "running", "succeeded"]
+    assert error and "stuck" in error

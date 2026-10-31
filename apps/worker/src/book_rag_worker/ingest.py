@@ -4,9 +4,11 @@ import asyncio
 import logging
 import uuid
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+from urllib.error import HTTPError, URLError
 
-from sqlalchemy import delete, update
+from sqlalchemy import delete, or_, update
+from sqlalchemy.exc import InterfaceError, OperationalError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.chunking import Chunk as ParsedChunk
@@ -20,6 +22,23 @@ log = logging.getLogger(__name__)
 ReadPdf = Callable[[str], bytes]
 
 _MAX_ERROR_CHARS = 2000
+
+# A transient failure is retried this many times (so a job runs at most 3 times). A re-run
+# replaces the rows of the earlier attempt, so a retry is safe.
+MAX_RETRIES = 2
+
+
+class TransientIngestionError(Exception):
+    """A failure worth retrying (Ollama or the database was briefly unreachable)."""
+
+
+def is_transient(exc: BaseException) -> bool:
+    """Connection errors, timeouts and server-side HTTP errors; bad input is not transient."""
+    if isinstance(exc, HTTPError):
+        return exc.code >= 500 or exc.code == 429
+    return isinstance(
+        exc, ConnectionError | TimeoutError | URLError | OperationalError | InterfaceError
+    )
 
 
 def _now() -> datetime:
@@ -82,6 +101,42 @@ async def _fail(engine: AsyncEngine, job_id: uuid.UUID, error: str) -> None:
             .values(status="failed", error=error[:_MAX_ERROR_CHARS], finished_at=_now())
         )
         await session.commit()
+
+
+async def _requeue(engine: AsyncEngine, job_id: uuid.UUID, error: str) -> None:
+    async with AsyncSession(engine) as session:
+        await session.execute(
+            update(IngestionJob)
+            .where(IngestionJob.id == job_id)
+            .values(status="queued", stage=None, error=error[:_MAX_ERROR_CHARS])
+        )
+        await session.commit()
+
+
+async def fail_stuck_jobs(engine: AsyncEngine, older_than: timedelta) -> int:
+    """Fail jobs left `queued` since creation, or `running` since start, longer than `older_than`.
+
+    Covers a failed `defer_async` and a killed worker. If the worker still picks such a job up
+    later, `_run` sets it to `running` again, so the sweep never blocks a live job for good.
+    """
+    cutoff = _now() - older_than
+    async with AsyncSession(engine) as session:
+        result = await session.execute(
+            update(IngestionJob)
+            .where(
+                or_(
+                    (IngestionJob.status == "queued") & (IngestionJob.created_at < cutoff),
+                    (IngestionJob.status == "running") & (IngestionJob.started_at < cutoff),
+                )
+            )
+            .values(
+                status="failed",
+                error=f"stuck: no progress for over {older_than}",
+                finished_at=_now(),
+            )
+        )
+        await session.commit()
+        return int(result.rowcount)  # type: ignore[attr-defined]
 
 
 async def _run(
@@ -151,10 +206,21 @@ async def run_ingestion(
     read_pdf: ReadPdf,
     embedder: Embedder,
     batch_size: int = 32,
+    attempts: int = MAX_RETRIES,
 ) -> None:
-    """Run one job to the end. A failure is recorded on the job (status `failed`), not raised."""
+    """Run one job to the end. A failure is recorded on the job (status `failed`), not raised.
+
+    `attempts` is how many times the job has run before. A transient failure with retries left
+    puts the job back to `queued` and raises `TransientIngestionError` for the queue to retry;
+    the default means no retries are left.
+    """
     try:
         await _run(engine, job_id, read_pdf, embedder, batch_size)
     except Exception as exc:
+        message = f"{type(exc).__name__}: {exc}"
+        if is_transient(exc) and attempts < MAX_RETRIES:
+            log.warning("ingestion job %s hit a transient error, will retry: %s", job_id, message)
+            await _requeue(engine, job_id, f"retrying after {message}")
+            raise TransientIngestionError(message) from exc
         log.exception("ingestion job %s failed", job_id)
-        await _fail(engine, job_id, f"{type(exc).__name__}: {exc}")
+        await _fail(engine, job_id, message)
