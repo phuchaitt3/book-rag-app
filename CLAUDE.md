@@ -4,6 +4,8 @@ Tier: **solo-fast** (confirmed by the user 2026-10-29; see the `workflow:new-pro
 
 Mode: **study-design** (chosen by the user 2026-10-30; see the `workflow:new-project` skill). Design briefs go in `docs/design/`, decisions in `docs/adr/`; [docs/design/README.md](docs/design/README.md) describes the process.
 
+Goals: this is a portfolio project, and **scalability and operability come before features** (the user's statement, 2026-10-31; full list in [README.md](README.md), "Goals and priorities"). Read that section before any design, ADR or dependency choice, and judge options by the design that scales and by measurement, not by today's load alone.
+
 Monorepo: `apps/api` (Python, FastAPI), `apps/web` (Next.js), `packages/rag`, `infra/`. Python tooling is uv (`uv sync --frozen`, `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`, `uv run pytest`); web tooling is pnpm (`pnpm lint:web`, `pnpm typecheck:web`, `pnpm build:web`). CI (`.github/workflows/ci.yml`) runs exactly these.
 
 This repository is **public**: everything committed or pushed is published.
