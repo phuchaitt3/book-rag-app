@@ -39,7 +39,7 @@ Shape of the change, in order:
 1. **`packages/rag` and the searcher.** `ChunkSearcher.vector_search` and `text_search` take `book_ids: Sequence[UUID]` instead of one `book_id`; `RetrievedChunk` gains `book_id`; `HybridRetriever.retrieve` takes `book_ids`. A one-book call passes a one-element list, so existing behaviour and tests carry over. The SQL becomes `Chunk.book_id.in_(book_ids)`.
 2. **API.** A new route `POST /chat` with `{question, top_k, book_ids}` (1 to 10 ids). It answers `404` for an unknown id and `409` (as in #81) naming each book that is not ready. `POST /books/{book_id}/chat` stays and calls the same code with one id, so the web app keeps working. Citations already carry `book_id` and `book_title`; the prompt gets the book title next to each passage number so the model can tell sources apart.
 3. **Web.** The book list becomes a multi-select; the chat shows the chosen titles and the chips already show the book. The generated types change with the API (`pnpm gen:api`, [ADR 0007](../adr/0007-api-web-contract.md)).
-4. **Check.** Extend the HNSW regression test (several books, only the chosen ones returned), and measure p95 search latency at 1, 5 and 10 books on the 400-chunk-per-book test data before claiming the bound.
+4. **Check.** Extend the HNSW regression test (several books, only the chosen ones returned), and measure p95 search latency at 1, 5 and 10 books before claiming the bound. The data is generated, not a real book: the HNSW regression test in `apps/api/tests/test_sql_retrieval.py` builds one book of 5 chunks and another of 400 with `FakeEmbedder` vectors; the measurement reuses that builder with N books of a few thousand chunks each, so it tests index behaviour, not answer quality.
 
 ## Risks and open points
 
