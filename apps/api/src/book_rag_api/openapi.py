@@ -23,7 +23,11 @@ def add_stream_events(app: FastAPI) -> None:
             schema = get_openapi(title=app.title, version=app.version, routes=app.routes)
             schemas = schema.setdefault("components", {}).setdefault("schemas", {})
             for model in STREAM_EVENT_MODELS:
-                model_schema = model.model_json_schema(ref_template="#/components/schemas/{model}")
+                model_schema = model.model_json_schema(
+                    ref_template="#/components/schemas/{model}", mode="serialization"
+                )
+                if model.__name__ in schemas:
+                    raise ValueError(f"schema name {model.__name__!r} is already taken")
                 schemas.update(model_schema.pop("$defs", {}))
                 schemas[model.__name__] = model_schema
             app.openapi_schema = schema
