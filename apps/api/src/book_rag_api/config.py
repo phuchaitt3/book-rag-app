@@ -28,6 +28,13 @@ class Settings(BaseSettings):
     s3_region: str = "auto"
     max_upload_bytes: int = 50 * 1024 * 1024
     max_upload_pages: int = 1000
+    # Chat: "ollama" or "fake" (no model, for tests and load tests). The embedding model must
+    # match the one the worker used to embed the chunks.
+    llm_provider: str = "ollama"
+    llm_model: str = "qwen2.5:7b-instruct"
+    embedding_provider: str = "ollama"
+    embedding_model: str = "bge-m3"
+    ollama_url: str = "http://localhost:11434"
 
 
 @lru_cache
