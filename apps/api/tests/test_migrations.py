@@ -93,7 +93,11 @@ async def test_downgrade_drops_tables(database_url: str) -> None:
         await engine.dispose()
 
 
-async def test_ordinals_are_unique_per_book(database_url: str) -> None:
+@pytest.mark.parametrize(
+    ("table", "constraint"),
+    [("chunks", "uq_chunks_book_id_ordinal"), ("sections", "uq_sections_book_id_ordinal")],
+)
+async def test_ordinals_are_unique_per_book(database_url: str, table: str, constraint: str) -> None:
     await asyncio.to_thread(command.upgrade, alembic_config(database_url), "head")
 
     engine = create_async_engine(database_url)
@@ -106,12 +110,17 @@ async def test_ordinals_are_unique_per_book(database_url: str) -> None:
                     )
                 )
             ).scalar_one()
+            if table == "chunks":
+                columns, values = "text", "'x'"
+            else:
+                columns, values = "title, path, level", "'t', 't', 1"
         insert = text(
-            "INSERT INTO chunks (id, book_id, ordinal, text) VALUES (gen_random_uuid(), :b, 7, 'x')"
+            f"INSERT INTO {table} (id, book_id, ordinal, {columns}) "
+            f"VALUES (gen_random_uuid(), :b, 7, {values})"
         )
         async with engine.begin() as conn:
             await conn.execute(insert, {"b": book_id})
-        with pytest.raises(IntegrityError):
+        with pytest.raises(IntegrityError, match=constraint):
             async with engine.begin() as conn:
                 await conn.execute(insert, {"b": book_id})
     finally:
