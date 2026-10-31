@@ -2,7 +2,7 @@
 
 **Status:** Accepted
 
-**Decided by:** owner (first draft from the owner's review answers, 2026-10-30; the owner edits the wording before merge). Lines tagged *[agent-added]* were added by an agent from the review discussion; the owner keeps, rewrites or deletes them.
+**Decided by:** owner, from the owner's own review answers (2026-10-30). Lines tagged *[agent-added]* were added by an agent from the review discussion. The owner kept them on purpose as a record of what the original answer covered.
 
 ## Context
 The project has a Next.js frontend, a FastAPI backend, a background worker and a pure-Python RAG core that should be testable on its own.
