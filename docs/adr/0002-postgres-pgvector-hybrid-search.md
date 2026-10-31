@@ -11,9 +11,13 @@ The app answers questions about a book by finding the passages ("chunks") most r
 - **Semantic (vector) search.** An *embedding model* (here bge-m3) turns each chunk and each question into a list of numbers, a *vector*, so that texts with similar meaning get vectors that are close together. Search means "find the chunks whose vectors are closest to the question's vector". This finds a passage about "feeling tired after lunch" for the question "why do I get sleepy after eating?", where no word is shared.
 - **Keyword (full-text) search.** Matches the actual words. It is better than vectors for names, numbers, rare terms and exact phrases ("Chapter 7", a person's name), which embeddings often blur.
 
-Using both and merging the results is called *hybrid search*. Vietnamese books are the first target, which matters because Postgres has no ready-made Vietnamese stemmer for keyword search (see "Why").
+Using both and merging the results is called *hybrid search*. It is a common default for retrieval systems today: Elasticsearch, Weaviate, Qdrant, Vespa and Azure AI Search all offer it, and Anthropic's "Contextual Retrieval" write-up combines embeddings with BM25 keyword search for the same reason. Its appeal is that the two methods fail on different questions, and merging them needs no training and little code. This repo has not measured the gain on its own books; the eval set (ADR 0005) is where that gets checked.
 
-Besides search, the system stores ordinary relational data: books, a section tree, chunks with page numbers, and ingestion jobs. A chunk and its metadata must be written together and never half-written.
+Vietnamese books are the first target, and that makes keyword search harder than in English. Postgres has no Vietnamese configuration, and the usual fix for English, a *stemmer*, is not the main need for Vietnamese. "Why `simple` for full-text search" below explains what is missing and what it costs.
+
+Besides search, the system stores ordinary relational data: books, a section tree, chunks with page numbers, and ingestion jobs. All of it, the search data included, lives in the same PostgreSQL database; that is the central choice of this ADR, and option B below is the alternative of keeping the vectors in a separate store.
+
+A chunk and its metadata must be written together and never half-written. "Half-written" means a write that stops partway. Ingesting one book inserts about 1,000 chunks, and each needs its text, page number, section link, embedding vector and keyword data. If the worker crashed or lost its connection after 400 chunks, or after a chunk's text was saved but before its vector was, the book would be left in a broken state: chunks with no vector are never returned by vector search, and nothing raises an error, so answers are quietly worse. The rule is "all or nothing": either the whole write happens and is visible, or none of it is. A database *transaction* provides exactly that, which is why keeping chunk and vector in one database matters (see option B for what goes wrong with two).
 
 Numbers (estimates, not measurements; the real corpus is small):
 
@@ -75,7 +79,14 @@ What is built (checked against `main`: `apps/api/migrations/versions/0001_initia
 - `m` is how many links each vector keeps (16 is pgvector's default) and `ef_construction` is how widely it looks for neighbours while inserting (64 is the default). Higher values raise recall and build time. These are untuned defaults, not measured choices. Query-time breadth is `hnsw.ef_search` (default 40), which nothing in this repo sets.
 - Cosine distance, because embeddings are compared by direction, not length.
 
-**Why `simple` for full-text search.** A text-search *configuration* decides how text is split into words and normalised. Postgres ships stemmers (reducing "running" to "run") for English and other languages, but none for Vietnamese. `simple` only lowercases and splits on non-letters, so it works for any language, at the price of no stemming and no stop-word removal. Accents are kept, so a query typed without diacritics does not match text that has them.
+**Why `simple` for full-text search.** A text-search *configuration* decides how text is split into words and normalised. Postgres ships configurations for English and other languages that *stem* (reduce "running", "runs" and "ran" towards "run", so a query for one finds the others) and drop stop words ("the", "of"). It has none for Vietnamese. `simple` only lowercases and splits on non-letters, so it works for any language, at the price of no stemming and no stop-word removal.
+
+For Vietnamese the missing stemmer matters less than it sounds, because Vietnamese words do not change form: there is no plural, tense or case ending to strip, so "học" (study) is the same string everywhere. Three other gaps matter more, and `simple` has all three:
+- **Words are made of several syllables.** Vietnamese is written with a space between syllables, not between words. "học sinh" (student) is one word of two syllables, and "học" and "sinh" alone mean "study" and "born". `simple` sees two separate words. A keyword query for "học sinh" therefore matches any chunk that contains "học" or "sinh" anywhere, because the search matches any query word (see "What is built"); it does not look for the pair. Proper handling needs a *word segmenter* (a tool that groups syllables into words, such as VnCoreNLP or Underthesea) run on both the text and the query, which Postgres does not do and which would be a new dependency in the ingestion worker.
+- **Diacritics.** Vietnamese marks tone and vowel quality with accents ("ma", "má", "mả", "mã", "mạ" and "mà" are different words). Many people type queries without accents, so "hoc sinh" should match "học sinh"; with `simple` it does not (see "Consequences", keyword search is accent-sensitive).
+- **Stop words.** Very common syllables ("là", "của", "và") are not removed, so they match many chunks and add noise to the keyword list. BM25 or `ts_rank_cd` weighting reduces the harm but does not remove it.
+
+Why accept this: vector search with bge-m3 is multilingual, understands Vietnamese meaning, and is not affected by accents or syllable splitting in this way, and it is the half of the hybrid that carries ordinary questions. Keyword search is there for names, numbers and exact phrases, where `simple` is adequate. Whether the gaps above hurt on real Vietnamese questions is something the eval set should show (ADR 0005); the fixes, in order of cost, are an `unaccent` column, then a segmenter plus a custom configuration, then a BM25 extension (see "Consequences").
 
 **Why combine with RRF.** The two searches give scores on different scales (a cosine distance and a text rank), so adding them directly is meaningless. *Reciprocal Rank Fusion* ignores scores and uses only positions: an item scores the sum of `1 / (60 + rank)` over each list it appears in, so an item ranked high in both lists wins and an item in one list still counts. The constant 60 is the one from the original paper. A *reranker* (a second model that reads the question together with each candidate and scores the pair) can then reorder the merged list; it is more accurate than either search but too slow to run on every chunk. Whether it is worth its cost is a question for the evals (ADR 0005).
 
@@ -119,4 +130,16 @@ If a feature ever needs search across all books at once, the per-book trick stop
 
 ## Review
 
-Questions and answers go here, dated, from [#35](https://github.com/phuchaitt3/book-rag-app/issues/35). None yet.
+Questions and answers go here, dated, from [#35](https://github.com/phuchaitt3/book-rag-app/issues/35).
+
+**2026-10-31, owner:** Is hybrid search the most popular approach currently, for its effectiveness and simplicity?
+**Answer:** It is one of the most common defaults, not the only popular one; plain vector search is still widespread because it is the simplest. Hybrid is popular because it costs little extra (one more index and a merge step) and covers the cases where vectors are weak. "Most effective" is a claim to test here, not assume: see the paragraph on hybrid search in "Context". Changed: that paragraph.
+
+**2026-10-31, owner:** Modify the ADR to explain the Vietnamese stemmer for keyword search in more detail.
+**Answer:** Rewrote "Why `simple` for full-text search". The main point: Vietnamese does not need a stemmer much, since words do not inflect; the real gaps are multi-syllable words, accents and stop words. Changed: "Context" (summary line) and "Why `simple` for full-text search".
+
+**2026-10-31, owner:** "Besides search, the system stores ordinary relational data..." Are these all stored inside a database together? Is this a design choice we should think about?
+**Answer:** Yes to both: books, sections, chunks, vectors, keyword data and jobs are all in one PostgreSQL database, and it is the main design choice of this ADR (option A against option B). Made explicit in "Context". The decision stands because one database gives all-or-nothing writes; the cost is that search shares the database's resources, covered in "At 1000x the load".
+
+**2026-10-31, owner:** "A chunk and its metadata must be written together and never half-written." What does half-written mean? Update the ADR.
+**Answer:** A write that stops partway, leaving some chunks or some of a chunk's fields saved. Added a worked example to "Context".
