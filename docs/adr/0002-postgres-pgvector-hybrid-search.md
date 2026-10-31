@@ -20,7 +20,7 @@ Numbers (estimates, not measurements; the real corpus is small):
 | | Now | At 1000x |
 |---|---|---|
 | Books | about 10 | about 10,000 |
-| Chunks per book | about 1,000 (a 400-page book cut into pieces of roughly 500 tokens) | same |
+| Chunks per book | about 1,000 (a 400-page book cut into pieces of at most 1,200 characters, about 300 tokens) | same |
 | Chunks in total | about 10,000 | about 10,000,000 |
 | Vector storage | a vector of 1024 numbers at 4 bytes each is about 4 KB, so about 40 MB | about 40 GB, plus an index of similar size |
 | Search traffic | a few queries per minute | tens of queries per second |
