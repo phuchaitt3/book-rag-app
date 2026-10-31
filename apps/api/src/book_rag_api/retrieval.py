@@ -60,6 +60,8 @@ class SqlChunkSearcher:
             if iterative_scan and await self._supports_iterative_scan(session):
                 # With a `book_id` filter the HNSW index alone can return few or no rows,
                 # because it keeps only about `hnsw.ef_search` candidates before the filter.
+                # The walk is bounded by `hnsw.max_scan_tuples` (20,000 by default), so it
+                # covers today's corpus, not millions of chunks (see ADR 0002).
                 # `LOCAL` lasts for this transaction, so it also holds behind a pooler.
                 await session.execute(text("SET LOCAL hnsw.iterative_scan = strict_order"))
             rows = await session.scalars(stmt)
