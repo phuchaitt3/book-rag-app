@@ -6,7 +6,7 @@ This project is also a system design study (see [docs/design](../design/README.m
 
 | # | Decision | Status | Decided by |
 |---|---|---|---|
-| [0001](0001-monorepo-uv-pnpm.md) | Monorepo with a uv workspace and a pnpm workspace | Accepted | owner (draft, edit pending) |
+| [0001](0001-monorepo-uv-pnpm.md) | Monorepo with a uv workspace and a pnpm workspace | Accepted | owner |
 | [0002](0002-postgres-pgvector-hybrid-search.md) | PostgreSQL with pgvector and full-text search, no separate vector database | Accepted | agents, owner review pending |
 | [0003](0003-model-provider-interfaces.md) | Every model sits behind a provider interface | Accepted | agents, owner review pending |
 | [0004](0004-ingestion-queue-in-postgres.md) | Ingestion queue in Postgres (Procrastinate), no Redis | Accepted | agents, owner review pending |
