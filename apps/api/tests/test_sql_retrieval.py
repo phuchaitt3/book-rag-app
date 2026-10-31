@@ -6,6 +6,7 @@ from uuid import UUID, uuid4
 import pytest
 from alembic import command
 from alembic.config import Config
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from testcontainers.community.postgres import PostgresContainer
 
@@ -82,3 +83,51 @@ async def test_hybrid_retrieval_end_to_end(
     result = await retriever.retrieve(book_id, "thủ đô Hà Nội", top_k=2)
     assert result[0].text == TEXTS[2]
     assert len(result) == 2
+
+
+async def test_vector_search_returns_the_books_chunks_when_only_the_hnsw_index_applies() -> None:
+    """With only the HNSW index usable, the `book_id` filter is applied after the index walk;
+    without `hnsw.iterative_scan` the walk keeps ~40 candidates and almost none are this book's."""
+    with PostgresContainer("pgvector/pgvector:pg17", driver="asyncpg") as pg:
+        url = pg.get_connection_url()
+        config = Config(str(ALEMBIC_INI))
+        config.set_main_option("sqlalchemy.url", url)
+        await asyncio.to_thread(command.upgrade, config, "head")
+
+        embedder = FakeEmbedder(EMBEDDING_DIM)
+        own_texts = [f"own passage {i} about rivers" for i in range(5)]
+        other_texts = [f"other passage {i} about mountains" for i in range(400)]
+        own_vectors = await embedder.embed(own_texts)
+        other_vectors = await embedder.embed(other_texts)
+        own_book, other_book = Book(id=uuid4(), title="own"), Book(id=uuid4(), title="other")
+
+        engine = create_async_engine(url)
+        sessions = async_sessionmaker(engine, expire_on_commit=False)
+        async with sessions.begin() as session:
+            session.add_all([own_book, other_book])
+            await session.flush()
+            session.add_all(
+                Chunk(book_id=book.id, ordinal=i, text=t, embedding=v)
+                for book, texts, vectors in (
+                    (own_book, own_texts, own_vectors),
+                    (other_book, other_texts, other_vectors),
+                )
+                for i, (t, v) in enumerate(zip(texts, vectors, strict=True))
+            )
+        async with engine.begin() as conn:
+            # Leave the planner no exact path: no `book_id` indexes and no sequential scan.
+            await conn.execute(text("DROP INDEX ix_chunks_book_id"))
+            await conn.execute(text("ALTER TABLE chunks DROP CONSTRAINT uq_chunks_book_id_ordinal"))
+        await engine.dispose()
+        # New connections pick up the database-level setting.
+        admin = create_async_engine(url, isolation_level="AUTOCOMMIT")
+        async with admin.connect() as conn:
+            await conn.execute(text("ALTER DATABASE test SET enable_seqscan = off"))
+        await admin.dispose()
+
+        engine = create_async_engine(url)
+        sessions = async_sessionmaker(engine, expire_on_commit=False)
+        [query] = await embedder.embed(["other passage about mountains"])
+        found = await SqlChunkSearcher(sessions).vector_search(own_book.id, query, 30)
+        await engine.dispose()
+    assert {c.text for c in found} == set(own_texts)
