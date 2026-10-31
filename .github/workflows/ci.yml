@@ -33,6 +33,13 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Check the generated API types are fresh
+        run: |
+          pnpm --filter web gen:types
+          git diff --exit-code apps/web/src/api || {
+            echo "::error::apps/web/src/api is stale; run 'pnpm gen:api' and commit the result"
+            exit 1
+          }
       - run: pnpm lint:web
       - run: pnpm typecheck:web
       - run: pnpm build:web
