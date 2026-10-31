@@ -24,7 +24,7 @@ pnpm lint:web && pnpm typecheck:web && pnpm build:web
 
 ## Design decisions
 
-Significant choices are recorded as short decision records in [docs/adr/](docs/adr/). Add one when a pull request changes a recorded choice or makes a new one that is costly to reverse.
+Significant choices are recorded as decision records in [docs/adr/](docs/adr/). Add one when a pull request changes a recorded choice or makes a new one that is costly to reverse.
 
 ## Secrets
 
