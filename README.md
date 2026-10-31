@@ -53,7 +53,7 @@ flowchart LR
     P --> M[LLM, embedder, reranker: fake, Ollama or hosted]
 ```
 
-An answer is built from hybrid retrieval (vector search plus Postgres full-text search), a rerank step, and a streamed LLM reply that cites book, section and page. Every model sits behind an interface, so local, test and production runs differ only in configuration.
+An answer is built from hybrid retrieval (vector search plus Postgres full-text search), a rerank step (an interface with only a fake implementation so far), and a streamed LLM reply that cites book, section and page. Every model sits behind an interface, so local, test and production runs differ only in configuration.
 
 ## Status
 
@@ -61,9 +61,10 @@ An answer is built from hybrid retrieval (vector search plus Postgres full-text 
 |---|---|
 | Skeleton: monorepo, Docker Compose, health checks, CI, pre-commit | done |
 | Provider interfaces (LLM, embedder) with fake and Ollama providers | done |
-| Database schema and first migration | in review |
-| Upload, PDF parsing and chunking, ingestion worker | planned |
-| Hybrid retrieval and streamed, cited answers | planned |
+| Database schema and migrations | done |
+| Upload, PDF parsing and chunking, ingestion worker | done; tested with a fake embedder, a real-model run is open |
+| Hybrid retrieval and streamed, cited answers (API) | done; the reranker is a fake |
+| Web: upload with progress, streaming chat with citation chips | done; not yet checked against the running stack |
 | Evaluation set and CI eval job | planned |
 | Authentication, per-user libraries, hosted demo | planned |
 
