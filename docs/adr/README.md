@@ -15,6 +15,8 @@ This project is also a system design study (see [docs/design](../design/README.m
 
 ## Template for new records
 
+Scale the depth to the decision. A choice that is costly to reverse (a data store, a queue, a service boundary, a data model) uses every section below. A small one (a lint tool, a naming rule) needs only Context, Decision and Why.
+
 ```markdown
 # NNNN: <decision in a few words>
 
