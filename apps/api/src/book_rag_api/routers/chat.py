@@ -38,6 +38,27 @@ class Citation(BaseModel):
     page: int | None
 
 
+class TokenEvent(BaseModel):
+    """One piece of the answer text."""
+
+    text: str
+
+
+class DoneEvent(BaseModel):
+    """The answer is complete."""
+
+
+class ErrorEvent(BaseModel):
+    """The model failed part-way; the answer is cut short."""
+
+    message: str
+
+
+# The payload of each event. OpenAPI cannot describe a stream, so `book_rag_api.openapi`
+# adds these to the document's schemas for the web app's generated types.
+STREAM_EVENT_MODELS: tuple[type[BaseModel], ...] = (Citation, TokenEvent, DoneEvent, ErrorEvent)
+
+
 def sse(event: str, data: Any) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
 
@@ -62,17 +83,17 @@ async def answer_events(
     citations = citations_for(book, chunks)
     yield sse("citations", [c.model_dump(mode="json") for c in citations])
     if not chunks:
-        yield sse("token", {"text": NO_PASSAGES_REPLY})
-        yield sse("done", {})
+        yield sse("token", TokenEvent(text=NO_PASSAGES_REPLY).model_dump())
+        yield sse("done", DoneEvent().model_dump())
         return
     try:
         async for piece in llm.stream(build_messages(question, book.title, chunks)):
-            yield sse("token", {"text": piece})
+            yield sse("token", TokenEvent(text=piece).model_dump())
     except Exception:
         log.exception("model failed while streaming an answer")
-        yield sse("error", {"message": "the model failed; try again"})
+        yield sse("error", ErrorEvent(message="the model failed; try again").model_dump())
         return
-    yield sse("done", {})
+    yield sse("done", DoneEvent().model_dump())
 
 
 @router.post("/{book_id}/chat")

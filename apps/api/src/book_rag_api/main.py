@@ -7,6 +7,7 @@ import procrastinate
 from fastapi import Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
 
@@ -18,9 +19,19 @@ from book_rag_api.db import create_engine, ping
 from book_rag_api.jobs import create_queue
 from book_rag_api.jobs import router as jobs_router
 from book_rag_api.models import EMBEDDING_DIM
+from book_rag_api.openapi import add_stream_events
 from book_rag_api.retrieval import SqlChunkSearcher
 from book_rag_api.routers.chat import router as chat_router
 from book_rag_api.storage import ObjectStorage, S3Storage
+
+
+class HealthStatus(BaseModel):
+    status: str
+
+
+class ReadyStatus(BaseModel):
+    status: str
+    database: str
 
 
 def create_app(
@@ -62,13 +73,19 @@ def create_app(
     app.include_router(jobs_router)
     app.include_router(books_router)
     app.include_router(chat_router)
+    add_stream_events(app)
 
     @app.get("/healthz", tags=["health"])
-    async def healthz() -> dict[str, str]:
+    async def healthz() -> HealthStatus:
         """Liveness: the process is up. Never touches the database."""
-        return {"status": "ok"}
+        return HealthStatus(status="ok")
 
-    @app.get("/readyz", tags=["health"])
+    @app.get(
+        "/readyz",
+        tags=["health"],
+        response_model=ReadyStatus,
+        responses={status.HTTP_503_SERVICE_UNAVAILABLE: {"model": ReadyStatus}},
+    )
     async def readyz(engine: Annotated[AsyncEngine, Depends(get_engine)]) -> JSONResponse:
         """Readiness: the database answers."""
         try:

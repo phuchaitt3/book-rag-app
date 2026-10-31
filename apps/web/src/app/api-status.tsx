@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-type Status = "checking" | "up" | "down";
+import { API_URL, routes } from "@/api/client";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+type Status = "checking" | "up" | "down";
 
 export function ApiStatus() {
   const [status, setStatus] = useState<Status>("checking");
@@ -14,7 +14,7 @@ export function ApiStatus() {
     // A scale-to-zero backend can take a few seconds to wake up.
     const timeout = setTimeout(() => controller.abort(), 15_000);
 
-    fetch(`${API_URL}/healthz`, { signal: controller.signal })
+    fetch(`${API_URL}${routes.healthz}`, { signal: controller.signal })
       .then((res) => setStatus(res.ok ? "up" : "down"))
       .catch(() => setStatus("down"))
       .finally(() => clearTimeout(timeout));

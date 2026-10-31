@@ -20,6 +20,8 @@ uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pyt
 pnpm lint:web && pnpm typecheck:web && pnpm build:web
 ```
 
+After you change an API route or a response model, run `pnpm gen:api` and commit `apps/web/src/api/openapi.json` and `schema.d.ts` (ADR 0007). Run it, not `pnpm --filter web gen:types` alone, which would only regenerate the types from an out-of-date `openapi.json`.
+
 `pre-commit install` runs the same lint and type checks on every commit (see the README).
 
 ## Design decisions
