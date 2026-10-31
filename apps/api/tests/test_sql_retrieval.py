@@ -46,6 +46,35 @@ def test_iterative_scan_needs_pgvector_0_8(version: str | None, expected: bool) 
     assert supports_iterative_scan(version) is expected
 
 
+class _StubSession:
+    """A session with no `vector` extension row and no chunks."""
+
+    async def __aenter__(self) -> "_StubSession":
+        return self
+
+    async def __aexit__(self, *_exc: object) -> None:
+        return None
+
+    async def scalar(self, _stmt: object) -> None:
+        return None
+
+    async def scalars(self, _stmt: object) -> list[Chunk]:
+        return []
+
+
+async def test_missing_pgvector_warns_once_and_is_asked_again(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    searcher = SqlChunkSearcher(lambda: _StubSession())  # type: ignore[arg-type]
+    with caplog.at_level("WARNING", logger="book_rag_api.retrieval"):
+        for _ in range(3):
+            assert await searcher.vector_search(uuid4(), [0.0] * EMBEDDING_DIM, 5) == []
+    assert [r.message for r in caplog.records if "not installed" in r.message] == [
+        "pgvector is not installed; searching without iterative scan"
+    ]
+    assert searcher._iterative_scan is None  # not cached: the next search asks again
+
+
 @pytest.fixture
 async def seeded() -> AsyncIterator[tuple[async_sessionmaker[AsyncSession], UUID]]:
     with PostgresContainer("pgvector/pgvector:pg17", driver="asyncpg") as pg:

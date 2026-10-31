@@ -37,6 +37,7 @@ class SqlChunkSearcher:
     def __init__(self, sessions: async_sessionmaker[AsyncSession]) -> None:
         self._sessions = sessions
         self._iterative_scan: bool | None = None  # cached once the extension reports a version
+        self._warned_missing = False
 
     async def vector_search(
         self, book_id: UUID, embedding: Sequence[float], limit: int
@@ -87,8 +88,10 @@ class SqlChunkSearcher:
                     text("SELECT extversion FROM pg_extension WHERE extname = 'vector'")
                 )
             if version is None:
-                # Not created yet: do not cache, ask again on the next search.
-                log.warning("pgvector is not installed; searching without iterative scan")
+                # Not created yet: do not cache, ask again on the next search, warn once.
+                if not self._warned_missing:
+                    self._warned_missing = True
+                    log.warning("pgvector is not installed; searching without iterative scan")
                 return False
             self._iterative_scan = supports_iterative_scan(version)
             if not self._iterative_scan:
