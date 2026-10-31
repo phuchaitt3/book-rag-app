@@ -13,11 +13,12 @@ from typing import Annotated, Any
 from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.providers import LLM
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
-from book_rag_api.models import Book
+from book_rag_api.models import Book, IngestionJob
 from book_rag_api.prompts import NO_PASSAGES_REPLY, build_messages
 
 router = APIRouter(prefix="/books", tags=["chat"])
@@ -103,8 +104,20 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
     llm: LLM = request.app.state.llm
     async with AsyncSession(engine, expire_on_commit=False) as session:
         book = await session.get(Book, book_id)
+        latest_job = await session.scalar(
+            select(IngestionJob.status)
+            .where(IngestionJob.book_id == book_id)
+            .order_by(IngestionJob.created_at.desc())
+            .limit(1)
+        )
     if book is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "book not found")
+    # Chunks are committed before their embeddings, and a re-run replaces them, so until the
+    # latest job succeeds the search would quietly use part of the book (ADR 0004).
+    if latest_job is not None and latest_job != "succeeded":
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, f"the book is not ready yet: its ingestion is {latest_job}"
+        )
     chunks = await retriever.retrieve(book_id, body.question, top_k=body.top_k)
     return StreamingResponse(
         answer_events(llm, book, body.question, chunks),

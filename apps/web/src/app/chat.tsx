@@ -28,7 +28,13 @@ export function Chat({ book }: { book: Book }) {
         body: JSON.stringify({ question }),
         signal: abort.current.signal,
       });
-      if (!res.ok || !res.body) throw new Error(`request failed (${res.status})`);
+      if (!res.ok || !res.body) {
+        // 409: the book's ingestion has not finished; the API says which state it is in.
+        const body = await res.json().catch(() => null);
+        throw new Error(
+          typeof body?.detail === "string" ? body.detail : `request failed (${res.status})`,
+        );
+      }
       for await (const event of readEvents(res.body)) {
         if (event.event === "citations") update((t) => ({ ...t, citations: event.data }));
         else if (event.event === "token")
