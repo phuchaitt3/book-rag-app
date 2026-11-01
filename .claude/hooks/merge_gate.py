@@ -25,7 +25,8 @@ from collections.abc import Callable, Sequence
 # risk-based exception there needs a judgment call, so the user (or a reviewer reading the
 # diff) decides. Lockfiles are not listed: CLAUDE.md lets the reviewer merge a lockfile-only
 # change after listing each changed package. README.md stands in for "public positioning",
-# which is also a judgment call.
+# which is also a judgment call. Compose files are not listed: the local dev stack is not deploy
+# config (CLAUDE.md), and the reviewer checks it adds no secret value or unauthenticated port.
 USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"^CLAUDE\.md$", "CLAUDE.md"),
     (r"^\.claude/", "agent settings and hooks (.claude/)"),
@@ -33,7 +34,6 @@ USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"^infra/", "infra/"),
     (r"(^|/)Dockerfile[^/]*$", "deploy config (Dockerfile)"),
     (r"(^|/)\.dockerignore$", "deploy config (.dockerignore)"),
-    (r"(^|/)(docker-)?compose[^/]*\.ya?ml$", "deploy config (compose)"),
     (r"(^|/)(neon\.ts|vercel\.json)$", "deploy config"),
     (r"(^|/)\.env(?!\.example$)(\..*)?$", "secrets (.env)"),
     (r"\.(pem|key)$", "secrets (key file)"),

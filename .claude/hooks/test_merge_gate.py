@@ -53,8 +53,6 @@ def test_admin_always_refused(command: str) -> None:
         ".github/workflows/ci.yml",
         ".github/CODEOWNERS",
         "apps/api/Dockerfile",
-        "docker-compose.yml",
-        "compose.yaml",
         ".env",
         "certs/server.pem",
         "apps/api/src/book_rag_api/auth/session.py",
@@ -75,6 +73,8 @@ def test_user_merge_paths_refused(path: str) -> None:
         ".env.example",
         "uv.lock",
         "apps/web/pnpm-lock.yaml",
+        "compose.yaml",
+        "docker-compose.yml",
     ],
 )
 def test_ordinary_paths_pass(path: str) -> None:
