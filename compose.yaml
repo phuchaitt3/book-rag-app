@@ -33,6 +33,19 @@ services:
     volumes:
       - s3-data:/data
 
+  # One-shot: creates or upgrades the tables, then exits. The api and worker wait for it.
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    working_dir: /app/apps/api
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://bookrag:bookrag@db:5432/bookrag
+    depends_on:
+      db:
+        condition: service_healthy
+
   api:
     build:
       context: .
@@ -50,6 +63,8 @@ services:
         condition: service_healthy
       s3:
         condition: service_started
+      migrate:
+        condition: service_completed_successfully
 
   worker:
     build:
@@ -69,6 +84,8 @@ services:
         condition: service_healthy
       s3:
         condition: service_started
+      migrate:
+        condition: service_completed_successfully
 
   web:
     build:
