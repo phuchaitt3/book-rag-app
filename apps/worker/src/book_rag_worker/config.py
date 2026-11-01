@@ -25,9 +25,9 @@ class WorkerSettings(BaseSettings):
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://localhost:11434"
     embed_batch_size: int = 32
-    # Experiment (ADR 0008, #114): with "qdrant" the worker also copies each batch of vectors
-    # to Qdrant. EXPIRES 2026-12-15, see #120.
-    vector_store: Literal["pgvector", "qdrant"] = "pgvector"
+    # Experiment (ADR 0008): with "qdrant" or "shadow" the worker also copies each batch of
+    # vectors to Qdrant. EXPIRES 2026-12-15, see #120.
+    vector_store: Literal["pgvector", "qdrant", "shadow"] = "pgvector"
     qdrant_url: str = "http://localhost:6333"
     qdrant_collection: str = "chunks"
     # A job queued or running longer than this is failed by the periodic sweep.

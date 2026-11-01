@@ -14,7 +14,12 @@ from testcontainers.community.postgres import PostgresContainer
 from book_rag.providers import FakeEmbedder, FakeReranker
 from book_rag.retrieval import HybridRetriever
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk
-from book_rag_api.qdrant_index import QdrantChunkSearcher, QdrantVectorIndex, vector_counts
+from book_rag_api.qdrant_index import (
+    QdrantChunkSearcher,
+    QdrantVectorIndex,
+    ShadowChunkSearcher,
+    vector_counts,
+)
 from book_rag_api.retrieval import SqlChunkSearcher, or_query, supports_iterative_scan
 
 ALEMBIC_INI = Path(__file__).parents[1] / "alembic.ini"
@@ -206,3 +211,47 @@ async def test_qdrant_searcher_reads_vectors_from_qdrant_and_text_from_postgres(
     await index.delete_book(book_id)
     assert await index.count(book_id) == 0
     assert await index.count(other_book) == 1
+
+
+async def test_shadow_mode_returns_postgres_and_logs_the_comparison(
+    seeded: tuple[async_sessionmaker[AsyncSession], UUID],
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    sessions, book_id = seeded
+    async with sessions() as session:
+        rows = (await session.scalars(select(Chunk).where(Chunk.book_id == book_id))).all()
+        items = [(c.id, c.embedding) for c in rows]
+    index = QdrantVectorIndex(AsyncQdrantClient(location=":memory:"), "chunks")
+    await index.upsert(book_id, items)
+    sql = SqlChunkSearcher(sessions)
+    shadow = ShadowChunkSearcher(sql, QdrantChunkSearcher(index, sessions, sql))
+    [vector] = await FakeEmbedder(EMBEDDING_DIM).embed([TEXTS[1]])
+
+    with caplog.at_level("INFO", logger="book_rag_api.qdrant_index"):
+        found = await shadow.vector_search(book_id, vector, 3)
+        await asyncio.gather(*shadow._tasks)
+    assert [c.text for c in found] == [c.text for c in await sql.vector_search(book_id, vector, 3)]
+    [line] = [r.message for r in caplog.records if "shadow book=" in r.message]
+    assert "overlap=3/3" in line
+
+
+async def test_shadow_mode_hides_a_qdrant_failure(
+    seeded: tuple[async_sessionmaker[AsyncSession], UUID],
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    sessions, book_id = seeded
+    index = QdrantVectorIndex(AsyncQdrantClient(location=":memory:"), "chunks")
+
+    async def broken(*_args: object) -> list[UUID]:
+        raise ConnectionError("qdrant is down")
+
+    index.search = broken  # type: ignore[method-assign]
+    sql = SqlChunkSearcher(sessions)
+    shadow = ShadowChunkSearcher(sql, QdrantChunkSearcher(index, sessions, sql))
+    [vector] = await FakeEmbedder(EMBEDDING_DIM).embed([TEXTS[1]])
+
+    with caplog.at_level("INFO", logger="book_rag_api.qdrant_index"):
+        found = await shadow.vector_search(book_id, vector, 3)
+        await asyncio.gather(*shadow._tasks)
+    assert len(found) == 3
+    assert any("the Qdrant search failed" in r.message for r in caplog.records)
