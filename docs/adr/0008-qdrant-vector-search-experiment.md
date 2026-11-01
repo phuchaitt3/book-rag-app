@@ -40,6 +40,10 @@ The winner must pass all four. Passing is necessary, not sufficient: the owner s
 
 Today's size cannot show where a dedicated store pays off. A second arm would load synthetic vectors at 1 million and 10 million chunks (1024 dimensions) into both stores and repeat criteria 1 and 2 with memory use reported at each size. It may need a larger machine or a paid cloud tier, so it **does not run** until the owner says yes in the review issue, with a spending limit. Without it the experiment can only say how Qdrant compares at today's size.
 
+## Results
+
+Measured 2026-11-01 on one real book (164 chunks) and a 100-book copy corpus; method, tables and limits are in [the measurement note](../design/qdrant-experiment-results.md). Criterion 2 (p95 no worse than pgvector) is **not met** (49.6 against 46.0 ms at one book; 49.5 against 36.3 ms at 100 books); criteria 3 and 4 are met; criterion 1 is not informative at this size and needs the scale-up arm. Expected outcome on the decision date: **Rejected**, unless the scale-up arm shows pgvector degrading. No criterion was changed after the run. A local scale-up run reached 200,000 synthetic chunks (both stores: recall 1.00, p99 under 60 ms) and stopped there when the laptop went to sleep mid-run (the 15.9 GB laptop was also close to its memory limit); whether pgvector degrades at 1M or more is still open (see the note).
+
 ## Decision date and what happens at it
 
 **Decision date: 2026-12-15.** On that date, whatever has been measured is entered in this ADR and one of these happens:
@@ -68,3 +72,5 @@ This is what the scale-up arm is for. ADR 0002 expects the pgvector index to sto
 ## Review
 
 (The owner's questions and the answers, dated, newest last.)
+
+- 2026-11-01: results added by the agent that ran the measurements (see "Results"). The status stays Proposed until the decision date; no criterion was changed after the results.
