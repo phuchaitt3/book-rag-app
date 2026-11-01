@@ -8,7 +8,7 @@
 
 The API (Python, FastAPI) and the web app (TypeScript, Next.js) talk over HTTP. The API decides the shape of each request and reply (field names, types, which fields may be missing), and the web app must agree exactly. They are in different languages, so no compiler checks them against each other: if the API renames `page_count` to `pages`, the web app shows an empty value or crashes in the browser. A written description both sides are held to is a contract.
 
-Today there is none. `apps/web/src/app/api-status.tsx` hardcodes the path `/healthz`, and nothing checks the reply. The next task, the upload page and streaming chat ([#21](https://github.com/phuchaitt3/book-rag-app/issues/21)), makes the web app depend on three JSON routes and one server-sent event stream. Three of those routes and the chat request are already Pydantic models, and FastAPI turns them into an OpenAPI document at `/openapi.json`, so the natural contract is produced from the same models that produce the replies.
+When this was decided (2026-10-31) there was none: `apps/web/src/app/api-status.tsx` hardcoded the path `/healthz`, and nothing checked the reply. The pipeline described below has since been built (#77, #82). The next task, the upload page and streaming chat ([#21](https://github.com/phuchaitt3/book-rag-app/issues/21)), makes the web app depend on three JSON routes and one server-sent event stream. Three of those routes and the chat request are already Pydantic models, and FastAPI turns them into an OpenAPI document at `/openapi.json`, so the natural contract is produced from the same models that produce the replies.
 
 Constraints: one developer and one client now (assumptions, not measured); CI runs Python and web checks as separate jobs; a new package means a lockfile change, which this repository treats as its own task (`CLAUDE.md`).
 
@@ -50,3 +50,4 @@ The decision rests on these assumptions: FastAPI keeps producing OpenAPI from it
 
 - 2026-10-31: wording of the CI checks made precise: the Python job checks `openapi.json`, the web job checks `schema.d.ts` ([#77](https://github.com/phuchaitt3/book-rag-app/issues/77), [#82](https://github.com/phuchaitt3/book-rag-app/issues/82)).
 - 2026-11-01: rewritten to the short template; the route table, options in depth and the 1000x analysis moved to the study note, the decision unchanged ([#128](https://github.com/phuchaitt3/book-rag-app/issues/128)).
+- 2026-11-01: Context dated: it described the state before the pipeline was built, which now exists; the decision is unchanged ([#151](https://github.com/phuchaitt3/book-rag-app/issues/151)).
