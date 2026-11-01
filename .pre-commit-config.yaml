@@ -30,3 +30,10 @@ repos:
         language: system
         files: ^apps/web/
         pass_filenames: false
+  # Scans the whole working tree, not only staged files, so CI (--all-files) checks it too.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+        entry: gitleaks dir --redact --verbose .
+        always_run: true
