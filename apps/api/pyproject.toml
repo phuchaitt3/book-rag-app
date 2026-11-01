@@ -16,6 +16,7 @@ dependencies = [
     "uvicorn[standard]>=0.32",
     "boto3>=1.43.122",
     "python-multipart>=0.0.32",
+    "qdrant-client>=1.12",
 ]
 
 [build-system]
