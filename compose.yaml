@@ -16,6 +16,13 @@ services:
       timeout: 3s
       retries: 10
 
+  # Experiment (ADR 0008, expires 2026-12-15): vector store, used when VECTOR_STORE=qdrant.
+  # Reachable on the Compose network only (no published port): Qdrant starts without authentication.
+  qdrant:
+    image: qdrant/qdrant:v1.20.0
+    volumes:
+      - qdrant-data:/qdrant/storage
+
   # S3-compatible store for uploads. SeaweedFS, because MinIO no longer publishes free images.
   # No auth locally; production uses Cloudflare R2.
   s3:
@@ -34,6 +41,8 @@ services:
       DATABASE_URL: postgresql+asyncpg://bookrag:bookrag@db:5432/bookrag
       CORS_ORIGINS: '["http://localhost:3000"]'
       S3_ENDPOINT_URL: http://s3:8333
+      VECTOR_STORE: ${VECTOR_STORE:-pgvector}
+      QDRANT_URL: http://qdrant:6333
     ports:
       - "8000:8080"
     depends_on:
@@ -51,6 +60,8 @@ services:
       S3_ENDPOINT_URL: http://s3:8333
       # The host's Ollama; set EMBEDDING_PROVIDER=fake to run without a model.
       OLLAMA_URL: http://host.docker.internal:11434
+      VECTOR_STORE: ${VECTOR_STORE:-pgvector}
+      QDRANT_URL: http://qdrant:6333
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
@@ -82,4 +93,5 @@ services:
 
 volumes:
   db-data:
+  qdrant-data:
   s3-data:

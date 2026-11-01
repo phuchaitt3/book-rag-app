@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -24,6 +25,11 @@ class WorkerSettings(BaseSettings):
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://localhost:11434"
     embed_batch_size: int = 32
+    # Experiment (ADR 0008, #114): with "qdrant" the worker also copies each batch of vectors
+    # to Qdrant. EXPIRES 2026-12-15, see #120.
+    vector_store: Literal["pgvector", "qdrant"] = "pgvector"
+    qdrant_url: str = "http://localhost:6333"
+    qdrant_collection: str = "chunks"
     # A job queued or running longer than this is failed by the periodic sweep.
     stuck_job_minutes: int = 60
 

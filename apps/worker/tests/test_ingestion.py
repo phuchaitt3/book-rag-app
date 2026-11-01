@@ -9,13 +9,14 @@ import pytest
 from alembic import command
 from alembic.config import Config
 from httpx import ASGITransport, AsyncClient
+from qdrant_client import AsyncQdrantClient
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.utils import simpleSplit
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen.canvas import Canvas
 from sqlalchemy import select, text
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 from testcontainers.community.postgres import PostgresContainer
 
 from book_rag.providers import FakeEmbedder
@@ -23,9 +24,10 @@ from book_rag_api.config import Settings
 from book_rag_api.jobs import enqueue_ingestion
 from book_rag_api.main import create_app
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, Section
+from book_rag_api.qdrant_index import QdrantVectorIndex, vector_counts
 from book_rag_worker.__main__ import init_schema
 from book_rag_worker.config import WorkerSettings
-from book_rag_worker.ingest import MAX_RETRIES, fail_stuck_jobs
+from book_rag_worker.ingest import MAX_RETRIES, fail_stuck_jobs, run_ingestion
 from book_rag_worker.storage import LocalStorage
 from book_rag_worker.worker import Worker, build_worker
 
@@ -167,6 +169,27 @@ async def test_rerun_replaces_chunks_instead_of_duplicating(worker: Worker) -> N
             .all()
         )
     assert sorted(ordinals) == list(range(len(ordinals)))
+
+
+async def test_vectors_are_copied_to_qdrant_and_a_rerun_keeps_the_counts_equal(
+    worker: Worker, storage: Path
+) -> None:
+    index = QdrantVectorIndex(AsyncQdrantClient(location=":memory:"), "chunks")
+    sessions = async_sessionmaker(worker.engine)
+    book_id = await add_book(worker.engine, "book.pdf")
+    for _ in range(2):  # the second run replaces the chunk ids, so Qdrant must drop the old points
+        job_id = await enqueue_ingestion(worker.engine, worker.app, book_id)
+        await run_ingestion(
+            worker.engine,
+            job_id,
+            lambda key: (storage / key).read_bytes(),
+            FakeEmbedder(EMBEDDING_DIM),
+            batch_size=4,
+            index=index,
+        )
+        in_postgres, in_qdrant = await vector_counts(sessions, index, book_id)
+        assert in_postgres >= 3
+        assert in_qdrant == in_postgres
 
 
 async def test_a_bad_file_marks_the_job_failed(worker: Worker) -> None:

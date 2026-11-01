@@ -8,11 +8,12 @@ from fastapi import Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from qdrant_client import AsyncQdrantClient
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
 from book_rag.providers import LLM, Embedder, FakeEmbedder, FakeLLM, OllamaEmbedder, OllamaLLM
-from book_rag.retrieval import HybridRetriever
+from book_rag.retrieval import ChunkSearcher, HybridRetriever
 from book_rag_api.books import router as books_router
 from book_rag_api.config import Settings, get_settings
 from book_rag_api.db import create_engine, ping
@@ -20,6 +21,7 @@ from book_rag_api.jobs import create_queue
 from book_rag_api.jobs import router as jobs_router
 from book_rag_api.models import EMBEDDING_DIM
 from book_rag_api.openapi import add_stream_events
+from book_rag_api.qdrant_index import QdrantChunkSearcher, QdrantVectorIndex
 from book_rag_api.retrieval import SqlChunkSearcher
 from book_rag_api.routers.chat import router as chat_router
 from book_rag_api.storage import ObjectStorage, S3Storage
@@ -53,7 +55,7 @@ def create_app(
         app.state.queue = queue or create_queue(settings.database_url)
         app.state.llm = llm or _llm(settings)
         app.state.retriever = HybridRetriever(
-            SqlChunkSearcher(async_sessionmaker(app.state.engine)),
+            _searcher(settings, async_sessionmaker(app.state.engine)),
             embedder or _embedder(settings),
         )
         try:
@@ -98,6 +100,16 @@ def create_app(
         return JSONResponse({"status": "ok", "database": "up"})
 
     return app
+
+
+def _searcher(settings: Settings, sessions: async_sessionmaker[AsyncSession]) -> ChunkSearcher:
+    sql = SqlChunkSearcher(sessions)
+    if settings.vector_store == "qdrant":
+        index = QdrantVectorIndex(
+            AsyncQdrantClient(url=settings.qdrant_url), settings.qdrant_collection
+        )
+        return QdrantChunkSearcher(index, sessions, sql)
+    return sql
 
 
 def _llm(settings: Settings) -> LLM:
