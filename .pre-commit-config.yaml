@@ -38,6 +38,8 @@ repos:
         files: ^apps/web/
         pass_filenames: false
   # Scans the whole working tree, not only staged files, so CI (--all-files) checks it too.
+  # (standard: a client-side scanner beside GitHub push protection, which knows only high-confidence
+  # token formats, checked 2026-11-01)
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.1
     hooks:
