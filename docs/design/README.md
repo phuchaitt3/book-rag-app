@@ -38,6 +38,16 @@ The usual structure of a system design discussion, applied to each milestone:
 
 The app's real traffic will be small. Every study note therefore has an "At 1000x the load" section, so the reasoning still covers scale, and the ADR's Consequences name the next step in one line.
 
+## Measuring scale on a small budget
+
+The 1000x sections are reasoning; where a decision rests on one of them, it is checked by measurement on one laptop, at no cost, following the `workflow:scaling-test` skill. The aim is to find where each part bends (the knee) and why, not to run at full size. (standard: standards/scaling-tests-on-a-budget in the owner's config register, checked 2026-11-01)
+
+- **Fakes for every paid model.** Load tests use the fake providers from [ADR 0003](../adr/0003-model-provider-interfaces.md), given realistic latency (time to first token, delay per token) and the errors a vendor returns (429, 5xx, timeouts). A fake that answers instantly flatters the results. A fake measures this system, not the vendor's speed, quality or cost; those need a small paid run, which the owner approves first.
+- **Synthetic data, ramped.** Data grows in steps (for example 10x, 30x, 100x) up to what the machine's memory allows, checked before each run (1 million 1024-number vectors is about 4 GB before the index). Synthetic data is labelled as such next to every number.
+- **No straight-line extrapolation.** A small environment does not scale linearly. A study note reports the measured curve, the knee and the size where the numbers stop; anything beyond is marked as an estimate.
+- **Cloud only to check the last step.** If a question needs more than the laptop (40 GB of vectors, a GPU), the owner approves a short run first: the full ramp runs locally, then one cloud machine checks only the largest step and is destroyed when it ends.
+- **What this cannot show:** real traffic patterns, a vendor's behaviour at volume, multi-region operation and the true cost per query. A study note names these as limits rather than claiming them.
+
 ## Study note template
 
 A study note is where the learning happens; the ADR stays short so the decision is easy to find. Before the decision the note is a brief (status `draft`); after it, it is the ADR's study note. Name it `NNNN-<slug>.md` after its ADR, or `brief-<slug>.md` while there is none.
