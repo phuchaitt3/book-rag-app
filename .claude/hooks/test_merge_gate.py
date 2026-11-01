@@ -64,6 +64,26 @@ def test_user_merge_paths_refused(path: str) -> None:
     assert merge_gate.check("gh pr merge 5 --squash", files("apps/api/x.py", path))
 
 
+def _codeowners_sample_paths() -> list[str]:
+    """One concrete file path for each pattern in .github/CODEOWNERS."""
+    text = (Path(__file__).parents[2] / ".github" / "CODEOWNERS").read_text(encoding="utf-8")
+    paths = []
+    for line in text.splitlines():
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        pattern = line.split()[0]
+        pattern = pattern.replace("**/", "apps/api/").lstrip("/").replace("*", "")
+        paths.append(pattern + "x" if pattern.endswith("/") else pattern)
+    return paths
+
+
+def test_every_codeowners_path_is_refused_by_the_hook() -> None:
+    paths = _codeowners_sample_paths()
+    assert len(paths) >= 8
+    for path in paths:
+        assert merge_gate.check("gh pr merge 5 --squash", files(path)), path
+
+
 @pytest.mark.parametrize(
     "path",
     [

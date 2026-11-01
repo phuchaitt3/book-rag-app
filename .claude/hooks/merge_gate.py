@@ -43,6 +43,7 @@ USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
         "authentication/authorization",
     ),
     (r"^README\.md$", "public positioning (README.md)"),
+    (r"^(LICENSE|SECURITY\.md)$", "licensing and security policy"),
 )
 
 _SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|&\n()`]")
