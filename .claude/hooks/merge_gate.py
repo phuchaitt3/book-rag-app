@@ -27,9 +27,11 @@ from collections.abc import Callable, Sequence
 # lockfile-only change after listing each changed package. README.md and other docs are
 # ordinary files: the reviewer checks their claims against the code (CLAUDE.md). Compose files
 # are not listed: the local dev stack is not deploy config (CLAUDE.md), and the reviewer checks
-# it adds no secret value or unauthenticated port.
+# it adds no secret value or unauthenticated port. Under `.claude/` only the settings files are
+# listed: they hold the allow rules and the hook registrations. Whether a hook's code change
+# makes it refuse less is a judgment call, so the reviewer carries that check (CLAUDE.md).
 USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
-    (r"^\.claude/", "agent settings and hooks (.claude/)"),
+    (r"^\.claude/settings[^/]*\.json$", "agent permissions and hook registration (.claude/)"),
     (r"^infra/", "infra/"),
     (r"(^|/)Dockerfile[^/]*$", "deploy config (Dockerfile)"),
     (r"(^|/)\.dockerignore$", "deploy config (.dockerignore)"),
