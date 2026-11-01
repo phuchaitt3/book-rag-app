@@ -58,6 +58,40 @@ So the system must run with different models in different places, and must be te
 
 A vendor SDK adapter does not have to import or subclass anything from our package, and `mypy` still checks that it matches. The interfaces are small (three methods in total) and the Ollama adapters are about 90 lines using only the standard library. This is the assumption to revisit if the number of hosted vendors grows past two or three.
 
+## How "only configuration differs" works
+
+The API and the worker never name a vendor. At start-up they read a few settings and build one implementation of each contract (`_llm` and `_embedder` in `apps/api/src/book_rag_api/main.py`; the worker, which only embeds, picks its embedder the same way):
+
+| Where | `LLM_PROVIDER`, `EMBEDDING_PROVIDER` | What runs |
+|---|---|---|
+| Unit tests, load tests, CI | `fake` | `FakeLLM`, `FakeEmbedder`: no model, no network, no cost |
+| A developer's machine | `ollama` | `OllamaLLM`, `OllamaEmbedder`, calling the local Ollama server at `OLLAMA_URL` |
+| Production (later) | a hosted vendor's name | a hosted adapter, one more class (none exists yet) |
+
+The chat route, the retriever and the ingestion pipeline only call `stream`, `embed` and `rerank`, so the same code runs in all three places. Adding a vendor means writing one adapter and one more branch in the selection code, not editing the callers.
+
+## What the interface hides, and what leaks
+
+These answers come from the owner's review ([#36](https://github.com/phuchaitt3/book-rag-app/issues/36)).
+
+**Hidden from the callers:** the vendor and model name, where the model runs, the request and reply formats, how the stream arrives on the wire (Ollama sends one JSON object per line; hosted vendors usually use server-sent events), and the threads the Ollama adapter uses.
+
+**What hiding costs.** The extra layer itself is one method call. The real cost is the *lowest common denominator*: the contract can only offer what every provider can do, so vendor features are out of reach until the contract grows. Today that means no temperature or maximum answer length, no token usage counts (needed for cost tracking), no structured or JSON output, no tool calls and no prompt caching. Each one added to the contract must then be supported, or refused clearly, by every adapter.
+
+**What leaks through anyway:**
+- the embedding dimension (the ADR's Consequences);
+- limits: how many texts one `embed` call may take (the worker's `embed_batch_size`, 32), the longest input, and the LLM's context window. None is in the contract, so the caller must know the current model's limits;
+- errors: the worker decides whether to retry by matching the Ollama adapter's exceptions (`urllib`'s `HTTPError` and `URLError`, in `is_transient` in `apps/worker/src/book_rag_worker/ingest.py`). An adapter on another HTTP library raises other types, which the worker would treat as fatal.
+
+## Where timeouts, retries and rate limits belong
+
+Today the timeout sits in the adapter (a fixed 300 seconds), and the only retry sits in a caller: the worker puts a failed ingestion job back on its queue. The chat route does not retry.
+
+The split this project is heading for (to be decided in [#53](https://github.com/phuchaitt3/book-rag-app/issues/53)):
+- **The adapter** owns the timeout and translates each vendor's errors into a few types the contract defines (for example "retry later", "rate limited", "bad input"), because only the adapter knows what the vendor's errors mean.
+- **The caller** owns the retry policy, because only it knows how long it may wait: the worker can retry a job minutes later through its queue, while a chat request has a user waiting and should fail fast or retry once.
+- **Rate limiting** is shared by every caller of one vendor account, so it belongs in one place in front of the vendor (a wrapper that implements the same contract, or a gateway), not in each caller.
+
 ## Measurements
 
 None. The 1000x figures below are estimates to be measured, not results.
