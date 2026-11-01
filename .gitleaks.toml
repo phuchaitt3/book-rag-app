@@ -1,0 +1,15 @@
+# gitleaks scans the working tree, including git-ignored files. Skip the ones that stay on the
+# developer's machine (see .gitignore) so a local .env does not fail every commit and teach
+# people to bypass the check. .env.example is still scanned.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "git-ignored local files and dependency folders"
+paths = [
+  '''(^|/)\.env(\.local|\.development|\.production|\.test)?$''',
+  '''(^|/)\.venv/''',
+  '''(^|/)node_modules/''',
+  '''(^|/)\.next/''',
+  '''^\.handoff/''',
+]
