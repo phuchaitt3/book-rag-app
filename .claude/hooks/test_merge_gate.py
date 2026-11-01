@@ -57,7 +57,6 @@ def test_admin_always_refused(command: str) -> None:
         "certs/server.pem",
         "apps/api/src/book_rag_api/auth/session.py",
         ".claude/hooks/merge_gate.py",
-        "README.md",
     ],
 )
 def test_user_merge_paths_refused(path: str) -> None:
@@ -89,6 +88,7 @@ def test_every_codeowners_path_is_refused_by_the_hook() -> None:
     [
         "apps/api/src/book_rag_api/author.py",
         "packages/rag/src/x.py",
+        "README.md",
         "apps/web/README.md",
         ".env.example",
         "uv.lock",
