@@ -54,8 +54,12 @@ services:
       DATABASE_URL: postgresql+asyncpg://bookrag:bookrag@db:5432/bookrag
       CORS_ORIGINS: '["http://localhost:3000"]'
       S3_ENDPOINT_URL: http://s3:8333
+      # The host's Ollama, for the question embedding and the answer.
+      OLLAMA_URL: http://host.docker.internal:11434
       VECTOR_STORE: ${VECTOR_STORE:-pgvector}
       QDRANT_URL: http://qdrant:6333
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "8000:8080"
     depends_on:
