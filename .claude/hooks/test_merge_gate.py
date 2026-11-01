@@ -19,9 +19,11 @@ def files(*names: str):
     return fn
 
 
-def test_claude_md_is_refused_with_file_name() -> None:
-    reason = merge_gate.check("gh pr merge 9 --auto --squash", files("CLAUDE.md", "README.md"))
-    assert reason and "CLAUDE.md" in reason
+def test_claude_dir_is_refused_with_file_name() -> None:
+    reason = merge_gate.check(
+        "gh pr merge 9 --auto --squash", files(".claude/settings.json", "README.md")
+    )
+    assert reason and ".claude" in reason
 
 
 def test_api_only_pr_passes() -> None:
@@ -50,8 +52,6 @@ def test_admin_always_refused(command: str) -> None:
     "path",
     [
         "infra/main.tf",
-        ".github/workflows/ci.yml",
-        ".github/CODEOWNERS",
         "apps/api/Dockerfile",
         ".env",
         "certs/server.pem",
@@ -95,6 +95,8 @@ def test_every_codeowners_path_is_refused_by_the_hook() -> None:
         "apps/web/pnpm-lock.yaml",
         "compose.yaml",
         "docker-compose.yml",
+        "CLAUDE.md",
+        ".github/workflows/ci.yml",
     ],
 )
 def test_ordinary_paths_pass(path: str) -> None:
@@ -102,7 +104,7 @@ def test_ordinary_paths_pass(path: str) -> None:
 
 
 def test_chained_command_is_still_checked() -> None:
-    assert merge_gate.check("cd repo && gh pr merge 9 --squash", files("CLAUDE.md"))
+    assert merge_gate.check("cd repo && gh pr merge 9 --squash", files("infra/main.tf"))
 
 
 def test_non_merge_commands_pass_without_calling_gh() -> None:
@@ -152,7 +154,7 @@ def test_pr_selector_and_repo_are_passed_on() -> None:
     ],
 )
 def test_wrapped_merge_forms_are_checked(command: str) -> None:
-    assert merge_gate.check(command, files("CLAUDE.md"))
+    assert merge_gate.check(command, files("infra/main.tf"))
 
 
 @pytest.mark.parametrize(

@@ -21,17 +21,15 @@ import subprocess
 import sys
 from collections.abc import Callable, Sequence
 
-# Paths the user merges (CLAUDE.md, "Pull requests"). Any `.github/` file is refused: the
-# risk-based exception there needs a judgment call, so the user (or a reviewer reading the
-# diff) decides. Lockfiles are not listed: CLAUDE.md lets the reviewer merge a lockfile-only
-# change after listing each changed package. README.md and other docs are ordinary files: the
-# reviewer checks their claims against the code (CLAUDE.md). Compose files are not listed: the
-# local dev stack is not deploy config (CLAUDE.md), and the reviewer checks it adds no secret
-# value or unauthenticated port.
+# Paths the user merges (CLAUDE.md, "Pull requests"). `.github/` files are not listed: the
+# risk line there (secrets, deploy or release steps) needs a judgment call, so the reviewer
+# reading the diff decides. Lockfiles are not listed: CLAUDE.md lets the reviewer merge a
+# lockfile-only change after listing each changed package. README.md and other docs are
+# ordinary files: the reviewer checks their claims against the code (CLAUDE.md). Compose files
+# are not listed: the local dev stack is not deploy config (CLAUDE.md), and the reviewer checks
+# it adds no secret value or unauthenticated port.
 USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
-    (r"^CLAUDE\.md$", "CLAUDE.md"),
     (r"^\.claude/", "agent settings and hooks (.claude/)"),
-    (r"^\.github/", "anything under .github/"),
     (r"^infra/", "infra/"),
     (r"(^|/)Dockerfile[^/]*$", "deploy config (Dockerfile)"),
     (r"(^|/)\.dockerignore$", "deploy config (.dockerignore)"),
