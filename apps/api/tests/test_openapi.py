@@ -4,13 +4,14 @@ from collections.abc import AsyncIterator, Sequence
 from pathlib import Path
 from uuid import uuid4
 
+import pytest
 from pydantic import TypeAdapter
 
 from book_rag.providers import LLM, FakeLLM, Message
 from book_rag.retrieval import RetrievedChunk
 from book_rag_api.main import create_app
 from book_rag_api.models import Book
-from book_rag_api.openapi import render
+from book_rag_api.openapi import document_app, render
 from book_rag_api.routers.chat import Citation, DoneEvent, ErrorEvent, TokenEvent, answer_events
 
 # The model for each event's payload, by event name.
@@ -26,9 +27,16 @@ COMMITTED = Path(__file__).resolve().parents[3] / "apps" / "web" / "src" / "api"
 
 
 def test_committed_document_matches_the_api() -> None:
-    assert COMMITTED.read_text(encoding="utf-8") == render(create_app()), (
+    assert COMMITTED.read_text(encoding="utf-8") == render(document_app()), (
         "apps/web/src/api/openapi.json is out of date: run `pnpm gen:api` and commit the result"
     )
+
+
+def test_document_ignores_the_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    before = render(document_app())
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://other:other@db.example/other")
+    monkeypatch.setenv("VECTOR_STORE", "not-a-store")  # invalid: Settings() would raise
+    assert render(document_app()) == before
 
 
 def test_document_describes_the_chat_stream_events() -> None:
