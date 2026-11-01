@@ -1,10 +1,16 @@
-# Paths the owner merges (see CLAUDE.md, "Pull requests"). With "Require review from
-# Code Owners" on in the protect-main ruleset, GitHub enforces this list.
+# The paths the owner merges (see CLAUDE.md, "Pull requests"). This file is the list: with
+# "Require review from Code Owners" on in the protect-main ruleset, GitHub enforces it, using
+# the copy on the base branch. .claude/hooks/merge_gate.py refuses agent merges of the same
+# paths, and test_merge_gate.py fails when a path here is not refused there.
+# Lockfiles are not listed: CLAUDE.md lets the reviewer merge them by risk.
 /CLAUDE.md          @phuchaitt3
+/.claude/           @phuchaitt3
 /.github/           @phuchaitt3
 /infra/             @phuchaitt3
 /README.md          @phuchaitt3
 /LICENSE            @phuchaitt3
 /SECURITY.md        @phuchaitt3
-/uv.lock            @phuchaitt3
-/pnpm-lock.yaml     @phuchaitt3
+**/Dockerfile*      @phuchaitt3
+**/.dockerignore    @phuchaitt3
+**/neon.ts          @phuchaitt3
+**/vercel.json      @phuchaitt3
