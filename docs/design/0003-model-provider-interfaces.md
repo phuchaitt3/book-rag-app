@@ -81,7 +81,7 @@ These answers come from the owner's review ([#36](https://github.com/phuchaitt3/
 **What leaks through anyway:**
 - the embedding dimension (the ADR's Consequences);
 - limits: how many texts one `embed` call may take (the worker's `embed_batch_size`, 32), the longest input, and the LLM's context window. None is in the contract, so the caller must know the current model's limits;
-- errors: the worker decides whether to retry by matching the Ollama adapter's exceptions (`urllib`'s `HTTPError` and `URLError`, in `is_transient` in `apps/worker/src/book_rag_worker/ingest.py`). An adapter on another HTTP library raises other types, which the worker would treat as fatal.
+- errors: the worker decides whether to retry by matching the Ollama adapter's exceptions (`urllib`'s `HTTPError` and `URLError`, in `is_transient` in `apps/worker/src/book_rag_worker/ingest.py`). It also accepts Python's own `ConnectionError` and `TimeoutError`, but an adapter on another HTTP library raises that library's types, so most of its failures (a 429, a 5xx) would be treated as fatal.
 
 ## Where timeouts, retries and rate limits belong
 
