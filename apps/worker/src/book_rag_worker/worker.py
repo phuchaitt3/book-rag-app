@@ -5,12 +5,14 @@ from dataclasses import dataclass
 from datetime import timedelta
 
 import procrastinate
+from qdrant_client import AsyncQdrantClient
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from book_rag.providers import Embedder, FakeEmbedder, OllamaEmbedder
 from book_rag_api.db import create_engine
 from book_rag_api.jobs import INGEST_TASK, create_queue
 from book_rag_api.models import EMBEDDING_DIM
+from book_rag_api.qdrant_index import QdrantVectorIndex
 from book_rag_api.storage import S3Storage
 from book_rag_worker.config import WorkerSettings
 from book_rag_worker.ingest import (
@@ -43,6 +45,14 @@ def create_embedder(settings: WorkerSettings) -> Embedder:
     raise ValueError(f"unknown embedding provider {settings.embedding_provider!r}")
 
 
+def create_index(settings: WorkerSettings) -> QdrantVectorIndex | None:
+    """The Qdrant copy of the vectors, only when the experiment is switched on (ADR 0008)."""
+    if settings.vector_store != "qdrant":
+        return None
+    client = AsyncQdrantClient(url=settings.qdrant_url)
+    return QdrantVectorIndex(client, settings.qdrant_collection)
+
+
 @dataclass(frozen=True, slots=True)
 class Worker:
     app: procrastinate.App
@@ -60,6 +70,7 @@ def build_worker(
     engine = create_engine(settings.database_url)
     embedder = embedder or create_embedder(settings)
     read_pdf = read_pdf or create_reader(settings)
+    index = create_index(settings)
 
     # Only transient errors are retried; a bad PDF fails at once (run_ingestion records it).
     retry = procrastinate.RetryStrategy(
@@ -75,6 +86,7 @@ def build_worker(
             embedder,
             settings.embed_batch_size,
             attempts=context.job.attempts,
+            index=index,
         )
 
     @app.periodic(cron="*/5 * * * *")

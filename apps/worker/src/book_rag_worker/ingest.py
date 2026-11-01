@@ -16,6 +16,7 @@ from book_rag.chunking import chunk_book
 from book_rag.parsing import ParsedBook, parse_pdf
 from book_rag.providers import Embedder
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, Section
+from book_rag_api.qdrant_index import QdrantVectorIndex
 
 log = logging.getLogger(__name__)
 
@@ -145,6 +146,7 @@ async def _run(
     read_pdf: ReadPdf,
     embedder: Embedder,
     batch_size: int,
+    index: QdrantVectorIndex | None = None,
 ) -> None:
     if embedder.dimension != EMBEDDING_DIM:
         raise ValueError(f"embedder dimension {embedder.dimension} != column {EMBEDDING_DIM}")
@@ -181,6 +183,8 @@ async def _run(
         await session.commit()
 
     await _set_stage(engine, job_id, "embed")
+    if index is not None:
+        await index.delete_book(book_id)  # a re-run replaced the chunk ids, so drop the old points
     for start in range(0, len(to_embed), batch_size):
         batch = to_embed[start : start + batch_size]
         vectors = await embedder.embed([text for _, text in batch])
@@ -190,6 +194,12 @@ async def _run(
                 [{"id": id_, "embedding": v} for (id_, _), v in zip(batch, vectors, strict=True)],
             )
             await session.commit()  # commit per batch so the API shows progress
+        if index is not None:
+            # After the commit, so Qdrant never holds a vector Postgres lost. An upsert is
+            # idempotent, so a retried batch is harmless.
+            await index.upsert(
+                book_id, [(id_, v) for (id_, _), v in zip(batch, vectors, strict=True)]
+            )
 
     async with AsyncSession(engine) as session:
         await session.execute(
@@ -207,6 +217,7 @@ async def run_ingestion(
     embedder: Embedder,
     batch_size: int = 32,
     attempts: int = MAX_RETRIES,
+    index: QdrantVectorIndex | None = None,
 ) -> None:
     """Run one job to the end. A failure is recorded on the job (status `failed`), not raised.
 
@@ -215,7 +226,7 @@ async def run_ingestion(
     the default means no retries are left.
     """
     try:
-        await _run(engine, job_id, read_pdf, embedder, batch_size)
+        await _run(engine, job_id, read_pdf, embedder, batch_size, index)
     except Exception as exc:
         message = f"{type(exc).__name__}: {exc}"
         if is_transient(exc) and attempts < MAX_RETRIES:

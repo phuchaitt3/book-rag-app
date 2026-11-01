@@ -6,13 +6,15 @@ from uuid import UUID, uuid4
 import pytest
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import text
+from qdrant_client import AsyncQdrantClient
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from testcontainers.community.postgres import PostgresContainer
 
 from book_rag.providers import FakeEmbedder, FakeReranker
 from book_rag.retrieval import HybridRetriever
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk
+from book_rag_api.qdrant_index import QdrantChunkSearcher, QdrantVectorIndex, vector_counts
 from book_rag_api.retrieval import SqlChunkSearcher, or_query, supports_iterative_scan
 
 ALEMBIC_INI = Path(__file__).parents[1] / "alembic.ini"
@@ -177,3 +179,30 @@ async def test_vector_search_returns_the_books_chunks_when_only_the_hnsw_index_a
         found = await SqlChunkSearcher(sessions).vector_search(own_book.id, query, 30)
         await engine.dispose()
     assert {c.text for c in found} == set(own_texts)
+
+
+async def test_qdrant_searcher_reads_vectors_from_qdrant_and_text_from_postgres(
+    seeded: tuple[async_sessionmaker[AsyncSession], UUID],
+) -> None:
+    sessions, book_id = seeded
+    embedder = FakeEmbedder(EMBEDDING_DIM)
+    async with sessions() as session:
+        rows = (await session.scalars(select(Chunk).where(Chunk.book_id == book_id))).all()
+        items = [(c.id, c.embedding) for c in rows]
+    index = QdrantVectorIndex(AsyncQdrantClient(location=":memory:"), "chunks")
+    other_book = uuid4()
+    await index.upsert(book_id, items)
+    await index.upsert(other_book, [(uuid4(), items[0][1])])  # another book's point never appears
+    assert await vector_counts(sessions, index, book_id) == (3, 3)
+
+    searcher = QdrantChunkSearcher(index, sessions, SqlChunkSearcher(sessions))
+    [vector] = await embedder.embed([TEXTS[1]])
+    found = await searcher.vector_search(book_id, vector, 2)
+    assert found[0].text == TEXTS[1]
+    assert len(found) == 2
+    assert found[0].page == 2
+    assert (await searcher.text_search(book_id, "Hà Nội thủ đô?", 10))[0].text == TEXTS[2]
+
+    await index.delete_book(book_id)
+    assert await index.count(book_id) == 0
+    assert await index.count(other_book) == 1

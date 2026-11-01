@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Literal
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -35,6 +36,10 @@ class Settings(BaseSettings):
     embedding_provider: str = "ollama"
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://localhost:11434"
+    # Experiment (ADR 0008, #114): "pgvector" (default) or "qdrant". EXPIRES 2026-12-15, see #120.
+    vector_store: Literal["pgvector", "qdrant"] = "pgvector"
+    qdrant_url: str = "http://localhost:6333"
+    qdrant_collection: str = "chunks"
 
 
 @lru_cache
