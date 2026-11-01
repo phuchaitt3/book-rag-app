@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 
 import { API_URL, type Book, type Citation, chatPath } from "@/api/client";
 import { readEvents } from "@/api/stream";
@@ -15,9 +15,19 @@ export function Chat({ book }: { book: Book }) {
   const update = (patch: (turn: Turn) => Turn) =>
     setTurns((all) => [...all.slice(0, -1), patch(all[all.length - 1])]);
 
-  async function ask(form: FormData) {
-    const question = String(form.get("question") ?? "").trim();
+  // Not a form `action`: React runs an action as a transition, so the `setTurns` calls below that
+  // follow an `await` were applied before the one that adds the turn. They hit an empty list and
+  // showed "undefined" plus the tokens, with no question, until the whole stream had ended.
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const question = String(new FormData(form).get("question") ?? "").trim();
     if (!question) return;
+    form.reset();
+    void ask(question);
+  }
+
+  async function ask(question: string) {
     setTurns((all) => [...all, { question, answer: "", citations: [] }]);
     setBusy(true);
     abort.current = new AbortController();
@@ -66,7 +76,7 @@ export function Chat({ book }: { book: Book }) {
           {turn.citations.length > 0 && <CitationChips citations={turn.citations} />}
         </article>
       ))}
-      <form action={ask} className="flex gap-2">
+      <form onSubmit={onSubmit} className="flex gap-2">
         <input
           name="question"
           required
