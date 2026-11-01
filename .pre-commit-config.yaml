@@ -2,6 +2,13 @@
 repos:
   - repo: local
     hooks:
+      # gitleaks skips git-ignored .env files by name, so refuse a committed one here instead.
+      - id: no-committed-env
+        name: no committed .env file
+        entry: ".env files hold secrets and must not be committed (only .env.example may be)"
+        language: fail
+        files: (^|/)\.env(\..+)?$
+        exclude: (^|/)\.env\.example$
       - id: ruff-check
         name: ruff check
         entry: uv run ruff check --fix
