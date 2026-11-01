@@ -25,6 +25,8 @@ _CLOSING = re.compile(
     re.I,
 )
 _LINE_START = re.compile(r"^[ \t>*+-]*$")
+# The opening quote of a one-line `--body "Closes #n"` also reads as a deliberate closing line.
+_BODY_OPEN = re.compile(r"(?:^|\s)(?:--body|-b)(?:=|\s+)[\"']$")
 
 
 def check(command: str) -> str | None:
@@ -34,7 +36,8 @@ def check(command: str) -> str | None:
     bad: list[str] = []
     for match in _CLOSING.finditer(command):
         line_start = command.rfind("\n", 0, match.start()) + 1
-        if not _LINE_START.match(command[line_start : match.start()]):
+        before = command[line_start : match.start()]
+        if not (_LINE_START.match(before) or _BODY_OPEN.search(before)):
             bad.append(match.group(0))
     if not bad:
         return None
@@ -42,7 +45,8 @@ def check(command: str) -> str | None:
     return (
         f"GitHub closes the issue when this PR merges because of {found}, even in a sentence "
         'such as "does not close #n". Write "Part of #n" for work that does not finish the '
-        'issue, or put "Closes #n" alone at the start of a line when it should close it.'
+        'issue, or put "Closes #n" at the start of a line (or right after the opening quote of '
+        "--body) when it should close it."
     )
 
 

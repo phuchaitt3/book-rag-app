@@ -22,7 +22,7 @@ _spec.loader.exec_module(pr_close_guard)
     ],
 )
 def test_closing_word_inside_a_sentence_is_refused(body: str) -> None:
-    command = f'gh pr create --title t --body "{body}"'
+    command = f'gh pr create --title t --body "Note. {body}"'
     reason = pr_close_guard.check(command)
     assert reason and "Part of #n" in reason
 
@@ -53,3 +53,19 @@ def test_bullet_closing_line_passes() -> None:
 
 def test_gh_with_flags_before_subcommand_is_checked() -> None:
     assert pr_close_guard.check('gh -R o/r pr edit 4 --body "does not close #4"')
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        'gh pr create --title t --body "Closes #82. Adds the thing."',
+        "gh pr create --title t -b 'Closes #82'",
+        'gh pr create --body="Closes #82"',
+    ],
+)
+def test_closing_keyword_right_after_the_body_quote_passes(command: str) -> None:
+    assert pr_close_guard.check(command) is None
+
+
+def test_keyword_later_in_a_one_line_body_is_still_refused() -> None:
+    assert pr_close_guard.check('gh pr create --body "This does not close #82"')
