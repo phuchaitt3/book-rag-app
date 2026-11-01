@@ -42,7 +42,7 @@ Today's size cannot show where a dedicated store pays off. A second arm would lo
 
 ## Results
 
-Measured 2026-11-01 on one real book (164 chunks) and a 100-book copy corpus; method, tables and limits are in [the measurement note](../design/qdrant-experiment-results.md). Criterion 2 (p95 no worse than pgvector) is **not met** (49.6 against 46.0 ms at one book; 49.5 against 36.3 ms at 100 books); criteria 3 and 4 are met; criterion 1 is not informative at this size and needs the scale-up arm. Expected outcome on the decision date: **Rejected**, unless the scale-up arm shows pgvector degrading. No criterion was changed after the run.
+Measured 2026-11-01 on one real book (164 chunks) and a 100-book copy corpus; method, tables and limits are in [the measurement note](../design/qdrant-experiment-results.md). Criterion 2 (p95 no worse than pgvector) is **not met** (49.6 against 46.0 ms at one book; 49.5 against 36.3 ms at 100 books); criteria 3 and 4 are met; criterion 1 is not informative at this size and needs the scale-up arm. Expected outcome on the decision date: **Rejected**, unless the scale-up arm shows pgvector degrading. No criterion was changed after the run. A local scale-up run reached 200,000 synthetic chunks (both stores: recall 1.00, p99 under 60 ms) and could not go further on the 15.9 GB laptop; whether pgvector degrades at 1M or more is still open (see the note).
 
 ## Decision date and what happens at it
 
