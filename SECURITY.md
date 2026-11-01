@@ -8,7 +8,7 @@ Never commit secrets. `.env` files are git-ignored, and secret scanning with pus
 
 ## If a secret leaks
 
-This repository is public, so assume a pushed secret is already copied. In this order:
+This repository is public, so assume a pushed secret is already copied. In this order (standard: GitHub secret-scanning guidance and Microsoft's DevSecOps guidance say to revoke or rotate first and clean history afterwards, checked 2026-11-01):
 
 1. **Revoke or rotate it** at the provider (Neon, Vercel, an API key page). Do this first: deleting the file or rewriting history does not undo the exposure.
 2. Check the provider's usage and billing for activity you did not make.
