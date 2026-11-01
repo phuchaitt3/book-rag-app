@@ -45,7 +45,12 @@ USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
 )
 
 _SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|&\n()`]")
-_API_MERGE = re.compile(r"\bgh(\.exe)?\s+api\b.*(merge|enablePullRequestAutoMerge)", re.I | re.S)
+# A merge through the API: the REST `.../pulls/N/merge` endpoint, or the GraphQL mutations.
+# Words like `mergedAt` or `merged:>=` in a read-only query must not match.
+_API_MERGE = re.compile(
+    r"\bgh(\.exe)?\s+api\b.*(/merge\b|mergePullRequest|enablePullRequestAutoMerge)",
+    re.I | re.S,
+)
 # `gh` flags before the subcommand that take a value (`gh -R o/r pr merge 9`).
 _GH_GLOBAL_VALUE_FLAGS = {"-R", "--repo", "--hostname"}
 # Flags of `gh pr merge` that take a value, so the value is not mistaken for the PR argument.
