@@ -41,12 +41,23 @@ def render(app: FastAPI) -> str:
     return json.dumps(app.openapi(), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
 
 
-def main() -> None:
+def document_app() -> FastAPI:
+    """The app as the document sees it: built from defaults, never from the environment.
+
+    The document does not depend on settings, so a stray `DATABASE_URL` or an invalid value in
+    the developer's or CI's environment can neither change nor break it. `model_construct` skips
+    reading the environment and `.env` files; nothing connects until the app starts.
+    """
+    from book_rag_api.config import Settings
     from book_rag_api.main import create_app
 
+    return create_app(Settings.model_construct())
+
+
+def main() -> None:
     if len(sys.argv) != 2:
         sys.exit("usage: python -m book_rag_api.openapi <output file>")
-    Path(sys.argv[1]).write_text(render(create_app()), encoding="utf-8", newline="\n")
+    Path(sys.argv[1]).write_text(render(document_app()), encoding="utf-8", newline="\n")
 
 
 if __name__ == "__main__":
