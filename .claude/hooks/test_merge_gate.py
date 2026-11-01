@@ -169,6 +169,18 @@ def test_gh_api_merge_forms_refused(command: str) -> None:
     assert merge_gate.check(command, files("a.py"))
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "gh api repos/o/r/pulls/9 --jq .merged_at",
+        "gh api graphql -f query='{repository{pullRequests{nodes{mergedAt}}}}'",
+        "gh api 'search/issues?q=is:merged'",
+    ],
+)
+def test_read_only_gh_api_queries_pass(command: str) -> None:
+    assert merge_gate.check(command, files("a.py")) is None
+
+
 def test_repo_flag_before_subcommand_is_skipped() -> None:
     seen: list[list[str]] = []
 
