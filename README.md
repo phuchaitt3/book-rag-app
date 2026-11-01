@@ -80,6 +80,8 @@ pnpm stack:down    # stop and remove everything (data is kept in the db-data vol
 pnpm stack:dev     # same as up, in the foreground with hot reload (docker compose watch)
 ```
 
+A one-shot `migrate` service creates the database tables before the API and worker start; run `docker compose run --rm migrate` to apply new migrations to an existing volume.
+
 The home page shows whether the API is reachable. `GET /healthz` is liveness; `GET /readyz` also checks the database.
 
 ## Checks
