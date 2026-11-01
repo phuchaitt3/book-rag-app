@@ -38,10 +38,12 @@ The decision rests on these assumptions: the three kinds of model are all the ap
 - Vectors from different embedding models are not comparable, and nothing enforces that the API uses the model the worker ingested with; the settings only document it.
 - There is no real reranker yet: `HybridRetriever` accepts one, but only `FakeReranker` exists, so the API runs without reranking. A self-hosted one needs a model runtime and a lockfile change.
 - Provider selection is a pair of `if` chains (`main.py`, `worker.py`); a third provider should move it into one shared function.
-- The contracts have no error vocabulary: a timeout, a rate limit and a malformed reply are all plain exceptions, so callers cannot tell a retryable failure from a fatal one ([#53](https://github.com/phuchaitt3/book-rag-app/issues/53)).
+- The contracts have no error vocabulary: a timeout, a rate limit and a malformed reply are all plain exceptions, so callers cannot tell a retryable failure from a fatal one ([#53](https://github.com/phuchaitt3/book-rag-app/issues/53)). Meanwhile the worker retries by matching the Ollama adapter's `urllib` exceptions, so a hosted adapter would get no retries.
+- Vendor limits (batch size, longest input, context window) are not in the contracts; callers must know them.
 - Next steps as load grows, in order: a hosted adapter on an async HTTP client (the Ollama adapter holds a thread per streamed answer, which caps concurrent answers at a few dozen); timeouts and retries with an error vocabulary in the contract; a rate limiter and a queue in front of the LLM. The `LLM` contract may also grow options and usage counts for cost tracking. The analysis is in the study note.
 
 ## Change log
 
 - 2026-10-31: rewritten to the full template with options, consequences and the 1000x analysis ([#36](https://github.com/phuchaitt3/book-rag-app/issues/36)).
 - 2026-11-01: rewritten to the short template; terms, options in depth and the 1000x analysis moved to the study note, the decision unchanged ([#128](https://github.com/phuchaitt3/book-rag-app/issues/128)).
+- 2026-11-01: owner review: named the worker's dependence on the Ollama adapter's exception types and the vendor limits the contracts do not carry; what the interface hides and where retries belong are in the study note ([#36](https://github.com/phuchaitt3/book-rag-app/issues/36)).
