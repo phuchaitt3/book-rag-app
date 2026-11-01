@@ -5,6 +5,9 @@ a `book_id` payload, and it can be rebuilt from `chunks`. EXPIRY 2026-12-15: del
 the `VECTOR_STORE` setting and the Compose service, or promote it by a superseding ADR.
 """
 
+import asyncio
+import logging
+import time
 from collections.abc import Sequence
 from uuid import UUID
 
@@ -15,6 +18,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from book_rag.retrieval import RetrievedChunk
 from book_rag_api.models import EMBEDDING_DIM, Chunk
 from book_rag_api.retrieval import SqlChunkSearcher
+
+log = logging.getLogger(__name__)
 
 _BOOK_ID = "book_id"
 
@@ -126,6 +131,61 @@ class QdrantChunkSearcher:
 
     async def text_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
         return await self._text_searcher.text_search(book_id, query, limit)
+
+
+class ShadowChunkSearcher:
+    """Returns the Postgres result and, in the background, compares it with Qdrant's.
+
+    One log line per search: the overlap of the two result lists and the time each took
+    (`vector_search shadow ...`). An error on the Qdrant path is logged and never reaches the
+    caller. The Qdrant search starts after the Postgres one returned, so the two timings do not
+    disturb each other.
+    """
+
+    def __init__(self, primary: SqlChunkSearcher, shadow: QdrantChunkSearcher) -> None:
+        self._primary = primary
+        self._shadow = shadow
+        self._tasks: set[asyncio.Task[None]] = set()  # keeps the tasks alive until they finish
+
+    async def vector_search(
+        self, book_id: UUID, embedding: Sequence[float], limit: int
+    ) -> list[RetrievedChunk]:
+        started = time.perf_counter()
+        result = await self._primary.vector_search(book_id, embedding, limit)
+        primary_ms = (time.perf_counter() - started) * 1000
+        task = asyncio.create_task(self._compare(book_id, embedding, limit, result, primary_ms))
+        self._tasks.add(task)
+        task.add_done_callback(self._tasks.discard)
+        return result
+
+    async def _compare(
+        self,
+        book_id: UUID,
+        embedding: Sequence[float],
+        limit: int,
+        expected: list[RetrievedChunk],
+        primary_ms: float,
+    ) -> None:
+        try:
+            started = time.perf_counter()
+            found = await self._shadow.vector_search(book_id, embedding, limit)
+            shadow_ms = (time.perf_counter() - started) * 1000
+        except Exception:
+            log.exception("vector_search shadow: the Qdrant search failed (book %s)", book_id)
+            return
+        overlap = len({c.id for c in expected} & {c.id for c in found})
+        log.info(
+            "vector_search shadow book=%s limit=%d overlap=%d/%d pgvector_ms=%.1f qdrant_ms=%.1f",
+            book_id,
+            limit,
+            overlap,
+            len(expected),
+            primary_ms,
+            shadow_ms,
+        )
+
+    async def text_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
+        return await self._primary.text_search(book_id, query, limit)
 
 
 async def vector_counts(

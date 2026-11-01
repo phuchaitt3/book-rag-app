@@ -21,7 +21,11 @@ from book_rag_api.jobs import create_queue
 from book_rag_api.jobs import router as jobs_router
 from book_rag_api.models import EMBEDDING_DIM
 from book_rag_api.openapi import add_stream_events
-from book_rag_api.qdrant_index import QdrantChunkSearcher, QdrantVectorIndex
+from book_rag_api.qdrant_index import (
+    QdrantChunkSearcher,
+    QdrantVectorIndex,
+    ShadowChunkSearcher,
+)
 from book_rag_api.retrieval import SqlChunkSearcher
 from book_rag_api.routers.chat import router as chat_router
 from book_rag_api.storage import ObjectStorage, S3Storage
@@ -104,12 +108,13 @@ def create_app(
 
 def _searcher(settings: Settings, sessions: async_sessionmaker[AsyncSession]) -> ChunkSearcher:
     sql = SqlChunkSearcher(sessions)
-    if settings.vector_store == "qdrant":
-        index = QdrantVectorIndex(
-            AsyncQdrantClient(url=settings.qdrant_url), settings.qdrant_collection
-        )
-        return QdrantChunkSearcher(index, sessions, sql)
-    return sql
+    if settings.vector_store == "pgvector":
+        return sql
+    index = QdrantVectorIndex(
+        AsyncQdrantClient(url=settings.qdrant_url), settings.qdrant_collection
+    )
+    qdrant = QdrantChunkSearcher(index, sessions, sql)
+    return qdrant if settings.vector_store == "qdrant" else ShadowChunkSearcher(sql, qdrant)
 
 
 def _llm(settings: Settings) -> LLM:

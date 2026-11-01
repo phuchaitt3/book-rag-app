@@ -36,8 +36,9 @@ class Settings(BaseSettings):
     embedding_provider: str = "ollama"
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://localhost:11434"
-    # Experiment (ADR 0008, #114): "pgvector" (default) or "qdrant". EXPIRES 2026-12-15, see #120.
-    vector_store: Literal["pgvector", "qdrant"] = "pgvector"
+    # Experiment (ADR 0008): "pgvector" (default), "qdrant", or "shadow" (pgvector answers and
+    # Qdrant is compared in the log). EXPIRES 2026-12-15, see #120.
+    vector_store: Literal["pgvector", "qdrant", "shadow"] = "pgvector"
     qdrant_url: str = "http://localhost:6333"
     qdrant_collection: str = "chunks"
 

@@ -47,7 +47,7 @@ def create_embedder(settings: WorkerSettings) -> Embedder:
 
 def create_index(settings: WorkerSettings) -> QdrantVectorIndex | None:
     """The Qdrant copy of the vectors, only when the experiment is switched on (ADR 0008)."""
-    if settings.vector_store != "qdrant":
+    if settings.vector_store == "pgvector":
         return None
     client = AsyncQdrantClient(url=settings.qdrant_url)
     return QdrantVectorIndex(client, settings.qdrant_collection)
