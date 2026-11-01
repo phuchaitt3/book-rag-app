@@ -56,11 +56,18 @@ def test_admin_always_refused(command: str) -> None:
         ".env",
         "certs/server.pem",
         "apps/api/src/book_rag_api/auth/session.py",
-        ".claude/hooks/merge_gate.py",
+        ".claude/settings.json",
     ],
 )
 def test_user_merge_paths_refused(path: str) -> None:
     assert merge_gate.check("gh pr merge 5 --squash", files("apps/api/x.py", path))
+
+
+@pytest.mark.parametrize(
+    "path", [".claude/hooks/merge_gate.py", ".claude/hooks/test_merge_gate.py"]
+)
+def test_claude_hook_code_is_left_to_the_reviewer(path: str) -> None:
+    assert merge_gate.check("gh pr merge 5 --squash", files(path)) is None
 
 
 def _codeowners_sample_paths() -> list[str]:
