@@ -53,7 +53,7 @@ Arm 1 runs twice here. v1 kept the original questions in its index, so a rewrite
 - Arm 4 − arm 3 (does fusion beat bge-m3 alone?): +3.3 (1.5–5.1) on the 1,000 dataset questions, +1 (−4 to +6) within context, **−2 (−9 to +5) without context**.
 - Arm 4 − BM25 alone: +8 (3–13) within, +15 (8–22) without.
 - Arm 5 − arm 4, Hit@1: +13 (4–22) within, +12 (4–20) without.
-- Arm 4 − arm 1 as v1 ran it: +30 (21–40) within, +16 (6–26) without.
+- Arm 4 − arm 1 with the originals removed: +65 within, +64 without (difference of means; the paired interval is reported from the next run on, see #175). Against arm 1 as v1 ran it the gap looks smaller, +30 (21–40) and +16 (6–26), only because of the leak below.
 
 **What it shows**
 
