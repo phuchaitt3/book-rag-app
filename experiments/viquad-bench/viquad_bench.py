@@ -1,17 +1,23 @@
-"""Retrieval benchmark on UIT-ViQuAD2.0: the v1 design against the v2 design (issue #171).
+"""Retrieval benchmark on UIT-ViQuAD2.0: the v1 design against the v2 design (#171, #173).
 
 Runs as a Kaggle script kernel (GPU, internet on); see README.md next to this file.
-It downloads the dataset and models at run time and writes only numbers to
-results.json: no dataset text leaves the kernel.
+It downloads the dataset, v1's question files and the models at run time and writes
+only numbers to results.json: no dataset text leaves the kernel.
 
 Arms (retrieval only, no LLM):
-  1 v1: distiluse-base-multilingual-cased-v1 over a question index; the held-out
-    questions are removed from the index and a hit returns that question's passage.
+  1 v1: distiluse-base-multilingual-cased-v1 over a question index; a hit returns that
+    question's passage.
   2 distiluse over passages.
   3 bge-m3 over passages.
   4 bge-m3 + BM25 fused with reciprocal rank fusion, k=60, 30 candidates per list
     (as packages/rag/src/book_rag/retrieval/hybrid.py does).
   5 arm 4 + bge-reranker-v2-m3 over the fused top 20.
+
+Query sets:
+  heldout_1000  1,000 dataset questions (seed 171), all removed from arm 1's index (#171).
+  v1_reworded_within_context, v1_reworded_without_context  v1's two sets of 100 questions
+    rewritten by gpt-4o-mini, with and without the passage shown (#173). Arm 1 runs twice:
+    with the original questions left in its index, as v1 ran it, and with them removed.
 """
 
 import json
@@ -20,15 +26,17 @@ import platform
 import re
 import time
 from collections import Counter
+from typing import Any
 
 import numpy as np
+import pandas as pd
 import torch
 from datasets import load_dataset
 from scipy import sparse
 from sentence_transformers import CrossEncoder, SentenceTransformer
 
 SEED = 171
-N_QUERIES = 1000
+N_HELDOUT = 1000
 TOP_K = 10
 CANDIDATES = 30  # per search path before fusion, as HybridRetriever's default
 RRF_K = 60  # as book_rag.retrieval.fusion.RRF_K
@@ -36,6 +44,14 @@ RERANK_DEPTH = 20
 N_BOOT = 2000
 SKIP_RERANK = os.environ.get("SKIP_RERANK") == "1"
 OUT = os.environ.get("OUT_DIR", "/kaggle/working")
+V1_EVAL = (
+    "https://raw.githubusercontent.com/phuchaitt3/book-rag/HEAD/Source_Code/Evaluation/"
+    "100_samples_similar_{kind}/input_files/queries_100_uniques_similar_dataset_{kind}.xlsx"
+)
+V1_SETS = {
+    "v1_reworded_within_context": "within_context",
+    "v1_reworded_without_context": "without_context",
+}
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 T_START = time.perf_counter()
@@ -46,26 +62,26 @@ def log(msg: str) -> None:
     print(f"[{time.perf_counter() - T_START:7.1f}s] {msg}", flush=True)
 
 
-# ---------------------------------------------------------------- data
+# ---------------------------------------------------------------- corpus
 log(f"device={DEVICE} gpu={torch.cuda.get_device_name(0) if DEVICE == 'cuda' else '-'}")
 ds = load_dataset("taidng/UIT-ViQuAD2.0")
 split_sizes = {name: len(ds[name]) for name in ds}
 log(f"splits {split_sizes}")
-train = ds["train"]
 
 
-def answerable(row: dict) -> bool:
+def answerable(row: dict[str, Any]) -> bool:
     if "is_impossible" in row and row["is_impossible"] is not None:
         return not bool(row["is_impossible"])
     return bool(row["answers"]["text"])
 
 
-rows = [r for r in train if answerable(r)]
 passage_ids: dict[str, int] = {}
 passages: list[str] = []
 questions: list[str] = []
 gold: list[int] = []
-for r in rows:
+for r in ds["train"]:
+    if not answerable(r):
+        continue
     ctx = r["context"]
     if ctx not in passage_ids:
         passage_ids[ctx] = len(passages)
@@ -74,16 +90,45 @@ for r in rows:
     gold.append(passage_ids[ctx])
 gold_arr = np.array(gold)
 log(f"answerable questions={len(questions)} passages={len(passages)}")
+question_rows: dict[tuple[str, int], list[int]] = {}
+for i, (q, g) in enumerate(zip(questions, gold, strict=True)):
+    question_rows.setdefault((q.strip(), g), []).append(i)
+
+
+# ---------------------------------------------------------------- query sets
+query_sets: dict[str, dict[str, Any]] = {}
 
 rng = np.random.default_rng(SEED)
-query_idx = np.sort(rng.choice(len(questions), size=N_QUERIES, replace=False))
-query_gold = gold_arr[query_idx]
-query_texts = [questions[i] for i in query_idx]
-index_mask = np.ones(len(questions), dtype=bool)
-index_mask[query_idx] = False
-# Passages that keep at least one question in arm 1's index: the rest cannot be found.
-reachable = set(gold_arr[index_mask].tolist())
-arm1_reachable = float(np.mean([g in reachable for g in query_gold]))
+held = np.sort(rng.choice(len(questions), size=N_HELDOUT, replace=False))
+query_sets["heldout_1000"] = {
+    "texts": [questions[i] for i in held],
+    "gold": gold_arr[held],
+    "arm1_variants": {"1_v1_distiluse_question_index": held},
+}
+
+for name, kind in V1_SETS.items():
+    df = pd.read_excel(V1_EVAL.format(kind=kind))
+    original_col = f"original_question_{kind}"
+    texts, golds, originals, unmatched = [], [], [], 0
+    for ctx, q, orig in zip(df["context"], df["question"], df[original_col], strict=True):
+        pid = passage_ids.get(ctx, passage_ids.get(str(ctx).strip()))
+        if pid is None:
+            unmatched += 1
+            continue
+        texts.append(str(q).strip())
+        golds.append(pid)
+        originals += question_rows.get((str(orig).strip(), pid), [])
+    query_sets[name] = {
+        "texts": texts,
+        "gold": np.array(golds),
+        "arm1_variants": {
+            "1_v1_index_keeps_originals": np.array([], dtype=int),
+            "1_v1_originals_removed": np.array(sorted(set(originals)), dtype=int),
+        },
+        "unmatched_passages": unmatched,
+        "originals_found": len(set(originals)),
+    }
+    log(f"{name}: {len(texts)} queries, {unmatched} unmatched, {len(set(originals))} originals")
 
 
 # ---------------------------------------------------------------- helpers
@@ -120,44 +165,45 @@ def tokens(text: str) -> list[str]:
     return TOKEN.findall(text.lower())
 
 
-def bm25_scores(docs: list[str], queries: list[str], k1: float = 1.2, b: float = 0.75):
-    vocab: dict[str, int] = {}
-    data, ind, ptr, lengths = [], [], [0], []
-    for d in docs:
-        counts = Counter(tokens(d))
-        lengths.append(sum(counts.values()))
-        for t, c in counts.items():
-            ind.append(vocab.setdefault(t, len(vocab)))
-            data.append(c)
-        ptr.append(len(ind))
-    tf = sparse.csr_matrix(
-        (np.array(data, dtype=np.float32), ind, ptr), shape=(len(docs), len(vocab))
-    )
-    dl = np.array(lengths, dtype=np.float32)
-    df = np.bincount(tf.indices, minlength=len(vocab))
-    idf = np.log(1 + (len(docs) - df + 0.5) / (df + 0.5)).astype(np.float32)
-    norm = k1 * (1 - b + b * dl / dl.mean())
-    w = tf.tocoo()
-    vals = w.data * (k1 + 1) / (w.data + norm[w.row]) * idf[w.col]
-    weights = sparse.csr_matrix((vals, (w.row, w.col)), shape=tf.shape)
-    q_data, q_ind, q_ptr = [], [], [0]
-    for q in queries:
-        for t, c in Counter(tokens(q)).items():
-            if t in vocab:
-                q_ind.append(vocab[t])
-                q_data.append(c)
-        q_ptr.append(len(q_ind))
-    qm = sparse.csr_matrix(
-        (np.array(q_data, dtype=np.float32), q_ind, q_ptr), shape=(len(queries), len(vocab))
-    )
-    return np.asarray((qm @ weights.T).todense())
+class BM25:
+    def __init__(self, docs: list[str], k1: float = 1.2, b: float = 0.75) -> None:
+        self.vocab: dict[str, int] = {}
+        data, ind, ptr, lengths = [], [], [0], []
+        for d in docs:
+            counts = Counter(tokens(d))
+            lengths.append(sum(counts.values()))
+            for t, c in counts.items():
+                ind.append(self.vocab.setdefault(t, len(self.vocab)))
+                data.append(c)
+            ptr.append(len(ind))
+        shape = (len(docs), len(self.vocab))
+        tf = sparse.csr_matrix((np.array(data, dtype=np.float32), ind, ptr), shape=shape)
+        dl = np.array(lengths, dtype=np.float32)
+        df = np.bincount(tf.indices, minlength=len(self.vocab))
+        idf = np.log(1 + (len(docs) - df + 0.5) / (df + 0.5)).astype(np.float32)
+        norm = k1 * (1 - b + b * dl / dl.mean())
+        w = tf.tocoo()
+        vals = w.data * (k1 + 1) / (w.data + norm[w.row]) * idf[w.col]
+        self.weights = sparse.csr_matrix((vals, (w.row, w.col)), shape=shape)
+
+    def scores(self, queries: list[str]) -> np.ndarray:
+        data, ind, ptr = [], [], [0]
+        for q in queries:
+            for t, c in Counter(tokens(q)).items():
+                if t in self.vocab:
+                    ind.append(self.vocab[t])
+                    data.append(c)
+            ptr.append(len(ind))
+        shape = (len(queries), len(self.vocab))
+        qm = sparse.csr_matrix((np.array(data, dtype=np.float32), ind, ptr), shape=shape)
+        return np.asarray((qm @ self.weights.T).todense())
 
 
-def per_query(rankings: list[list[int]]) -> dict[str, np.ndarray]:
+def per_query(rankings: list[list[int]], gold_ids: np.ndarray) -> dict[str, np.ndarray]:
     ranks = []
-    for ranked, g in zip(rankings, query_gold, strict=True):
-        ranked = ranked[:TOP_K]
-        ranks.append(ranked.index(g) + 1 if g in ranked else 0)
+    for ranked, g in zip(rankings, gold_ids, strict=True):
+        top = list(ranked[:TOP_K])
+        ranks.append(top.index(g) + 1 if g in top else 0)
     r = np.array(ranks)
     return {
         "hit@1": (r == 1).astype(float),
@@ -167,10 +213,7 @@ def per_query(rankings: list[list[int]]) -> dict[str, np.ndarray]:
     }
 
 
-boot_idx = np.random.default_rng(SEED + 1).integers(0, N_QUERIES, size=(N_BOOT, N_QUERIES))
-
-
-def ci(values: np.ndarray) -> dict[str, float]:
+def ci(values: np.ndarray, boot_idx: np.ndarray) -> dict[str, float]:
     means = values[boot_idx].mean(axis=1)
     lo, hi = np.percentile(means, [2.5, 97.5])
     return {
@@ -180,101 +223,114 @@ def ci(values: np.ndarray) -> dict[str, float]:
     }
 
 
-arms: dict[str, list[list[int]]] = {}
-
-# ---------------------------------------------------------------- arms 1 and 2: distiluse
+# ---------------------------------------------------------------- indexes (built once)
 t0 = time.perf_counter()
 distiluse = SentenceTransformer(
     "sentence-transformers/distiluse-base-multilingual-cased-v1", device=DEVICE
 )
-q_all = encode(distiluse, questions, 256)
-q_emb = q_all[query_idx]
-idx_rows = np.flatnonzero(index_mask)
-sims = q_emb @ q_all[idx_rows].T
-top_q = top_n(sims, 200)
-arm1 = []
-for row in top_q:
-    seen: list[int] = []
-    for j in row:
-        p = int(gold_arr[idx_rows[j]])
-        if p not in seen:
-            seen.append(p)
-            if len(seen) == TOP_K:
-                break
-    arm1.append(seen)
-arms["1_v1_distiluse_question_index"] = arm1
-timings["arm1_s"] = time.perf_counter() - t0
-log("arm 1 done")
-
-t0 = time.perf_counter()
+q_index = encode(distiluse, questions, 256)
 p_dist = encode(distiluse, passages, 128)
-arms["2_distiluse_passages"] = top_n(q_emb @ p_dist.T, TOP_K).tolist()
-timings["arm2_s"] = time.perf_counter() - t0
-del distiluse
-log("arm 2 done")
+timings["distiluse_index_s"] = time.perf_counter() - t0
+log("distiluse indexes done")
 
-# ---------------------------------------------------------------- arms 3 and 4: bge-m3 (+ BM25)
 t0 = time.perf_counter()
-bge = SentenceTransformer(
-    "BAAI/bge-m3",
-    device=DEVICE,
-    model_kwargs={"torch_dtype": torch.float16} if DEVICE == "cuda" else {},
-)
+fp16 = {"torch_dtype": torch.float16} if DEVICE == "cuda" else {}
+bge = SentenceTransformer("BAAI/bge-m3", device=DEVICE, model_kwargs=fp16)
 bge.max_seq_length = 1024
 p_bge = encode(bge, passages, 16)
-q_bge = encode(bge, query_texts, 64)
-dense_scores = q_bge @ p_bge.T
-dense_top = top_n(dense_scores, CANDIDATES).tolist()
-arms["3_bge_m3_passages"] = [r[:TOP_K] for r in dense_top]
-timings["arm3_s"] = time.perf_counter() - t0
-del bge
-log("arm 3 done")
+timings["bge_m3_index_s"] = time.perf_counter() - t0
+log("bge-m3 index done")
 
 t0 = time.perf_counter()
-bm25_top = top_n(bm25_scores(passages, query_texts), CANDIDATES).tolist()
-fused = [rrf([d, s]) for d, s in zip(dense_top, bm25_top, strict=True)]
-arms["4_bge_m3_bm25_rrf"] = [f[:TOP_K] for f in fused]
-arms["bm25_only"] = [r[:TOP_K] for r in bm25_top]
-timings["arm4_extra_s"] = time.perf_counter() - t0
-log("arm 4 done")
+bm25 = BM25(passages)
+timings["bm25_index_s"] = time.perf_counter() - t0
 
-# ---------------------------------------------------------------- arm 5: reranker
+reranker = None
 if not SKIP_RERANK:
-    t0 = time.perf_counter()
     reranker = CrossEncoder(
-        "BAAI/bge-reranker-v2-m3",
-        max_length=512,
-        device=DEVICE,
-        model_kwargs={"torch_dtype": torch.float16} if DEVICE == "cuda" else {},
+        "BAAI/bge-reranker-v2-m3", max_length=512, device=DEVICE, model_kwargs=fp16
     )
-    arm5 = []
-    for q, f in zip(query_texts, fused, strict=True):
-        cand = f[:RERANK_DEPTH]
-        s = reranker.predict(
-            [(q, passages[c]) for c in cand], batch_size=RERANK_DEPTH, show_progress_bar=False
-        )
-        arm5.append([cand[i] for i in np.argsort(-np.asarray(s))][:TOP_K])
-    arms["5_rrf_plus_bge_reranker_top20"] = arm5
-    timings["arm5_s"] = time.perf_counter() - t0
-    log("arm 5 done")
 
-# ---------------------------------------------------------------- report
-metrics = {name: per_query(r) for name, r in arms.items()}
-report = {name: {m: ci(v) for m, v in ms.items()} for name, ms in metrics.items()}
-a1, a4 = metrics["1_v1_distiluse_question_index"], metrics["4_bge_m3_bm25_rrf"]
-paired = {m: ci(a4[m] - a1[m]) for m in ("hit@1", "hit@5", "mrr@10")}
+
+def arm1(q_emb: np.ndarray, excluded: np.ndarray) -> list[list[int]]:
+    keep = np.ones(len(questions), dtype=bool)
+    keep[excluded] = False
+    rows = np.flatnonzero(keep)
+    out = []
+    for row in top_n(q_emb @ q_index[rows].T, 200):
+        seen: list[int] = []
+        for j in row:
+            p = int(gold_arr[rows[j]])
+            if p not in seen:
+                seen.append(p)
+                if len(seen) == TOP_K:
+                    break
+        out.append(seen)
+    return out
+
+
+# ---------------------------------------------------------------- evaluate each set
+report: dict[str, Any] = {}
+for set_name, qs in query_sets.items():
+    t0 = time.perf_counter()
+    texts, set_gold = qs["texts"], qs["gold"]
+    arms: dict[str, list[list[int]]] = {}
+    q_dist = encode(distiluse, texts, 256)
+    for arm_name, excluded in qs["arm1_variants"].items():
+        arms[arm_name] = arm1(q_dist, excluded)
+    arms["2_distiluse_passages"] = top_n(q_dist @ p_dist.T, TOP_K).tolist()
+    dense_top = top_n(encode(bge, texts, 64) @ p_bge.T, CANDIDATES).tolist()
+    arms["3_bge_m3_passages"] = [r[:TOP_K] for r in dense_top]
+    bm25_top = top_n(bm25.scores(texts), CANDIDATES).tolist()
+    arms["bm25_only"] = [r[:TOP_K] for r in bm25_top]
+    fused = [rrf([d, s]) for d, s in zip(dense_top, bm25_top, strict=True)]
+    arms["4_bge_m3_bm25_rrf"] = [f[:TOP_K] for f in fused]
+    timings[f"{set_name}_arms1to4_s"] = time.perf_counter() - t0
+    if reranker is not None:
+        t0 = time.perf_counter()
+        arm5 = []
+        for q, f in zip(texts, fused, strict=True):
+            cand = f[:RERANK_DEPTH]
+            s = reranker.predict(
+                [(q, passages[c]) for c in cand],
+                batch_size=RERANK_DEPTH,
+                show_progress_bar=False,
+            )
+            arm5.append([cand[i] for i in np.argsort(-np.asarray(s))][:TOP_K])
+        arms["5_rrf_plus_bge_reranker_top20"] = arm5
+        timings[f"{set_name}_arm5_s"] = time.perf_counter() - t0
+
+    n = len(texts)
+    boot = np.random.default_rng(SEED + 1).integers(0, n, size=(N_BOOT, n))
+    metrics = {name: per_query(r, set_gold) for name, r in arms.items()}
+    first_arm1 = next(iter(qs["arm1_variants"]))
+    pairs = {
+        "arm4_minus_" + first_arm1: ("4_bge_m3_bm25_rrf", first_arm1),
+        "arm4_minus_arm3": ("4_bge_m3_bm25_rrf", "3_bge_m3_passages"),
+        "arm4_minus_bm25": ("4_bge_m3_bm25_rrf", "bm25_only"),
+    }
+    if "5_rrf_plus_bge_reranker_top20" in metrics:
+        pairs["arm5_minus_arm4"] = ("5_rrf_plus_bge_reranker_top20", "4_bge_m3_bm25_rrf")
+    report[set_name] = {
+        "n_queries": n,
+        **{k: v for k, v in qs.items() if k in ("unmatched_passages", "originals_found")},
+        "arms": {a: {m: ci(v, boot) for m, v in ms.items()} for a, ms in metrics.items()},
+        "paired": {
+            label: {m: ci(metrics[a][m] - metrics[b][m], boot) for m in ("hit@1", "hit@5")}
+            for label, (a, b) in pairs.items()
+        },
+    }
+    log(f"{set_name} done")
+
 results = {
-    "issue": 171,
+    "issues": [171, 173],
     "dataset": "taidng/UIT-ViQuAD2.0, train split, answerable rows",
     "split_sizes": split_sizes,
     "n_questions": len(questions),
     "n_passages": len(passages),
-    "n_queries": N_QUERIES,
     "seed": SEED,
     "bootstrap": {"resamples": N_BOOT, "interval": "95% percentile"},
-    "arm1_gold_passage_reachable": round(arm1_reachable, 4),
-    "arms": report,
-    "arm4_minus_arm1_paired": paired,
+    "query_sets": report,
     "timings_s": {k: round(v, 1) for k, v in timings.items()},
     "total_s": round(time.perf_counter() - T_START, 1),
     "hardware": {
