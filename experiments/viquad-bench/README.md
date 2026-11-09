@@ -1,4 +1,4 @@
-# UIT-ViQuAD2.0 retrieval benchmark (issues #171, #173)
+# UIT-ViQuAD2.0 retrieval benchmark (issues #171, #173, #175)
 
 `viquad_bench.py` compares the v1 retrieval design (distiluse over a question index) with the v2 design (bge-m3 over passages, fused with BM25 by RRF, k=60) and the steps between them. Results: [docs/benchmarks/viquad-retrieval.md](../../docs/benchmarks/viquad-retrieval.md).
 
@@ -17,3 +17,5 @@ Replace `<your-kaggle-user>` in the `id` of `kernel-metadata.json` with your Kag
 **Fixed choices:** train split, answerable rows only, contexts deduplicated by exact text; 1,000 held-out questions drawn with seed 171; 2,000 bootstrap resamples over queries (seed 172). Arm 1 removes all 1,000 held-out questions from its index, as v1 removed its held-out rows.
 
 **Query sets:** the 1,000 held-out dataset questions (#171), and v1's two sets of 100 questions that gpt-4o-mini rewrote with and without the passage shown (#173). The script reads those from the public v1 repository (`phuchaitt3/book-rag`, `Source_Code/Evaluation/`) at run time. On the rewritten sets arm 1 runs twice: with the original questions left in its index, as v1 ran it, and with them removed.
+
+**Leakage guard (#175):** every query records the dataset question it came from. Before any model runs, the script checks each arm-1 index for those source questions and for the query's own text, and stops if it finds either in a variant not marked as a leaky reference; it also reports near-copies (cosine ≥ 0.95). `CHECK_ONLY=1` runs only the data loading and this check, on CPU, in under a minute. The rule behind it is in [docs/benchmarks/README.md](../../docs/benchmarks/README.md).
