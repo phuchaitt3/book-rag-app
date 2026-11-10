@@ -1,6 +1,7 @@
 from book_rag.providers.base import LLM, Embedder, Message, Reranker
 from book_rag.providers.fake import FakeEmbedder, FakeLLM, FakeReranker
 from book_rag.providers.ollama import OllamaEmbedder, OllamaLLM
+from book_rag.providers.tei import TeiReranker
 
 __all__ = [
     "LLM",
@@ -12,4 +13,5 @@ __all__ = [
     "OllamaEmbedder",
     "OllamaLLM",
     "Reranker",
+    "TeiReranker",
 ]

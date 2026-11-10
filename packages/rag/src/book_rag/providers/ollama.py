@@ -1,7 +1,7 @@
 """Local providers backed by an Ollama server (standard library only, no new dependencies).
 
-A self-hosted reranker (bge-reranker-v2-m3) needs a model runtime, so it waits for the
-dependency change that adds one; hosted providers come after the eval (M3).
+Ollama has no rerank route, so the reranker runs in its own server (`providers/tei.py`,
+ADR 0009).
 """
 
 from __future__ import annotations

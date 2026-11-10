@@ -36,7 +36,7 @@ The decision rests on these assumptions: the three kinds of model are all the ap
 - Easier: local and production differ only in configuration; load tests measure this system, not a vendor, at no cost; a provider can be swapped or self-hosted without touching callers.
 - The interface does not hide the embedding dimension. The vector column is fixed at 1024 (`EMBEDDING_DIM`); `OllamaEmbedder` raises on a mismatch, but a model of another size means a migration and re-embedding every chunk.
 - Vectors from different embedding models are not comparable, and nothing enforces that the API uses the model the worker ingested with; the settings only document it.
-- There is no real reranker yet: `HybridRetriever` accepts one, but only `FakeReranker` exists, so the API runs without reranking. A self-hosted one needs a model runtime and a lockfile change.
+- The reranker runs locally only: `TeiReranker` calls a Hugging Face TEI server in Compose, so no model runtime enters the lockfile; production runs without reranking until hosting is decided ([ADR 0009](0009-reranker-local-tei-service.md)).
 - Provider selection is a pair of `if` chains (`main.py`, `worker.py`); a third provider should move it into one shared function.
 - The contracts have no error vocabulary: a timeout, a rate limit and a malformed reply are all plain exceptions, so callers cannot tell a retryable failure from a fatal one ([#53](https://github.com/phuchaitt3/book-rag-app/issues/53)). Meanwhile the worker retries by matching the Ollama adapter's `urllib` exceptions, so a hosted adapter's HTTP errors would not be retried.
 - Vendor limits (batch size, longest input, context window) are not in the contracts; callers must know them.
@@ -47,3 +47,4 @@ The decision rests on these assumptions: the three kinds of model are all the ap
 - 2026-10-31: rewritten to the full template with options, consequences and the 1000x analysis ([#36](https://github.com/phuchaitt3/book-rag-app/issues/36)).
 - 2026-11-01: rewritten to the short template; terms, options in depth and the 1000x analysis moved to the study note, the decision unchanged ([#128](https://github.com/phuchaitt3/book-rag-app/issues/128)).
 - 2026-11-01: owner review: named the worker's dependence on the Ollama adapter's exception types and the vendor limits the contracts do not carry; what the interface hides and where retries belong are in the study note ([#36](https://github.com/phuchaitt3/book-rag-app/issues/36)).
+- 2026-11-10: the reranker consequence now points to ADR 0009 (a TEI service, local only) ([#184](https://github.com/phuchaitt3/book-rag-app/issues/184)).

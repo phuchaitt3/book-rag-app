@@ -12,7 +12,17 @@ from qdrant_client import AsyncQdrantClient
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
-from book_rag.providers import LLM, Embedder, FakeEmbedder, FakeLLM, OllamaEmbedder, OllamaLLM
+from book_rag.providers import (
+    LLM,
+    Embedder,
+    FakeEmbedder,
+    FakeLLM,
+    FakeReranker,
+    OllamaEmbedder,
+    OllamaLLM,
+    Reranker,
+    TeiReranker,
+)
 from book_rag.retrieval import ChunkSearcher, HybridRetriever
 from book_rag_api.books import router as books_router
 from book_rag_api.config import Settings, get_settings
@@ -47,8 +57,10 @@ def create_app(
     queue: procrastinate.App | None = None,
     llm: LLM | None = None,
     embedder: Embedder | None = None,
+    reranker: Reranker | None = None,
 ) -> FastAPI:
-    """Tests pass a fake `storage`, an in-memory `queue`, and fake `llm` and `embedder`."""
+    """Tests pass a fake `storage`, an in-memory `queue`, and fake `llm`, `embedder` and
+    `reranker`."""
     settings = settings or get_settings()
 
     @asynccontextmanager
@@ -61,6 +73,8 @@ def create_app(
         app.state.retriever = HybridRetriever(
             _searcher(settings, async_sessionmaker(app.state.engine)),
             embedder or _embedder(settings),
+            reranker or _reranker(settings),
+            rerank_depth=settings.rerank_depth,
         )
         try:
             async with app.state.queue.open_async():
@@ -131,6 +145,14 @@ def _embedder(settings: Settings) -> Embedder:
     if settings.embedding_provider == "ollama":
         return OllamaEmbedder(settings.embedding_model, EMBEDDING_DIM, settings.ollama_url)
     raise ValueError(f"unknown embedding provider {settings.embedding_provider!r}")
+
+
+def _reranker(settings: Settings) -> Reranker | None:
+    if settings.reranker_provider == "none":
+        return None
+    if settings.reranker_provider == "fake":
+        return FakeReranker()
+    return TeiReranker(settings.reranker_url, settings.rerank_timeout)
 
 
 def _s3_storage(settings: Settings) -> S3Storage:

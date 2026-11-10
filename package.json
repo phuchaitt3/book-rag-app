@@ -5,7 +5,8 @@
   "scripts": {
     "stack:up": "docker compose up -d --build",
     "stack:dev": "docker compose up --build --watch",
-    "stack:down": "docker compose down",
+    "stack:up:rerank": "docker compose -f compose.yaml -f compose.reranker.yaml up -d --build",
+    "stack:down": "docker compose -f compose.yaml -f compose.reranker.yaml down",
     "gen:api": "uv run python -m book_rag_api.openapi apps/web/src/api/openapi.json && pnpm --filter web gen:types",
     "dev:web": "pnpm --filter web dev",
     "build:web": "pnpm --filter web build",
