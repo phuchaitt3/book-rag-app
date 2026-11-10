@@ -16,7 +16,8 @@ uv run --with openai python experiments/book-testset/generate.py --limit 10
 uv run --with openai python experiments/book-testset/generate.py --n 220 --unanswerable 25 --budget 5
 
 # 3. Score retrieval. CHECK_ONLY=1 runs only the leakage check; SKIP_RERANK=1 skips arm 5.
-uv run --with sentence-transformers --with scipy --with torch \
+#    QUESTIONS picks the question file; the published results use the checked set in git.
+QUESTIONS=experiments/book-testset/questions.jsonl uv run --with sentence-transformers --with scipy --with torch \
   --index https://download.pytorch.org/whl/cu128 \
   python experiments/book-testset/bench.py
 ```
@@ -35,4 +36,11 @@ uv run --with sentence-transformers --with scipy --with torch \
 
 **Leakage guard** (#175, adapted). The index holds only the book's chunks, so a query can leak only by copying chunk text. Before any model loads, `bench.py` stops if any chunk contains a query's normalised text or its source question's. It also reports near-copies (cosine ≥ 0.95 to a chunk) and the mean share of a query's words found in its gold chunk.
 
-**Licence of the outputs.** The book is in the public domain, so the questions, which quote it, could be committed. They are not committed yet: they stay in `data/` until the full set is checked by hand.
+**The checked set** (#178). [questions.jsonl](questions.jsonl) is the generated set after two checks, recorded separately in [review.md](review.md):
+
+1. **LLM review (Claude):** one agent read all 215 seen/blind pairs against their evidence and source chunks, flagged 24 on four criteria (the evidence answers the question; the question stands alone; the answer adds nothing from outside the book; the rewrite keeps the meaning), and drew 10 unflagged pairs with seed 178 as a control sample.
+2. **Human check (the user):** confirmed all 24 flags and found all 10 controls sound. 7 pairs were dropped and 17 fixed; changed rows carry `"edited": "#178 review"`.
+
+The result is 208 seen, 208 blind and 25 unanswerable questions. The unanswerable questions were not checked. On fixed rows, `closed_book_correct` is still the verdict for the original question. `data/questions.jsonl` (git-ignored) keeps the raw generated set.
+
+**Licence of the outputs.** The book is in the public domain in Vietnam (the author died in 1953), so the questions, which quote it, are committed.

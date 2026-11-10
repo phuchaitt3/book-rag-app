@@ -1,58 +1,61 @@
 # Retrieval on a book: Việt Nam sử lược, Quyển I
 
-Issue #177, run 2026-11-10. Scripts and rerun steps: [experiments/book-testset/](../../experiments/book-testset/README.md).
+Issue #177; rerun 2026-11-10 on the checked question set (#178). Scripts, the question set and rerun steps: [experiments/book-testset/](../../experiments/book-testset/README.md).
 
-**Result.** On the app's own chunks of one history book, the v2 design (bge-m3 + BM25, fused by RRF) puts a gold chunk in the top 5 for **92.6%** of 215 questions written from the chunks (95% CI 88.8–95.8). On the same questions rewritten without the chunk in view, it reaches **89.3%** (85.1–93.0). The bge-reranker-v2-m3 cross-encoder over the fused top 20 is the largest single gain: **+21 to +24 points Hit@1** on every set. Unlike on ViQuAD's reworded questions (#173), fusion keeps a measurable gain over bge-m3 alone on the rewritten set: **+5.6 points Hit@5** (0.9–10.2).
+**Result.** On the app's own chunks of one history book, the v2 design (bge-m3 + BM25, fused by RRF) puts a gold chunk in the top 5 for **91.8%** of 208 checked questions written from the chunks (95% CI 88.0–95.2). On the same questions rewritten without the chunk in view, it reaches **89.4%** (85.1–93.3). The bge-reranker-v2-m3 cross-encoder over the fused top 20 is the largest single gain: **+21 to +23 points Hit@1** on every set. Fusion's gain over bge-m3 alone on the rewritten set is **+4.8 points Hit@5** (0.0–9.6): smaller than the first run's and at the edge of the interval.
 
 ## Setup
 
 - **Corpus:** *Việt Nam sử lược*, Quyển I (Trần Trọng Kim, public domain), from the proofread vi.wikisource transcription. It is chunked by `book_rag.chunking.chunk_book` at the app's defaults (1,200 characters, 150 overlap): 28 sections, 365k characters, **359 chunks**.
-- **Questions:** written by `deepseek-v4-pro` with thinking off, from 219 chunks drawn with seed 177 across the chapters.
-  - **seen:** the model reads one chunk and writes a question, an answer, and the sentence that answers it. 215 questions; 4 were dropped because the sentence was not found in the chunk.
-  - **blind:** the same 215 questions, rewritten by the model without the chunk in view.
-  - **retrieval needed:** the 123 of 215 questions the model could not answer without the book.
-  - **unanswerable:** 25 questions with no gold chunk, counted but not scored here.
+- **Questions:** written by `deepseek-v4-pro` with thinking off, from 219 chunks drawn with seed 177 across the chapters, then checked (below).
+  - **seen:** the model reads one chunk and writes a question, an answer, and the sentence that answers it. 215 were generated; 4 more were dropped at generation because the sentence was not found in the chunk.
+  - **blind:** the same questions, rewritten by the model without the chunk in view.
+  - **retrieval needed:** the 120 of 208 questions the model could not answer without the book.
+  - **unanswerable:** 25 questions with no gold chunk, counted but not scored here, and not checked.
+- **The check** (#178; record in [review.md](../../experiments/book-testset/review.md)): an LLM review (Claude) read all 215 pairs against their evidence and source chunks and flagged 24, and the user then checked every flag and a control sample of 10 unflagged pairs (seed 178). The user confirmed all 24 flags and found all 10 controls sound. 7 pairs were dropped (no answer in the book, figurative answers, duplicates) and 17 fixed (unnamed rulers, rewrites that reversed or changed the question, one answer with a fact from outside its chunk). **208 pairs remain**, committed as [questions.jsonl](../../experiments/book-testset/questions.jsonl).
 - **Gold:** the source chunk plus any chunk holding the same evidence sentence (the overlap between chunks), 1.13 chunks per question on average. A hit is any gold chunk in the top k.
-- **Leakage guard:** no question, and no blind question's source, appears inside any chunk; there are no near-copies (cosine ≥ 0.95). Questions share 79% (seen) and 66% (blind) of their words with their gold chunk.
+- **Leakage guard:** no question, and no blind question's source, appears inside any chunk; there are no near-copies (cosine ≥ 0.95). Questions share 78% (seen) and 67% (blind) of their words with their gold chunk.
 - **Intervals:** 95% percentile bootstrap, 2,000 resamples over questions. Differences between arms use paired resamples.
-- **Hardware:** GTX 1660 Ti (6 GB), fp32, torch 2.11, Python 3.12. The run took 16 minutes, 93% of it in the reranker.
-- **Cost:** generation took 921 DeepSeek calls and cost at most **$0.65**, counted at peak-hour prices, including two smoke tests.
+- **Hardware:** GTX 1660 Ti (6 GB), fp32, torch 2.11, Python 3.12. The run took 16 minutes, most of it in the reranker.
+- **Cost:** generation took 921 DeepSeek calls and cost at most **$0.65**, counted at peak-hour prices, including two smoke tests. The check made no API calls.
 
 ## Results
 
-Hit@k in percent, 95% CI in brackets. 215 questions per set.
+Hit@k in percent, 95% CI in brackets. 208 questions per set.
 
 | Arm | Design | seen Hit@1 | seen Hit@5 | blind Hit@1 | blind Hit@5 |
 |---|---|---|---|---|---|
-| 2 | distiluse (v1's model), chunk index | 3.3 (0.9–5.6) | 12.1 (7.9–16.3) | 2.3 (0.5–4.7) | 8.8 (5.6–13.0) |
-| 3 | bge-m3, chunk index | 61.9 (54.9–68.4) | 87.0 (82.3–90.7) | 60.0 (53.0–66.5) | 83.7 (78.6–88.4) |
-| — | BM25 alone (reference) | 77.7 (72.1–83.3) | 92.1 (88.4–95.3) | 62.3 (55.8–68.8) | 87.0 (82.3–91.2) |
-| 4 | v2: bge-m3 + BM25, RRF k=60 | 69.8 (63.7–75.8) | 92.6 (88.8–95.8) | 62.8 (56.3–69.3) | 89.3 (85.1–93.0) |
-| 5 | arm 4 + bge-reranker-v2-m3, top 20 | **92.1 (88.4–95.3)** | **98.6 (96.7–100)** | **84.2 (79.1–88.8)** | **94.9 (91.6–97.7)** |
+| 2 | distiluse (v1's model), chunk index | 2.4 (0.5–4.8) | 12.0 (7.7–16.8) | 1.9 (0.5–3.8) | 10.1 (6.3–14.4) |
+| 3 | bge-m3, chunk index | 62.5 (56.3–68.8) | 87.5 (83.2–91.8) | 61.1 (54.8–67.3) | 84.6 (79.8–89.4) |
+| — | BM25 alone (reference) | 76.4 (70.7–82.2) | 91.8 (88.0–95.2) | 63.0 (56.3–69.7) | 86.1 (81.3–90.9) |
+| 4 | v2: bge-m3 + BM25, RRF k=60 | 70.7 (64.9–76.9) | 91.8 (88.0–95.2) | 63.9 (57.7–70.2) | 89.4 (85.1–93.3) |
+| 5 | arm 4 + bge-reranker-v2-m3, top 20 | **92.8 (89.4–96.2)** | **99.0 (97.6–100)** | **85.1 (80.3–89.9)** | **95.2 (92.3–98.1)** |
 
-MRR@10: arm 4 0.804 (seen) and 0.746 (blind); arm 5 0.949 and 0.892. Hit@10 and the `*_retrieval_needed` sets are in `results.json`. On the 123 questions that need retrieval, every arm is within 4 points of its full-set figure, so the filter changes no conclusion.
+MRR@10: arm 4 0.806 (seen) and 0.754 (blind); arm 5 0.955 and 0.897. Hit@10 and the `*_retrieval_needed` sets are in `results.json`. On the 120 questions that need retrieval, every arm is within 5 points of its full-set figure, so the filter changes no conclusion.
 
 **Paired differences:**
 
 | Comparison | seen Hit@1 | seen Hit@5 | blind Hit@1 | blind Hit@5 |
 |---|---|---|---|---|
-| Arm 4 − arm 3 (fusion vs bge-m3 alone) | +7.9 (2.8–13.0) | +5.6 (1.9–9.8) | +2.8 (−2.3 to 7.9) | +5.6 (0.9–10.2) |
-| Arm 4 − BM25 alone | **−7.9 (−13.5 to −2.3)** | +0.5 (−2.8 to 3.7) | +0.5 (−5.6 to 6.5) | +2.3 (−1.9 to 6.5) |
-| Arm 5 − arm 4 (reranker) | **+22.3 (16.7–28.4)** | +6.0 (2.8–9.8) | **+21.4 (15.3–27.4)** | +5.6 (1.9–9.8) |
+| Arm 4 − arm 3 (fusion vs bge-m3 alone) | +8.2 (3.4–13.5) | +4.3 (1.0–8.2) | +2.9 (−2.4 to 8.7) | +4.8 (0.0–9.6) |
+| Arm 4 − BM25 alone | **−5.8 (−11.5 to 0.0)** | 0.0 (−3.8 to 3.4) | +1.0 (−4.3 to 6.7) | +3.4 (−1.0 to 7.7) |
+| Arm 5 − arm 4 (reranker) | **+22.1 (16.8–27.4)** | +7.2 (3.8–10.6) | **+21.2 (15.4–26.9)** | +5.8 (1.9–9.6) |
+
+**What the check changed.** Against the first run on the 215 unchecked pairs (this note's version from #177, in git history), the reranker's gain and the v2 headline figures moved by less than one point. The two smaller effects weakened: fusion's gain over bge-m3 on the blind set fell from +5.6 (0.9–10.2) to +4.8 (0.0–9.6) Hit@5, and BM25's lead over fusion on seen questions fell from 7.9 (2.3–13.5) to 5.8 (0.0–11.5) Hit@1. Both intervals now touch zero.
 
 ## What it shows
 
 - **The reranker is the step that matters most,** as on ViQuAD: about +22 points Hit@1 on both sets, and it lifts Hit@5 to 95–99%. It is also most of the cost: about 2 seconds per question on this GPU, which the next retrieval design has to weigh against latency.
-- **Fusion helps more on a book than on ViQuAD's reworded questions.** On ViQuAD, fusion's gain over bge-m3 alone disappeared once questions stopped reusing the passage's words (#173). Here it holds at +5.6 Hit@5 on the blind set. Questions about a history book carry proper names (rulers, places, dynasties) that the rewrite keeps, and BM25 matches those exactly.
-- **On questions that copy the text, RRF costs BM25 its top rank:** BM25 alone beats fusion by 7.9 points Hit@1 on the seen set. At Hit@5 they tie, and on the blind set the gap is gone. An RRF weight that leans toward BM25, or a reranker after fusion (arm 5), recovers this. The fusion weight is the question this set was built to answer next (#177).
-- **v1's embedding model fails on Vietnamese book chunks:** distiluse finds the gold chunk in the top 5 for 12% of questions, against 87% for bge-m3.
+- **Fusion may help more on a book than on ViQuAD's reworded questions, but the evidence is thin.** On ViQuAD, fusion's gain over bge-m3 alone disappeared once questions stopped reusing the passage's words (#173). Here it is +4.8 Hit@5 on the blind set, with an interval whose lower end is zero. Questions about a history book carry proper names (rulers, places, dynasties) that the rewrite keeps, and BM25 matches those exactly. A larger set or stronger rewrites (#178) would settle it.
+- **On questions that copy the text, RRF may cost BM25 its top rank:** BM25 alone leads fusion by 5.8 points Hit@1 on the seen set, with an interval that reaches zero. At Hit@5 they tie, and on the blind set the gap is gone. An RRF weight that leans toward BM25 (#180), or a reranker after fusion (arm 5), would recover it.
+- **v1's embedding model fails on Vietnamese book chunks:** distiluse finds the gold chunk in the top 5 for 12% of questions, against 88% for bge-m3.
 
 ## Limits
 
-- **The rewrites are light.** Blind questions still share 66% of their words with the gold chunk, against 79% for seen ones. The generator ran without thinking to fit a $2 budget, and it kept names and much of the wording. This is a milder test of wording change than ViQuAD's `without_context` set, so BM25's strength here partly reflects the overlap.
+- **The rewrites are light.** Blind questions still share 67% of their words with the gold chunk, against 78% for seen ones. The generator ran without thinking to fit a $2 budget, and it kept names and much of the wording. This is a milder test of wording change than ViQuAD's `without_context` set, so BM25's strength here partly reflects the overlap.
 - **Synthetic questions.** An LLM wrote every question. A synthetic set ranks retrievers in line with human questions but overstates absolute scores (standard: standards/rag-retrieval-eval-without-benchmark, checked 2026-11-09). Read the comparisons between arms, not the absolute numbers.
+- **The check is one pass.** One person checked the 24 flagged pairs and 10 controls; the other 181 pairs had only the LLM review. The control sample found no miss, but 10 pairs bound the miss rate only loosely. 16 blind rewrites written in the check were not generated by the model, and on fixed rows `closed_book_correct` still refers to the original question.
 - **The closed-book filter is loose.** Without thinking, the model failed some questions it would know with thinking on, for example the Lê Lai story. So the `*_retrieval_needed` sets keep some questions answerable from general knowledge.
 - **One book, 359 chunks.** In a library of many books there are more near-misses per question, and absolute hit rates will fall.
-- **Unanswerable questions lack variety:** all 25 ask about later archaeology, because the prompt's first example steered them there. They are not used here; a later answer-quality test needs a more varied set.
-- **No person has checked the questions.** The agent that built the set (Claude) read 20 question pairs in its own session: 18 looked sound, one was too vague to stand alone, and one answer added a fact from outside the book. That is one LLM reviewing another LLM's output, not a human check. The questions stay out of git until the set is checked (#178).
+- **Unanswerable questions lack variety and were not checked:** all 25 ask about later archaeology, because the prompt's first example steered them there. They are not used here; a later answer-quality test needs a more varied set.
 - **BM25, not Postgres full-text,** as in the ViQuAD note. One run, one seed.
