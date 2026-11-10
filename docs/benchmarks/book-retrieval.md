@@ -54,5 +54,5 @@ MRR@10: arm 4 0.804 (seen) and 0.746 (blind); arm 5 0.949 and 0.892. Hit@10 and 
 - **The closed-book filter is loose.** Without thinking, the model failed some questions it would know with thinking on, for example the Lê Lai story. So the `*_retrieval_needed` sets keep some questions answerable from general knowledge.
 - **One book, 359 chunks.** In a library of many books there are more near-misses per question, and absolute hit rates will fall.
 - **Unanswerable questions lack variety:** all 25 ask about later archaeology, because the prompt's first example steered them there. They are not used here; a later answer-quality test needs a more varied set.
-- **A hand check, not a hand-checked set.** One reader checked 20 question pairs: 18 were sound, one was too vague to stand alone, and one answer added a fact from outside the book. The full set has not been checked, so the questions stay out of git for now.
+- **No person has checked the questions.** The agent that built the set (Claude) read 20 question pairs in its own session: 18 looked sound, one was too vague to stand alone, and one answer added a fact from outside the book. That is one LLM reviewing another LLM's output, not a human check. The questions stay out of git until the set is checked (#178).
 - **BM25, not Postgres full-text,** as in the ViQuAD note. One run, one seed.
