@@ -145,6 +145,8 @@ class Generator:
     def __init__(self, budget_usd: float) -> None:
         from openai import OpenAI  # only needed when a call is made
 
+        if MODEL not in PRICES:  # an unpriced model would count as free and pass the budget
+            raise SystemExit(f"no price for {MODEL}: add it to PRICES first")
         key = os.environ.get("DEEPSEEK_API_KEY")
         if not key:
             raise SystemExit("set DEEPSEEK_API_KEY")
@@ -202,7 +204,7 @@ class Generator:
         return None
 
     def _usage(self, stage: str, usage: Any) -> None:
-        price_in, price_out = PRICES.get(MODEL, (0.0, 0.0))
+        price_in, price_out = PRICES[MODEL]
         cost = (usage.prompt_tokens * price_in + usage.completion_tokens * price_out) / 1e6
         self.spent += cost
         self.calls += 1
