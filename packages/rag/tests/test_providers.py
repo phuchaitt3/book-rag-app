@@ -14,6 +14,7 @@ from book_rag.providers import (
     OllamaEmbedder,
     OllamaLLM,
     Reranker,
+    TeiReranker,
 )
 
 
@@ -97,3 +98,38 @@ async def test_ollama_embedder_checks_dimension() -> None:
     assert await good.embed([]) == []
     with pytest.raises(ValueError):
         await OllamaEmbedder("bge-m3", dimension=1024, post=post).embed(["a"])
+
+
+async def test_tei_reranker_puts_scores_back_in_document_order() -> None:
+    seen: list[tuple[str, dict[str, Any], float]] = []
+
+    def post(url: str, payload: dict[str, Any], timeout: float) -> Any:
+        seen.append((url, payload, timeout))
+        # TEI answers best first, by index.
+        return [{"index": 2, "score": 0.9}, {"index": 0, "score": 0.5}, {"index": 1, "score": 0.1}]
+
+    reranker = TeiReranker("http://tei:80/", timeout=3.0, post=post)
+    assert isinstance(reranker, Reranker)
+    assert await reranker.rerank("sông Hồng", ["a", "b", "c"]) == [0.5, 0.1, 0.9]
+    assert seen == [
+        (
+            "http://tei:80/rerank",
+            {"query": "sông Hồng", "texts": ["a", "b", "c"], "truncate": True},
+            3.0,
+        )
+    ]
+
+
+async def test_tei_reranker_skips_the_call_for_no_documents() -> None:
+    def post(url: str, payload: dict[str, Any], timeout: float) -> Any:
+        raise AssertionError("should not be called")
+
+    assert await TeiReranker(post=post).rerank("q", []) == []
+
+
+async def test_tei_reranker_rejects_a_reply_missing_a_document() -> None:
+    def post(url: str, payload: dict[str, Any], timeout: float) -> Any:
+        return [{"index": 0, "score": 0.5}]
+
+    with pytest.raises(ValueError):
+        await TeiReranker(post=post).rerank("q", ["a", "b"])

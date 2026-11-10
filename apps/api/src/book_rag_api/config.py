@@ -36,6 +36,13 @@ class Settings(BaseSettings):
     embedding_provider: str = "ollama"
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://localhost:11434"
+    # Reranker (ADR 0009): "none" (default), "fake" (tests), or "tei" (the Compose service).
+    # Only the top `rerank_depth` fused candidates are scored; on an error or after
+    # `rerank_timeout` seconds the fused order is used.
+    reranker_provider: Literal["none", "fake", "tei"] = "none"
+    reranker_url: str = "http://localhost:8080"
+    rerank_depth: int = Field(default=20, ge=1, le=60)
+    rerank_timeout: float = Field(default=10.0, gt=0)
     # Experiment (ADR 0008): "pgvector" (default), "qdrant", or "shadow" (pgvector answers and
     # Qdrant is compared in the log). EXPIRES 2026-12-15, see #120.
     vector_store: Literal["pgvector", "qdrant", "shadow"] = "pgvector"
