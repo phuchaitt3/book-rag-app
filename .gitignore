@@ -22,3 +22,4 @@ credentials*.json
 Thumbs.db
 .idea/
 .neon
+experiments/book-testset/data/
