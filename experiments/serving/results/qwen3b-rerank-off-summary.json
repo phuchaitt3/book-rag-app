@@ -1,0 +1,43 @@
+{
+  "n": 30,
+  "errors": 0,
+  "t_citations": {
+    "n": 30,
+    "median": 0.13433079999958863,
+    "p90": 0.155565300003218
+  },
+  "t_first_token": {
+    "n": 30,
+    "median": 7.9754527999975835,
+    "p90": 8.931102100003045
+  },
+  "t_total": {
+    "n": 30,
+    "median": 8.574598400002287,
+    "p90": 9.834455600001093
+  },
+  "conditions": {
+    "label": "qwen3b-rerank-off",
+    "date_utc": "2026-11-13",
+    "git_commit": "1ef621c75ada8201838b91f0f0358799beb50d14",
+    "gpu": "NVIDIA GeForce GTX 1660 Ti, 6144 MiB, 616.92",
+    "ollama": {
+      "version": "0.40.13",
+      "chat_model": {
+        "name": "qwen2.5:3b-instruct",
+        "digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b",
+        "size": 1929912432,
+        "quantization": "Q4_K_M",
+        "parameter_size": "3.1B"
+      },
+      "embedding_model": {
+        "name": "bge-m3",
+        "digest": "7907646426070047a77226ac3e684fbbe8410524f7b4a74d02837e43f2146bab",
+        "size": 1157672605,
+        "quantization": "F16",
+        "parameter_size": "566.70M"
+      }
+    },
+    "tei_image": "ghcr.io/huggingface/text-embeddings-inference:turing-1.9.4"
+  }
+}

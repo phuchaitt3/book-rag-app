@@ -56,6 +56,9 @@ services:
       S3_ENDPOINT_URL: http://s3:8333
       # The host's Ollama, for the question embedding and the answer.
       OLLAMA_URL: http://host.docker.internal:11434
+      # The answer model; on a 6 GB GPU with the reranker, qwen2.5:3b-instruct stays loaded next to
+      # bge-m3 while the 7B default is swapped in and out (docs/benchmarks/serving-latency.md).
+      LLM_MODEL: ${LLM_MODEL:-qwen2.5:7b-instruct}
       VECTOR_STORE: ${VECTOR_STORE:-pgvector}
       QDRANT_URL: http://qdrant:6333
       # Off here; compose.reranker.yaml adds the reranker service and turns it on (ADR 0009).
