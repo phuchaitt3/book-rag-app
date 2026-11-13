@@ -50,6 +50,28 @@ MRR@10: arm 4 0.806 (seen) and 0.754 (blind); arm 5 0.955 and 0.897. Hit@10 and 
 - **On questions that copy the text, RRF may cost BM25 its top rank:** BM25 alone leads fusion by 5.8 points Hit@1 on the seen set, with an interval that reaches zero. At Hit@5 they tie, and on the blind set the gap is gone. An RRF weight that leans toward BM25 (#180), or a reranker after fusion (arm 5), would recover it.
 - **v1's embedding model fails on Vietnamese book chunks:** distiluse finds the gold chunk in the top 5 for 12% of questions, against 88% for bge-m3.
 
+## Fusion weight (#180)
+
+Question: should the app's equal-weight RRF lean toward BM25? Score = w/(k+rank_bm25) + (1−w)/(k+rank_dense), k = 60, 30 candidates per list; w = 0.5 is the app's rule. The weights 0.3, 0.4, 0.6, 0.7, 0.8 were fixed before the run; each is compared with w = 0.5 on the same questions (paired, 95% bootstrap intervals), on the 208 checked questions of each kind. Run: `bench.py` on the GTX 1660 Ti, 1,481 s (the reranker's scores are cached across weights). Results: `RESULTS=... python experiments/book-testset/bench.py`; weights through `WEIGHTS`.
+
+Hit@1, difference from w = 0.5 (interval); blind = rewritten questions, the set that decides:
+
+| Set | w | RRF alone | RRF + reranker |
+|---|---|---|---|
+| blind | 0.3 | −1.4 (−4.8, +1.9) | −1.0 (−2.9, +0.5) |
+| blind | 0.4 | −0.5 (−2.4, +1.4) | −1.0 (−2.9, +0.5) |
+| blind | 0.6 | +3.4 (0.0, +6.7) | −1.9 (−4.3, 0.0) |
+| blind | 0.7 | +2.9 (−1.4, +7.2) | −1.9 (−4.3, 0.0) |
+| blind | 0.8 | +2.9 (−1.9, +7.2) | −1.9 (−4.3, 0.0) |
+| seen | 0.6 | +4.3 (+0.5, +8.2) | −1.0 (−2.4, 0.0) |
+| seen | 0.8 | +5.8 (+1.4, +10.6) | −1.0 (−2.4, 0.0) |
+
+Absolute Hit@1 at w = 0.5 is 63.9% (blind) and 70.7% (seen) for RRF alone, 85.1% and 92.8% with the reranker. BM25 alone: 63.0% and 76.4%.
+
+**What it shows.** Leaning toward BM25 helps RRF alone on copied wording (seen: +4 to +6 points at w ≥ 0.6, intervals above zero), as the issue guessed, and gives no clear gain on rewritten questions (+3 at best, intervals include zero except w = 0.6, whose lower end is 0.0). With the reranker, which the app uses, every other weight is equal or slightly worse than 0.5 (blind Hit@5 −3.4 points at w ≥ 0.6, interval −6.2 to −0.5): the reranker reorders the same top 20, so fusion order matters little, and a BM25-heavy candidate list loses some dense-only hits. The retrieval_needed subsets agree.
+
+**Decision.** Keep equal weights; no ADR or issue for a new weight, because none beats 0.5 on the rewritten set inside the reranked pipeline. Limits: one book, 208 questions per kind (intervals about ±4 points), five fixed weights, k and candidate depth not varied, and the questions were generated, not written by people.
+
 ## Limits
 
 - **The rewrites are light.** Blind questions still share 67% of their words with the gold chunk, against 78% for seen ones. The generator ran without thinking to fit a $2 budget, and it kept names and much of the wording. This is a milder test of wording change than ViQuAD's `without_context` set, so BM25's strength here partly reflects the overlap.
