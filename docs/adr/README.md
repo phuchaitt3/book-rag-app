@@ -21,7 +21,7 @@ ADRs written before 2026-11-01 are being rewritten to this template, one PR per 
 
 ## Template for new records
 
-About two pages, change log excluded. A small decision (a lint tool, a naming rule) needs only Context, Decision, Why and the change log. One decision per record. Once a record is accepted, a changed decision is a new ADR that supersedes it. A clarification or new measurement that leaves the decision unchanged gets a dated change-log line and the smallest edit to the body.
+About two pages, change log excluded. A small decision (a lint tool, a naming rule) needs only Context, Decision, Why and the change log. One decision per record. Once a record is accepted it is frozen: a changed decision is a new ADR that supersedes it, and the old record is not edited to follow the code or a later ADR. The only edits are a typo or broken link, the `Superseded by NNNN` status line, and a dated clarification of wording that was unclear when written, each with a change-log line ([docs/design/README.md](../design/README.md), "Accepted ADRs are frozen").
 
 ```markdown
 # NNNN: <the decision, in a few words>
