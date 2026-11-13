@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from uuid import UUID
 
 from qdrant_client import AsyncQdrantClient, models
+from qdrant_client.http.exceptions import UnexpectedResponse
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
@@ -22,6 +23,7 @@ from book_rag_api.retrieval import SqlChunkSearcher
 log = logging.getLogger(__name__)
 
 _BOOK_ID = "book_id"
+_CONFLICT = 409  # Qdrant: the collection already exists
 
 
 def _book_filter(book_id: UUID) -> models.Filter:
@@ -39,16 +41,24 @@ class QdrantVectorIndex:
         self._dimension = dimension
         self._ready = False
 
+    async def close(self) -> None:
+        await self._client.close()
+
     async def _ensure_collection(self) -> None:
         if self._ready:
             return
         if not await self._client.collection_exists(self._collection):
-            await self._client.create_collection(
-                self._collection,
-                vectors_config=models.VectorParams(
-                    size=self._dimension, distance=models.Distance.COSINE
-                ),
-            )
+            try:
+                await self._client.create_collection(
+                    self._collection,
+                    vectors_config=models.VectorParams(
+                        size=self._dimension, distance=models.Distance.COSINE
+                    ),
+                )
+            except UnexpectedResponse as error:
+                # The API and the worker race on an empty volume: the other one created it.
+                if error.status_code != _CONFLICT:
+                    raise
         # A tenant index keeps the vectors of one book together on disk, so a filtered search
         # touches one book's points. Local (in-memory) mode accepts and ignores it.
         await self._client.create_payload_index(

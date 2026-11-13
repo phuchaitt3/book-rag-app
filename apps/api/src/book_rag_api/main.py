@@ -74,8 +74,9 @@ def create_app(
         app.state.queue = queue or create_queue(settings.database_url)
         app.state.llm = llm or _llm(settings)
         app.state.chat_limiter = RateLimiter(settings.chat_rate_limit, window=60.0)
+        searcher, index = _searcher(settings, async_sessionmaker(app.state.engine))
         app.state.retriever = HybridRetriever(
-            _searcher(settings, async_sessionmaker(app.state.engine)),
+            searcher,
             embedder or _embedder(settings),
             reranker or _reranker(settings),
             rerank_depth=settings.rerank_depth,
@@ -85,6 +86,8 @@ def create_app(
             async with app.state.queue.open_async():
                 yield
         finally:
+            if index is not None:
+                await index.close()
             await app.state.engine.dispose()
 
     app = FastAPI(title="book-rag-app API", version="0.1.0", lifespan=lifespan)
@@ -132,15 +135,19 @@ def create_app(
     return app
 
 
-def _searcher(settings: Settings, sessions: async_sessionmaker[AsyncSession]) -> ChunkSearcher:
+def _searcher(
+    settings: Settings, sessions: async_sessionmaker[AsyncSession]
+) -> tuple[ChunkSearcher, QdrantVectorIndex | None]:
+    """The searcher, and the Qdrant index to close at shutdown when there is one."""
     sql = SqlChunkSearcher(sessions)
     if settings.vector_store == "pgvector":
-        return sql
+        return sql, None
     index = QdrantVectorIndex(
         AsyncQdrantClient(url=settings.qdrant_url), settings.qdrant_collection
     )
     qdrant = QdrantChunkSearcher(index, sessions, sql)
-    return qdrant if settings.vector_store == "qdrant" else ShadowChunkSearcher(sql, qdrant)
+    searcher = qdrant if settings.vector_store == "qdrant" else ShadowChunkSearcher(sql, qdrant)
+    return searcher, index
 
 
 def _llm(settings: Settings) -> LLM:
