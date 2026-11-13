@@ -76,6 +76,23 @@ What this shows for scaling: the bound does not change the growth rate on this d
 
 The data is synthetic: each chunk is a random draw of words from the real book's word frequencies, so common words are as common as in the real text and an OR query matches almost every chunk, but word order, co-occurrence and rare-word clustering are lost. It supports a latency claim only, never a quality claim. The smallest size (392 chunks, the real book's count) took 84 ms here against 11 ms on the real book above, so the synthetic text is a harsher case than the real one, probably because rare words are less concentrated and the bound removes fewer candidates; this was not checked. The 392-chunk row ran first, and its high p95 may include warm-up. One run, one machine, one 2 GB container, 100 queries.
 
+## Accent-insensitive keyword search (#95)
+
+[fts_unaccent.py](../../experiments/e2e/fts_unaccent.py) asks whether an `unaccent` step in the keyword leg changes what it finds ([fts-unaccent-95.json](../../experiments/e2e/results/fts-unaccent-95.json)). Arm A is today's `simple` configuration. Arm B indexes `to_tsvector('simple', unaccent(text))` in a second column and runs `unaccent` over the query too. The book's 359 chunks sit in a throwaway Postgres 17 (pgvector image, `unaccent` extension, which handles Vietnamese: `Việt Đức học` becomes `Viet Duc hoc`). 416 answerable questions (208 `seen`, 208 `blind`); a hit is a top-k chunk containing the question's evidence sentence. Two query sets: the questions as written, and the same questions with every accent removed. Keyword leg only: the fused result needs chunk embeddings and was not computed. Hit@5 in percent, 95% bootstrap interval for Hit@5 in brackets:
+
+| Query set | Leg | A (today) Hit@5 | B (unaccent) Hit@5 | A Hit@1 | B Hit@1 |
+|---|---|---|---|---|---|
+| accented | `ts_rank_cd` | 63.0 [58.2, 67.5] | 58.2 [53.6, 63.0] | 39.9 | 34.6 |
+| accented | BM25 | 88.9 [85.8, 91.8] | 79.6 [75.7, 83.4] | 69.7 | 60.6 |
+| stripped | `ts_rank_cd` | 15.9 [12.5, 19.5] | 58.2 [53.6, 63.0] | 5.5 | 34.6 |
+| stripped | BM25 | 25.0 [20.9, 29.3] | 79.6 [75.7, 83.4] | 9.6 | 60.6 |
+
+By question kind (BM25 Hit@5, `seen` / `blind`): accented A 91.8 / 86.1, B 86.5 / 72.6; stripped A 25.5 / 24.5, B 86.5 / 72.6. The set has no other question types. Latency of the `ts_rank_cd` leg per query, 416 questions, warm, local: A 13.8 ms median and 25.2 ms p95; B 14.9 and 30.6 ms (the `unaccent` call on the query is inline). The `unaccent` GIN index is smaller (475 KB against 623 KB) because accent variants merge into one lexeme.
+
+**What it shows.** On queries typed with accents, which is how these questions were written, unaccent makes retrieval worse: BM25 Hit@5 drops 9.3 points (88.9 to 79.6, intervals just touching), and per question 29 hits are lost against 9 gained for `ts_rank_cd`. Vietnamese accents separate words (`sử` history, `sự` fact; `ma`, `má`, `mà`, `mả`, `mạ`), so removing them adds false matches and the right chunk ranks lower. On queries typed without accents the effect reverses: today's leg finds the right chunk in only 16 to 25% of questions (it cannot match `hoc` to `học`), and B recovers 58 to 80%, close to its own accented result because stripped and accented queries become the same string. 180 questions gain a hit and 4 lose one for `ts_rank_cd`.
+
+**What it does not show.** One book, 359 chunks, questions written by an LLM in accented Vietnamese and then stripped by a script: real users who drop accents also make other typing changes, and the share of users who do is unknown. The fused result with the dense leg was not measured; dense search already handles missing accents to some degree, so the gain in the fused system is probably smaller than the keyword-leg gain here, and the loss on accented queries is probably also smaller. The measured trade is therefore: unaccent only (B) trades about 9 points on accented queries for about 55 points on stripped ones. A middle option not measured here is to keep both columns and fuse them (or use the unaccented leg only when the query has no accents); that needs its own measurement. Word segmentation (the second part of #95, pyvi or underthesea) was not tried: it would add a dependency, which this measurement step does not do.
+
 ## What follows
 
 - Adopting any of these changes the search design, so it needs an ADR, and the choice is a latency-against-quality trade that is the user's to weigh: BM25 in Postgres restores the 11 points but multiplies the leg's time by about 5 on this book. Follow-up issue: bound the candidate set (for example, take the GIN matches on only the query's rarest words) and re-time.
