@@ -24,6 +24,7 @@ import statistics
 import time
 import unicodedata
 import urllib.request
+from collections.abc import Iterable
 from pathlib import Path
 
 import asyncpg  # type: ignore[import-untyped]
@@ -46,6 +47,20 @@ def norm(text: str) -> str:
     return _NON_WORD.sub("", unicodedata.normalize("NFC", text).lower())
 
 
+def first_citations_event(lines: Iterable[str]) -> list[str]:
+    """Chunk ids of the first `citations` SSE event; stops at its blank line."""
+    event = data = None
+    for raw in lines:
+        line = raw.rstrip("\n")
+        if line.startswith("event:"):
+            event = line[6:].strip()
+        elif line.startswith("data:"):
+            data = line[5:].strip()
+        elif not line and event == "citations":
+            break
+    return [c["chunk_id"] for c in json.loads(data or "[]")]
+
+
 def citations(question: str) -> tuple[list[str], float]:
     body = json.dumps({"question": question, "top_k": TOP_K}).encode()
     request = urllib.request.Request(
@@ -55,17 +70,9 @@ def citations(question: str) -> tuple[list[str], float]:
     )
     start = time.perf_counter()
     with urllib.request.urlopen(request, timeout=120) as response:
-        event = data = None
-        for raw in response:
-            line = raw.decode().rstrip("\n")
-            if line.startswith("event:"):
-                event = line[6:].strip()
-            elif line.startswith("data:"):
-                data = line[5:].strip()
-            elif not line and event == "citations":
-                break
+        ids = first_citations_event(raw.decode() for raw in response)
         elapsed = time.perf_counter() - start
-    return [c["chunk_id"] for c in json.loads(data or "[]")], elapsed
+    return ids, elapsed
 
 
 def interval(hits: list[int], seed: int = 189, reps: int = 10_000) -> tuple[float, float]:
