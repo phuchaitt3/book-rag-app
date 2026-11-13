@@ -17,8 +17,16 @@ services:
       - --max-client-batch-size=64
     volumes:
       - tei-models:/data
+    labels:
+      # Who started this container (findings/shared-gpu-one-machine: label GPU containers with
+      # their owner). The task part is set by whoever runs it: RERANKER_OWNER=<chat>-<task>.
+      com.book-rag-app.owner: ${RERANKER_OWNER:-book-rag-app-reranker}
     deploy:
       resources:
+        limits:
+          # Measured use is about 3.2 GB (model 2.2 GB plus a 2048-token batch); 4 GB leaves
+          # headroom and stops a leak from taking the laptop's 16 GB.
+          memory: 4g
         reservations:
           devices:
             - driver: nvidia
