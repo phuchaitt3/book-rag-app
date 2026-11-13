@@ -36,6 +36,7 @@ from book_rag_api.qdrant_index import (
     QdrantVectorIndex,
     ShadowChunkSearcher,
 )
+from book_rag_api.rate_limit import RateLimiter
 from book_rag_api.retrieval import SqlChunkSearcher
 from book_rag_api.routers.chat import router as chat_router
 from book_rag_api.storage import ObjectStorage, S3Storage
@@ -70,6 +71,7 @@ def create_app(
         app.state.storage = storage or _s3_storage(settings)
         app.state.queue = queue or create_queue(settings.database_url)
         app.state.llm = llm or _llm(settings)
+        app.state.chat_limiter = RateLimiter(settings.chat_rate_limit, window=60.0)
         app.state.retriever = HybridRetriever(
             _searcher(settings, async_sessionmaker(app.state.engine)),
             embedder or _embedder(settings),
