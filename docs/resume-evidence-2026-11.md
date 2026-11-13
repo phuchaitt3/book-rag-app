@@ -8,7 +8,7 @@ Per task: what was built, the commit on `main`, how to reproduce it, and what wa
 |---|---|---|
 | 1. Real-model end-to-end run (#189) | `74ec919` (PR #196) | [benchmarks/e2e-real-model.md](benchmarks/e2e-real-model.md) |
 | 2. Reranker in the API (#184) | `df0fb2e` (PR #188); measured in the app's path in PR #196 | [ADR 0009](adr/0009-reranker-local-tei-service.md), [benchmarks/book-retrieval.md](benchmarks/book-retrieval.md) |
-| 3. Serving latency (#190) | this PR (see `git log -- docs/benchmarks/serving-latency.md`) | [benchmarks/serving-latency.md](benchmarks/serving-latency.md) |
+| 3. Serving latency (#190) | `e7a4a4c` (PR #197) | [benchmarks/serving-latency.md](benchmarks/serving-latency.md) |
 
 Common conditions, unless a section says otherwise: one Windows 11 laptop with an NVIDIA GTX 1660 Ti (6 GB) and 16 GB of RAM, Ollama 0.40.13, the Docker Compose stack of this repository, run on 2026-11-13. The book is Trần Trọng Kim, *Việt Nam sử lược*, Quyển I (public domain), and the questions come from the checked book test set ([experiments/book-testset/](../experiments/book-testset/README.md)). All runs are local; nothing here measures a deployed system.
 
@@ -23,7 +23,7 @@ Common conditions, unless a section says otherwise: one Windows 11 laptop with a
 | Reranker off | 47.6% (40.9–54.3) | 75.5% (69.7–81.2) | 0.14 s |
 | Reranker on | 80.8% (75.5–86.1) | 88.9% (84.6–93.3) | 2.87 s |
 
-**Negative result, reported as such.** Without the reranker, the app scores well below the in-memory benchmark on the same questions (75.5% against 89.4% Hit@5). The runs differ in text (PDF against proofread HTML), search code and scoring, and the cause was not isolated. See the note's "Open question".
+**Negative result, reported as such.** Without the reranker, the app scores well below the in-memory benchmark on the same questions (75.5% against 89.4% Hit@5). A follow-up (#199, PR #205) changed the text, the search and the scoring one at a time: the cause is the app's full-text leg (Postgres `ts_rank_cd` over an OR query, no document-frequency weighting). With BM25 in its place the app reaches 86.5% on the PDF (+11.1 points, paired 95% CI 5.8–16.3); the PDF text, the scoring and the embedding side account for little or nothing ([benchmarks/retrieval-gap.md](benchmarks/retrieval-gap.md)). The fix is not built yet (#204).
 
 **Reproduce.** `uv run python experiments/e2e/fetch_pdf.py`, `pnpm stack:up:rerank`, upload the PDF, then `BOOK_ID=<id> LABEL=rerank uv run python experiments/e2e/retrieval_check.py` (details and the reranker-off arm in the note). Raw results: `experiments/e2e/results/`.
 
