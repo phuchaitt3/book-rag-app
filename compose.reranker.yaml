@@ -6,6 +6,11 @@
 # docs/design/0009-reranker-local-tei-service.md). The model (about 2.2 GB) downloads into the
 # tei-models volume on first start; until it is ready, answers use the fused order.
 # Compose network only (no published port): TEI starts without authentication.
+# Recovery: if the reranker panics at start with "tokenizer.json not found ... expected value" from
+# an existing tei-models volume (seen after a Docker crash on a full disk, 2026-11-13), stop the
+# stack (docker compose -f compose.yaml -f compose.reranker.yaml down), then remove the volume
+# (docker volume rm <project>_tei-models); about 2.2 GB downloads again on next start. The root
+# cause is unknown (#198).
 services:
   reranker:
     image: ghcr.io/huggingface/text-embeddings-inference:turing-1.9.4
