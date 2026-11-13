@@ -13,7 +13,8 @@ from testcontainers.community.postgres import PostgresContainer
 
 from book_rag.providers import FakeEmbedder, FakeReranker
 from book_rag.retrieval import HybridRetriever
-from book_rag_api.models import EMBEDDING_DIM, Book, Chunk
+from book_rag_api.lexical import refresh_book_stats
+from book_rag_api.models import EMBEDDING_DIM, Book, BookTerm, Chunk
 from book_rag_api.qdrant_index import (
     QdrantChunkSearcher,
     QdrantVectorIndex,
@@ -255,3 +256,103 @@ async def test_shadow_mode_hides_a_qdrant_failure(
         await asyncio.gather(*shadow._tasks)
     assert len(found) == 3
     assert any("the Qdrant search failed" in r.message for r in caplog.records)
+
+
+BM25_TEXTS = [
+    # Common words repeated, no rare word: ts_rank_cd's favourite.
+    "của của của là là là và và và có có có",
+    "Vua Gia Long lập ra triều Nguyễn và là vua đầu tiên",
+    "Thành phố Huế là kinh đô của triều Nguyễn",
+    "Sông Hương chảy qua Huế",
+    "Lễ hội Huế diễn ra của mỗi năm và là dịp lớn",
+]
+
+
+@pytest.fixture
+async def bm25_book() -> AsyncIterator[tuple[async_sessionmaker[AsyncSession], UUID]]:
+    with PostgresContainer("pgvector/pgvector:pg17", driver="asyncpg") as pg:
+        url = pg.get_connection_url()
+        config = Config(str(ALEMBIC_INI))
+        config.set_main_option("sqlalchemy.url", url)
+        await asyncio.to_thread(command.upgrade, config, "head")
+        engine = create_async_engine(url)
+        sessions = async_sessionmaker(engine, expire_on_commit=False)
+        book = Book(id=uuid4(), title="B")
+        async with sessions.begin() as session:
+            session.add(book)
+            await session.flush()
+            session.add_all(
+                Chunk(book_id=book.id, ordinal=i, text=t, page=i + 1)
+                for i, t in enumerate(BM25_TEXTS)
+            )
+            await session.flush()
+            await refresh_book_stats(session, book.id)
+        yield sessions, book.id
+        await engine.dispose()
+
+
+async def test_refresh_book_stats_counts_tokens_and_document_frequency(
+    bm25_book: tuple[async_sessionmaker[AsyncSession], UUID],
+) -> None:
+    sessions, book_id = bm25_book
+    async with sessions() as session:
+        lengths = (
+            await session.execute(
+                select(Chunk.ordinal, Chunk.token_count)
+                .where(Chunk.book_id == book_id)
+                .order_by(Chunk.ordinal)
+            )
+        ).all()
+        df = {
+            t.term: t.df
+            for t in (
+                await session.execute(select(BookTerm).where(BookTerm.book_id == book_id))
+            ).scalars()
+        }
+    assert lengths[0].token_count == 12
+    assert df["huế"] == 3
+    assert df["của"] == 3
+    assert df["sông"] == 1
+    # A second refresh replaces, never doubles.
+    async with sessions.begin() as session:
+        await refresh_book_stats(session, book_id)
+        again = await session.scalar(select(BookTerm.df).where(BookTerm.term == "huế"))
+    assert again == 3
+
+
+async def test_bm25_ranks_the_rare_word_above_repeated_common_words(
+    bm25_book: tuple[async_sessionmaker[AsyncSession], UUID],
+) -> None:
+    sessions, book_id = bm25_book
+    searcher = SqlChunkSearcher(sessions)
+    found = await searcher.text_search(book_id, "Ai là vua đầu tiên của triều Nguyễn?", 5)
+    assert found[0].text == BM25_TEXTS[1]
+    assert BM25_TEXTS[0] not in [c.text for c in found[:2]]
+    assert found[0].page == 2
+
+
+async def test_bm25_with_only_common_words_still_returns_chunks(
+    bm25_book: tuple[async_sessionmaker[AsyncSession], UUID],
+) -> None:
+    sessions, book_id = bm25_book
+    found = await SqlChunkSearcher(sessions).text_search(book_id, "của là", 5)
+    assert found  # no word is rare: every query word selects candidates
+
+
+async def test_bm25_ignores_words_the_book_lacks_and_punctuation(
+    bm25_book: tuple[async_sessionmaker[AsyncSession], UUID],
+) -> None:
+    sessions, book_id = bm25_book
+    searcher = SqlChunkSearcher(sessions)
+    assert await searcher.text_search(book_id, "zzzzqq", 5) == []
+    assert await searcher.text_search(book_id, "?!", 5) == []
+    found = await searcher.text_search(book_id, "Huế') | !x & 'a\b http://a.b/c:d", 5)
+    assert {c.text for c in found} == {BM25_TEXTS[2], BM25_TEXTS[3], BM25_TEXTS[4]}
+
+
+async def test_a_book_without_statistics_falls_back_to_ts_rank(
+    seeded: tuple[async_sessionmaker[AsyncSession], UUID],
+) -> None:
+    sessions, book_id = seeded  # its chunks were inserted without refresh_book_stats
+    found = await SqlChunkSearcher(sessions).text_search(book_id, "Hà Nội thủ đô?", 10)
+    assert found[0].text == TEXTS[2]

@@ -23,7 +23,7 @@ from book_rag.providers import FakeEmbedder
 from book_rag_api.config import Settings
 from book_rag_api.jobs import enqueue_ingestion
 from book_rag_api.main import create_app
-from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, Section
+from book_rag_api.models import EMBEDDING_DIM, Book, BookTerm, Chunk, IngestionJob, Section
 from book_rag_api.qdrant_index import QdrantVectorIndex, vector_counts
 from book_rag_worker.__main__ import init_schema
 from book_rag_worker.config import WorkerSettings
@@ -149,6 +149,14 @@ async def test_job_runs_and_progress_is_readable_through_the_api(
     assert by_title["Chương 2"].parent_id is None
     assert sorted(c.ordinal for c in chunks) == list(range(len(chunks)))
     assert all(c.embedding is not None and c.section_id is not None for c in chunks)
+    assert all(c.token_count > 0 for c in chunks)  # BM25 statistics were written (ADR 0011)
+    async with AsyncSession(worker.engine) as session:
+        terms = (
+            (await session.execute(select(BookTerm).where(BookTerm.book_id == book_id)))
+            .scalars()
+            .all()
+        )
+    assert terms and max(t.df for t in terms) <= len(chunks)
     assert {c.section_path for c in chunks} == {
         "Chương 1",
         "Chương 1 > 1.1 Mở đầu",

@@ -15,6 +15,7 @@ from book_rag.chunking import Chunk as ParsedChunk
 from book_rag.chunking import chunk_book
 from book_rag.parsing import ParsedBook, parse_pdf
 from book_rag.providers import Embedder
+from book_rag_api.lexical import refresh_book_stats
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, Section
 from book_rag_api.qdrant_index import QdrantVectorIndex
 
@@ -180,6 +181,8 @@ async def _run(
         session.add_all(sections)
         await session.flush()  # sections first: chunks reference them
         session.add_all(chunk_rows)
+        await session.flush()
+        await refresh_book_stats(session, book_id)  # BM25 statistics (ADR 0011)
         await session.commit()
 
     await _set_stage(engine, job_id, "embed")
