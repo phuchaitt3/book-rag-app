@@ -6,6 +6,7 @@ Measured results for retrieval and answering. Each note links the script that pr
 - [book-retrieval.md](book-retrieval.md): the same arms on the app's own chunks of one book (Việt Nam sử lược, Quyển I), with generated questions.
 - [e2e-real-model.md](e2e-real-model.md): one real run of the app on a PDF, with and without the reranker.
 - [retrieval-gap.md](retrieval-gap.md): why the app is below the benchmark (the full-text leg).
+- [fts-options.md](fts-options.md): ways to fix the full-text leg (#204): BM25 in Postgres matches the benchmark; its latency cost.
 
 ## Checklist for a test set
 
