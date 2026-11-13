@@ -20,6 +20,7 @@ export function Chat({ book }: { book: Book }) {
   // showed "undefined" plus the tokens, with no question, until the whole stream had ended.
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (busy) return; // Enter still submits the form while a stream runs; do not start a second request.
     const form = event.currentTarget;
     const question = String(new FormData(form).get("question") ?? "").trim();
     if (!question) return;
