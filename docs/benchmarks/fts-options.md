@@ -45,6 +45,20 @@ Storing the document frequencies and chunk lengths in tables ([fts_stats_latency
 | `ts_rank_cd` normalisation flags | none (−0.5 to −1.9 on the PDF) | free | ruled out |
 | A Postgres BM25 extension | not measured | the Compose image (pgvector) has none; a new image or a managed Postgres that ships one | not measured; belongs in the ADR 0002 research ([#90](https://github.com/phuchaitt3/book-rag-app/issues/90)) |
 
+## Bounding the cost (#208)
+
+[fts_bounded.py](../../experiments/e2e/fts_bounded.py) stores the statistics and takes as candidates only the chunks the GIN index finds for the query's rare words (in at most SHARE of the chunks), then scores them with BM25 over every query word ([fts-bounded-208.json](../../experiments/e2e/results/fts-bounded-208.json)). Median per question, PDF, with fused Hit@5 on PDF / HTML:
+
+| SHARE | Median | p95 | Fused Hit@5 | Leg alone Hit@5 (PDF) |
+|---|---|---|---|---|
+| 1.0 (no bound) | 26 ms | 46 ms | 86.5 / 89.4 | 84.1 |
+| 0.5 | 26 ms | 46 ms | 86.5 / 89.4 | 84.1 |
+| **0.2** | **11 ms** | 19 ms | **86.5 / 88.9** | 83.7 |
+| 0.1 | 5 ms | 9 ms | 85.6 / 88.0 | 76.4 |
+| 0.05 | 2 ms | 5 ms | 83.7 / 86.5 | 62.0 |
+
+At 0.2 the leg is faster than today's `ts_rank_cd` (14 ms) with the BM25 quality; below it the leg's recall falls. This changes the verdict above: the 80 ms was the per-query statistics and the unbounded candidate set, not BM25. The design is proposed in [ADR 0011](../adr/0011-bm25-in-postgres-stored-statistics.md).
+
 ## What follows
 
 - Adopting any of these changes the search design, so it needs an ADR, and the choice is a latency-against-quality trade that is the user's to weigh: BM25 in Postgres restores the 11 points but multiplies the leg's time by about 5 on this book. Follow-up issue: bound the candidate set (for example, take the GIN matches on only the query's rarest words) and re-time.
