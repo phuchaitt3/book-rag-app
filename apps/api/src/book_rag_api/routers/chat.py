@@ -4,8 +4,10 @@ Events, in order: `citations` (once, before the first token), `token` (many), th
 If the model fails part-way, `error` is sent instead of `done`.
 """
 
+import asyncio
 import json
 import logging
+import math
 import uuid
 from collections.abc import AsyncIterator
 from typing import Annotated, Any
@@ -18,8 +20,10 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.providers import LLM
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
+from book_rag_api.config import Settings
 from book_rag_api.models import Book, IngestionJob
 from book_rag_api.prompts import NO_PASSAGES_REPLY, build_messages
+from book_rag_api.rate_limit import RateLimiter
 
 router = APIRouter(prefix="/books", tags=["chat"])
 log = logging.getLogger(__name__)
@@ -78,8 +82,34 @@ def citations_for(book: Book, chunks: list[RetrievedChunk]) -> list[Citation]:
     ]
 
 
+async def with_timeouts(
+    pieces: AsyncIterator[str], *, idle: float, total: float
+) -> AsyncIterator[str]:
+    """Pass `pieces` through; raise TimeoutError if one takes over `idle` seconds or the whole
+    stream takes over `total`."""
+    iterator = pieces.__aiter__()
+    try:
+        async with asyncio.timeout(total):
+            while True:
+                try:
+                    piece = await asyncio.wait_for(anext(iterator), idle)
+                except StopAsyncIteration:
+                    return
+                yield piece
+    finally:
+        aclose = getattr(iterator, "aclose", None)
+        if aclose is not None:
+            await aclose()
+
+
 async def answer_events(
-    llm: LLM, book: Book, question: str, chunks: list[RetrievedChunk]
+    llm: LLM,
+    book: Book,
+    question: str,
+    chunks: list[RetrievedChunk],
+    *,
+    idle_timeout: float = 30.0,
+    total_timeout: float = 180.0,
 ) -> AsyncIterator[str]:
     citations = citations_for(book, chunks)
     yield sse("citations", [c.model_dump(mode="json") for c in citations])
@@ -88,8 +118,13 @@ async def answer_events(
         yield sse("done", DoneEvent().model_dump())
         return
     try:
-        async for piece in llm.stream(build_messages(question, book.title, chunks)):
+        stream = llm.stream(build_messages(question, book.title, chunks))
+        async for piece in with_timeouts(stream, idle=idle_timeout, total=total_timeout):
             yield sse("token", TokenEvent(text=piece).model_dump())
+    except TimeoutError:
+        log.warning("model stream timed out")
+        yield sse("error", ErrorEvent(message="the model took too long; try again").model_dump())
+        return
     except Exception:
         log.exception("model failed while streaming an answer")
         yield sse("error", ErrorEvent(message="the model failed; try again").model_dump())
@@ -102,6 +137,15 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
     engine: AsyncEngine = request.app.state.engine
     retriever: HybridRetriever = request.app.state.retriever
     llm: LLM = request.app.state.llm
+    settings: Settings = request.app.state.settings
+    limiter: RateLimiter = request.app.state.chat_limiter
+    wait = limiter.check(request.client.host if request.client else "unknown")
+    if wait is not None:
+        raise HTTPException(
+            status.HTTP_429_TOO_MANY_REQUESTS,
+            "too many questions; slow down",
+            headers={"Retry-After": str(math.ceil(wait))},
+        )
     async with AsyncSession(engine, expire_on_commit=False) as session:
         book = await session.get(Book, book_id)
         latest_job = await session.scalar(
@@ -118,9 +162,25 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
         raise HTTPException(
             status.HTTP_409_CONFLICT, f"the book is not ready yet: its ingestion is {latest_job}"
         )
-    chunks = await retriever.retrieve(book_id, body.question, top_k=body.top_k)
+    try:
+        async with asyncio.timeout(settings.retrieval_timeout):
+            chunks = await retriever.retrieve(book_id, body.question, top_k=body.top_k)
+    except Exception:
+        # The embedder (Ollama) or the search failed before any byte was sent, so a status
+        # code can still say so; once the stream starts only an `error` event can.
+        log.exception("retrieval failed")
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE, "search is unavailable; try again"
+        ) from None
     return StreamingResponse(
-        answer_events(llm, book, body.question, chunks),
+        answer_events(
+            llm,
+            book,
+            body.question,
+            chunks,
+            idle_timeout=settings.llm_idle_timeout,
+            total_timeout=settings.llm_total_timeout,
+        ),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
