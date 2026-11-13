@@ -7,6 +7,10 @@ app's own chunks of one book instead of Wikipedia passages:
   4 bge-m3 + BM25 fused with reciprocal rank fusion, k=60, 30 candidates per list
     (as packages/rag/src/book_rag/retrieval/hybrid.py does).
   5 arm 4 + bge-reranker-v2-m3 over the fused top 20.
+  w<x>_rrf, w<x>_rerank  (#180) weighted RRF, score = w/(k+rank_bm25) + (1-w)/(k+rank_dense),
+    for the fixed weights in WEIGHTS (0.3 to 0.8, set before any run), alone and with the
+    reranker over the weighted top 20. w = 0.5 is arm 4 and arm 5. Each is compared with it,
+    paired, per query set.
 Arm 1 (v1's index of questions) has no counterpart: no generated-question index of this
 book exists yet, and one would need a generator other than the one that wrote these
 questions (docs/benchmarks/README.md, checklist item 2).
@@ -46,11 +50,14 @@ import numpy as np
 
 OUT = Path(os.environ.get("OUT_DIR", Path(__file__).parent / "data"))
 QUESTIONS = Path(os.environ.get("QUESTIONS", OUT / "questions.jsonl"))
+RESULTS = Path(os.environ.get("RESULTS", OUT / "results.json"))
 SEED = 177
 TOP_K = 10
 CANDIDATES = 30
 RRF_K = 60
 RERANK_DEPTH = 20
+# BM25 weight in the weighted fusion (#180); fixed in advance, not tuned on the results.
+WEIGHTS = [float(w) for w in os.environ.get("WEIGHTS", "0.3,0.4,0.6,0.7,0.8").split(",") if w]
 N_BOOT = 2000
 NEAR_DUP = 0.95
 SKIP_RERANK = os.environ.get("SKIP_RERANK") == "1"
@@ -148,6 +155,17 @@ def rrf(rankings: list[list[int]], k: int = RRF_K) -> list[int]:
     return [item for item, _ in sorted(scores.items(), key=lambda p: p[1], reverse=True)]
 
 
+def weighted_rrf(
+    bm25_rank: list[int], dense_rank: list[int], w: float, k: int = RRF_K
+) -> list[int]:
+    """RRF with weight `w` on the BM25 list and `1 - w` on the dense list (w = 0.5: equal)."""
+    scores: dict[int, float] = {}
+    for weight, ranking in ((w, bm25_rank), (1 - w, dense_rank)):
+        for rank, item in enumerate(ranking, start=1):
+            scores[item] = scores.get(item, 0.0) + weight / (k + rank)
+    return [item for item, _ in sorted(scores.items(), key=lambda p: p[1], reverse=True)]
+
+
 class BM25:
     def __init__(self, docs: list[str], k1: float = 1.2, b: float = 0.75) -> None:
         self.vocab: dict[str, int] = {}
@@ -232,10 +250,28 @@ if not SKIP_RERANK:
 timings["indexes_s"] = time.perf_counter() - t0
 log("indexes done")
 
+
+def rerank(texts: list[str], ids: list[str], candidates: list[list[int]]) -> list[list[int]]:
+    """Rerank each question's top RERANK_DEPTH candidates; scores are cached per (id, chunk)."""
+    assert reranker is not None
+    out = []
+    for q, qid, cand in zip(texts, ids, candidates, strict=True):
+        cand = cand[:RERANK_DEPTH]
+        todo = [c for c in cand if (qid, c) not in score_cache]
+        if todo:
+            s = reranker.predict(
+                [(q, passages[c]) for c in todo], batch_size=4, show_progress_bar=False
+            )
+            score_cache.update({(qid, c): float(x) for c, x in zip(todo, s, strict=True)})
+        out.append(sorted(cand, key=lambda c: -score_cache[(qid, c)])[:TOP_K])
+    return out
+
+
 # ---------------------------------------------------------------- rank each question once
 # The *_retrieval_needed sets are subsets of seen and blind, so each question is ranked
 # once and each set picks its rows.
 ranked: dict[str, dict[str, list[int]]] = {}  # arm -> question id -> ranking
+score_cache: dict[tuple[str, int], float] = {}  # (question id, chunk) -> reranker score
 near_dup: dict[str, bool] = {}
 for kind in ("seen", "blind"):
     rows = query_sets[kind]
@@ -255,15 +291,20 @@ for kind in ("seen", "blind"):
     arms["bm25_only"] = [r[:TOP_K] for r in bm25_top]
     fused = [rrf([d, s]) for d, s in zip(dense_top, bm25_top, strict=True)]
     arms["4_bge_m3_bm25_rrf"] = [f[:TOP_K] for f in fused]
+    for w in WEIGHTS:
+        arms[f"w{w}_rrf"] = [
+            weighted_rrf(s, d, w)[:TOP_K] for d, s in zip(dense_top, bm25_top, strict=True)
+        ]
+
     if reranker is not None:
-        arm5 = []
-        for q, f in zip(texts, fused, strict=True):
-            cand = f[:RERANK_DEPTH]
-            s = reranker.predict(
-                [(q, passages[c]) for c in cand], batch_size=4, show_progress_bar=False
+        ids = [q["id"] for q in rows]
+        arms["5_rrf_plus_bge_reranker_top20"] = rerank(texts, ids, fused)
+        for w in WEIGHTS:  # candidate pairs overlap across weights; scores are cached
+            arms[f"w{w}_rerank"] = rerank(
+                texts,
+                ids,
+                [weighted_rrf(s, d, w) for d, s in zip(dense_top, bm25_top, strict=True)],
             )
-            arm5.append([cand[i] for i in np.argsort(-np.asarray(s))][:TOP_K])
-        arms["5_rrf_plus_bge_reranker_top20"] = arm5
     for arm, lists in arms.items():
         for q, r in zip(rows, lists, strict=True):
             ranked.setdefault(arm, {})[q["id"]] = r
@@ -288,6 +329,10 @@ for set_name, rows in query_sets.items():
     }
     if "5_rrf_plus_bge_reranker_top20" in metrics:
         pairs["arm5_minus_arm4"] = ("5_rrf_plus_bge_reranker_top20", "4_bge_m3_bm25_rrf")
+    for w in WEIGHTS:
+        pairs[f"w{w}_rrf_minus_arm4"] = (f"w{w}_rrf", "4_bge_m3_bm25_rrf")
+        if "5_rrf_plus_bge_reranker_top20" in metrics:
+            pairs[f"w{w}_rerank_minus_arm5"] = (f"w{w}_rerank", "5_rrf_plus_bge_reranker_top20")
     report[set_name] = {
         "n_queries": n,
         "mean_gold_chunks": round(float(np.mean([len(g) for g in gold])), 2),
@@ -300,6 +345,7 @@ for set_name, rows in query_sets.items():
 
 results = {
     "issue": 177,
+    "weights_bm25": WEIGHTS,
     "book": "Việt Nam sử lược, Quyển I (Trần Trọng Kim), vi.wikisource",
     "n_chunks": len(passages),
     "questions_file": QUESTIONS.name,
@@ -318,7 +364,5 @@ results = {
         "torch": torch.__version__,
     },
 }
-(OUT / "results.json").write_text(
-    json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8"
-)
+RESULTS.write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
 print(json.dumps({k: results[k] for k in ("query_sets", "leakage")}, indent=1, ensure_ascii=False))
