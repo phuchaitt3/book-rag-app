@@ -57,6 +57,7 @@ def create_index(settings: WorkerSettings) -> QdrantVectorIndex | None:
 class Worker:
     app: procrastinate.App
     engine: AsyncEngine
+    index: QdrantVectorIndex | None = None
 
 
 def build_worker(
@@ -94,4 +95,4 @@ def build_worker(
     async def sweep_stuck_jobs(timestamp: int) -> None:
         await fail_stuck_jobs(engine, timedelta(minutes=settings.stuck_job_minutes))
 
-    return Worker(app, engine)
+    return Worker(app, engine, index)

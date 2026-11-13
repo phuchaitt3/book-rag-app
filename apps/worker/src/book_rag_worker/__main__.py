@@ -19,9 +19,13 @@ async def init_schema(worker: Worker) -> None:
 
 
 async def run(worker: Worker) -> None:
-    async with worker.app.open_async():
-        await worker.app.run_worker_async()
-    await worker.engine.dispose()
+    try:
+        async with worker.app.open_async():
+            await worker.app.run_worker_async()
+    finally:
+        if worker.index is not None:
+            await worker.index.close()
+        await worker.engine.dispose()
 
 
 def main() -> None:
