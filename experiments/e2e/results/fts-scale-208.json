@@ -1,0 +1,43 @@
+{
+  "issue": 208,
+  "synthetic": "random draws from the real book's word frequencies; latency only",
+  "container_mem_limit": "2g",
+  "queries": 100,
+  "limit": 30,
+  "seed": 208,
+  "python": "3.12.3",
+  "rows": [
+    {
+      "chunks": 392,
+      "load_s": 0.6,
+      "bm25_bounded_median_ms": 83.5,
+      "bm25_bounded_p95_ms": 483.7,
+      "ts_rank_cd_median_ms": 18.8,
+      "ts_rank_cd_p95_ms": 36.2
+    },
+    {
+      "chunks": 3920,
+      "load_s": 4.2,
+      "bm25_bounded_median_ms": 136.2,
+      "bm25_bounded_p95_ms": 334.7,
+      "ts_rank_cd_median_ms": 152.7,
+      "ts_rank_cd_p95_ms": 287.1
+    },
+    {
+      "chunks": 11760,
+      "load_s": 13.9,
+      "bm25_bounded_median_ms": 355.0,
+      "bm25_bounded_p95_ms": 986.7,
+      "ts_rank_cd_median_ms": 500.3,
+      "ts_rank_cd_p95_ms": 1057.7
+    },
+    {
+      "chunks": 39200,
+      "load_s": 57.7,
+      "bm25_bounded_median_ms": 1284.8,
+      "bm25_bounded_p95_ms": 3388.8,
+      "ts_rank_cd_median_ms": 1594.2,
+      "ts_rank_cd_p95_ms": 3075.1
+    }
+  ]
+}

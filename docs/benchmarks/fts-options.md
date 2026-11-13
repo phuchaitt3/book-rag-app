@@ -59,6 +59,23 @@ Storing the document frequencies and chunk lengths in tables ([fts_stats_latency
 
 At 0.2 the leg is faster than today's `ts_rank_cd` (14 ms) with the BM25 quality; below it the leg's recall falls. This changes the verdict above: the 80 ms was the per-query statistics and the unbounded candidate set, not BM25. The design is proposed in [ADR 0011](../adr/0011-bm25-in-postgres-stored-statistics.md).
 
+## Growth with book size (#208)
+
+[fts_scale.py](../../experiments/e2e/fts_scale.py) times the shipped BM25 leg (bounded candidates, stored statistics, [ADR 0011](../adr/0011-bm25-in-postgres-stored-statistics.md)) and the `ts_rank_cd` search it replaced on synthetic books of growing chunk count ([fts-scale-208.json](../../experiments/e2e/results/fts-scale-208.json)). Median and p95 per query, 100 real test-set questions, two passes each, 30 candidates, Postgres in a 2 GB container:
+
+| Chunks | BM25 bounded median / p95 | `ts_rank_cd` median / p95 |
+|---|---|---|
+| 392 | 84 / 484 ms | 19 / 36 ms |
+| 3,920 | 136 / 335 ms | 153 / 287 ms |
+| 11,760 | 355 / 987 ms | 500 / 1,058 ms |
+| 39,200 | 1,285 / 3,389 ms | 1,594 / 3,075 ms |
+
+From 3,920 to 39,200 chunks (10 times) the BM25 median grows 9.4 times and the `ts_rank_cd` median 10.4 times: both legs grow about linearly with chunk count here, and BM25 is 10 to 30% faster in the median from 3,920 chunks up. The p95 of BM25 is higher than `ts_rank_cd` at 392 and 39,200 chunks and lower at the two sizes between, so the data does not separate the tails.
+
+What this shows for scaling: the bound does not change the growth rate on this data. A book of 39,200 chunks (about 100 times the real one) costs over a second per query on either leg, so a large book needs a different remedy (for example a smaller candidate share or a cap on candidates), not only the bound.
+
+The data is synthetic: each chunk is a random draw of words from the real book's word frequencies, so common words are as common as in the real text and an OR query matches almost every chunk, but word order, co-occurrence and rare-word clustering are lost. It supports a latency claim only, never a quality claim. The smallest size (392 chunks, the real book's count) took 84 ms here against 11 ms on the real book above, so the synthetic text is a harsher case than the real one, probably because rare words are less concentrated and the bound removes fewer candidates; this was not checked. The 392-chunk row ran first, and its high p95 may include warm-up. One run, one machine, one 2 GB container, 100 queries.
+
 ## What follows
 
 - Adopting any of these changes the search design, so it needs an ADR, and the choice is a latency-against-quality trade that is the user's to weigh: BM25 in Postgres restores the 11 points but multiplies the leg's time by about 5 on this book. Follow-up issue: bound the candidate set (for example, take the GIN matches on only the query's rarest words) and re-time.
