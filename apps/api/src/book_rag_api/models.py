@@ -92,6 +92,9 @@ class Chunk(Base):
     tsv: Mapped[Any] = mapped_column(
         TSVECTOR, Computed("to_tsvector('simple', text)", persisted=True)
     )
+    # Words in the chunk (the sum of the term frequencies in `tsv`), for BM25's length
+    # normalisation. Filled by `refresh_book_stats` when a book's chunks are written (ADR 0011).
+    token_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
 
     book: Mapped[Book] = relationship(back_populates="chunks")
 
@@ -106,6 +109,21 @@ class Chunk(Base):
         ),
         Index("ix_chunks_tsv", "tsv", postgresql_using="gin"),
     )
+
+
+class BookTerm(Base):
+    """Document frequency of a term within one book: in how many of its chunks it occurs.
+
+    Rebuilt per book by `refresh_book_stats`; BM25's idf comes from it (ADR 0011).
+    """
+
+    __tablename__ = "book_terms"
+
+    book_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("books.id", ondelete="CASCADE"), primary_key=True
+    )
+    term: Mapped[str] = mapped_column(Text, primary_key=True)
+    df: Mapped[int] = mapped_column(Integer)
 
 
 class IngestionJob(Base):

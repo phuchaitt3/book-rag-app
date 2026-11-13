@@ -7,6 +7,7 @@ from sqlalchemy import Select, func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from book_rag.retrieval import RetrievedChunk
+from book_rag_api.lexical import BM25_SEARCH, K1, RARE_SHARE, B, has_stats
 from book_rag_api.models import Chunk
 
 log = logging.getLogger(__name__)
@@ -58,10 +59,34 @@ class SqlChunkSearcher:
         return await self._fetch(stmt, setup)
 
     async def text_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
-        tsquery_text = or_query(query)
-        if not tsquery_text:
+        """BM25 over the book's stored statistics (ADR 0011).
+
+        A book with no statistics (ingested before they existed and not backfilled) falls back
+        to `ts_rank_cd`, which ranks worse but never returns nothing for that reason.
+        """
+        if not or_query(query):
             return []
-        tsquery = func.to_tsquery("simple", tsquery_text)
+        async with self._sessions() as session:
+            if await has_stats(session, book_id):
+                rows = await session.execute(
+                    BM25_SEARCH,
+                    {
+                        "book_id": book_id,
+                        "query": query,
+                        "share": RARE_SHARE,
+                        "k1": K1,
+                        "b": B,
+                        "limit": limit,
+                    },
+                )
+                return [
+                    RetrievedChunk(id=r.id, text=r.text, page=r.page, section_path=r.section_path)
+                    for r in rows
+                ]
+        return await self._ts_rank_search(book_id, query, limit)
+
+    async def _ts_rank_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
+        tsquery = func.to_tsquery("simple", or_query(query))
         stmt = (
             select(Chunk)
             .where(Chunk.book_id == book_id, Chunk.tsv.op("@@")(tsquery))

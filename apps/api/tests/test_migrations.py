@@ -43,7 +43,7 @@ async def test_upgrade_creates_extension_and_tables(database_url: str) -> None:
                     text("SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
                 )
             ).scalars()
-            assert {"books", "sections", "chunks", "ingestion_jobs"} <= set(tables)
+            assert {"books", "sections", "chunks", "ingestion_jobs", "book_terms"} <= set(tables)
 
             indexes = (
                 await conn.execute(
