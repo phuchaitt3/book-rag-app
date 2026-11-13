@@ -4,7 +4,7 @@ Until this run, ingestion had only been tested with a fake embedder. This note r
 
 **Result.** The PDF ingested (338 pages, 392 chunks, all embedded, 202 s) and a question answered with a streamed reply citing section and page. On the 208 blind questions of the [book test set](../../experiments/book-testset/README.md), the app's own retrieval finds the evidence sentence in the top 5 cited chunks for **75.5%** of questions without the reranker and **88.9%** with it. Hit@1 goes from **47.6% to 80.8%**. The reranker adds about 2.7 s to the median retrieval time (0.14 s to 2.87 s).
 
-The no-reranker figure is well below the in-memory benchmark on the same questions ([book-retrieval.md](book-retrieval.md), arm 4: 89.4% Hit@5). This run does not say why. The candidates are listed under "Open question".
+The no-reranker figure is well below the in-memory benchmark on the same questions ([book-retrieval.md](book-retrieval.md), arm 4: 89.4% Hit@5). This run does not say why; [retrieval-gap.md](retrieval-gap.md) (#199) does: the app's full-text leg.
 
 ## Conditions
 
@@ -38,15 +38,9 @@ Raw per-question ranks: [retrieval-no-rerank.json](../../experiments/e2e/results
 - **A real answer streams with citations.** One question ("Nước Việt ta khởi đầu có sử từ đời nào, vào thế kỷ thứ mấy?") returned "Đời nhà Trần, vào quãng thế kỷ thứ XIII [1]" with six citations (sections and printed pages). Its first token took 133 s because the 7B model was loading with about 1.9 GB of free RAM. That is a cold start and is not a serving figure; the serving note measures warm answers.
 - **The reranker is the largest effect in the app too:** +33.2 points Hit@1 and +13.4 points Hit@5 against no reranker, the same direction and order of size as the benchmark's arm 5 (+22 Hit@1 over fusion).
 
-## Open question: why is the app below the benchmark?
+## Open question, answered in #199: why is the app below the benchmark?
 
-The same 208 questions reach 89.4% Hit@5 in the in-memory benchmark (arm 4) and 75.5% here. The runs differ in several ways at once, and this run does not separate them:
-
-- The text: the benchmark uses the proofread HTML chunking (359 chunks); this run uses the PDF export (392 chunks) with page numbers, footnotes and Han spelling inside sentences.
-- The search: the app's pgvector and Postgres full-text search against the benchmark's own cosine and BM25 code.
-- The scoring: evidence sentence in a cited chunk against the gold chunk numbers.
-
-An experiment that changes one of these at a time would answer it, for example scoring the benchmark's arm 4 on the PDF chunks, or loading the HTML chunks through the app. It was not run, and no figure here was tuned toward the benchmark's.
+The same 208 questions reach 89.4% Hit@5 in the in-memory benchmark (arm 4) and 75.5% here. [retrieval-gap.md](retrieval-gap.md) changes the text, the search and the scoring one at a time: the cause is the app's full-text leg (`ts_rank_cd` over an OR query, no document-frequency weighting). With the benchmark's BM25 in its place the app's fused Hit@5 is 86.5% on this PDF. The PDF's text costs 1 to 3 points (not significant), and the scoring and the embedding side cost nothing.
 
 ## Reproduce
 
