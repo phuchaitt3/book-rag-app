@@ -82,6 +82,8 @@ pnpm stack:dev     # same as up, in the foreground with hot reload (docker compo
 
 A one-shot `migrate` service creates the database tables before the API and worker start; run `docker compose run --rm migrate` to apply new migrations to an existing volume.
 
+For a large HNSW index build (100k+ chunks), raise `maintenance_work_mem` in the session that runs `CREATE INDEX` (for example `SET maintenance_work_mem = '2GB'`); the db service has `shm_size: 3g` in `compose.yaml` so the parallel workers get enough shared memory (Docker's default `/dev/shm` is 64 MB).
+
 The home page shows whether the API is reachable. `GET /healthz` is liveness; `GET /readyz` also checks the database.
 
 ## Checks

@@ -1,6 +1,9 @@
 services:
   db:
     image: pgvector/pgvector:pg17
+    # Docker's default /dev/shm is 64 MB; a parallel HNSW build with a large maintenance_work_mem
+    # (2GB) asks Postgres for a shared-memory segment that size and fails without this.
+    shm_size: 3g
     environment:
       POSTGRES_USER: bookrag
       POSTGRES_PASSWORD: bookrag
