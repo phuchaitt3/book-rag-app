@@ -86,3 +86,66 @@ async def test_reranker_failure_falls_back_to_the_fused_order(
 def test_rerank_depth_must_be_positive() -> None:
     with pytest.raises(ValueError):
         HybridRetriever(StubSearcher([], []), FakeEmbedder(), rerank_depth=0)
+
+
+class RecordingObserver:
+    def __init__(self) -> None:
+        self.stages: list[str] = []
+        self.totals = 0
+        self.fallbacks: list[str] = []
+
+    def stage_done(self, stage: str, seconds: float) -> None:
+        assert seconds >= 0
+        self.stages.append(stage)
+
+    def retrieval_done(self, seconds: float) -> None:
+        assert seconds >= 0
+        self.totals += 1
+
+    def rerank_fallback(self, reason: str) -> None:
+        self.fallbacks.append(reason)
+
+
+class ConnectionRefusedReranker:
+    async def rerank(self, query: str, documents: Sequence[str]) -> list[float]:
+        raise ConnectionRefusedError("nothing listens")
+
+
+async def test_observer_sees_every_stage_once_and_no_fallback() -> None:
+    observer = RecordingObserver()
+    retriever = HybridRetriever(
+        StubSearcher([chunk("a")], []), FakeEmbedder(), FakeReranker(), observer=observer
+    )
+    await retriever.retrieve(uuid4(), "q")
+    assert sorted(observer.stages) == ["embed", "rerank", "search"]
+    assert observer.totals == 1
+    assert observer.fallbacks == []
+
+
+async def test_observer_without_a_reranker_sees_no_rerank_stage() -> None:
+    observer = RecordingObserver()
+    retriever = HybridRetriever(StubSearcher([chunk("a")], []), FakeEmbedder(), observer=observer)
+    await retriever.retrieve(uuid4(), "q")
+    assert sorted(observer.stages) == ["embed", "search"]
+
+
+async def test_observer_counts_a_timeout_fallback() -> None:
+    observer = RecordingObserver()
+    retriever = HybridRetriever(
+        StubSearcher([chunk("a")], []), FakeEmbedder(), BrokenReranker(), observer=observer
+    )
+    await retriever.retrieve(uuid4(), "q")
+    assert observer.fallbacks == ["timeout"]
+    assert "rerank" in observer.stages  # the failed attempt still took time
+
+
+async def test_observer_counts_any_other_failure_as_error() -> None:
+    observer = RecordingObserver()
+    retriever = HybridRetriever(
+        StubSearcher([chunk("a")], []),
+        FakeEmbedder(),
+        ConnectionRefusedReranker(),
+        observer=observer,
+    )
+    await retriever.retrieve(uuid4(), "q")
+    assert observer.fallbacks == ["error"]

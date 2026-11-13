@@ -36,6 +36,14 @@ class Settings(BaseSettings):
     embedding_provider: str = "ollama"
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://localhost:11434"
+    # Chat limits (#191). Retrieval (embedding the question plus the search) gets
+    # `retrieval_timeout` seconds. The model stream may pause at most `llm_idle_timeout` seconds
+    # between pieces and run at most `llm_total_timeout` seconds in all. Each client address may
+    # send `chat_rate_limit` questions per minute to this process (0 turns the limit off).
+    retrieval_timeout: float = Field(default=20.0, gt=0)
+    llm_idle_timeout: float = Field(default=30.0, gt=0)
+    llm_total_timeout: float = Field(default=180.0, gt=0)
+    chat_rate_limit: int = Field(default=30, ge=0)
     # Reranker (ADR 0009): "none" (default), "fake" (tests), or "tei" (the Compose service).
     # Only the top `rerank_depth` fused candidates are scored; on an error or after
     # `rerank_timeout` seconds the fused order is used.
