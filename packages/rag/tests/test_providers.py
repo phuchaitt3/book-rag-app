@@ -1,4 +1,6 @@
+import asyncio
 import math
+import time
 from collections.abc import Iterator
 from typing import Any
 
@@ -133,3 +135,81 @@ async def test_tei_reranker_rejects_a_reply_missing_a_document() -> None:
 
     with pytest.raises(ValueError):
         await TeiReranker(post=post).rerank("q", ["a", "b"])
+
+
+async def _llm_outcomes(llm: FakeLLM, n: int) -> list[bool]:
+    result = []
+    for _ in range(n):
+        try:
+            _ = [p async for p in llm.stream([Message("user", "hi")])]
+            result.append(True)
+        except RuntimeError:
+            result.append(False)
+    return result
+
+
+async def test_fake_llm_delays_first_token_and_each_token() -> None:
+    llm = FakeLLM("a b c", first_token_delay=0.02, token_delay=0.01)
+    start = time.perf_counter()
+    pieces = [p async for p in llm.stream([Message("user", "hi")])]
+    assert "".join(pieces) == "a b c"
+    assert time.perf_counter() - start >= 0.035
+
+
+async def test_fake_llm_scripted_errors_then_success() -> None:
+    llm = FakeLLM("ok", errors=[TimeoutError("scripted"), None])
+    with pytest.raises(TimeoutError):
+        _ = [p async for p in llm.stream([Message("user", "hi")])]
+    for _ in range(2):
+        assert "".join([p async for p in llm.stream([Message("user", "hi")])]) == "ok"
+
+
+async def test_fake_llm_error_rate_repeats_with_the_same_seed() -> None:
+    first = await _llm_outcomes(FakeLLM("ok", error_rate=0.5, seed=7), 30)
+    second = await _llm_outcomes(FakeLLM("ok", error_rate=0.5, seed=7), 30)
+    assert first == second
+    assert True in first
+    assert False in first
+    assert all(await _llm_outcomes(FakeLLM("ok", error_rate=0.0), 5))
+    assert not any(await _llm_outcomes(FakeLLM("ok", error_rate=1.0), 5))
+
+
+async def test_fake_llm_delays_overlap_across_concurrent_streams() -> None:
+    async def run() -> None:
+        _ = [p async for p in FakeLLM("a b", first_token_delay=0.03).stream([])]
+
+    start = time.perf_counter()
+    await asyncio.gather(*(run() for _ in range(10)))
+    assert time.perf_counter() - start < 0.25
+
+
+async def test_fake_embedder_delay_and_scripted_error() -> None:
+    embedder = FakeEmbedder(8, batch_delay=0.02, errors=[ConnectionError("429")])
+    with pytest.raises(ConnectionError):
+        await embedder.embed(["x"])
+    start = time.perf_counter()
+    vectors = await embedder.embed(["x", "y"])
+    assert len(vectors) == 2
+    assert time.perf_counter() - start >= 0.015
+
+
+async def test_fake_embedder_error_rate_is_seeded() -> None:
+    async def run(seed: int) -> list[bool]:
+        embedder = FakeEmbedder(8, error_rate=0.5, seed=seed)
+        out = []
+        for _ in range(30):
+            try:
+                await embedder.embed(["x"])
+                out.append(True)
+            except RuntimeError:
+                out.append(False)
+        return out
+
+    assert await run(3) == await run(3)
+
+
+def test_fake_error_rate_must_be_a_probability() -> None:
+    with pytest.raises(ValueError):
+        FakeLLM(error_rate=1.5)
+    with pytest.raises(ValueError):
+        FakeEmbedder(error_rate=-0.1)
