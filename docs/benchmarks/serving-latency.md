@@ -1,80 +1,68 @@
-# Serving latency: time to first token and total answer time
+# Serving latency: time to first token and total answer time (#190)
 
-Issue #190. **Status: not yet run.** Every figure below reads `TBD (not yet run)` until the run is made at a commit on `main` and the numbers are copied from its `-summary.json`. Script and questions: [experiments/serving/](../../experiments/serving/measure.py).
+How long one user waits for an answer about one book through the app's own chat endpoint (`POST /books/{id}/chat`, streamed over SSE), with the reranker off and on. It is not a load test: one request at a time, one user, one laptop.
 
-## Purpose
+**Result.** With `qwen2.5:3b-instruct` as the answer model, the first streamed token arrives after a median of **8.0 s** without the reranker and **10.7 s** with it, and the whole answer after **8.6 s** and **11.6 s**. The reranker costs about 2.7 s per question, all of it before the citations are sent. Most of the remaining wait is the model reading the six cited passages before it writes: about 7.9 s between the citations and the first token in both arms. On this 6 GB GPU the app's default answer model (7B) does not stay loaded next to the reranker and the embedder, so it was not measured (see "The 7B default").
 
-How long one user waits for an answer about one book through the app's own chat endpoint (`POST /books/{BOOK_ID}/chat`, streamed over SSE): the time until the first streamed token, and the time until the whole answer is done. It is run with the reranker off and on, so the cost of the reranker (ADR 0009) is visible in the user's wait and not only in the retrieval step. It is not a load test: one request at a time, one user.
+## Results
+
+Seconds, 30 counted questions per arm, no errors in either arm. Nearest-rank median and p90.
+
+| Arm | Citations (retrieval) median / p90 | First token median / p90 | Whole answer median / p90 |
+|---|---|---|---|
+| Reranker off | 0.13 / 0.16 | 7.98 / 8.93 | 8.57 / 9.83 |
+| Reranker on | 2.80 / 2.97 | 10.69 / 11.88 | 11.57 / 13.18 |
+
+Raw records and summaries, with the conditions the script captured: [experiments/serving/results/](../../experiments/serving/results/) (`qwen3b-rerank-off*`, `qwen3b-rerank-on*`).
 
 ## Conditions
 
 | Item | Value |
 |---|---|
-| Machine GPU / VRAM | TBD (not yet run) |
-| Ollama version | TBD (not yet run) |
-| Chat model | `qwen2.5:7b-instruct` (default `llm_model` in `apps/api/src/book_rag_api/config.py`) |
-| Chat model quantisation | TBD (not yet run) |
-| Embedding model | `bge-m3` (default `embedding_model` in `config.py`) |
-| TEI image (reranker arm) | `ghcr.io/huggingface/text-embeddings-inference:turing-1.9.4` (`compose.reranker.yaml`) |
-| Commit | TBD (not yet run) |
-| Date | TBD (not yet run) |
-| Book | TBD (not yet run) |
-
-The script records GPU, Ollama version, model digest and quantisation, TEI image, commit and date in the `conditions` block of each summary file, so the table is filled from there and not from memory.
+| Machine | Windows 11 laptop, NVIDIA GTX 1660 Ti 6 GB (driver 616.92), 16 GB RAM, 1.6–3.2 GB of it free at the readings taken that evening |
+| Answer model | `qwen2.5:3b-instruct`, Q4_K_M, 3.1B parameters, digest `357c53fb…`, context 4096, through Ollama 0.40.13 |
+| Embedding model | `bge-m3`, F16, 567M parameters, digest `79076464…`, through the same Ollama |
+| Ollama settings | `OLLAMA_KEEP_ALIVE=30m`, `OLLAMA_MAX_LOADED_MODELS=2`; both models were resident on the GPU for both arms |
+| Reranker (arm "on") | `BAAI/bge-reranker-v2-m3`, TEI `turing-1.9.4`, fp32, depth 20 (`compose.reranker.yaml`) |
+| API | built from `main` at `c3a41cf` (includes the chat timeouts and rate limit of #193 and `/metrics` of #195, at their defaults), `top_k` 6 |
+| Book | *Việt Nam sử lược*, Quyển I, Wikisource PDF export, 338 pages, 392 chunks ([e2e-real-model.md](e2e-real-model.md)) |
+| Questions | [questions.json](../../experiments/serving/questions.json): 33 blind questions of the book test set drawn with seed 2026; the first 3 are warm-up and not counted |
+| Date | 2026-11-13 |
 
 ## Method
 
-[experiments/serving/measure.py](../../experiments/serving/measure.py) sends each question to `POST {API_URL}/books/{BOOK_ID}/chat` with `top_k` 6, one request at a time (sequential, no concurrency), and reads the SSE stream. It records seconds from just before the request is sent (`time.perf_counter`) to each of three events:
+[measure.py](../../experiments/serving/measure.py) sends each question to the chat endpoint, one at a time, and reads the stream. It records seconds from just before the request is sent to three events:
 
-- **t_citations:** the first `citations` event. Retrieval, and reranking when on, are done by then.
-- **t_first_token:** the first `token` event.
-- **t_total:** the `done` event.
+- **Citations:** the `citations` event. Query embedding, both searches, fusion and (arm "on") reranking are done by then.
+- **First token:** the first `token` event.
+- **Whole answer:** the `done` event.
 
-An event counts when its `event:` line arrives, which is when the server flushed it. A request that raises, streams an `error` event, or never reaches `done` is counted as an error and left out of every timing.
+A request that raises, streams an `error` event or never reaches `done` counts as an error and is left out of the timings; there were none. Median and p90 use the nearest-rank method (the value at rank `ceil(p/100 × n)` of the sorted values). With 30 values, p90 is the 27th: a rough tail, not a stable one.
 
-The question file is [experiments/serving/questions.json](../../experiments/serving/questions.json): 33 blind-form questions picked with `random.Random(2026)` by `make_questions.py`. The first 3 are warm-up (run, not counted, so model load and caches do not enter the figures); the other **30 are counted**.
+## Cold start
 
-Median and p90 use the nearest-rank method: for n sorted values, the value at 1-based rank `ceil(p/100 * n)`. The median is the 50th percentile by the same rule (the lower middle value for even n). Raw per-question records go to `OUT_DIR/<LABEL>.jsonl`, and the summary to `OUT_DIR/<LABEL>-summary.json`.
+The first request after Ollama starts pays for loading the models. Measured with one call each through Ollama's API, before the runs: `qwen2.5:3b-instruct` 22 s, `bge-m3` 21 s, `qwen2.5:7b-instruct` 127 s. The warm-up questions absorb this, so it is not in the table. A user who asks the first question after a restart waits that long, and with Ollama's default keep-alive (5 minutes) again after every idle spell.
 
-## Results
+## The 7B default
 
-Seconds. n is the number of counted questions; errors are counted separately and excluded from the timings.
-
-**Reranker off** (`pnpm stack:up`)
-
-| Timing | n | median | p90 | errors |
-|---|---|---|---|---|
-| t_citations | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) |
-| t_first_token | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) |
-| t_total | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) |
-
-**Reranker on** (`pnpm stack:up:rerank`)
-
-| Timing | n | median | p90 | errors |
-|---|---|---|---|---|
-| t_citations | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) |
-| t_first_token | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) |
-| t_total | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) | TBD (not yet run) |
+The app's default answer model is `qwen2.5:7b-instruct`. On this GPU, with the reranker holding 2.2 GB, Ollama keeps only one model loaded: the 7B model (5.2 GB, 18% of it on the CPU) and `bge-m3` replace each other on every question. Ollama reported load times of about 47 s for the 7B model and 15 s for `bge-m3` on each switch. The serving run was not made with it: it would measure model loading, not the app, and it heats the laptop. Two things follow for a local setup on a 6 GB card: use the 3B model (set `LLM_MODEL`), or run without the reranker. Which answer model is good enough is a separate question: no evaluation of answer quality exists yet, so these figures say nothing about the answers (see #22, #168).
 
 ## Reproduce
 
-Start the stack for the arm, ingest the book, then run the script under the machine-wide GPU lock. Run the off arm first, then bring the stack down and run the on arm.
-
 ```sh
-pnpm stack:up            # reranker off
-# or
-pnpm stack:up:rerank     # reranker on (TEI service)
-
-BOOK_ID=<id of the ingested book> LABEL=rerank-off API_URL=http://localhost:8000 \
-  python ~/claude-config/scripts/gpu_run.py run --wait -- \
-  uv run python experiments/serving/measure.py
+# Ollama on the host with both models pulled; keep them loaded for the run:
+#   OLLAMA_KEEP_ALIVE=30m OLLAMA_MAX_LOADED_MODELS=2 ollama serve
+LLM_MODEL=qwen2.5:3b-instruct pnpm stack:up:rerank        # arm "on"
+# ingest the book (see e2e-real-model.md), then, under the machine-wide GPU lock:
+BOOK_ID=<id> LABEL=qwen3b-rerank-on LLM_MODEL=qwen2.5:3b-instruct \
+  python ~/claude-config/scripts/gpu_run.py run --wait -- uv run python experiments/serving/measure.py
+# arm "off": recreate the api with the reranker provider set to none, then LABEL=qwen3b-rerank-off
 ```
-
-Use `LABEL=rerank-on` for the second arm. `WARMUP`, `QUESTIONS`, `OUT_DIR`, `OLLAMA_URL`, `LLM_MODEL` and `EMBEDDING_MODEL` are optional and documented at the top of `measure.py`. `pnpm stack:down` stops either stack.
 
 ## Limits
 
-- **Small sample:** 30 counted questions per arm, so p90 rests on very few values and the figures are noisy. No confidence interval is computed.
-- **One laptop, one GPU:** the figures say nothing about other hardware, and the GPU is shared by chat, embedding and the reranker.
-- **Local only:** Ollama and TEI run in the local compose stack, not on a deployed system.
-- **Not production:** one user, one request at a time, one book; it shows no behaviour under concurrent load.
+- **Small sample:** 30 questions per arm, one run each, no repeats and no confidence interval.
+- **One laptop:** a 6 GB consumer GPU shared by the answer model, the embedder and the reranker, with little free RAM. Other hardware will differ.
+- **Local, not production:** production would call hosted models (ADR 0003), and this says nothing about them.
+- **One user:** sequential requests; nothing here shows behaviour under concurrent load.
+- **Latency only:** the answers were not scored.
