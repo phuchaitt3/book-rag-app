@@ -6,7 +6,7 @@ from typing import Annotated
 import procrastinate
 from fastapi import Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
 from qdrant_client import AsyncQdrantClient
 from sqlalchemy.exc import SQLAlchemyError
@@ -29,6 +29,7 @@ from book_rag_api.config import Settings, get_settings
 from book_rag_api.db import create_engine, ping
 from book_rag_api.jobs import create_queue
 from book_rag_api.jobs import router as jobs_router
+from book_rag_api.metrics import Metrics, MetricsMiddleware
 from book_rag_api.models import EMBEDDING_DIM
 from book_rag_api.openapi import add_stream_events
 from book_rag_api.qdrant_index import (
@@ -63,6 +64,7 @@ def create_app(
     """Tests pass a fake `storage`, an in-memory `queue`, and fake `llm`, `embedder` and
     `reranker`."""
     settings = settings or get_settings()
+    metrics = Metrics()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -77,6 +79,7 @@ def create_app(
             embedder or _embedder(settings),
             reranker or _reranker(settings),
             rerank_depth=settings.rerank_depth,
+            observer=metrics,
         )
         try:
             async with app.state.queue.open_async():
@@ -92,6 +95,8 @@ def create_app(
         allow_headers=["*"],
     )
 
+    app.add_middleware(MetricsMiddleware, metrics=metrics)
+
     app.include_router(jobs_router)
     app.include_router(books_router)
     app.include_router(chat_router)
@@ -101,6 +106,11 @@ def create_app(
     async def healthz() -> HealthStatus:
         """Liveness: the process is up. Never touches the database."""
         return HealthStatus(status="ok")
+
+    @app.get("/metrics", include_in_schema=False)
+    async def metrics_endpoint() -> Response:
+        """Prometheus text format (ADR 0010). Unauthenticated: only the scraper may reach it."""
+        return Response(metrics.render(), media_type=metrics.content_type)
 
     @app.get(
         "/readyz",
