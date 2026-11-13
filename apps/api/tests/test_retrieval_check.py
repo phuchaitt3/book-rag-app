@@ -113,3 +113,9 @@ def test_citations_reads_first_event_from_a_local_server(
     assert elapsed >= 0
     assert seen["path"] == f"/books/{rc.BOOK_ID}/chat"
     assert seen["body"] == {"question": "what?", "top_k": rc.TOP_K}
+
+
+def test_norm_ignores_pdf_page_numbers_and_han_characters(rc: ModuleType) -> None:
+    evidence = "chữ Pháp, hoặc xưng là Kinh-dương-vương, quốc-hiệu"
+    pdf_text = "chữ Pháp1 hoặc xưng là Kinh-dương-vương 涇陽王 quốc-hiệu"
+    assert rc.norm(evidence) == rc.norm(pdf_text)

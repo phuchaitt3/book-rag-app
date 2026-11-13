@@ -39,12 +39,14 @@ BOOK_ID = os.environ["BOOK_ID"]
 LABEL = os.environ.get("LABEL", "run")
 OUT_DIR = Path(os.environ.get("OUT_DIR", HERE / "results"))
 LIMIT = int(os.environ.get("LIMIT", "0"))
-_NON_WORD = re.compile(r"[\W_]+", re.UNICODE)
+# Not matched: punctuation and spacing, digits (the PDF puts page numbers and footnote markers
+# inside sentences) and CJK (it inlines the Han spelling of names after the Vietnamese one).
+_NOISE = re.compile(r"[\W_\d㐀-鿿豈-﫿]+", re.UNICODE)
 
 
 def norm(text: str) -> str:
-    """Lowercase, NFC, letters and digits only (hyphens, spacing and line breaks are ignored)."""
-    return _NON_WORD.sub("", unicodedata.normalize("NFC", text).lower())
+    """Lowercase NFC letters only, without digits or CJK, so PDF noise does not hide a match."""
+    return _NOISE.sub("", unicodedata.normalize("NFC", text).lower())
 
 
 def first_citations_event(lines: Iterable[str]) -> list[str]:
