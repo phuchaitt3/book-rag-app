@@ -7,6 +7,7 @@ Measured results for retrieval and answering. Each note links the script that pr
 - [e2e-real-model.md](e2e-real-model.md): one real run of the app on a PDF, with and without the reranker.
 - [retrieval-gap.md](retrieval-gap.md): why the app is below the benchmark (the full-text leg).
 - [fts-options.md](fts-options.md): ways to fix the full-text leg (#204): BM25 in Postgres matches the benchmark; its latency cost.
+- [set-local-cost.md](set-local-cost.md): the extra `SET LOCAL` statement in vector search costs one round trip (#93).
 
 ## Checklist for a test set
 
