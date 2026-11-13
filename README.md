@@ -62,8 +62,8 @@ An answer is built from hybrid retrieval (vector search plus Postgres full-text 
 | Skeleton: monorepo, Docker Compose, health checks, CI, pre-commit | done |
 | Provider interfaces (LLM, embedder, reranker) with fake, Ollama and TEI providers | done |
 | Database schema and migrations | done |
-| Upload, PDF parsing and chunking, ingestion worker | done; tested with a fake embedder, a real-model run is open |
-| Hybrid retrieval and streamed, cited answers (API) | done; the reranker runs locally (TEI in Compose), not yet in a hosted setup |
+| Upload, PDF parsing and chunking, ingestion worker | done; one real run with bge-m3 on a 338-page Vietnamese PDF ([results](docs/benchmarks/e2e-real-model.md)) |
+| Hybrid retrieval and streamed, cited answers (API) | done; the reranker runs locally (TEI in Compose), not yet in a hosted setup; on that PDF it lifts Hit@1 from 47.6% to 80.8% ([results](docs/benchmarks/e2e-real-model.md)) |
 | Web: upload with progress, streaming chat with citation chips | done; not yet checked against the running stack |
 | Evaluation set and CI eval job | planned |
 | Authentication, per-user libraries, hosted demo | planned |
