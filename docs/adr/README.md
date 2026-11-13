@@ -17,6 +17,7 @@ ADRs written before 2026-11-01 are being rewritten to this template, one PR per 
 | [0007](0007-api-web-contract.md) | The web app learns the API's shape from a generated OpenAPI file | Accepted | agents, owner review pending |
 | [0008](0008-qdrant-vector-search-experiment.md) | Qdrant vector-search experiment, exit criteria fixed before any run | Proposed | agents, owner review pending |
 | [0009](0009-reranker-local-tei-service.md) | The reranker runs locally as a TEI service; production hosting is decided at deployment | Accepted | owner (local only), agents (details); owner review pending |
+| [0010](0010-metrics-endpoint-prometheus.md) | The API serves Prometheus metrics at /metrics; retrieval reports through an observer | Accepted | agents, owner review pending |
 
 ## Template for new records
 
