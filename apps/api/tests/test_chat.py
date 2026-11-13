@@ -30,6 +30,24 @@ TEXTS = [
 ]
 
 
+class StallingLLM:
+    async def stream(self, messages: list[Message]) -> AsyncIterator[str]:
+        yield "first"
+        await asyncio.sleep(10)
+        yield "never"
+
+
+class BrokenEmbedder:
+    async def embed(self, texts: list[str]) -> list[list[float]]:
+        raise ConnectionError("ollama down")
+
+
+class SlowEmbedder:
+    async def embed(self, texts: list[str]) -> list[list[float]]:
+        await asyncio.sleep(10)
+        return []
+
+
 class BrokenLLM:
     async def stream(self, messages: list[Message]) -> AsyncIterator[str]:
         yield "partial"
@@ -81,13 +99,18 @@ async def book_id(database_url: str) -> UUID:
     return book.id
 
 
-async def make_client(database_url: str, llm: object) -> AsyncIterator[AsyncClient]:
+async def make_client(
+    database_url: str,
+    llm: object,
+    embedder: object | None = None,
+    **settings: float,
+) -> AsyncIterator[AsyncClient]:
     app = create_app(
-        Settings(database_url=database_url),
+        Settings(database_url=database_url, **settings),  # type: ignore[arg-type]
         storage=object(),  # type: ignore[arg-type]
         queue=procrastinate.App(connector=testing.InMemoryConnector()),
         llm=llm,  # type: ignore[arg-type]
-        embedder=FakeEmbedder(EMBEDDING_DIM),
+        embedder=embedder or FakeEmbedder(EMBEDDING_DIM),  # type: ignore[arg-type]
     )
     async with (
         app.router.lifespan_context(app),
@@ -215,3 +238,50 @@ def test_prompt_numbers_passages_and_carries_the_question() -> None:
 
 def test_sse_keeps_unicode_readable() -> None:
     assert sse("token", {"text": "Hà Nội"}) == 'event: token\ndata: {"text": "Hà Nội"}\n\n'
+
+
+async def test_embedder_failure_is_503_not_500(database_url: str, book_id: UUID) -> None:
+    async for client in make_client(database_url, FakeLLM("x"), embedder=BrokenEmbedder()):
+        response = await client.post(f"/books/{book_id}/chat", json={"question": "sông Hồng"})
+
+    assert response.status_code == 503
+
+
+async def test_slow_retrieval_is_503(database_url: str, book_id: UUID) -> None:
+    async for client in make_client(
+        database_url, FakeLLM("x"), embedder=SlowEmbedder(), retrieval_timeout=0.05
+    ):
+        response = await client.post(f"/books/{book_id}/chat", json={"question": "sông Hồng"})
+
+    assert response.status_code == 503
+
+
+async def test_stalled_model_ends_with_error_event(database_url: str, book_id: UUID) -> None:
+    async for client in make_client(database_url, StallingLLM(), llm_idle_timeout=0.05):
+        response = await client.post(f"/books/{book_id}/chat", json={"question": "sông Hồng"})
+
+    names = [name for name, _ in parse_sse(response.text)]
+    assert names == ["citations", "token", "error"]
+
+
+async def test_model_over_total_time_ends_with_error_event(
+    database_url: str, book_id: UUID
+) -> None:
+    async for client in make_client(
+        database_url, StallingLLM(), llm_idle_timeout=5, llm_total_timeout=0.05
+    ):
+        response = await client.post(f"/books/{book_id}/chat", json={"question": "sông Hồng"})
+
+    assert [name for name, _ in parse_sse(response.text)][-1] == "error"
+
+
+async def test_questions_over_the_rate_limit_are_429(database_url: str, book_id: UUID) -> None:
+    async for client in make_client(database_url, FakeLLM("x"), chat_rate_limit=2):
+        codes = [
+            (await client.post(f"/books/{book_id}/chat", json={"question": "sông"})).status_code
+            for _ in range(3)
+        ]
+        limited = await client.post(f"/books/{book_id}/chat", json={"question": "sông"})
+
+    assert codes == [200, 200, 429]
+    assert int(limited.headers["retry-after"]) >= 1
