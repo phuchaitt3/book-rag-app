@@ -95,6 +95,10 @@ jobs:
   dependency-review:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    # The action fails until the repository's "Dependency graph" setting is on (Settings >
+    # Security > Code security; only the owner can turn it on). Until then it must not turn
+    # every PR red: remove this line once the setting is enabled.
+    continue-on-error: true
     permissions:
       contents: read
     steps:
