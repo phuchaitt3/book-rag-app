@@ -1,0 +1,38 @@
+{
+ "rows_scored": 98,
+ "distribution_all": {
+  "1": 59,
+  "2": 1,
+  "3": 16,
+  "4": 0,
+  "5": 22
+ },
+ "distribution_sheet_rows": {
+  "1": 23,
+  "2": 0,
+  "3": 7,
+  "4": 0,
+  "5": 10
+ },
+ "sheet_rows_scored": 40,
+ "mean_by_outcome": {
+  "answerable, answered": {
+   "n": 68,
+   "mean": 1.96
+  },
+  "answerable, abstained (false abstain)": {
+   "n": 5,
+   "mean": 2.6
+  },
+  "unanswerable, abstained (correct)": {
+   "n": 9,
+   "mean": 5.0
+  },
+  "unanswerable, answered anyway": {
+   "n": 16,
+   "mean": 1.75
+  }
+ },
+ "judge_vs_token_f1_spearman_answered": 0.293,
+ "judge_vs_token_f1_n": 68
+}

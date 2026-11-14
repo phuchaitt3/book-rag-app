@@ -1,0 +1,2339 @@
+{
+ "summary": {
+  "judge_model": "qwen2.5:3b-instruct",
+  "answer_model": "qwen2.5:3b-instruct",
+  "same_model_as_answerer": true,
+  "validated_against_humans": false,
+  "rows": 100,
+  "repeats": 2,
+  "parse_failures_run1": 2,
+  "score_distribution_run1": {
+   "1": 59,
+   "2": 1,
+   "3": 16,
+   "4": 0,
+   "5": 22
+  },
+  "score_mean_run1": 2.235,
+  "mean_score_by_system_run1": {
+   "topk1": {
+    "n": 40,
+    "mean": 2.44
+   },
+   "topk6": {
+    "n": 60,
+    "mean": 2.1
+   }
+  },
+  "repeat_consistency": {
+   "pairs": 100,
+   "compared": 97,
+   "identical_pct": 95.9,
+   "within_1_pct": 97.9
+  },
+  "latency_mean_s": 2.288,
+  "latency_median_s": 2.454
+ },
+ "rows": [
+  {
+   "row_id": "r001",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời thiếu thông tin về Lý Thường Kiệt đã từng là vua nhà Lý và đã từng đánh Chiêm-thành. Fluency là 5 vì câu trả lời tự nhiên, đúng ngữ pháp và chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời thiếu thông tin về Lý Thường Kiệt đã từng là vua nhà Lý và đã từng đánh Chiêm-thành. Fluency là 5 vì câu trả lời tự nhiên, đúng ngữ pháp và chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời thiếu thông tin về Lý Thường Kiệt đã từng là người ở làng Thái-hòa, chỉ nêu rõ làng Thái-hòa, huyện Thọ-xương (thành phố Hà-nội).\"}"
+   ],
+   "seconds": [
+    10.315698899998097,
+    3.571245099999942
+   ]
+  },
+  {
+   "row_id": "r002",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề cập đến kỳ thi đầu tiên của nước ta.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề cập đến kỳ thi đầu tiên của nước ta.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề cập đến kỳ thi đầu tiên của nước ta.\"}"
+   ],
+   "seconds": [
+    2.3151771999982884,
+    0.8541943000018364
+   ]
+  },
+  {
+   "row_id": "r003",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích. Đoạn trích chỉ đề cập đến việc Dương Nhật Lễ lên ngôi và bị giết, không có thông tin về ai đã đưa Trần Dụ Tông lên ngôi vua.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích. Đoạn trích chỉ đề cập đến việc Dương Nhật Lễ lên ngôi và bị giết, không có thông tin về ai đã đưa Trần Dụ Tông lên ngôi vua.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    2.5047011000133352,
+    2.2411229999997886
+   ]
+  },
+  {
+   "row_id": "r004",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng và đầy đủ với câu hỏi, trích dẫn từ đoạn [2] và đáp án tham chiếu. Câu trả lời tự nhiên, đúng ngữ pháp và chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi, trích dẫn từ đoạn [2] và đáp án tham chiếu. Câu trả lời tự nhiên, đúng ngữ pháp và chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi, trích dẫn từ đoạn [2] hoàn toàn có căn cứ và không bịa ra thông tin. Câu trả lời cũng tự nhiên và đúng ngữ pháp, chính tả.\"}"
+   ],
+   "seconds": [
+    3.7667545000003884,
+    1.005262299993774
+   ]
+  },
+  {
+   "row_id": "r005",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách. Văn Đế chỉ gửi thư, không có giọng điệu thân thiện và nhân từ trong đoạn trích. Đáp án tham chiếu không có thông tin về giọng điệu của thư.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Văn Đế chỉ gửi thư, không có giọng điệu thân thiện và nhân từ trong đoạn trích. Đáp án tham chiếu không có thông tin về giọng điệu của thư.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích. Mặc dù có nhắc đến Văn Đế và Triệu Vũ Đế, nhưng không có thông tin về giọng điệu thân thiện và nhân từ trong đoạn trích.\"}"
+   ],
+   "seconds": [
+    2.517344400010188,
+    2.5094507000030717
+   ]
+  },
+  {
+   "row_id": "r006",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi đề cập đến vị tướng giỏi đánh bại quân Mông Cổ. Câu trả lời chỉ nhắc đến một nhân vật và sự kiện không liên quan đến câu hỏi đề cập đến vị tướng giỏi đánh bại quân Mông Cổ.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi đề cập đến vị tướng giỏi đánh bại quân Mông Cổ. Câu trả lời chỉ nhắc đến một nhân vật và sự kiện không liên quan đến câu hỏi đề cập đến vị tướng giỏi đánh bại quân Mông Cổ.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề cập đến vị tướng giỏi đánh bại quân Mông Cổ.\"}"
+   ],
+   "seconds": [
+    2.6757175999955507,
+    2.324399400007678
+   ]
+  },
+  {
+   "row_id": "r007",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời hoàn toàn không tìm thấy trong các đoạn trích. Các thông tin về việc thần phục vua Mông-cổ, tuyển chọn lính và phân quân ngũ đều không có trong các đoạn trích. Hơn nữa, câu trả lời bịa ra thông tin về việc mỗi quân có 30 đô và mỗi đô có 80 người, không có trong sách.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn không tìm thấy trong các đoạn trích. Các thông tin về việc thần phục vua Mông-cổ, tuyển chọn lính và phân quân ngũ đều không có trong các đoạn trích. Hơn nữa, câu trả lời bịa ra thông tin về việc mỗi quân có 30 đô và mỗi đô có 80 người, không có trong sách.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn không tìm thấy trong các đoạn trích. Các thông tin về việc thần phục vua Mông-cổ, tuyển chọn lính và phân quân ngũ đều không có trong các đoạn trích. Các thông tin về việc luyện tập luôn cũng không được đề cập. Các thông tin về việc luyện tập luôn cũng không được đề cập. Các thông tin về việc luyện tập luôn cũng không được đề cập.\"}"
+   ],
+   "seconds": [
+    4.244709399994463,
+    1.4954205000103684
+   ]
+  },
+  {
+   "row_id": "r008",
+   "scores": [
+    3,
+    4
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng về người được sai đi sứ, nhưng thiếu thông tin về việc đòi lại đất và chỉ trả lời một phần câu hỏi về năm 1078. Câu trả lời tự nhiên và đúng ngữ pháp, chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng về người được sai đi sứ, nhưng thiếu thông tin về việc đòi lại đất và chỉ trả lời một phần câu hỏi về năm 1078. Câu trả lời tự nhiên và đúng ngữ pháp, chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 4, \"reason\": \"Câu trả lời đúng với đoạn trích và đáp án tham chiếu, nhưng thiếu thông tin về việc trả lại châu huyện và chỉ nêu một phần ý chính của câu hỏi. Câu trả lời tự nhiên và đúng ngữ pháp, chính tả.\"}"
+   ],
+   "seconds": [
+    2.525378999998793,
+    2.6151722999929916
+   ]
+  },
+  {
+   "row_id": "r009",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 3,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng về người được giao quyền chỉ huy quân đội, nhưng thiếu thông tin về Lý Nam Đế rút quân về Dạ-trạch. Về độ tự nhiên và chính tả, câu trả lời là đầy đủ và chính xác.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 3, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng về người được giao quyền chỉ huy quân đội, nhưng thiếu thông tin về Lý Nam Đế rút quân về Dạ-trạch. Về độ tự nhiên và chính tả, câu trả lời là đầy đủ và chính xác.\"}",
+    "{\"faithfulness\": 3, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng về người được giao quyền chỉ huy quân đội, nhưng thiếu thông tin về Lý Nam Đế rút quân về Dạ-trạch. Câu trả lời đầy đủ về nội dung câu hỏi, nhưng không hoàn toàn chính xác về toàn bộ câu chuyện. Ngữ pháp và chính tả đúng.\"}"
+   ],
+   "seconds": [
+    2.5450599000032526,
+    1.2077879999997094
+   ]
+  },
+  {
+   "row_id": "r010",
+   "scores": [
+    null,
+    null
+   ],
+   "verdict": {
+    "score": null,
+    "faithfulness": null,
+    "completeness": null,
+    "fluency": null,
+    "reason": "",
+    "error": "backend: HTTPStatusError"
+   },
+   "raw": [
+    "",
+    ""
+   ],
+   "seconds": [
+    3.4291680000023916,
+    3.5214959000004455
+   ]
+  },
+  {
+   "row_id": "r011",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 5,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách và bịa ra, không hoàn toàn trung thực với đoạn trích. Câu trả lời không đầy đủ vì không trả lời câu hỏi về đời sống thường dân ở vùng đồng bằng sông Hồng. Văn phong không tự nhiên và sai lệch so với ngữ cảnh của đoạn trích.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và bịa ra, không hoàn toàn trung thực với đoạn trích. Câu trả lời không đầy đủ vì không trả lời câu hỏi về đời sống thường dân ở vùng đồng bằng sông Hồng. Văn phong không tự nhiên và sai lệch so với ngữ cảnh của đoạn trích.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và bịa ra, không trả lời đúng câu hỏi. Câu trả lời chỉ nói về những chuyện hoang đường huyền hòan trong sử chép, không liên quan đến đời sống thường dân thời kỳ này ở vùng đồng bằng sông Hồng.\"}"
+   ],
+   "seconds": [
+    2.934662199986633,
+    2.8959979000064777
+   ]
+  },
+  {
+   "row_id": "r012",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích, cũng như không chính xác với đáp án tham chiếu. Đoạn trích chỉ nói về việc Nam Chiếu đánh phủ thành hai lần, nhưng không cung cấp số lượng người bị sát hại. Hơn 15 vạn người là một số liệu không có trong sách.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích, cũng như không chính xác với đáp án tham chiếu. Đoạn trích chỉ nói về việc Nam Chiếu đánh phủ thành hai lần, nhưng không cung cấp số lượng người bị sát hại. Hơn 15 vạn người là một số liệu không có trong sách.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích, cũng như không chính xác về số lượng người bị sát hại. Đoạn trích chỉ nói đến việc Nam Chiếu đánh phủ thành hai lần, nhưng không cung cấp số lượng người bị sát hại. Hơn 15 vạn người không có căn cứ từ đoạn trích.\"}"
+   ],
+   "seconds": [
+    2.934594999998808,
+    1.2618785000086064
+   ]
+  },
+  {
+   "row_id": "r013",
+   "scores": [
+    1,
+    5
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 5,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách và không trả lời câu hỏi. Câu trả lời chỉ xác nhận rằng sách không có thông tin về câu hỏi đề ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không trả lời câu hỏi. Câu trả lời chỉ xác nhận rằng sách không có thông tin về câu hỏi đề ra.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời không tìm thấy trong sách, đáp án tham chiếu cũng chỉ ra rằng câu hỏi không có câu trả lời trong sách. Vì vậy, câu trả lời này là trung thực và không bịa ra.\"}"
+   ],
+   "seconds": [
+    3.7254168999934336,
+    3.8971542000072077
+   ]
+  },
+  {
+   "row_id": "r014",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng về người giữ Đằng Châu và tên gọi của họ, nhưng thiếu thông tin về thời loạn 12 sứ quân và chỉ nêu một phần ý chính của câu hỏi. Câu trả lời tự nhiên và đúng ngữ pháp, chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng về người giữ Đằng Châu và tên gọi của họ, nhưng thiếu thông tin về thời loạn 12 sứ quân và chỉ nêu một phần ý chính của câu hỏi. Câu trả lời tự nhiên và đúng ngữ pháp, chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng về người giữ Đằng Châu và tên gọi của họ, nhưng thiếu thông tin về thời loạn 12 sứ quân và chỉ nêu một phần ý chính của câu hỏi. Câu trả lời tự nhiên và đúng ngữ pháp, chính tả.\"}"
+   ],
+   "seconds": [
+    3.1465429999952903,
+    1.0914591000037035
+   ]
+  },
+  {
+   "row_id": "r015",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy thông tin chính xác về con trai cả của vua Đinh Tiên Hoàng trong các đoạn văn được cung cấp. Câu trả lời chỉ đưa ra thông tin về Nam Việt vương Liễn mà không xác định anh ta là con trai cả của vua Đinh Tiên Hoàng.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin chính xác về con trai cả của vua Đinh Tiên Hoàng trong các đoạn văn được cung cấp. Câu trả lời chỉ đưa ra thông tin về Nam Việt vương Liễn mà không xác định anh ta là con trai cả của vua Đinh Tiên Hoàng.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin chính xác về con trai cả của vua Đinh Tiên Hoàng trong các đoạn văn được cung cấp. Câu trả lời chỉ đưa ra thông tin về Nam Việt vương Liễn mà không xác định anh ta là con trai cả của vua Đinh Tiên Hoàng.\"}"
+   ],
+   "seconds": [
+    3.0539797999954317,
+    1.2372505000093952
+   ]
+  },
+  {
+   "row_id": "r016",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 5,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy thông tin trong đoạn văn và từ chối trả lời là đúng và đầy đủ. Câu trả lời không liên quan đến câu hỏi.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin trong đoạn văn và từ chối trả lời là đúng và đầy đủ. Câu trả lời không liên quan đến câu hỏi.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin trong đoạn văn và từ chối trả lời là đúng và đầy đủ. Câu trả lời không liên quan đến câu hỏi.\"}"
+   ],
+   "seconds": [
+    2.623475700005656,
+    0.8595580999972299
+   ]
+  },
+  {
+   "row_id": "r017",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"\"}"
+   ],
+   "seconds": [
+    1.8144471000123303,
+    1.84739319999062
+   ]
+  },
+  {
+   "row_id": "r018",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời hoàn toàn bịa đặt và không có trong sách. Các thông tin về các di tích khảo cổ từ thời Trần được phát hiện tại Đông Anh, Hà Nội sau năm 1930 không có trong sách. Các thông tin về đời sống thường nhật của người dân dưới triều Trần cũng không được đề cập trong sách. Các thông tin về việc học đạo Nho, đạo Phật và sự phát triển của đạo Phật trong triều Trần cũng không có trong sách. Các thông tin về đời sống văn hóa của người Việt và văn hóa Trung Quốc cũng không có trong sách.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn bịa đặt và không có trong sách. Các thông tin về các di tích khảo cổ từ thời Trần được phát hiện tại Đông Anh, Hà Nội sau năm 1930 không có trong sách. Các thông tin về đời sống thường nhật của người dân dưới triều Trần cũng không được đề cập trong sách. Các thông tin về việc học đạo Nho, đạo Phật và sự phát triển của đạo Phật trong triều Trần cũng không có trong sách. Các thông tin về đời sống văn hóa của người Việt và văn hóa Trung Quốc cũng không có trong sách.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn bịa đặt và không có trong sách. Các thông tin về các di tích khảo cổ từ thời Trần được phát hiện tại Đông Anh, Hà Nội sau năm 1930 không có trong sách. Các thông tin về đời sống thường nhật của người dân dưới triều Trần cũng không được đề cập trong sách. Các thông tin về việc học đạo Nho, đạo Phật và sự phát triển của đạo Phật trong triều Trần cũng không có trong sách. Các thông tin về đời sống văn hóa của người Việt và văn hóa Trung Quốc cũng không có trong sách.\"}"
+   ],
+   "seconds": [
+    5.193818800005829,
+    1.9765041999926325
+   ]
+  },
+  {
+   "row_id": "r019",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời trích dẫn đúng và đủ thông tin về số lượng quân mà Lê Thánh Tông cử đi đánh Chiêm Thành năm 1470, nhưng thiếu thông tin về việc luyện tập và vẽ địa đồ. Câu trả lời tự nhiên và đúng ngữ pháp, nhưng không đầy đủ thông tin về các bước chuẩn bị chiến lược khác.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời trích dẫn đúng và đủ thông tin về số lượng quân mà Lê Thánh Tông cử đi đánh Chiêm Thành năm 1470, nhưng thiếu thông tin về việc luyện tập và vẽ địa đồ. Câu trả lời tự nhiên và đúng ngữ pháp, nhưng không đầy đủ thông tin về các bước chuẩn bị chiến lược khác.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời trích dẫn đúng và đầy đủ thông tin về số lượng quân của Lê Thánh Tông, nhưng thiếu thông tin về việc đánh Chiêm Thành. Câu trả lời có độ tự nhiên và chính tả đúng ngữ pháp.\"}"
+   ],
+   "seconds": [
+    3.054746599998907,
+    1.0272752000018954
+   ]
+  },
+  {
+   "row_id": "r020",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng là 'không tìm thấy trong sách', vì không có thông tin nào liên quan đến việc Vua Lê Thái Tổ lập thêm đạo nào mới trong các đoạn trích được cung cấp. Tuy nhiên, câu trả lời được đưa ra không bịa, mà chỉ xác nhận sự thiếu thông tin trong sách.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 5, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời đúng là 'không tìm thấy trong sách', vì không có thông tin nào liên quan đến việc Vua Lê Thái Tổ lập thêm đạo nào mới trong các đoạn trích được cung cấp. Tuy nhiên, câu trả lời được đưa ra không bịa, mà chỉ xác nhận sự thiếu thông tin trong sách.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 5, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời đúng là 'không tìm thấy trong sách', vì không có thông tin nào liên quan đến việc Vua Lê Thái Tổ lập thêm đạo nào mới trong các đoạn trích được cung cấp. Tuy nhiên, câu trả lời được đưa ra không bịa, mà chỉ xác nhận sự thiếu thông tin trong sách.\"}"
+   ],
+   "seconds": [
+    1.411897099998896,
+    1.476946399998269
+   ]
+  },
+  {
+   "row_id": "r021",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 5,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách và không đầy đủ, vì sách không có thông tin về Napoléon Bonaparte lên ngôi hoàng đế nước Pháp vào năm nào. Văn phong đáp án tham chiếu cũng chính xác. Tuy nhiên, câu trả lời không tìm thấy trong sách là trung thực, nên điểm là 1.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không đầy đủ, vì sách không có thông tin về Napoléon Bonaparte lên ngôi hoàng đế nước Pháp vào năm nào. Văn phong đáp án tham chiếu cũng chính xác. Tuy nhiên, câu trả lời không tìm thấy trong sách là trung thực, nên điểm là 1.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không đầy đủ, vì sách không có thông tin về Napoléon Bonaparte lên ngôi hoàng đế nước Pháp vào năm nào. Văn phong đáp án tham chiếu cũng chính xác. Tuy nhiên, câu trả lời không tìm thấy trong sách là trung thực, nên điểm là 1.\"}"
+   ],
+   "seconds": [
+    2.7992855999909807,
+    2.814798699997482
+   ]
+  },
+  {
+   "row_id": "r022",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách. Câu trả lời đề cập đến niên hiệu của vua Trần Thuận Tông, nhưng sách không có thông tin về niên hiệu của vua Trần Thuận Tông.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu trả lời đề cập đến niên hiệu của vua Trần Thuận Tông, nhưng sách không có thông tin về niên hiệu của vua Trần Thuận Tông.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu trả lời đề cập đến niên hiệu của vua Trần Thuận Tông, nhưng sách không có thông tin về niên hiệu của vua Trần Thuận Tông.\"}"
+   ],
+   "seconds": [
+    2.4872941999929026,
+    0.9743175000039628
+   ]
+  },
+  {
+   "row_id": "r023",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng và đầy đủ với câu hỏi và đáp án tham chiếu. Nó trích dẫn chính xác từ đoạn trích và không bịa ra thông tin. Câu trả lời tự nhiên, đúng ngữ pháp và chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi và đáp án tham chiếu. Nó trích dẫn chính xác từ đoạn trích và không bịa ra thông tin. Câu trả lời tự nhiên, đúng ngữ pháp và chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi và đáp án tham chiếu. Nó trích dẫn chính xác từ đoạn trích và không bịa ra thông tin. Câu trả lời tự nhiên, đúng ngữ pháp và chính tả.\"}"
+   ],
+   "seconds": [
+    2.403242300002603,
+    1.0384027999971295
+   ]
+  },
+  {
+   "row_id": "r024",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng và đầy đủ với câu hỏi, đáp án và đoạn trích đề cập. Câu trả lời không bịa ra, mà chính xác là ngày 20 tháng 8 năm 1300, giống như trong đoạn trích và đáp án tham chiếu.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi, đáp án và đoạn trích đề cập. Câu trả lời không bịa ra, mà chính xác là ngày 20 tháng 8 năm 1300, giống như trong đoạn trích và đáp án tham chiếu.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi, đáp án và đoạn trích đề cập. Câu trả lời không bịa ra, mà chính xác là ngày 20 tháng 8 năm 1300, giống như trong đoạn trích và đáp án tham chiếu.\"}"
+   ],
+   "seconds": [
+    2.661065200009034,
+    2.7343705999956
+   ]
+  },
+  {
+   "row_id": "r025",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Đáp án đúng và đầy đủ không tìm thấy câu trả lời trong sách. Câu trả lời tự nhiên, đúng ngữ pháp và chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ không tìm thấy câu trả lời trong sách. Câu trả lời tự nhiên, đúng ngữ pháp và chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả\"}"
+   ],
+   "seconds": [
+    1.0339035000069998,
+    1.032599600002868
+   ]
+  },
+  {
+   "row_id": "r026",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 5,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy thông tin cụ thể về bản dịch tiếng Anh đầu tiên của Bình Ngô đại cáo trong các đoạn trích được cung cấp. Vì vậy, câu trả lời không trung thực với đoạn trích. Mặc dù câu trả lời không đầy đủ vì không cung cấp thông tin về người thực hiện và thời điểm công bố bản dịch, nhưng từ chối trả lời là đúng và đầy đủ. Câu trả lời không gây hiểu lầm về ngữ pháp và chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin cụ thể về bản dịch tiếng Anh đầu tiên của Bình Ngô đại cáo trong các đoạn trích được cung cấp. Vì vậy, câu trả lời không trung thực với đoạn trích. Mặc dù câu trả lời không đầy đủ vì không cung cấp thông tin về người thực hiện và thời điểm công bố bản dịch, nhưng từ chối trả lời là đúng và đầy đủ. Câu trả lời không gây hiểu lầm về ngữ pháp và chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin cụ thể về bản dịch tiếng Anh đầu tiên của Bình Ngô đại cáo trong các đoạn trích được cung cấp. Vì vậy, câu trả lời không trung thực với đoạn trích. Mặc dù câu trả lời không đầy đủ vì không cung cấp thông tin về người thực hiện và thời điểm công bố bản dịch, nhưng từ chối trả lời là đúng và đầy đủ. Câu trả lời không gây hiểu lầm về ngữ pháp và chính tả.\"}"
+   ],
+   "seconds": [
+    3.737958300000173,
+    3.7662872999935644
+   ]
+  },
+  {
+   "row_id": "r027",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả\"}"
+   ],
+   "seconds": [
+    0.9822461000003386,
+    0.9822896999976365
+   ]
+  },
+  {
+   "row_id": "r028",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi. Câu trả lời chỉ nói về các quan lại trong nhà Chu, không đề cập đến trường đại học.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi. Câu trả lời chỉ nói về các quan lại trong nhà Chu, không đề cập đến trường đại học.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi. Câu trả lời chỉ nói về các quan lại trong nhà Chu, không đề cập đến trường đại học.\"}"
+   ],
+   "seconds": [
+    2.6206545000022743,
+    2.6309231000050204
+   ]
+  },
+  {
+   "row_id": "r029",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy thông tin trong các đoạn trích và không liên quan đến câu hỏi đề ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin trong các đoạn trích và không liên quan đến câu hỏi đề ra.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin trong đoạn trích và hoàn toàn không liên quan đến câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    2.1109979000029853,
+    2.125077600008808
+   ]
+  },
+  {
+   "row_id": "r030",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích. Đoạn trích chỉ đề cập đến việc Sài Thung đến An Nam và thái độ của An Nam đối với ông, không có thông tin về trận đánh Hàm Tử Quan hay tướng nhà Nguyên thua dưới tay Trần Nhật Duật.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích. Đoạn trích chỉ đề cập đến việc Sài Thung đến An Nam và thái độ của An Nam đối với ông, không có thông tin về trận đánh Hàm Tử Quan hay tướng nhà Nguyên thua dưới tay Trần Nhật Duật.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích. Đoạn trích chỉ đề cập đến việc Sài Thung đến An Nam và thái độ của An Nam đối với ông, không có thông tin về trận đánh Hàm Tử Quan hay tướng nhà Nguyên thua dưới tay Trần Nhật Duật.\"}"
+   ],
+   "seconds": [
+    2.666839900004561,
+    2.7058169999945676
+   ]
+  },
+  {
+   "row_id": "r031",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 5,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời chỉ ra một trong nhiều sách giả sử trong đoạn trích, nhưng không liên quan đến câu hỏi về Vua nào lệnh cho Ngô Sĩ Liên viết sách Đại Việt sử ký. Câu trả lời không đầy đủ và không trung thực với đoạn trích. Fluency là 5 vì câu trả lời tự nhiên và đúng ngữ pháp. Score là 1 vì đáp án không đúng và không liên quan đến câu hỏi.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời chỉ ra một trong nhiều sách giả sử trong đoạn trích, nhưng không liên quan đến câu hỏi về Vua nào lệnh cho Ngô Sĩ Liên viết sách Đại Việt sử ký. Câu trả lời không đầy đủ và không trung thực với đoạn trích. Fluency là 5 vì câu trả lời tự nhiên và đúng ngữ pháp. Score là 1 vì đáp án không đúng và không liên quan đến câu hỏi.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời chỉ ra một trong nhiều sách giả sử trong đoạn trích, nhưng không liên quan đến câu hỏi về Vua nào lệnh cho Ngô Sĩ Liên viết sách Đại Việt sử ký. Câu trả lời không đầy đủ và không trung thực với đoạn trích. Fluency là 5 vì câu trả lời tự nhiên và đúng ngữ pháp. Score là 1 vì đáp án không đúng và không liên quan đến câu hỏi.\"}"
+   ],
+   "seconds": [
+    3.033846500009531,
+    3.053896800003713
+   ]
+  },
+  {
+   "row_id": "r032",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy thông tin cụ thể về thứ sử Giao Châu được nhà Lương cử và nổi tiếng là tàn bạo trong các đoạn trích. Hơn nữa, câu trả lời không chính xác vì tài liệu chỉ đề cập đến Tiêu Tư, không phải là thứ sử Giao Châu được nhà Lương cử.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin cụ thể về thứ sử Giao Châu được nhà Lương cử và nổi tiếng là tàn bạo trong các đoạn trích. Hơn nữa, câu trả lời không chính xác vì tài liệu chỉ đề cập đến Tiêu Tư, không phải là thứ sử Giao Châu được nhà Lương cử.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin cụ thể về thứ sử Giao Châu được nhà Lương cử và nổi tiếng là tàn bạo trong các đoạn trích. Hơn nữa, câu trả lời không chính xác vì tài liệu chỉ đề cập đến Tiêu Tư, không phải là thứ sử Giao Châu được nhà Lương cử.\"}"
+   ],
+   "seconds": [
+    4.124658000000636,
+    1.3110119000048144
+   ]
+  },
+  {
+   "row_id": "r033",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề cập đến Đỗ Tử Bình.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề cập đến Đỗ Tử Bình.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề cập đến Đỗ Tử Bình.\"}"
+   ],
+   "seconds": [
+    2.2554432999895653,
+    0.7665695000032429
+   ]
+  },
+  {
+   "row_id": "r034",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề ra.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    2.2048037000058684,
+    2.2155760000023292
+   ]
+  },
+  {
+   "row_id": "r035",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời trích dẫn đúng thông tin từ đoạn trích, nhưng thiếu ý chính là người con nuôi của Cung-túc-vương là Dương Nhật Lễ. Câu trả lời có độ fluency tốt.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời trích dẫn đúng thông tin từ đoạn trích, nhưng thiếu ý chính là người con nuôi của Cung-túc-vương là Dương Nhật Lễ. Câu trả lời có độ fluency tốt.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời trích dẫn đúng thông tin từ đoạn trích, nhưng thiếu ý chính là người con nuôi của Cung-túc-vương là Dương Nhật Lễ. Câu trả lời có độ fluency tốt.\"}"
+   ],
+   "seconds": [
+    2.7342695999977877,
+    2.7463511000096332
+   ]
+  },
+  {
+   "row_id": "r036",
+   "scores": [
+    3,
+    4
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng và đủ ý chính câu hỏi, nhưng thiếu một phần thông tin về việc Đặng Dung bỏ chạy và tự tử tiết. Câu trả lời có độ tự nhiên và không có lỗi ngữ pháp hoặc chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng và đủ ý chính câu hỏi, nhưng thiếu một phần thông tin về việc Đặng Dung bỏ chạy và tự tử tiết. Câu trả lời có độ tự nhiên và không có lỗi ngữ pháp hoặc chính tả.\"}",
+    "{\"faithfulness\": 3, \"completeness\": 5, \"fluency\": 5, \"score\": 4, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi, đáp án tham chiếu và sách. Tuy nhiên, câu trả lời thiếu một phần thông tin về việc Đặng Dung và các con ông tự tử tiết.\"}"
+   ],
+   "seconds": [
+    3.889896900000167,
+    0.9960894000105327
+   ]
+  },
+  {
+   "row_id": "r037",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Không tìm thấy câu trả lời trong sách, câu trả lời chính xác và đầy đủ như tham chiếu",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, câu trả lời chính xác và đầy đủ như tham chiếu\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, đáp án đúng là không tìm thấy câu trả lời cho câu hỏi này.\"}"
+   ],
+   "seconds": [
+    0.9915864000067813,
+    1.030775299994275
+   ]
+  },
+  {
+   "row_id": "r038",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi đề ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi đề ra.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    3.53617830001167,
+    3.5484236999909626
+   ]
+  },
+  {
+   "row_id": "r039",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời trích dẫn đúng và đủ thông tin từ đoạn trích, nhưng thiếu ý chính về tông chỉ của Lão Tử và không nêu rõ Lão Tử mất vào năm 523 trước Tây lịch. Câu trả lời có độ fluency tốt.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời trích dẫn đúng và đủ thông tin từ đoạn trích, nhưng thiếu ý chính về tông chỉ của Lão Tử và không nêu rõ Lão Tử mất vào năm 523 trước Tây lịch. Câu trả lời có độ fluency tốt.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời trích dẫn đúng và đủ thông tin từ đoạn trích, nhưng thiếu ý chính về tông chỉ của Lão Tử và không nêu rõ Lão Tử mất vào năm 523 trước Tây lịch. Câu trả lời có độ fluency tốt.\"}"
+   ],
+   "seconds": [
+    2.8956153000035556,
+    1.1073906999954488
+   ]
+  },
+  {
+   "row_id": "r040",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời chỉ nêu tên Trần Cao mà không đầy đủ thông tin về lý do ông được đưa lên ngôi vua. Câu trả lời có độ fluency tốt và trung thực với đoạn trích.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời chỉ nêu tên Trần Cao mà không đầy đủ thông tin về lý do ông được đưa lên ngôi vua. Câu trả lời có độ fluency tốt và trung thực với đoạn trích.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời chỉ nêu tên Trần Cao mà không đầy đủ thông tin về lý do và quá trình đưa Trần Cao lên ngôi. Câu trả lời có độ fluency tốt.\"}"
+   ],
+   "seconds": [
+    2.353239999996731,
+    2.302926899996237
+   ]
+  },
+  {
+   "row_id": "r041",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"\"}"
+   ],
+   "seconds": [
+    1.9372107000090182,
+    0.43772200000239536
+   ]
+  },
+  {
+   "row_id": "r042",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách. Câu trả lời đưa ra Mông-kha (Mong-ké) lên làm vua, nhưng sách không đề cập đến điều này. Hơn nữa, câu trả lời không liên quan đến câu hỏi đề cập đến Thành Cát Tư Hãn (Thiết Mộc Chân).",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu trả lời đưa ra Mông-kha (Mong-ké) lên làm vua, nhưng sách không đề cập đến điều này. Hơn nữa, câu trả lời không liên quan đến câu hỏi đề cập đến Thành Cát Tư Hãn (Thiết Mộc Chân).\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu trả lời đưa ra Mông-kha (Mong-ké) lên làm vua, nhưng sách không đề cập đến điều này. Hơn nữa, câu trả lời không liên quan đến câu hỏi đề cập đến Thành Cát Tư Hãn (Thiết Mộc Chân).\"}"
+   ],
+   "seconds": [
+    2.763697400005185,
+    1.2586447999929078
+   ]
+  },
+  {
+   "row_id": "r043",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 3,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng với thông tin trong đoạn trích, nhưng thiếu thông tin về việc Nùng Trí Cao sau này đổi tên nước thành Đại Nam. Câu trả lời về tên nước ban đầu là chính xác và tự nhiên về ngữ pháp và chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 3, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng với thông tin trong đoạn trích, nhưng thiếu thông tin về việc Nùng Trí Cao sau này đổi tên nước thành Đại Nam. Câu trả lời về tên nước ban đầu là chính xác và tự nhiên về ngữ pháp và chính tả.\"}",
+    "{\"faithfulness\": 3, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng với thông tin trong đoạn trích, nhưng thiếu thông tin về việc Nùng Trí Cao sau này đổi tên nước thành Đại Nam. Câu trả lời về tên nước ban đầu là chính xác và tự nhiên, đúng ngữ pháp và chính tả.\"}"
+   ],
+   "seconds": [
+    2.602170299986028,
+    1.1165449999971315
+   ]
+  },
+  {
+   "row_id": "r044",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách và không hoàn toàn đáp ứng yêu cầu của câu hỏi. Câu trả lời chỉ là một đoạn văn không liên quan đến kinh đô Đông Kinh thời Lê sơ, và không bịa ra câu trả lời như yêu cầu.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không hoàn toàn đáp ứng yêu cầu của câu hỏi. Câu trả lời chỉ là một đoạn văn không liên quan đến kinh đô Đông Kinh thời Lê sơ, và không bịa ra câu trả lời như yêu cầu.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không hoàn toàn đáp ứng yêu cầu của câu hỏi. Câu trả lời chỉ là một đoạn văn không liên quan đến kinh đô Đông Kinh thời Lê sơ, và không bịa ra câu trả lời như yêu cầu.\"}"
+   ],
+   "seconds": [
+    2.6092338000016753,
+    2.6064137000066694
+   ]
+  },
+  {
+   "row_id": "r045",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời trích dẫn đúng và đầy đủ ý chính của đoạn trích, đáp án tham chiếu và câu hỏi đề ra, và được viết bằng tiếng Việt tự nhiên",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời trích dẫn đúng và đầy đủ ý chính của đoạn trích, đáp án tham chiếu và câu hỏi đề ra, và được viết bằng tiếng Việt tự nhiên\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời trích dẫn đúng và đầy đủ ý chính từ đoạn trích, đáp án tham chiếu cũng chính xác và câu trả lời tự nhiên, đúng ngữ pháp và chính tả.\"}"
+   ],
+   "seconds": [
+    2.5860766999976477,
+    0.9138805000111461
+   ]
+  },
+  {
+   "row_id": "r046",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến vấn đề đặt ra. Đoạn trích đề cập đến sổ hộ khẩu nhưng không gọi là 'hoàng sách'.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến vấn đề đặt ra. Đoạn trích đề cập đến sổ hộ khẩu nhưng không gọi là 'hoàng sách'.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến vấn đề đặt ra. Đoạn trích nói về sổ hộ khẩu, nhưng không có thông tin về tên gọi của nó trong thời Minh.\"}"
+   ],
+   "seconds": [
+    2.308483000000706,
+    0.97921230000793
+   ]
+  },
+  {
+   "row_id": "r047",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không trích dẫn đoạn trích đúng, cũng không bịa câu trả lời. Tuy nhiên, câu trả lời không liên quan đến câu hỏi đề cập đến Trọng Thủy tự vẫn ở chỗ nào sau khi an táng Mị Châu. Câu trả lời chỉ mô tả hành động của An-dương-vương và Trọng Thủy, nhưng không xác định vị trí tự vẫn của Trọng Thủy.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không trích dẫn đoạn trích đúng, cũng không bịa câu trả lời. Tuy nhiên, câu trả lời không liên quan đến câu hỏi đề cập đến Trọng Thủy tự vẫn ở chỗ nào sau khi an táng Mị Châu. Câu trả lời chỉ mô tả hành động của An-dương-vương và Trọng Thủy, nhưng không xác định vị trí tự vẫn của Trọng Thủy.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không trích dẫn đoạn trích đúng, cũng không bịa câu trả lời. Tuy nhiên, câu trả lời không liên quan đến câu hỏi đề cập đến Trọng Thủy tự vẫn ở chỗ nào sau khi an táng Mị Châu. Câu trả lời chỉ mô tả hành động của An-dương-vương và Trọng Thủy, nhưng không xác định vị trí tự vẫn của Trọng Thủy.\"}"
+   ],
+   "seconds": [
+    3.5406124000001,
+    3.559754299989436
+   ]
+  },
+  {
+   "row_id": "r048",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời chỉ nêu một đoạn trích từ sách, không đầy đủ thông tin về câu hỏi. Câu trả lời tự nhiên và đúng ngữ pháp, chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời chỉ nêu một đoạn trích từ sách, không đầy đủ thông tin về câu hỏi. Câu trả lời tự nhiên và đúng ngữ pháp, chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời chỉ nêu một đoạn trích từ sách, không đầy đủ thông tin về câu hỏi. Câu trả lời tự nhiên và đúng ngữ pháp, chính tả.\"}"
+   ],
+   "seconds": [
+    2.3833332999929553,
+    2.405683599994518
+   ]
+  },
+  {
+   "row_id": "r049",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích và hoàn toàn mâu thuẫn với nội dung. Đoạn trích chỉ nói về việc Phạm Phạm Chí giữ những chỗ hiểm yếu, không có thông tin về việc dâng biểu tạ tội hay xin triều cống.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và hoàn toàn mâu thuẫn với nội dung. Đoạn trích chỉ nói về việc Phạm Phạm Chí giữ những chỗ hiểm yếu, không có thông tin về việc dâng biểu tạ tội hay xin triều cống.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và hoàn toàn mâu thuẫn với nội dung sách. Hơn nữa, câu trả lời không đúng với câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    2.8599174999981187,
+    0.8572187999961898
+   ]
+  },
+  {
+   "row_id": "r050",
+   "scores": [
+    5,
+    1
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng và đầy đủ không tìm thấy thông tin trong đoạn trích, đồng thời đáp án tham chiếu cũng xác nhận rằng sách không có câu trả lời cho câu hỏi này. Câu trả lời không bịa ra, mà chỉ đơn thuần là không tìm thấy trong sách.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ không tìm thấy thông tin trong đoạn trích, đồng thời đáp án tham chiếu cũng xác nhận rằng sách không có câu trả lời cho câu hỏi này. Câu trả lời không bịa ra, mà chỉ đơn thuần là không tìm thấy trong sách.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin về Hồ Chí Minh đọc Tuyên ngôn Độc lập ở đâu và vào ngày nào trong đoạn trích. Câu trả lời chỉ đơn thuần là một khẳng định sai lệch về thông tin trong đoạn trích, không hoàn toàn có căn cứ và không đầy đủ thông tin như yêu cầu.\"}"
+   ],
+   "seconds": [
+    2.5317156999954022,
+    2.661386299994774
+   ]
+  },
+  {
+   "row_id": "r051",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không có trong sách và mâu thuẫn với nội dung sách. Hơn nữa, câu trả lời không đúng với câu hỏi đề ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không có trong sách và mâu thuẫn với nội dung sách. Hơn nữa, câu trả lời không đúng với câu hỏi đề ra.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không có trong sách và mâu thuẫn với nội dung sách. Hơn nữa, câu trả lời không đúng với câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    3.7128641000017524,
+    0.8280566999892471
+   ]
+  },
+  {
+   "row_id": "r052",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách và bịa ra thông tin không liên quan đến câu hỏi đề xuất.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và bịa ra thông tin không liên quan đến câu hỏi đề xuất.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không có căn cứ trong sách. Câu trả lời đưa ra thông tin không đúng và không liên quan đến câu hỏi đề xuất.\"}"
+   ],
+   "seconds": [
+    2.829395900000236,
+    0.8221564999985276
+   ]
+  },
+  {
+   "row_id": "r053",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời không bịa ra, hoàn toàn trung thực với đoạn trích và đáp án tham chiếu. Câu trả lời đúng và đầy đủ không tìm thấy thông tin về Hiệp định Genève 1954 trong các đoạn trích. Câu trả lời được viết một cách tự nhiên và chính xác về ngữ pháp và chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời không bịa ra, hoàn toàn trung thực với đoạn trích và đáp án tham chiếu. Câu trả lời đúng và đầy đủ không tìm thấy thông tin về Hiệp định Genève 1954 trong các đoạn trích. Câu trả lời được viết một cách tự nhiên và chính xác về ngữ pháp và chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời không bịa ra, hoàn toàn trung thực với đoạn trích và đáp án tham chiếu. Câu trả lời đúng và đầy đủ không tìm thấy thông tin về Hiệp định Genève 1954 trong các đoạn trích.\"}"
+   ],
+   "seconds": [
+    4.250315200013574,
+    1.1022871999884956
+   ]
+  },
+  {
+   "row_id": "r054",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích, và không đầy đủ thông tin về việc duyệt quân ở đâu. Đoạn trích chỉ nói về việc hội quân tại bến Đông Bộ Đầu, nhưng không xác định rõ duyệt quân ở đâu.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích, và không đầy đủ thông tin về việc duyệt quân ở đâu. Đoạn trích chỉ nói về việc hội quân tại bến Đông Bộ Đầu, nhưng không xác định rõ duyệt quân ở đâu.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích, và không đầy đủ thông tin về việc duyệt quân ở đâu. Đoạn trích chỉ nói về việc hội quân tại bến Đông Bộ Đầu, nhưng không xác định rõ duyệt quân ở đâu.\"}"
+   ],
+   "seconds": [
+    2.446060900008888,
+    2.4618710999930045
+   ]
+  },
+  {
+   "row_id": "r055",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đầy đủ thông tin về truyền thừa đạo đức của Khổng Tử, nhưng thiếu ý chính về nội dung đạo đức của Khổng Tử. Câu trả lời có độ fluency tốt.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đầy đủ thông tin về truyền thừa đạo đức của Khổng Tử, nhưng thiếu ý chính về nội dung đạo đức của Khổng Tử. Câu trả lời có độ fluency tốt.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đầy đủ thông tin về truyền thừa đạo đức của Khổng Tử, nhưng thiếu ý chính về nội dung đạo đức mà Khổng Tử dạy. Câu trả lời có độ fluency tốt.\"}"
+   ],
+   "seconds": [
+    4.020924000011291,
+    1.0105883999931393
+   ]
+  },
+  {
+   "row_id": "r056",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Không tìm thấy câu trả lời trong sách, từ chối trả lời là đúng và đầy đủ",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, từ chối trả lời là đúng và đầy đủ\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, từ chối trả lời là đúng và đầy đủ\"}"
+   ],
+   "seconds": [
+    0.906027200006065,
+    0.9239900999964448
+   ]
+  },
+  {
+   "row_id": "r057",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng về người tham gia mưu lập vua khác, nhưng thiếu thông tin về thời điểm và nguyên nhân của việc mưu lập vua khác. Câu trả lời tự nhiên và chính tả đúng.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng về người tham gia mưu lập vua khác, nhưng thiếu thông tin về thời điểm và nguyên nhân của việc mưu lập vua khác. Câu trả lời tự nhiên và chính tả đúng.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng về người tham gia mưu lập vua khác, nhưng thiếu thông tin về thời điểm và nguyên nhân của việc mưu lập vua khác. Câu trả lời tự nhiên và chính tả đúng.\"}"
+   ],
+   "seconds": [
+    2.8185733999998774,
+    2.8210252999997465
+   ]
+  },
+  {
+   "row_id": "r058",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách và bịa ra một số bằng chứng khảo cổ học sau năm 1930, mặc dù sách không có thông tin về vấn đề này. Câu trả lời không tự nhiên và không có căn cứ trong sách.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và bịa ra một số bằng chứng khảo cổ học sau năm 1930, mặc dù sách không có thông tin về vấn đề này. Câu trả lời không tự nhiên và không có căn cứ trong sách.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và bịa ra một số bằng chứng khảo cổ học sau năm 1930, mặc dù sách không có thông tin về vấn đề này. Câu trả lời không tự nhiên và không có căn cứ trong sách.\"}"
+   ],
+   "seconds": [
+    2.5891048000048613,
+    2.579036499999347
+   ]
+  },
+  {
+   "row_id": "r059",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách. Các đoạn trích không có thông tin về Toa Đô và Ô Mã Nhi chạy trốn ra mặt bể, bị vây đánh, trúng tên chết, hoặc tìm cách thoát thân. Câu trả lời bịa ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Các đoạn trích không có thông tin về Toa Đô và Ô Mã Nhi chạy trốn ra mặt bể, bị vây đánh, trúng tên chết, hoặc tìm cách thoát thân. Câu trả lời bịa ra.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Các đoạn trích không có thông tin về Toa Đô và Ô Mã Nhi chạy trốn ra mặt bể, bị vây đánh, trúng tên, tìm đường chạy vào Thanh-hoa, hoặc phải lẻn xuống thuyền chạy ra biển. Các thông tin này hoàn toàn bịa ra.\"}"
+   ],
+   "seconds": [
+    4.036813200000324,
+    1.327451300006942
+   ]
+  },
+  {
+   "row_id": "r060",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách và không bịa ra, vì sách không có thông tin về các di chỉ khảo cổ liên quan đến kinh đô Hoa Lư thời Đinh sau năm 1930.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không bịa ra, vì sách không có thông tin về các di chỉ khảo cổ liên quan đến kinh đô Hoa Lư thời Đinh sau năm 1930.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không bịa ra, vì sách không có thông tin về các di chỉ khảo cổ liên quan đến kinh đô Hoa Lư thời Đinh sau năm 1930.\"}"
+   ],
+   "seconds": [
+    2.7458959000068717,
+    2.748778000008315
+   ]
+  },
+  {
+   "row_id": "r061",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 5,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng là 'không tìm thấy trong sách', vì không có đoạn trích nào đề cập đến câu hỏi đề ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời đúng là 'không tìm thấy trong sách', vì không có đoạn trích nào đề cập đến câu hỏi đề ra.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và bịa ra câu trả lời, không trả lời câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    0.9864230999955907,
+    0.9531571000115946
+   ]
+  },
+  {
+   "row_id": "r062",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy thông tin về nơi sinh của Triệu Thị Chinh trong cả đoạn trích. Nó chỉ đề cập đến cuộc đời và sự nghiệp của Triệu quốc Đạt, không liên quan đến Triệu Thị Chinh. Hơn nữa, câu trả lời không trung thực vì nói Triệu Thị Chinh sinh ra ở Huyện Nông Cống, trong khi đáp án tham chiếu nói là Huyện Nông Cống, và đoạn trích không cung cấp thông tin này.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin về nơi sinh của Triệu Thị Chinh trong cả đoạn trích. Nó chỉ đề cập đến cuộc đời và sự nghiệp của Triệu quốc Đạt, không liên quan đến Triệu Thị Chinh. Hơn nữa, câu trả lời không trung thực vì nói Triệu Thị Chinh sinh ra ở Huyện Nông Cống, trong khi đáp án tham chiếu nói là Huyện Nông Cống, và đoạn trích không cung cấp thông tin này.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy thông tin về nơi sinh của Triệu Thị Chinh trong cả đoạn trích. Nó chỉ đề cập đến cuộc đời và sự nghiệp của Triệu quốc Đạt, không liên quan đến Triệu Thị Chinh. Hơn nữa, câu trả lời không trung thực vì nói Triệu Thị Chinh sinh ra ở Huyện Nông Cống, trong khi đáp án tham chiếu nói là Huyện Nông Cống, và đoạn trích không cung cấp thông tin này.\"}"
+   ],
+   "seconds": [
+    3.7521280000073602,
+    3.758067500006291
+   ]
+  },
+  {
+   "row_id": "r063",
+   "scores": [
+    2,
+    2
+   ],
+   "verdict": {
+    "score": 2,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời thiếu thông tin về thời gian và địa điểm của việc chiếm 65 thành, cũng như thiếu thông tin về việc lập quốc xưng vương. Tuy nhiên, câu trả lời không bịa ra và đúng với thông tin trong đoạn trích.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 2, \"reason\": \"Câu trả lời thiếu thông tin về thời gian và địa điểm của việc chiếm 65 thành, cũng như thiếu thông tin về việc lập quốc xưng vương. Tuy nhiên, câu trả lời không bịa ra và đúng với thông tin trong đoạn trích.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 2, \"reason\": \"Câu trả lời thiếu thông tin về thời gian và địa điểm của việc chiếm 65 thành, cũng như thiếu thông tin về việc lập quốc xưng vương. Tuy nhiên, câu trả lời không bịa ra và đúng với thông tin trong đoạn trích.\"}"
+   ],
+   "seconds": [
+    2.128433199992287,
+    1.0926113000023179
+   ]
+  },
+  {
+   "row_id": "r064",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề ra.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không liên quan đến câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    2.2003930999926524,
+    0.7047984999953769
+   ]
+  },
+  {
+   "row_id": "r065",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không liên quan đến thời gian trị vì của Vua Lê Thái Tông. Nó chỉ nói về vị trí và quyền lực của Lê Sát trong triều đình.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không liên quan đến thời gian trị vì của Vua Lê Thái Tông. Nó chỉ nói về vị trí và quyền lực của Lê Sát trong triều đình.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không liên quan đến thời gian trị vì của Vua Lê Thái Tông. Nó chỉ nói về vị trí và quyền lực của Lê Sát trong triều đình.\"}"
+   ],
+   "seconds": [
+    2.418090499995742,
+    2.428697099996498
+   ]
+  },
+  {
+   "row_id": "r066",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách. Các đoạn trích không có thông tin về hành động của Mộc Thạnh khi hay tin Liễu Thăng bại trận. Câu trả lời bịa ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Các đoạn trích không có thông tin về hành động của Mộc Thạnh khi hay tin Liễu Thăng bại trận. Câu trả lời bịa ra.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Các đoạn trích không có thông tin về hành động của Mộc Thạnh khi hay tin Liễu Thăng bại trận. Câu trả lời bịa ra.\"}"
+   ],
+   "seconds": [
+    3.863502799998969,
+    0.9784222999878693
+   ]
+  },
+  {
+   "row_id": "r067",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách. Câu trả lời đưa ra không chính xác so với đáp án tham chiếu. Câu trả lời chỉ nói năm 1242 Thái-tông chia nước Nam ra làm 12 lộ, nhưng sách chỉ nói về việc chia đất cho Trần Liễu và không nói rõ năm 1242 có chia 12 lộ hay không.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu trả lời đưa ra không chính xác so với đáp án tham chiếu. Câu trả lời chỉ nói năm 1242 Thái-tông chia nước Nam ra làm 12 lộ, nhưng sách chỉ nói về việc chia đất cho Trần Liễu và không nói rõ năm 1242 có chia 12 lộ hay không.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu trả lời đưa ra không chính xác so với đáp án tham chiếu. Câu trả lời chỉ nói năm 1242 Thái-tông chia nước Nam ra làm 12 lộ, nhưng sách chỉ nói về việc chia đất cho Trần Liễu, không nói về việc chia đất cho 12 lộ. Hơn nữa, sách không nói rõ năm 1242, chỉ nói về việc chia đất sau khi Thái-tông lấy đất Yên-phụ, Yên-đường, Yên-sinh và Yên-bang cho Trần Liễu.\"}"
+   ],
+   "seconds": [
+    2.962271399999736,
+    3.483470099992701
+   ]
+  },
+  {
+   "row_id": "r068",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Không tìm thấy câu trả lời trong sách, đáp án đúng là 5",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, đáp án đúng là 5\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, đáp án đúng là 5\"}"
+   ],
+   "seconds": [
+    0.8201686999964295,
+    0.8262665000074776
+   ]
+  },
+  {
+   "row_id": "r069",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 5,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách và bịa ra thông tin về người dâng sớ, đồng thời thiếu ý chính về câu hỏi đã được trả lời.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và bịa ra thông tin về người dâng sớ, đồng thời thiếu ý chính về câu hỏi đã được trả lời.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và bịa ra thông tin về người dâng sớ, đồng thời thiếu ý chính về câu hỏi đã được trả lời.\"}"
+   ],
+   "seconds": [
+    2.5554679999913787,
+    2.55703710000671
+   ]
+  },
+  {
+   "row_id": "r070",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời hoàn toàn không có trong cả hai đoạn trích, cũng không cung cấp thông tin về việc Trần Cao cắt tóc đi tu như trong câu hỏi và đáp án tham chiếu.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn không có trong cả hai đoạn trích, cũng không cung cấp thông tin về việc Trần Cao cắt tóc đi tu như trong câu hỏi và đáp án tham chiếu.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn không có trong cả hai đoạn trích. Nó cũng không thể được tìm thấy trong sách. Hơn nữa, nó không đúng với nội dung của đoạn trích.\"}"
+   ],
+   "seconds": [
+    3.796684799992363,
+    0.908884600008605
+   ]
+  },
+  {
+   "row_id": "r071",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng và đủ ý chính của câu hỏi nhưng thiếu một số chi tiết quan trọng. Fluency tốt, không có lỗi ngữ pháp hoặc chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng và đủ ý chính của câu hỏi nhưng thiếu một số chi tiết quan trọng. Fluency tốt, không có lỗi ngữ pháp hoặc chính tả.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng và đủ ý chính của câu hỏi nhưng thiếu một số chi tiết quan trọng. Fluency tốt, không có lỗi ngữ pháp hoặc chính tả.\"}"
+   ],
+   "seconds": [
+    2.2310847000044305,
+    2.239000400004443
+   ]
+  },
+  {
+   "row_id": "r072",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Không tìm thấy câu trả lời trong sách, đáp án và câu trả lời đều đúng với thông tin sách không có câu trả lời cho câu hỏi này",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, đáp án và câu trả lời đều đúng với thông tin sách không có câu trả lời cho câu hỏi này\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, đáp án và câu trả lời đều đúng với thông tin sách không có câu trả lời cho câu hỏi này\"}"
+   ],
+   "seconds": [
+    1.0772105000069132,
+    1.079519100007019
+   ]
+  },
+  {
+   "row_id": "r073",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách. Mặc dù đoạn trích đề cập đến vấn đề về lương thực, nhưng không có thông tin cụ thể về vấn đề này sau thất bại ở Vân Đồn. Câu trả lời đã bịa ra một vấn đề về lương thực mà không có trong sách.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Mặc dù đoạn trích đề cập đến vấn đề về lương thực, nhưng không có thông tin cụ thể về vấn đề này sau thất bại ở Vân Đồn. Câu trả lời đã bịa ra một vấn đề về lương thực mà không có trong sách.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Mặc dù đoạn trích đề cập đến vấn đề về lương thực, nhưng không có thông tin cụ thể về vấn đề này sau thất bại ở Vân Đồn. Câu trả lời đã bịa ra một vấn đề về lương thực mà không có trong sách.\"}"
+   ],
+   "seconds": [
+    2.6561186999897473,
+    2.6706526999914786
+   ]
+  },
+  {
+   "row_id": "r074",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách. Câu trả lời khẳng định Long Đĩnh thường chơi trò, nhưng sách không cung cấp thông tin về trò chơi mà ông thường chơi.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu trả lời khẳng định Long Đĩnh thường chơi trò, nhưng sách không cung cấp thông tin về trò chơi mà ông thường chơi.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không liên quan đến nội dung câu hỏi và các đoạn trích đã cho. Nó chỉ nói về việc Long Đĩnh bị gọi là 120 Ngọa-triều mà không giải thích về trò chơi mà ông thường chơi.\"}"
+   ],
+   "seconds": [
+    2.1109708000003593,
+    1.059726799998316
+   ]
+  },
+  {
+   "row_id": "r075",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Không tìm thấy câu trả lời trong sách, đáp án và câu trả lời đều đúng với thông tin trong sách",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, đáp án và câu trả lời đều đúng với thông tin trong sách\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, đáp án và câu trả lời đều đúng với thông tin trong sách\"}"
+   ],
+   "seconds": [
+    0.9816495999984909,
+    0.9858249000099022
+   ]
+  },
+  {
+   "row_id": "r076",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng và đầy đủ với câu hỏi và đáp án tham chiếu. Nó trích dẫn chính xác đoạn trích đề cập đến ông Ngô Quyền đánh đuổi quân Tàu về Bắc.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi và đáp án tham chiếu. Nó trích dẫn chính xác đoạn trích đề cập đến ông Ngô Quyền đánh đuổi quân Tàu về Bắc.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi và đáp án tham chiếu. Nó trích dẫn chính xác đoạn trích đề cập đến ông Ngô Quyền đánh đuổi quân Tàu về Bắc.\"}"
+   ],
+   "seconds": [
+    2.3106813999911537,
+    2.3173573999956716
+   ]
+  },
+  {
+   "row_id": "r077",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng là không tìm thấy trong sách, không bịa ra câu trả lời, và đáp ứng tiêu chí tự nhiên, đúng ngữ pháp và chính tả của fluency.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng là không tìm thấy trong sách, không bịa ra câu trả lời, và đáp ứng tiêu chí tự nhiên, đúng ngữ pháp và chính tả của fluency.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng là không tìm thấy thông tin yêu cầu trong câu hỏi trong cả hai đoạn trích. Câu trả lời không bịa ra, mà chỉ khẳng định rằng thông tin không có trong sách.\"}"
+   ],
+   "seconds": [
+    2.64214009999705,
+    0.9574494999978924
+   ]
+  },
+  {
+   "row_id": "r078",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả\"}"
+   ],
+   "seconds": [
+    0.9876808999979403,
+    0.9940990000031888
+   ]
+  },
+  {
+   "row_id": "r079",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không liên quan đến câu hỏi và các đoạn trích đã cho. Câu trả lời đưa ra thông tin không đúng về thời điểm và nội dung của câu hỏi.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không liên quan đến câu hỏi và các đoạn trích đã cho. Câu trả lời đưa ra thông tin không đúng về thời điểm và nội dung của câu hỏi.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không liên quan đến câu hỏi và các đoạn trích đã cho. Câu trả lời đưa ra thông tin không đúng về thời điểm và nội dung của câu hỏi.\"}"
+   ],
+   "seconds": [
+    3.7881735999981174,
+    3.7909308999951463
+   ]
+  },
+  {
+   "row_id": "r080",
+   "scores": [
+    1,
+    null
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời chỉ ra một phần nhỏ thông tin trong đoạn trích, không trung thực với đoạn trích. Đoạn trích chỉ nói đến việc nhà Minh yêu cầu Đại Ngu giao Lộc Châu, nhưng không nói rõ năm 1405 nhà Minh đã yêu cầu giao Lộc Châu. Câu trả lời thiếu thông tin quan trọng và bịa ra thông tin không có trong sách.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời chỉ ra một phần nhỏ thông tin trong đoạn trích, không trung thực với đoạn trích. Đoạn trích chỉ nói đến việc nhà Minh yêu cầu Đại Ngu giao Lộc Châu, nhưng không nói rõ năm 1405 nhà Minh đã yêu cầu giao Lộc Châu. Câu trả lời thiếu thông tin quan trọng và bịa ra thông tin không có trong sách.\"}",
+    ""
+   ],
+   "seconds": [
+    2.681194399992819,
+    3.6597836000000825
+   ]
+  },
+  {
+   "row_id": "r081",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng với nội dung của đoạn trích và đáp án tham chiếu. Tuy nhiên, câu trả lời thiếu ý chính là việc Dương tam Kha bị bắt và Ngô xương Văn chỉ giáng xuống làm Trương Dương-công. Fluency được đánh 5 vì câu trả lời tự nhiên và đúng ngữ pháp. Completeness chỉ được đánh 3 vì câu trả lời đúng nhưng thiếu ý chính của câu hỏi.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng với nội dung của đoạn trích và đáp án tham chiếu. Tuy nhiên, câu trả lời thiếu ý chính là việc Dương tam Kha bị bắt và Ngô xương Văn chỉ giáng xuống làm Trương Dương-công. Fluency được đánh 5 vì câu trả lời tự nhiên và đúng ngữ pháp. Completeness chỉ được đánh 3 vì câu trả lời đúng nhưng thiếu ý chính của câu hỏi.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng với nội dung của đoạn trích và đáp án tham chiếu. Tuy nhiên, câu trả lời thiếu ý chính là việc Dương tam Kha bị bắt và Ngô xương Văn chỉ giáng xuống làm Trương Dương-công. Fluency được đánh 5 vì câu trả lời tự nhiên và đúng ngữ pháp. Completeness chỉ được đánh 3 vì câu trả lời đúng nhưng thiếu ý chính của câu hỏi.\"}"
+   ],
+   "seconds": [
+    3.1888478999899235,
+    1.4953712999995332
+   ]
+  },
+  {
+   "row_id": "r082",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích và không hoàn toàn chính xác. Đoạn trích chỉ nói về thái độ của Nhân-tông khi nghe Hưng-đạo-vương thua chạy, không đề cập đến thái độ của vua và nhân dân.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không hoàn toàn chính xác. Đoạn trích chỉ nói về thái độ của Nhân-tông khi nghe Hưng-đạo-vương thua chạy, không đề cập đến thái độ của vua và nhân dân.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và không chính xác. Đoạn trích chỉ nói về thái độ của Nhân-tông, không đề cập đến thái độ của vua và nhân dân khi Hưng Đạo Vương qua đời.\"}"
+   ],
+   "seconds": [
+    2.866476299997885,
+    1.044816900001024
+   ]
+  },
+  {
+   "row_id": "r083",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách. Các đoạn trích không cung cấp thông tin về sông Bạch Đằng chảy qua các tỉnh thành và chiều dài của nó.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Các đoạn trích không cung cấp thông tin về sông Bạch Đằng chảy qua các tỉnh thành và chiều dài của nó.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu hỏi đề cập đến sông Bạch Đằng hiện nay chảy qua các tỉnh Kiên Giang và Kiên Hải, dài khoảng 162 kilômét. Các đoạn trích không cung cấp thông tin về sông Bạch Đằng hiện nay chảy qua các tỉnh hay dài bao nhiêu ki-lô-mét.\"}"
+   ],
+   "seconds": [
+    7.006191699998453,
+    1.4787481000093976
+   ]
+  },
+  {
+   "row_id": "r084",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích và hoàn toàn không liên quan đến câu hỏi đề ra.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và hoàn toàn không liên quan đến câu hỏi đề ra.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích và hoàn toàn không liên quan đến câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    2.252810399993905,
+    0.7422772999998415
+   ]
+  },
+  {
+   "row_id": "r085",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích, cũng không liên quan đến diện tích Trung Việt. Ngữ pháp và ngữ nghĩa đều sai lệch so với đề bài.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích, cũng không liên quan đến diện tích Trung Việt. Ngữ pháp và ngữ nghĩa đều sai lệch so với đề bài.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích, cũng không liên quan đến diện tích Trung Việt. Ngữ pháp và ngữ nghĩa đều sai lệch so với đề bài.\"}"
+   ],
+   "seconds": [
+    2.4110305000067456,
+    2.414559400000144
+   ]
+  },
+  {
+   "row_id": "r086",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời chỉ ra rằng sách không trả lời câu hỏi, nhưng không nói rõ câu hỏi cụ thể là gì. Câu trả lời không trung thực với đoạn trích và không đầy đủ. Văn phong tự nhiên, đúng ngữ pháp và chính tả.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời chỉ ra rằng sách không trả lời câu hỏi, nhưng không nói rõ câu hỏi cụ thể là gì. Câu trả lời không trung thực với đoạn trích và không đầy đủ. Văn phong tự nhiên, đúng ngữ pháp và chính tả.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời chỉ ra rằng sách không trả lời câu hỏi, nhưng không nói rõ câu hỏi cụ thể là gì. Câu trả lời không trung thực với đoạn trích và không đầy đủ. Văn phong tự nhiên, đúng ngữ pháp và chính tả.\"}"
+   ],
+   "seconds": [
+    1.2748016999976244,
+    1.284658299991861
+   ]
+  },
+  {
+   "row_id": "r087",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách. Câu trả lời đưa ra nhân vật Trình Bằng Phi, nhưng sách không đề cập đến nhân vật này. Hơn nữa, câu trả lời không chính xác vì sách chỉ nói về Toa Đô, không phải Trình Bằng Phi.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu trả lời đưa ra nhân vật Trình Bằng Phi, nhưng sách không đề cập đến nhân vật này. Hơn nữa, câu trả lời không chính xác vì sách chỉ nói về Toa Đô, không phải Trình Bằng Phi.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Câu trả lời đưa ra nhân vật Trình Bằng Phi, nhưng sách không đề cập đến nhân vật này. Hơn nữa, câu trả lời không chính xác vì sách chỉ nói về Toa Đô, không phải Trình Bằng Phi.\"}"
+   ],
+   "seconds": [
+    2.5111567999992985,
+    2.512175900003058
+   ]
+  },
+  {
+   "row_id": "r088",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong sách. Các đoạn trích chỉ nêu tên các tướng lĩnh mà Bình Định Vương sai đi, nhưng không có thông tin về việc họ đi đánh các địa điểm như trong câu trả lời. Hơn nữa, câu trả lời bịa thêm các địa điểm không được sách đề cập.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Các đoạn trích chỉ nêu tên các tướng lĩnh mà Bình Định Vương sai đi, nhưng không có thông tin về việc họ đi đánh các địa điểm như trong câu trả lời. Hơn nữa, câu trả lời bịa thêm các địa điểm không được sách đề cập.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Các đoạn trích chỉ nêu tên các tướng lĩnh mà Bình Định Vương sai đi, nhưng không có thông tin về việc họ đi đánh các địa điểm như trong câu trả lời. Hơn nữa, câu trả lời bịa thêm các địa điểm không được sách đề cập.\"}"
+   ],
+   "seconds": [
+    2.9704195000085747,
+    2.9829334000096424
+   ]
+  },
+  {
+   "row_id": "r089",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời hoàn toàn không có trong đoạn trích và không liên quan đến câu hỏi đề cập đến Hàn Thuyên. Nó cũng không trung thực với thông tin về Hàn Thuyên trong đoạn trích.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn không có trong đoạn trích và không liên quan đến câu hỏi đề cập đến Hàn Thuyên. Nó cũng không trung thực với thông tin về Hàn Thuyên trong đoạn trích.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn không có trong đoạn trích và không liên quan đến câu hỏi đề cập đến Hàn Thuyên quê ở đâu.\"}"
+   ],
+   "seconds": [
+    2.7247516000061296,
+    0.7969389000063529
+   ]
+  },
+  {
+   "row_id": "r090",
+   "scores": [
+    null,
+    null
+   ],
+   "verdict": {
+    "score": null,
+    "faithfulness": null,
+    "completeness": null,
+    "fluency": null,
+    "reason": "",
+    "error": "backend: HTTPStatusError"
+   },
+   "raw": [
+    "",
+    ""
+   ],
+   "seconds": [
+    3.5325829000066733,
+    3.545400500006508
+   ]
+  },
+  {
+   "row_id": "r091",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời hoàn toàn không tìm thấy trong đoạn trích và không trung thực với sách. Câu trả lời thiếu ý chính và bịa ra. Không có tính nhút nhát, khiếp sợ và muốn hòa bình trong đoạn trích. Câu trả lời không tự nhiên và không chính tả đúng.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn không tìm thấy trong đoạn trích và không trung thực với sách. Câu trả lời thiếu ý chính và bịa ra. Không có tính nhút nhát, khiếp sợ và muốn hòa bình trong đoạn trích. Câu trả lời không tự nhiên và không chính tả đúng.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn không tìm thấy trong đoạn trích và không chính xác với đáp án tham chiếu. Câu trả lời bịa ra nhiều ý không có trong sách.\"}"
+   ],
+   "seconds": [
+    2.93981480000366,
+    0.8967326999991201
+   ]
+  },
+  {
+   "row_id": "r092",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời không tìm thấy trong đoạn trích, cũng như không đầy đủ thông tin về thời gian bắt đầu của thời Thượng cổ từ sách Việt Nam sử lược.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích, cũng như không đầy đủ thông tin về thời gian bắt đầu của thời Thượng cổ từ sách Việt Nam sử lược.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong đoạn trích, cũng như không đầy đủ và không chính xác. Đoạn trích chỉ đề cập đến việc soạn thảo sách sử từ thời gian cụ thể, nhưng không nói rõ thời gian bắt đầu của thời Thượng cổ.\"}"
+   ],
+   "seconds": [
+    2.724744400009513,
+    1.1206953000073554
+   ]
+  },
+  {
+   "row_id": "r093",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi đề ra. Câu trả lời chỉ nhắc lại một đoạn giới thiệu sách mà không giải thích về việc giải mã hệ thống chữ viết cổ. Câu trả lời không trung thực với đoạn trích.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và không liên quan đến câu hỏi đề ra. Câu trả lời chỉ nhắc lại một đoạn giới thiệu sách mà không giải thích về việc giải mã hệ thống chữ viết cổ. Câu trả lời không trung thực với đoạn trích.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách và hoàn toàn không liên quan đến câu hỏi đề ra.\"}"
+   ],
+   "seconds": [
+    2.4962868000002345,
+    0.7001801999867894
+   ]
+  },
+  {
+   "row_id": "r094",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 5,
+    "reason": "Câu trả lời không tìm thấy trong sách. Các đoạn trích chỉ nêu rõ quân Chiêm Thành đã tấn công Thăng Long hai lần, không có thông tin về ba lần tấn công như câu trả lời đề xuất.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Các đoạn trích chỉ nêu rõ quân Chiêm Thành đã tấn công Thăng Long hai lần, không có thông tin về ba lần tấn công như câu trả lời đề xuất.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 5, \"score\": 1, \"reason\": \"Câu trả lời không tìm thấy trong sách. Các đoạn trích chỉ nêu rõ quân Chiêm Thành đã tấn công Thăng Long hai lần, không có thông tin về ba lần tấn công như câu trả lời đề xuất.\"}"
+   ],
+   "seconds": [
+    2.4805065999971703,
+    0.9873567000031471
+   ]
+  },
+  {
+   "row_id": "r095",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Đáp án đúng và đầy đủ cho rằng sách không có câu trả lời cho câu hỏi này",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ cho rằng sách không có câu trả lời cho câu hỏi này\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ cho rằng sách không có câu trả lời cho câu hỏi này, không bịa ra câu trả lời\"}"
+   ],
+   "seconds": [
+    0.90825209999457,
+    0.9770138000021689
+   ]
+  },
+  {
+   "row_id": "r096",
+   "scores": [
+    3,
+    3
+   ],
+   "verdict": {
+    "score": 3,
+    "faithfulness": 5,
+    "completeness": 3,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng về người được giao chức Khu mật đại sứ, nhưng thiếu thông tin về Nghệ Tông lánh mình chạy sang Đông-ngạn và việc Nghệ Tông tin tưởng Lê Quý Ly. Câu trả lời đầy đủ về thông tin cần câu hỏi cần, nhưng thiếu thông tin về hành động của Nghệ Tông.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng về người được giao chức Khu mật đại sứ, nhưng thiếu thông tin về Nghệ Tông lánh mình chạy sang Đông-ngạn và việc Nghệ Tông tin tưởng Lê Quý Ly. Câu trả lời đầy đủ về thông tin cần câu hỏi cần, nhưng thiếu thông tin về hành động của Nghệ Tông.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 3, \"fluency\": 5, \"score\": 3, \"reason\": \"Câu trả lời đúng về người được giao chức Khu mật đại sứ, nhưng thiếu thông tin về Nghệ Tông và Lê Quý Ly là dòng dõi của Hồ Hùng Dật. Câu trả lời đầy đủ về thông tin cần thiết, nhưng thiếu thông tin về mối quan hệ giữa Nghệ Tông và Lê Quý Ly.\"}"
+   ],
+   "seconds": [
+    2.940210400003707,
+    2.9423277000023518
+   ]
+  },
+  {
+   "row_id": "r097",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Không tìm thấy câu trả lời trong sách, đáp án và câu trả lời đều đúng với thông tin trong sách",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, đáp án và câu trả lời đều đúng với thông tin trong sách\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Không tìm thấy câu trả lời trong sách, đáp án và câu trả lời đều đúng với thông tin trong sách\"}"
+   ],
+   "seconds": [
+    0.979670900007477,
+    0.9879666000051657
+   ]
+  },
+  {
+   "row_id": "r098",
+   "scores": [
+    1,
+    1
+   ],
+   "verdict": {
+    "score": 1,
+    "faithfulness": 1,
+    "completeness": 1,
+    "fluency": 1,
+    "reason": "Câu trả lời hoàn toàn bịa đặt và không có trong sách. Các thông tin được nêu trong câu trả lời không xuất hiện trong đoạn trích được cung cấp.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn bịa đặt và không có trong sách. Các thông tin được nêu trong câu trả lời không xuất hiện trong đoạn trích được cung cấp.\"}",
+    "{\"faithfulness\": 1, \"completeness\": 1, \"fluency\": 1, \"score\": 1, \"reason\": \"Câu trả lời hoàn toàn bịa đặt và không có trong sách. Các thông tin được nêu trong câu trả lời không xuất hiện trong đoạn trích được cung cấp.\"}"
+   ],
+   "seconds": [
+    2.957983599990257,
+    2.964539499997045
+   ]
+  },
+  {
+   "row_id": "r099",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Câu trả lời đúng và đầy đủ với câu hỏi, trích dẫn từ đoạn [1] hoàn toàn có trong sách và không bịa ra thông tin. Câu trả lời cũng tự nhiên và chính xác về địa điểm xây dựng Tây Đô.",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi, trích dẫn từ đoạn [1] hoàn toàn có trong sách và không bịa ra thông tin. Câu trả lời cũng tự nhiên và chính xác về địa điểm xây dựng Tây Đô.\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Câu trả lời đúng và đầy đủ với câu hỏi, trích dẫn từ đoạn [1] hoàn toàn có trong sách và không bịa ra thông tin. Câu trả lời cũng tự nhiên và chính xác về địa điểm xây dựng Tây Đô.\"}"
+   ],
+   "seconds": [
+    2.568684799989569,
+    2.5729998000024352
+   ]
+  },
+  {
+   "row_id": "r100",
+   "scores": [
+    5,
+    5
+   ],
+   "verdict": {
+    "score": 5,
+    "faithfulness": 5,
+    "completeness": 5,
+    "fluency": 5,
+    "reason": "Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả",
+    "error": null
+   },
+   "raw": [
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả\"}",
+    "{\"faithfulness\": 5, \"completeness\": 5, \"fluency\": 5, \"score\": 5, \"reason\": \"Đáp án đúng và đầy đủ, không bịa ra câu trả lời, và tự nhiên, đúng ngữ pháp và chính tả\"}"
+   ],
+   "seconds": [
+    1.0324861999979476,
+    1.0362236999935703
+   ]
+  }
+ ]
+}

@@ -65,6 +65,7 @@ An answer is built from hybrid retrieval (vector search plus Postgres full-text 
 | Upload, PDF parsing and chunking, ingestion worker | done; one real run with bge-m3 on a 338-page Vietnamese PDF ([results](docs/benchmarks/e2e-real-model.md)) |
 | Hybrid retrieval and streamed, cited answers (API) | done; the reranker runs locally (TEI in Compose), not yet in a hosted setup; on that PDF it lifts Hit@1 from 47.6% to 80.8% ([results](docs/benchmarks/e2e-real-model.md)) |
 | Abstain on questions the book does not answer (fixed reply, no model call, `abstained` flag, metric) | done; with the reranker, a 0.2557 score threshold abstains on 100% of 19 blind unanswerable questions at a 5.3% false-abstain rate ([results](docs/benchmarks/abstain.md)) |
+| LLM-as-judge for answer quality (local model, rubric, repeat consistency) | built; **unvalidated** until the 40-row human labelling sheet is filled in and compared ([note](docs/benchmarks/judge.md)) |
 | Web: upload with progress, streaming chat with citation chips | done; not yet checked against the running stack |
 | Evaluation set and CI eval job | planned |
 | Authentication, per-user libraries, hosted demo | planned |

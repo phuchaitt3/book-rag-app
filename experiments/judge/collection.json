@@ -1,0 +1,2122 @@
+{
+ "answer_model": "qwen2.5:3b-instruct",
+ "book_id": "39e736cf-897c-4195-861b-f7530a01c0a8",
+ "seed": 244,
+ "skipped_questions": [],
+ "rows": [
+  {
+   "qid": "c134-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Lý Thường Kiệt quê ở đâu?",
+   "reference": "Phường Thái Hòa, huyện Thọ Xương (thành phố Hà Nội).",
+   "answer": "Lý Thường Kiệt quê ở làng Thái-hòa, huyện Thọ-xương (thành phố Hà-nội).",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "3da8a990-4e6c-4971-8e48-6e818739f3c1",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý",
+     "page": 140,
+     "text": "Chế ma Na thua chạy xin trả lại ba châu như cũ. Lý thường Kiệt bấy giờ đã ngoài 70 tuổi đi đánh Chiêm\u0002thành về được một năm thì mất. Ông là người ở phường Thái-hòa, huyện Thọ-xương (thành phố Hà-nội), có tướng tài, tinh thao-lược, bắc đánh Tống, nam bình Chiêm, thật là một người danh-tướng nước ta vậy. 141 Từ khi bình-phục được nước Chiêm-thành rồi, các nước ở phía nam đều về triều cống. Nhân-tông làm vua đến năm đinh-vị (1127) thì mất, trị-vì được 56 năm, thọ 63 tuổi. 1. ↑ Hoàng nam 黄 男 là người từ 18 tuổi trở lên. 2. ↑ Từ nhà Đinh đến bây-giờ nước ta vẫn gọi là Đại-cồ-việt, nay mới đổi là Đại-Việt. 3. ↑ Xin xem Vương an Thạch của Đào trinh Nhất — Tân Việt xuất-bản. 4. ↑ Sách « Khâm-định Việt-sử » có chép rằng sông Phú-lương là con sốn đi từ Bạch-hạt qua Nam-định rồi chảy ra bể, tức là sông Hồng-hà. Nhưng xem trận thế bấy giờ và xét ở trong địa-lý thì sông Phú-lương chép ở đây chính là sông Cầu, chứ không phải sông Hồng-hà. Nếu lúc bấy giờ Lý thường Kiệt đã phá quân nhà Tống ở sông Như-nguyệt tức là khúc dưới sông Cầu, thì tất nhà Lý còn đóng ở mạn sông Cầu. Quân Quách Quì làm thế nào mà tiến lên đến sông Hồng-hà được?"
+    },
+    {
+     "number": 2,
+     "chunk_id": "0b8bcfb5-b2ac-44e4-b001-1304c667f895",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý",
+     "page": 136,
+     "text": "Vậy quân Đại-Việt sang đánh để cứu-vớt nhân\u0002dân, vân vân... Năm ất-mão (1075) Lý thường Kiệt đem quân sang vây đánh Khâm-châu 欽 州 và Liêm-châu 廉 州 (thuộc tỉnh Quảng\u0002đông) giết hại hơn 8.000 người. Đạo quân của Tôn Đản sang 137 đánh Ung-châu 邕 州 (tức là thành Nam-ninh thuộc tỉnh Quảng-tây), quan Đô-giám Quảng-tây là Trương thủ Tiết 張 守 節 đem binh lại cứu Ung-châu , bị Lý thường Kiệt đón đánh ở Côn-lôn quan 崑 崙 關 (gần Nam-ninh) chém Trương thủ Tiết ở trận tiền. Tôn Đản vây thành Ung-châu hơn 40 ngày, quan tri-châu là Tô Dam 蘇 緘 kiên cố giữ mãi. Đến khi quân nhà Lý hạ được thành, thì Tô Dam bắt người nhà tất cả là 36 người chết trước, rồi tự đốt mà chết. Người trong thành cũng bắt\u0002chước quan tri-châu, không ai chịu hàng cả. Quân nhà Lý vào thành giết hại gần đến 58.000 (?) người. Lý thường Kiệt và Tôn Đản sang đánh nhà Tống giết hại cả thảy đến 10 vạn người, rồi lại bắt người lấy của đem về nước. 5. NHÀ TỐNG LẤY ĐẤT QUẢNG-NGUYÊN."
+    }
+   ],
+   "row_id": "r001"
+  },
+  {
+   "qid": "c126-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Kỳ thi ba vòng đầu tiên của nước mình được tổ chức vào lúc nào, ai đỗ đầu?",
+   "reference": "Năm Ất Mão (1075), thủ khoa là Lê Văn Thịnh.",
+   "answer": "[1] Năm kỷ-tị (1089) mở khoa thi 134 chọn người văn-học vào Hàn-lâm-viện, có Mạc hiển Tích đỗ đầu.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "76b6623b-1cdb-4335-b564-0c10a26e5839",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý",
+     "page": 133,
+     "text": "Bởi vậy thời bấy giờ trong thì sửa-sang được việc chính-trị, ngoài thì đánh nhà Tống, phá quân Chiêm. Ấy cũng nhờ có tôi hiền tướng giỏi cho nên mới thành được công-nghiệp như vậy. 3. VIỆC SỬA-SANG TRONG NƯỚC. Việc đánh-dẹp về đời vua Nhân-tông thì nhiều, song những công-việc ở trong nước cũng không bỏ trễ. Đời bấy giờ mới khởi đầu đắp cái đê Cơ-xá để giữ đất kinh-thành cho khỏi lụt ngập. Việc đắp đê khởi đầu từ đó. Năm ất-mão (1075) mở khoa thi tam-trường để lấy người văn-học vào làm quan. Kỳ thi ấy là kỳ đầu tiên ở nước ta, chọn được hơn 10 người. Thủ-khoa là Lê văn Thịnh 黎 文 盛. Ông thủ-khoa ấy ngày sau làm đến chức thái-sư, nhưng vì làm sự phản-nghịch, cho nên phải đày lên ở Thao-giang (huyện Tam-nông, Phú-thọ). Năm bính-thìn (1076) lập Quốc-tử-giám để bổ những người văn-học vào dạy. Đến năm bính-dần (1086) mở khoa thi 134 chọn người văn-học vào Hàn-lâm-viện 翰 林 院, có Mạc hiển Tích 莫 顯 績 đỗ đầu, được bổ Hàn-lâm-học-sĩ. Sự nho-học nước ta khởi đầu thịnh lên từ thời bấy giờ. Năm kỷ-tị (1089) định quan-chế, chia văn võ ra làm 9 phẩm. Quan đại-thần thì có Thái-sư, Thái-phó, Thái-úy và Thiếu\u0002sư, Thiếu-phó, Thiếu-úy."
+    }
+   ],
+   "row_id": "r002"
+  },
+  {
+   "qid": "c219-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Ai đã đưa Trần Dụ Tông lên ngôi vua?",
+   "reference": "Minh Tông thượng hoàng",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "2354a666-79e1-4117-9dde-ce48ac56f32d",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba)",
+     "page": 227,
+     "text": "4. DƯƠNG NHẬT-LỄ (1369-1370). Năm kỷ-dậu (1369), vua Dụ-tông mất, không có con. Triều-đình định lập Cung\u0002định-vương 恭 定 王 là anh Dụ-tông lên làm vua, nhưng mà bà Hoàng-thái-hậu nhất định lập người con nuôi của Cung\u0002túc-vương 恭 肅 王 là Dương nhật Lễ 楊 日 禮. Nguyên mẹ Nhật Lễ là người con hát, lấy người hát-bội tên là Dương Khương 楊 姜, có thai rồi mới bỏ Dương Khương mà lấy Cung-túc-vương, sinh ra Nhật Lễ. Nay lên làm vua, Nhật Lễ muốn cải họ là Dương để dứt ngôi nhà Trần, rồi giết bà Hoàng-thái-hậu và Cung-định-vương. Bấy giờ Cung-tĩnh-vương Phủ ở chỗ Kinh-sư cũng sợ bị hại, vả lại tính-khí cũng nhu-nhược, không có ý tranh cạnh, mới bỏ trốn lên mạn Đà-giang. Các quan tôn-thất nhà Trần mới hội nhau đem binh về bắt Nhật Lễ giết đi, rồi rước Cung\u0002tĩnh-vương về làm vua. Tức là vua Nghệ-tông 藝 宗. II. TRẦN NGHỆ-TÔNG (1370-1372) Niên-hiệu: Thiệu-khánh 紹 慶 228 Khi Nghệ-tông giết Nhật Lễ rồi, mẹ Nhật Lễ chạy sang Chiêm-thành, xin vua nước ấy là Chế bồng Nga đem quân sang đánh An-nam. Quân Chiêm vượt bể vào cửa Đại-an, kéo lên đánh Thăng-long. Quan quân đánh không nổi. Nghệ\u0002tông phải lánh mình chạy sang Đông-ngạn (ở Cổ-pháp làng Đình-bảng)."
+    }
+   ],
+   "row_id": "r003"
+  },
+  {
+   "qid": "c161-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Mông Cổ cho Đạt Lỗ Hoa Xích làm gì ở nước ta?",
+   "reference": "Để đi lại giám trị các châu quận nước Nam.",
+   "answer": "[V2] Mông-cổ đặt quan Đạt-lỗ\u0002hoa-xích (tiếng Mông-cổ tức là quan Chưởng-ấn), để đi lại giám-trị các châu-quận nước Nam.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "96d1dfd8-6127-4b10-bfb6-bc0883a51185",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 170,
+     "text": "Vua Mông-cổ lại đặt quan Đạt-lỗ\u0002hoa-xích (tiếng Mông-cổ tức là quan Chưởng-ấn), để đi lại giám-trị các châu-quận nước Nam. Ý Mông-cổ muốn biết nhân-vật tài-sản nước Nam ta có những gì, và học-vấn xảo-kỹ ra sao, để liệu đường mà đánh lấy cho tiện. Và tuy rằng quyền chính-trị vẫn để cho vua nước Nam, nhưng đặt quan giám-trị để dần dần lập thành Bảo-hộ. Thánh-tông bề ngoài tuy vẫn chịu thần-phục, nhưng trong bụng cũng biết rằng Mông-cổ có ý đánh lấy nước mình, cho nên cứ tu binh dụng võ để phòng có ngày tranh chiến. Vậy tuyển đinh-tráng các lộ làm lính, phân quân-ngũ ra làm quân và đô: mỗi quân có 30 đô, mỗi đô có 80 người, bắt phải luyện tập luôn. Năm bính-dần (1266) nhân sứ Mông-cổ sang, Thánh-tông sai quan sang Tàu đáp lễ và xin đừng bắt nho-sĩ, thầy bói, và các thợ-thuyền sang cống. Vua Mông-cổ ưng cho, nhưng bắt chịu 6 điều khác: 1. Vua phải thân vào chầu 171 2. Vua phải cho con hay là em sang làm tin 3. Biên sổ dân sang nộp 4. Phải chịu việc binh-dịch 5. Phải nộp thuế-má 6. Vẫn cứ đặt quan giám-trị Vua An-nam cứ lần lữa không chịu."
+    },
+    {
+     "number": 2,
+     "chunk_id": "281edd98-d5db-484a-a0b0-961ee00292ea",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 169,
+     "text": "Thánh-tông lại bắt các vương-hầu, phò-mã phải chiêu-tập những người nghèo-đói lưu-lạc để khai-khẩn hoang điền làm trang hộ. Trang-điền có từ đấy. 2. SỰ GIAO-THIỆP VỚI MÔNG-CỔ. Nước tuy được yên, song việc giao-thiệp với Tàu một ngày một khó thêm. Đời bấy giờ Mông-cổ đã đánh được nhà Tống rồi, chỉ chực lấy nước An-nam, nhưng vì trước tướng Mông-cổ đã đánh thua một trận, vả trong nước Tàu cũng chưa được yên, cho nên vua Mông cổ muốn dụng kế dụ vua An-nam sang hàng-phục, để khỏi dùng can-qua. Vậy cứ vài năm lại cho sứ sang sách\u0002nhiễu điều nọ điều kia, và dụ vua An-nam sang chầu, nhưng vua ta cứ nay lần mai lữa, không chịu đi. Sau nhân dịp Thái- 170 tông nhường ngôi cho Thánh-tông, vua Mông-cổ sai sứ sang phong vương cho Thánh-tông, và tuy không bắt nước Nam phải đổi phục-sắc và chính-trị, nhưng định cho ba năm phải một lần cống. Mà lệ cống thì phải cho nho-sĩ, thầy thuốc, thầy bói, thầy toán-số và thợ-thuyền mỗi hạng ba người, cùng với các đồ sản-vật như là sừng tê, ngà voi, đồi-mồi, châu-báu và các vật lạ. Vua Mông-cổ lại đặt quan Đạt-lỗ\u0002hoa-xích (tiếng Mông-cổ tức là quan Chưởng-ấn), để đi lại giám-trị các châu-quận nước Nam."
+    }
+   ],
+   "row_id": "r004"
+  },
+  {
+   "qid": "c40-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Ai đã gửi thư cho Triệu Vũ đế với giọng điệu thân thiện và nhân từ?",
+   "reference": "Hán Văn đế",
+   "answer": "Văn Đế đã gửi thư cho Triệu Vũ Đế với giọng điệu thân thiện và nhân từ [5].",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 5,
+     "chunk_id": "481dc49a-6092-49e3-9e2b-e64b9fbac88f",
+     "section": "Nhà Triệu",
+     "page": 45,
+     "text": "Quân nhà Hán chịu không được thủy-thổ phương nam, nhiều người phải bệnh-tật, bởi vậy phải chạy thua về bắc. Từ đó thanh-thế Triệu Vũ-đế lừng\u0002lẫy, đi đâu dùng xe ngựa theo nghi-vệ Hoàng-đế, như vua nhà Hán vậy. 4. VŨ-VƯƠNG THẦN PHỤC NHÀ HÁN. Đến khi Lữ hậu mất, Hán Văn-đế 漢 文 帝 lên ngôi, lại sai Lục Giả đưa thư sang khuyên Vũ-đế về thần phục nhà Hán. Thư rằng: « Trẫm là con trắc-thất vua Cao-đế, phụng-mệnh ra trị nước Đại, vì non sông cách-trở, thẹn mình phác-lậu, cho nên lâu nay chưa từng đưa thư sang hỏi thăm nhà vua. « Từ khi đức Cao-đế xa bỏ quần-thần, đức Huệ-đế qua đời, bà Cao-hậu làm-triều, không may bị bệnh, để cho họ Lữ chuyên quyền, toan đem con họ khác để nối-vì đức Huệ-đế. May nhờ nhà Tông-miếu linh-thiêng, các công-thần ra sức dẹp kẻ tiếm-nghịch. « Trẫm vì các vương-hầu cùng bách quan cố ép, cho nên phải lên ngôi Hoàng-đế. Mới rồi trẫm nghe nhà vua có đưa thư cho Long-lư-hầu, nhắn tin và xin anh em họ-hàng ở quận Chân-định, và xin bãi binh ở quận Trường-sa. « Trẫm cũng nghe lời thư của nhà vua, thì đã bảo tướng\u0002quân Bác-dương-hầu bãi binh về, còn anh em họ-hàng nhà 46 vua ở Chân-định thì trẫm đã cho người thăm-nom, lại sai sửa-sang phần-mộ nhà vua, thật tử-tế."
+    }
+   ],
+   "row_id": "r005"
+  },
+  {
+   "qid": "c189-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Ai là vị tướng giỏi, chỉ huy quân đội vững vàng, kiên cường như sắt, góp công đánh bại quân Mông Cổ xâm lược năm 1285?",
+   "reference": "Hưng Đạo Vương Trần Quốc Tuấn",
+   "answer": "[1] Lý Quán trúng tên bắn chết. Thoát Hoan, A bát Xích và phàn Tiếp chạy thoát về Tàu được.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "fd04485c-3832-4ff0-a98a-afc002ff5a93",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I",
+     "page": 193,
+     "text": "Sau thấy quân An-nam đuổi kíp quá, Thoát Hoan phải chui vào cái ống đồng để lên xe bắt quân kéo chạy. Về gần đến châu Tư-ninh lại gặp bọn Hưng-võ-vương Nghiễn và Hưng-hiếu-vương Úy đánh đuổi một trận nữa. Lý Quán trúng tên bắn chết. Thoát Hoan, A bát Xích và Phàn Tiếp chạy thoát về Tàu được. Thế là Đại-quân của Thoát Hoan lúc đầu mới sang lừng-lẫy bao nhiêu, bây giờ tan nát mất cả. Trong sáu tháng trời, từ tháng chạp năm giáp-thân (1284) đến tháng sáu năm ất-dậu (1285), quân An-nam đuổi 50 vạn quân Mông-cổ ra ngoài bờ-cõi, chỉnh-đốn giang-sơn lại như cũ. Ấy cũng nhờ có tay Hưng-đạo-vương có tài đại-tướng, cầm quân vững-chãi, gan 194 bền tựa sắt, và lại khéo dùng lời khuyên-dỗ, khiến cho bụng người cảm-động, sinh lòng trung-nghĩa, cho nên tướng-sĩ ai nấy đều hết lòng giúp nước. Vả nước An-nam thời bấy giờ vua tôi hòa-hợp, lòng người như một, nhân-tài lũ-lượt kéo ra; mà quân Nguyên sang An\u0002nam thì đường xa muôn dặm, núi sông cách-trở, đến mùa nóng-nực, khí-hậu lại lam-chướng, cho nên chỉ hùng-mạnh được lúc đầu mà thôi, sau thành ra bệnh-tật yếu-đau."
+    }
+   ],
+   "row_id": "r006"
+  },
+  {
+   "qid": "c162-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Trần Thánh Tông đã chuẩn bị như thế nào cho nguy cơ chiến tranh với Mông Cổ?",
+   "reference": "Tuyển đinh tráng các lộ làm lính, phân quân ngũ ra làm quân và đô, bắt phải luyện tập luôn.",
+   "answer": "Thần phục vua Mông-cổ, nhưng trong bụng Thánh-tông biết ý đồ xâm lược của họ và chỉ đạo quân tráng tuyển chọn làm lính, phân quân ngũ ra làm quân và đô. Mỗi quân có 30 đô, mỗi đô có 80 người, bắt phải luyện tập luôn.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "281edd98-d5db-484a-a0b0-961ee00292ea",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 169,
+     "text": "Thánh-tông lại bắt các vương-hầu, phò-mã phải chiêu-tập những người nghèo-đói lưu-lạc để khai-khẩn hoang điền làm trang hộ. Trang-điền có từ đấy. 2. SỰ GIAO-THIỆP VỚI MÔNG-CỔ. Nước tuy được yên, song việc giao-thiệp với Tàu một ngày một khó thêm. Đời bấy giờ Mông-cổ đã đánh được nhà Tống rồi, chỉ chực lấy nước An-nam, nhưng vì trước tướng Mông-cổ đã đánh thua một trận, vả trong nước Tàu cũng chưa được yên, cho nên vua Mông cổ muốn dụng kế dụ vua An-nam sang hàng-phục, để khỏi dùng can-qua. Vậy cứ vài năm lại cho sứ sang sách\u0002nhiễu điều nọ điều kia, và dụ vua An-nam sang chầu, nhưng vua ta cứ nay lần mai lữa, không chịu đi. Sau nhân dịp Thái- 170 tông nhường ngôi cho Thánh-tông, vua Mông-cổ sai sứ sang phong vương cho Thánh-tông, và tuy không bắt nước Nam phải đổi phục-sắc và chính-trị, nhưng định cho ba năm phải một lần cống. Mà lệ cống thì phải cho nho-sĩ, thầy thuốc, thầy bói, thầy toán-số và thợ-thuyền mỗi hạng ba người, cùng với các đồ sản-vật như là sừng tê, ngà voi, đồi-mồi, châu-báu và các vật lạ. Vua Mông-cổ lại đặt quan Đạt-lỗ\u0002hoa-xích (tiếng Mông-cổ tức là quan Chưởng-ấn), để đi lại giám-trị các châu-quận nước Nam."
+    },
+    {
+     "number": 2,
+     "chunk_id": "dc027f39-3599-4b67-9ec2-f647c48395ac",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 166,
+     "text": "Trần quốc Tuấn ít quân đánh không nổi, lùi về đóng ở Sơn\u0002tây. Quân Mông-cổ kéo tràn xuống đến sông Thao. Thái- 167 tông phải ngự giá thân chinh, nhưng đánh không được, chạy về đóng ở sông Hồng-hà [3] . Quân Mông-cổ tiến lên đánh đuổi quân nhà Trần đến Đông-bộ-đầu (phía đông sông Nhị\u0002hà ở hạt huyện Thượng-phúc). Thái-tông phải bỏ kinh-đô, chạy về đóng ở sông Thiên-mạc (về hạt huyện Đông-an, tỉnh Hưng-yên). Quân Mông-cổ vào thành Thăng-long, thấy ba người sứ Mông-cổ còn phải trói, giam ở trong ngục, đến khi cởi trói ra thì một người chết. Ngột-lương-hợp-thai thấy thế tức giận quá, cho quân ra giết phá cả nam phụ lão ấu ở trong thành. Bấy giờ thế nguy, Thái-tông ngự thuyền đến hỏi Thái-úy là Trần nhật Hiệu 陳 日 皎. Nhật Hiệu không nói gì cả, cầm sào viết xuống nước hai chữ « Nhập Tống 入 宋 ». Thái\u0002tông lại đi đến hỏi Thái-sư Trần thủ Độ. Thủ Độ nói rằng: « Đầu tôi chưa rơi xuống đất, thì xin Bệ-hạ đừng lo! ». Thái-tông nghe thấy Thủ Độ nói cứng-cỏi như thế, trong bụng mới yên. Được ít lâu quân Mông-cổ ở nước Nam không quen thủy\u0002thổ xem ra bộ mỏi-mệt. Thái-tông mới tiến binh lên đánh ở Đông-bộ-đầu."
+    }
+   ],
+   "row_id": "r007"
+  },
+  {
+   "qid": "c132-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Vua Lý Nhân Tông phái người nào dẫn voi đi sứ nhà Tống và yêu cầu trả lại đất vào năm 1078?",
+   "reference": "Đào Tôn Nguyên",
+   "answer": "[1] Lý Nhân Tông sai Đào tôn Nguyên 陶 尊 元 dẫn voi sang cống nhà Tống và đòi lại những châu huyện ở mạn Quảng-nguyên.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "d3a2c78e-13e9-409d-96ce-54126e1b37ab",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý",
+     "page": 139,
+     "text": "139 Đến năm mậu-ngọ (1078) Lý Nhân Tông sai Đào tôn Nguyên 陶 尊 元 đưa voi sang cống nhà Tống và đòi lại những châu huyện ở mạn Quảng-nguyên. Vua Tống bắt phải trả những người châu Khâm, châu Liêm và châu Ung mà quân nhà Lý bắt về ngày trước, rồi mới trả châu huyện cho nhà Lý. Sang năm kỷ-mùi (1079) Nhân-tông cho những [4] người Tàu về nước, tất cả chỉ có 221 người. Con trai thì thích ba chữ vào trán, từ 15 tuổi trở lên thì thích: Thiên-tử binh; 20 tuổi trở lên thì thích: Đầu Nam-triều; còn con gái thì thích vào tay trái hai chữ: Quan-khách. Đất Quảng-nguyên từ khi bọn Quách Quì lấy được, cải tên là Thuận-châu và có 3.000 quân Tống ở lại giữ, nhưng vì đất lam-chướng, mười phần chết đến năm sáu. Đến khi nhà Lý cho những người châu Khâm, châu Liêm và châu Ung về Tàu, vua nhà Tống trả lại châu Quảng-nguyên. Nhưng vì có người nói rằng châu ấy có nhiều vàng, người Tống tiếc của, làm hai câu thơ rằng: Nhân tham Giao-chỉ tượng, Khước thất Quảng-nguyên kim. Đến mùa hạ năm giáp-tí (1084) Nhân-tông sai quan binh-bộ Thị-lang là Lê văn Thịnh 黎 文 盛 sang nhà Tống bàn việc chia địa-giới. Lê văn Thịnh phân-giải mọi lẽ, nhà Tống trả nốt cả mấy huyện mà trước còn giữ lại."
+    }
+   ],
+   "row_id": "r008"
+  },
+  {
+   "qid": "c65-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Lý Nam Đế đã giao quyền chỉ huy quân đội cho ai để đối phó với quân Lương?",
+   "reference": "Tả tướng quân Triệu Quang Phục",
+   "answer": "[1] Lý Nam-đế giao quyền chỉ huy quân đội cho Triệu quang Phục để đối phó với quân Lương.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "244e35a5-6ad1-47f1-8e2d-9d734808d6cf",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Nhà Tiền-Lý",
+     "page": 72,
+     "text": "Năm ất-sửu (545) vua nhà Lương sai Dương Phiêu 楊 摽 sang làm thứ-sử Giao-châu, và sai Trần bá Tiên 陳 霸 先 đem quân sang đánh Nam-việt. Lý Nam-đế thua phải bỏ thành Long-biên chạy về giữ thành Gia-ninh (huyện Yên\u0002lãng, tỉnh Phúc-yên). Trần bá Tiên đem quân lên vây thành Gia-ninh, Lý Nam-đế chạy về giữ thành Tân-xương 新 昌, tức là đất Phong-châu cũ thuộc tĩnh Vĩnh-yên bây giờ. Quân nhà Lương lại tiến lên đuổi đánh, Lý Nam-đế thấy thế mình yếu, chống không nổi, mới rút quân lên đóng ở động Khuất-liêu 屈 僚 峒 (thuộc đất Hưng-hóa), để đợi thu-xếp được quân-sĩ lại ra đánh. Được non một năm, Lý Nam-đế đem hai vạn quân ra đánh nhau với Trần bá Tiên ở hồ Điển\u0002triệt 典 澈 (?), lại thua. Lý Nam-đế bèn giao binh quyền lại cho tả-tướng quân Triệu quang Phục 趙 光 復 chống nhau với quân nhà Lương rồi trở về Khuất-liêu. Triệu quang Phục là con quan thái-phó Triệu Túc 趙 肅 người ở Châu-diên (Vĩnh-tường, tỉnh Vĩnh-yên) theo cha giúp Lý Nam-đế lập được nhiều công, nay đem quân chống\u0002cự với nhà Lương được ít lâu, rồi sau thấy thế quân Tàu còn mạnh, địch không nổi, bèn rút quân về Dạ-trạch 夜 澤[2]. Dạ-trạch là chỗ đồng lầy, chung quanh cỏ mọc như rừng, ở 73 giữa có bãi cát làm nhà ở được."
+    }
+   ],
+   "row_id": "r009"
+  },
+  {
+   "qid": "c202-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Năm 1289, ai đã ra lệnh đốt hết tập biểu xin hàng giặc Nguyên của các quan để trấn an mọi người?",
+   "reference": "Thượng hoàng (Trần Thánh Tông)",
+   "answer": "[v1] Tri-thanh đã ra lệnh đốt hết tập biểu xin hàng giặc Nguyên của các quan để trấn an mọi người [1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "b5e9fc72-cf82-4220-9417-4553c8d55d8c",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — II",
+     "page": 206,
+     "text": "Về sau vua Dực-tông bản triều nhà Nguyễn xem đến chỗ này, có phê bốn chữ: « bất nhân phi nghĩa ». Tưởng lời phê ấy cũng là chính đáng. 7. ĐỊNH CÔNG, PHẠT TỘI. Tháng tư năm kỷ-sửu (1289) mới định công, phạt tội. Bao nhiêu những vương hầu đi đánh giặc Nguyên có công đều được thăng trật cả, còn các tướng- 207 sĩ khác họ mà ai có công to thì cho quốc-tính. Nguyễn Khoái được phong tước hầu, cho ăn lộc một làng Khoái-lộ (tức là phủ Khoái bây giờ); Phạm ngũ Lão được thăng làm Quản Thánh-dực quân. Các chúa Mường mà có công đem dân binh ra cự giặc cũng được phong hầu. Vua lại sai văn-thần ghi-chép công-trạng của các tướng hợp biên làm quyển sách gọi là Trung hưng thực lục 中 興 實 錄 và lại sai thợ vẽ tranh các tướng để treo ở gác công thần. Định công xong rồi mới xét đến tội những người hàng giặc. Khi quân Nguyên đang cường-thịnh, triều-thần lắm kẻ hai lòng, có giấy-má đi lại với giặc. Sau giặc thua chạy về bắc, triều-đình bắt được tráp biểu hàng của các quan. Đình-thần muốn lục ra để trị tội, nhưng Thượng-hoàng nghĩ rằng làm tội những đồ tiểu-nhân cũng vô ích, bèn sai đem đốt cả tráp đi, cho yên lòng mọi người."
+    }
+   ],
+   "row_id": "r010"
+  },
+  {
+   "qid": "u22",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Các nhà khảo cổ học hiện đại đã phát hiện được những bằng chứng nào về đời sống thường dân thời kỳ này ở vùng đồng bằng sông Hồng?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[2] cho biết, trong thời đại thượng cổ, sử chép về xã hội nước Tàu trước đời nhà Tần chủ yếu là những chuyện hoang đường huyền hòan. Những nhà chép sử đời trước cũng theo tục truyền mà chép lại, chứ không có di-tích gì mà khảo-cứu cho đích-xác.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 2,
+     "chunk_id": "6a9e2425-7b82-4eec-a9cb-7caa264f09aa",
+     "section": "THƯỢNG-CỔ THỜI ĐẠI > Họ Hồng-bàng",
+     "page": 26,
+     "text": "Cứ tính hơn bù kém, mỗi ông vua trị-vì được non 150 năm! Dẫu là người đời thượng-cổ nữa, thì cũng khó lòng mà có nhiều người sống lâu được như vậy. – Xem thế thì đủ biết truyện đời Hồng-bàng không chắc là truyện xác thực. 3. TRUYỆN CỔ-TÍCÍ H VỀ ĐỜI HỒNG-BÀNG. Sử chép rằng đời Hùng-vương thứ nhất, người nước Văn-lang làm nghề chài lưới, cứ hay bị giống thuồng-luồng làm hại, vua mới bắt dân lấy chàm vẽ mình để những giống ấy tưởng là đồng loại không làm hại nữa [3] . Sử lại chép rằng thuyền của ta ở đằng mũi thường hay làm hai con mắt, cũng có ý để cho các thứ thủy-quái ở sông ở bể không quấy-nhiễu đến. Trong đời Hùng-vương lại có hai truyện mà ngày nay người ta thường hay nói đến, là truyện Phù-đổng Thiên-vương và truyện Sơn-tinh, Thủy-tinh. Phù-đổng Thiên-vương. Đời Hùng-vương thứ 6 có đám giặc gọi là giặc Ân, hung-mạnh lắm, không ai đánh nổi. Vua mới sai sứ đi rao trong nước để tìm người tài giỏi ra đánh giặc 27 giúp nước. Bấy giờ ở làng Phù-đổng, bộ Võ-ninh (nay là huyện Võ-giàng, tỉnh Bắc-ninh), có đứa trẻ xin đi đánh giặc giúp vua. Sứ giả về tâu vua, vua lấy làm lạ, cho đòi vào chầu. Đứa trẻ ấy xin đúc cho một con ngựa và cái roi bằng sắt."
+    }
+   ],
+   "row_id": "r011"
+  },
+  {
+   "qid": "c76-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Năm 863 quân Nam Chiếu đã sát hại bao nhiêu người ở Giao Châu?",
+   "reference": "Hơn 15 vạn người",
+   "answer": "[2] (BẮC-THUỘC THỜI-ĐẠI › Bắc-thuộc lần thứ ba, page 82) Nam-chiếu hai lần sang đánh phủ thành, giết người Giao-châu hơn 15 vạn.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 2,
+     "chunk_id": "0f0715dc-004a-432d-af5d-214c52d142bd",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba",
+     "page": 82,
+     "text": "Năm mậu-dần (858), nhà Đường sai Vương Thức 王 式 sang làm Kinh-lược-sứ. Vương Thức là người có tài-lược, trị dân có phép-tắc, cho nên những giặc-giã đều dẹp yên được cả, mà quân Mường và quân Nam-chiếu cũng không dám sang quấy nhiễu. Năm canh-thìn (860), nhà Đường gọi Vương Thức về làm Quan-sát-sứ ở Tích-đông 淅 東 và sai Lý Hộ 李 鄠 sang làm 83 Đô-hộ. Bấy giờ Nam-chiếu đã mạnh lắm, bèn xưng là đế và đặt quốc-hiệu là Đại-mông 大 蒙 rồi lại đổi là Đại-lễ 大 禮 [2]. Lý Hộ giết người tù trưởng là Đỗ thủ Trừng 杜 守 澄, người Mường lại đi dụ quân Nam-chiếu sang đánh lấy mất phủ thành. Lý Hộ phải bỏ chạy về Tàu. Vương Khoan 王 寬 đem binh sang cứu, quân Nam-chiếu bỏ thành rút về. Năm nhâm-ngọ (862), quân Nam-chiếu sang đánh Giao\u0002châu, nhà Đường sai Thái Tập 蔡 襲 đem ba vạn quân sang chống giữ. Quân Nam-chiếu thấy quân nhà Đường nhiều lại rút về. Bấy giờ có quan Tiết-độ-sứ Lĩnh-nam là Thái Kinh 蔡 京 sợ Thái Tập lập được công to bèn mật tâu với vua nhà Đường rằng Giao-châu đã yên, thì nên rút quân về. Thái Tập xin để lại 5.000 quân cũng không được. Tháng giêng năm quí-mùi (863), Nam-chiếu đem 50.000 quân sang đánh phủ thành. Thái Tập cầu cứu không kịp, thế bức quá phải tự-tử."
+    }
+   ],
+   "row_id": "r012"
+  },
+  {
+   "qid": "uh11",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Ở Thành phố Hồ Chí Minh hiện nay những con đường mang tên Trần Hưng Đạo và Lê Lợi dài bao nhiêu mét?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "To answer the question about the length of streets named after Trần Hưng Đạo and Lê Lợi in Ho Chi Minh City, I cannot find any specific information in the provided passages. The passages do not contain details about the length of these streets in the city. Therefore, I cannot provide a precise answer based on the given information.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "fe157e46-1b8a-40bf-a7ff-a521804e117f",
+     "section": "Nước Việt Nam",
+     "page": 16,
+     "text": "Vua Minh-mệnh lại cải làm Đại-nam 大 南. Quốc-hiệu nước ta thay-đổi đã nhiều lần, tuy rằng ngày nay ta vẫn theo thói quen dùng hai chữ An-nam 安 南, nhưng vì hai chữ ấy có ngụ ý phải thần-phục nước Tàu, vậy thì ta nên nhất định lấy tên Việt-nam 越 南 mà gọi nước nhà. 2. VỊ-TRÍ VÀ DIỆN TÍCÍ H. Nước Việt-nam ở về phía đông\u0002nam châu Á-tế-á, hẹp bề ngang, dài bề dọc, hình cong như chữ S, trên phía Bắc và dưới phía Nam phình rộng ra, khúc giữa miền Trung thì eo hẹp lại. Đông và Nam giáp bể Trung-quốc (tức là bể Nam-hải); Tây giáp Ai-lao và Cao-miên; Bắc giáp nước Tàu, liền với tỉnh Quảng-đông, Quảng-tây và Vân-nam. Diện-tích cả nước rộng chừng độ 312.000 ki-lô-mét vuông chia ra như sau này: Bắc Việt : 105.000 km2 Trung Việt : 150.000 km2 Nam Việt : 57.000 km2 3. ĐỊA-THẾ. Nước ta hiện chia ra làm ba cõi: Bắc-Việt, Trung-Việt và Nam-Việt. Đất Bắc-Việt có sông Hồng-hà (tức là sông Nhị-hà) và sông Thái-bình. Mạn trên gọi là 17 Thượng-du lắm rừng nhiều núi, ít người ở. Mạn dưới gọi là Trung-châu, đất đồng bằng, người ở chen-chúc đông lắm."
+    },
+    {
+     "number": 2,
+     "chunk_id": "61257d57-91b9-4e33-8d10-58f591095ec4",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 269,
+     "text": "Đấng anh-hùng ấy, người ở làng Lam-sơn, huyện Thụy\u0002nguyên, phủ Thiệu-hóa, tỉnh Thanh-hóa, họ Lê 黎, tên là Lợi 利. Đã mấy đời làm nghề canh-nông, nhà vẫn giàu có, lại hay giúp-đỡ cho kẻ nghèo-khó, cho nên mọi người đều phục, và những tôi-tớ ước có hàng nghìn người. Ông Lê Lợi 黎 利 khảng-khái, có chí lớn, quan nhà Minh nghe tiếng, đã dỗ cho làm quan, nhưng ông không chịu khuất, thường nói rằng: « Làm trai sinh ở trên đời, nên giúp nạn lớn, lập công to, để tiếng thơm muôn đời, chứ sao lại chịu bo bo làm đầy-tớ người! ». Bèn giấu tiếng ở chỗ sơn-lâm, đón mời những kẻ hào-kiệt, chiêu-tập những kẻ lưu-vong. Đến mùa xuân năm mậu-tuất (1418) đời vua Thành-tổ nhà Minh, niên-hiệu Vĩnh-lạc thứ 16, ông Lê Lợi cùng với tướng là Lê Thạch 黎 石 và Lê Liễu 黎 柳 khởi binh ở núi Lam\u0002sơn 藍 山 tự xưng là Bình-định-vương 平 定 王, rồi truyền hịch đi gần xa kể tội nhà Minh để rõ cái mục-đính của mình khởi nghĩa đánh kẻ thù của nước. Việc đánh giặc Minh tuy là thuận lòng người và hợp lẽ công\u0002bằng, nhưng mà thế-lực của Bình-định-vương lúc đầu còn kém lắm, tướng-sĩ thì ít, lương-thực không đủ."
+    }
+   ],
+   "row_id": "r013"
+  },
+  {
+   "qid": "c102-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Trong thời loạn 12 sứ quân, ai giữ Đằng Châu (Hưng Yên) và được gọi là Phạm Phòng Át?",
+   "reference": "Phạm Bạch Hổ",
+   "answer": "[V1] Phạm bạch Hổ 范 白 虎, xưng là Phạm Phòng át 范 防 遏 giữ Đằng-châu 藤 洲 (Hưng-yên)",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "afbfd7e7-7f12-445f-9cb5-b39dd9a58fb7",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Ngô",
+     "page": 108,
+     "text": "Nguyễn Khoan 阮 寬, xưng là Nguyễn Thái-bình 阮 太 平 giữ Tam-đái 三 帶 (phủ Vĩnh-tường) 6. Ngô nhật Khánh 呉 日 慶, xưng là Ngô Lãm-công 呉 覽 公 giữ Đường-lâm 唐 林 (Phúc-thọ, Sơn-tây) 7. Lý Khuê 李 奎, xưng là Lý Lang-công 李 郞 公 giữ Siêu\u0002loại 超 類 (Thuận-thành) 8. Nguyễn thủ Tiệp 阮 守 捷, xưng là Nguyễn Lịnh-công 阮 令 公 giữ Tiên-du 仙 逾 (Bắc-ninh) 9. Lữ Đường 呂 唐, xưng là Lữ Tá-công 呂 佐 公 giữ Tế\u0002giang 細 江 (Văn-giang, Bắc-ninh) 10. Nguyễn Siêu 阮 超, xưng là Nguyễn Hữu-công 阮 右 公 giữ Tây-phù-liệt 西 扶 烈 (Thanh-trì, Hà-đông) 11. Kiểu Thuận 矯 順, xưng là Kiểu Lịnh-công 矯 令 公 giữ Hồi-hồ 回 湖 (Cẩm-khê, Sơn-tây) 12. Phạm bạch Hổ 范 白 虎, xưng là Phạm Phòng át 范 防 遏 giữ Đằng-châu 藤 洲 (Hưng-yên) Những Sứ-quân ấy cứ đánh lẫn nhau, làm cho dân-gian khổ\u0002sở. Sau nhờ có ông Đinh bộ Lĩnh ở Hoa-lư đem quân đi đánh, mới dẹp xong cái loạn sứ-quân, đem giang-sơn lại làm một mối, và lập nên cơ-nghiệp nhà Đinh vậy. Ề Ế 109 NGÔ TRIỀU THẾ PHỔ 吳 朝 世 譜 Ngô-vương Quyền 吳 王 權 Thiên-sách\u0002vương Ngô\u0002xương-Ngập 天 策 王 吳 昌 岌 Nam-tấn\u0002vương Ngô\u0002xương-Văn 南 晉 王 吳 昌 文 Sứ-quân Ngô xương Xí 使 君 吳 昌 熾"
+    }
+   ],
+   "row_id": "r014"
+  },
+  {
+   "qid": "c105-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Con trai cả của vua Đinh Tiên Hoàng tên là gì?",
+   "reference": "Nam Việt Vương Liễn",
+   "answer": "Để trả lời câu hỏi này, chúng tôi cần tìm thông tin về con trai cả của vua Đinh Tiên Hoàng trong các đoạn văn được cung cấp. [2] nói rằng Đinh Tiên Hoàng có một con trai tên là Nam Việt vương Liễn. Tuy nhiên, đoạn văn này cũng chỉ ra rằng Nam Việt vương Liễn không được làm Thái tử, do đó con trai cả của vua Đinh Tiên Hoàng là Nam Việt vương Liễn. Tuy nhiên, thông tin chính xác nhất về con trai cả của vua Đinh Tiên Hoàng không thể xác định từ thông tin đã cung cấp.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 2,
+     "chunk_id": "5ebbe8fa-8788-49c1-9dee-f6e9e5f79bca",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Đinh",
+     "page": 112,
+     "text": "Họa chăng Tiên-hoàng có được độ 10 vạn người đã là nhiều. Tiên-hoàng bỏ trưởng lập ấu, cho đứa con út là Hạng Lang 項 郞 làm Thái-tử. Con trưởng là Nam-việt-vương Liễn đã theo Tiên-hoàng đi trận-mạc từ thủa hàn-vi, nay không được 113 ngôi Thái-tử, lấy sự ấy làm tức-giận bèn khiến người giết Hạng Lang đi. Ấy là gây nên mối loạn ở trong nhà. Năm kỹ-mão (979) vua Tiên-hoàng và Nam-việt-vương Liễn bị tên Đỗ Thích 杜 釋 giết chết. Sử chép rằng tên Đỗ Thích trước làm lại, đêm nằm thấy sao rơi vào mồm, tưởng là triệu mình được làm vua, bèn định bụng làm sự thí-đoạt. Một hôm Đỗ Thích thấy Tiên-hoàng say rượu nằm trong cung, bèn lẻn vào giết Tiên-hoàng đi, rồi giết cả Nam-việt-vương Liễn. Đình-thần tìm bắt được Đỗ Thích đem làm tội, và tôn Vệ\u0002vương 衞 王 Đinh Tuệ 丁 璿 lên làm vua. Tiên-hoàng làm vua được 12 năm, thọ được 56 tuổi. 2. PHẾ-ĐẾ (979-980). Vệ-vương mới có 6 tuổi lên làm vua, quyền-chính ở cả Thập-đạo tướng-quân là Lê Hoàn 黎 桓. Lê Hoàn lại cùng với Dương Thái-hậu 楊 太 后 tư thông. Các quan đại-thần bấy giờ là bọn Đinh Điền 丁 佃, Nguyễn Bặc 阮 匐 thấy Lê Hoàn nhiếp chính lộng quyền quá, mới cử binh-mã đến đánh, nhưng bị Lê Hoàn giết cả."
+    }
+   ],
+   "row_id": "r015"
+  },
+  {
+   "qid": "c258-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Khi đô hộ nước ta, nhà Minh lập bao nhiêu phủ?",
+   "reference": "17 phủ",
+   "answer": "[1] Khi đây nói đến nhà Minh, không có thông tin nào trong đoạn văn được cung cấp. Do đó, tôi không thể trả lời câu hỏi \"Khi đô hộ nước ta, nhà Minh lập bao nhiêu phủ?\" dựa vào đoạn văn này.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "7a369225-eab2-4308-951d-c184721bc3d8",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba",
+     "page": 77,
+     "text": "Lưu Phương bèn dùng mưu: sai quân đào hố lấy cỏ phủ lên, rồi sai quân ra đánh nhử, giả tảng bại trận. Quân Lâm-ấp đuổi theo được một quãng, voi sa xuống hố, quân-sĩ loạn cả. Khi bấy giờ quân Tàu mới quay trở lại lấy cung nỏ bắn, voi khiếp sợ xéo cả lên quân Lâm-ấp mà chạy. Lưu Phương cũng phải bệnh về đến nửa đường thì chết. II. NHÀ ĐƯỜNG (618-907) 1. CHÍNÍ H-TRỊ NHÀ ĐƯỜNG. Năm mậu-dần (618) nhà Tùy mất nước, nhà Đường 唐 kế nghiệp làm vua nước Tàu. Đến năm tân-tị (621) vua Cao-tổ nhà Đường 唐 高 祖 sai Khâu Hòa 邱 和 làm đại tổng-quản 大 總 管 sang cai-trị Giao-châu. Từ khi nước ta thuộc về nước Tàu, chỉ có nhà Đường cai-trị là nghiệt hơn cả. Nhưng sử chép lược quá: thường cách hai ba năm mới chép một việc, chắc là những nhà làm sử nước ta sau cứ theo sử Tàu chép lại, cho nên mới sơ-lược như vậy. 78 2. AN-NAM ĐÔ-HỘ PHỦ. Năm kỷ-mão (679) vua Cao\u0002tông nhà Đường 唐 高 宗 chia đất Giao-châu ra làm 12 châu, 59 huyện, và đặt An-nam đô-hộ-phủ 安 南 都 護 府 [1] . Nước ta gọi là An-nam khởi đầu từ đấy. Mười hai Châu đời nhà Đường là những châu này: 1. Giao-châu 交 州 có 8 huyện (Hà-nội, Nam-định v.v.) 2. Lục-châu 陸 州 có 3 huyện (Quảng-yên, Lạng-sơn) 3. Phúc-lộc châu 福 祿 州 có 3 huyện (Sơn-tây) 4."
+    }
+   ],
+   "row_id": "r016"
+  },
+  {
+   "qid": "c39-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Người đưa thư của Hán Văn Đế sang khuyên Triệu Vũ Đế thần phục là ai?",
+   "reference": "Lục Giả",
+   "answer": "Hán Văn Đế đã sai Lục Giả đưa thư sang khuyên Triệu Vũ Đế thần phục. Citations: [2]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 2,
+     "chunk_id": "a6549502-97cf-4088-92f3-0df94bcf41a3",
+     "section": "Nhà Triệu",
+     "page": 46,
+     "text": "« Thế mà vừa rồi trẫm nghe nhà vua còn đem binh quấy\u0002nhiễu ngoài biên, quận Trường-sa thật khổ, mà Nam-quận lại còn khổ hơn. Làm như thế, nước nhà vua có chắc lợi được một mình không? Tất là tướng-tá quân-sĩ chết nhiều, làm cho vợ người góa chồng, con người mồ-côi bố, cha mẹ mất con, được một mất mười, trẫm không lòng nào nỡ làm như vậy. « Vả lại được đất nhà vua cũng không lấy làm to, được của nhà vua cũng không đủ làm giàu. Vậy thì từ phía nam núi Lĩnh thì mặc ý nhà vua tự-trị lấy. Nhưng nhà vua cứ xưng đế hiệu, hai bên cùng là đế-quốc mà không sai sứ giao-thông, thế chẳng hóa ra ganh nhau ư? Ganh nhau mà không nhường, thì người nhân không thèm làm. « Trẫm nay xin cùng nhà vua gác bỏ điều cũ, từ rày trở đi, thông sứ như xưa. Vậy trẫm sai Lục Giả sang đem ý trẫm khuyên nhà vua nên nghe, chứ làm chi nhiều sự cướp bóc tai-hại ». Xem thư của Hán Văn-đế lời-lẽ tử-tế, thật là có nhân-từ, vì thế cho nên Triệu Vũ-đế phải chịu phục, và đáp thư lại rằng: « Nam di đại-trưởng lão-phu thần, Đà, muội tử tái bái, dâng thư lên Hoàng-đế bệ-hạ. Lão-phu là kẻ cố-lại nước Việt, khi Hiếu Huệ Hoàng-đế lên ngôi, tình-nghĩa không dứt, vẫn hậu 47 đãi lão phu."
+    }
+   ],
+   "row_id": "r017"
+  },
+  {
+   "qid": "u20",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Di tích khảo cổ nào từ thời Trần (thế kỷ 13-14) đã được phát hiện tại khu vực Đông Anh, Hà Nội sau năm 1930, và những phát hiện đó cho thấy điều gì về đời sống thường nhật của người dân dưới triều Trần?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[3] Di tích khảo cổ từ thời Trần (thế kỷ 13-14) được phát hiện tại khu vực Đông Anh, Hà Nội sau năm 1930 thông qua việc tìm thấy các di vật như đỗ tử Bình, Trần nguyên Hãn và Trần Nguyên Đán. Điều này cho thấy đời sống thường nhật của người dân dưới triều Trần bao gồm việc luyện tập võ thuật, học hỏi văn hóa, và có người được vinh danh vì những hoạt động như đánh cướp.\n\n[4] Những điều này cũng cho thấy sự tiến hóa của người nước Nam từ việc theo học các đạo Nho, đạo Khổng, đạo Phật trong thời kỳ trước khi tự chủ, và sự phát triển của đạo Phật trong triều Trần, đặc biệt từ triều nhà Đinh, nhà Tiền Lê, nhà Lý và nhà Trần. Điều này cho thấy sự tương tác giữa đời sống văn hóa của người Việt và văn hóa Trung Quốc.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 3,
+     "chunk_id": "039416e5-db14-4d30-9d22-9a267271d036",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba)",
+     "page": 243,
+     "text": "Dụ-tông thì hoang chơi, không chịu lo gì đến việc nước và lại làm loạn cả cương-kỷ để đến nỗi dân nghèo nước yếu. Nghệ-tông thì không biết phân-biệt hiền gian để kẻ quyền-thần được thế làm loạn, thành ra tự mình nối giáo cho giặc, tự mình làm hại nhà mình vậy. 1. ↑ Khi quân nhà Trần đánh được quân nhà Nguyên, có bắt được một tên hát-bội là Lý nguyên Cát 李 元 吉 sau nó ở lại nước ta lấy cổ truyện mà đặt thành bài tuồng, rồi dạy người mình hát. Khi con hát ra làm trò thì mặc áo gấm, áo vóc, theo nhịp đàn nhịp trống mà hát. Sự hát tuồng của Việt-nam bắt đầu từ đấy. 2. ↑ Thành Đồ-Bàn bây giờ hãy còn di-tích ở huyện Tuy-viễn, tỉnh Khánh\u0002hòa. 3. ↑ Đỗ tử Bình trước đi đánh Chiêm-thành có tội phải đày đi làm lính. Nay không biết làm thế nào đã được phục-chức. 4. ↑ Trần nguyên Đán là cháu tằng tôn Trần quang Khải. 5. ↑ Hoàng-giang là khúc sông Hồng-hà ở về huyện Nam-xang, Hà-nam. 6. ↑ Trần khát Chân là dòng-dõi Trần bình Trọng. 7. ↑ Hoằng-nô là đầy-tớ nhà quan. 8. ↑ Nay ở Thanh-hóa có nhiều nơi làm đền thờ Trần khát Chân."
+    },
+    {
+     "number": 4,
+     "chunk_id": "a8e479d5-03ca-4b05-87f2-e68020f00e72",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 308,
+     "text": "5. ↑ Trần nguyên Hãn, có nơi chép là Trần Hãn, là cháu Trần nguyên Đán, dòng-dõi Trần quang Khải. 6. ↑ Những tên Ninh-kiều, Ninh-giang, Ứng-thiên chắc là ở vùng huyện Từ\u0002liêm, huyện Thanh-oai, về quãng sông Nhuệ-giang và sông Đáy. Mà Ninh\u0002giang có lẽ là khúc sông Đáy ở vào quãng Từ-liêm hay Thanh-oai gì đó. 7. ↑ Tụy-động và Chúc-động ở vào quãng huyện Chương-mỹ, phía đông có sông Đáy, phía tây có con sông con gọi là sông Bùi, chảy vào sông Đáy, chỗ Ngã-ba-thá. 8. ↑ Chắc là một khúc sông Đáy thuộc hạt tỉnh Hà-đông bây giờ. 9. ↑ Vợ con của quan Bố-chính thì phải 70 quan; vợ con những sinh-viên và thổ-quan thì 10 quan; còn những con-trai, con-gái đầy-tớ, đứa-ở thì 5 309 quan. 10. ↑ Minh-trưng: chứng-cớ rõ-ràng 11. ↑ Tứ-ngược: Hết sức tàn ngược 12. ↑ Khoa-liễm: Thuế-má 13. ↑ Quan: Người không vợ; quả: người góa chồng; điên-liên: những kẻ không có nhà ở, không trông-cậy vào đâu được. 14. ↑ Dục đông: Ý nói muốn về Đông-đô 15. ↑ Hư tả: Cỗ xe không bên trái để đợi người hiền 16. ↑ Vọng dương: Trông ra biển không thấy gì 17. ↑ Chửng-nịch: Vớt người chết đuối 18. ↑ Vua Tuyên-tông nhà Minh, niên-hiệu Tuyên-đức."
+    }
+   ],
+   "row_id": "r018"
+  },
+  {
+   "qid": "c335-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Lê Thánh Tông sai bao nhiêu lính đánh Chiêm Thành năm 1470?",
+   "reference": "Hơn 20 vạn quân",
+   "answer": "10. ĐÁNH CHIÊM-THÀNH. Năm canh-thìn (1470) là năm Hồng-đức nguyên-niên, vua nước Chiêm-thành là Trà Toàn 茶 全 muốn sinh sự với nước Nam. Vua Thánh-tông cho sứ sang Tàu kể chuyện Trà Toàn làm nhiễu, rồi ngài tự làm tướng, cử đại-binh hơn 20 vạn sang đánh Chiêm-thành; khi quân vào đến Thuận-hóa, Thánh-tông đóng quân lại để luyện-tập và sai người lẻn sang vẽ địa-đồ nước Chiêm-thành để biết cho rõ chỗ hiểm chỗ không rồi mới tiến binh lên đánh lấy cửa Thị-nại (cửa Bình-định).",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "fb24bf24-bfd2-43bb-ad38-26d20fd4bd2a",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lê",
+     "page": 320,
+     "text": "Ngài lại đặt ra 31 điều quân lệnh để tập thủy trận; 42 điều để tập bộ trận. Lại đặt ra lệ cứ ba năm một kỳ thi võ. Tướng-sĩ ai đậu thì thưởng, ai hỏng thì phạt, để khiến mọi người đều vui lòng về việc võ-bị. Đời vua Thánh-tông mấy năm về trước cũng được yên ổn, nhưng mấy năm về sau thì phải chinh-chiến nhiều lần. Khi thì phải đánh giặc Lào, khi thì đánh những giặc cỏ ở trong nước; nhưng chỉ có đánh Chiêm-thành, đánh Lão-qua và đánh Bồn-man là phải dùng đến đại-binh. 10. ĐÁNH CHIÊM-THÀNH. Năm canh-thìn (1470) là năm Hồng-đức nguyên-niên, vua nước Chiêm-thành là Trà Toàn 茶 全 muốn sinh sự với nước Nam. Một mặt thì cho người sang cầu viện-binh bên nhà Minh, một mặt thì đem quân sang đánh phá ở đất Hóa-châu. Vua Thánh-tông cho sứ sang Tàu kể chuyện Trà Toàn làm nhiễu, rồi ngài tự làm tướng, cử đại-binh hơn 20 vạn sang đánh Chiêm-thành; khi quân vào đến Thuận-hóa, Thánh-tông đóng quân lại để luyện-tập và sai người lẻn sang vẽ địa-đồ nước Chiêm-thành để biết cho rõ chỗ hiểm chỗ không rồi mới tiến binh lên đánh lấy cửa Thị-nại (cửa Bình-định). Trà Toàn đánh thua, rút quân về giữ kinh-thành Đồ-bàn. Quân An-nam kéo đến vây đánh, phá được thành, bắt được Trà Toàn."
+    }
+   ],
+   "row_id": "r019"
+  },
+  {
+   "qid": "c318-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Vua Lê Thái Tổ lập thêm đạo nào mới?",
+   "reference": "Hải Tây đạo",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r020"
+  },
+  {
+   "qid": "uh6",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Napoléon Bonaparte lên ngôi hoàng đế nước Pháp vào năm nào?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "The answer cannot be determined from the given text.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "87eeb500-a7c9-49d8-a4a0-71177efd97e7",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý (tiếp theo)",
+     "page": 151,
+     "text": "Tháng 10 năm giáp-thân (1224) Huệ-tông truyền ngôi cho Chiêu-thánh công-chúa, rồi vào ở chùa Chân-giáo. Huệ-tông trị-vì được 14 năm. IX. LÝ CHIÊU-HOÀNG (1225) Niên-hiệu: Thiên-chương-hữu-đạo 天 彰 有 道 (1224-1225) Chiêu-thánh công-chúa lên ngôi, tức là vua Chiêu-hoàng 昭 皇. Bấy giờ quyền-chính ở cả Trần thủ Độ. Thủ Độ lại tư thông với Trần Thái hậu, đêm ngày tìm mưu lấy cơ-nghiệp nhà Lý, bèn đòi con các quan vào trong cung để hầu Chiêu\u0002hoàng, và lại cho cháu là Trần Cảnh 陳 煚 vào làm chức Chính-thủ 正 首. Đến tháng chạp thì Chiêu-hoàng lấy Trần Cảnh và truyền ngôi cho chồng. Nhà Lý đến đấy là hết, cả thảy làm vua được 216 năm, truyền ngôi được 9 đời. 152 Nhà Lý có công làm cho nước Nam ta nên được một nước cường-thịnh: ngoài thì đánh nước Tàu, bình nước Chiêm, trong thì chỉnh-đốn việc võ-bị, sửa-sang pháp-luật, xây vững cái nền tự-chủ. Vì vua Cao-tông hoang chơi, làm mất lòng người, cho nên giặc-giã nổi lên, loạn thần nhiễu sự. Vua Huệ-tông lại nhu-nhược bỏ việc chính-trị, đem giang-sơn phó-thác cho người con gái còn đang thơ-dại, khiến cho kẻ gian-hùng được nhân dịp mà lấy giang-sơn nhà Lý và lập ra cơ-nghiệp nhà Trần vậy. LÝ-TRIỀU THẾ-PHỔ 李 朝 世 譜 1. Thái-tổ Lý công Uẩn 太 祖 李 公 蘊 2."
+    }
+   ],
+   "row_id": "r021"
+  },
+  {
+   "qid": "c232-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Niên hiệu của vua Trần Thuận Tông là gì?",
+   "reference": "Quang Thái",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "079fdaf9-c690-40fb-aa43-30fa8e21ad5e",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 172,
+     "text": "172 Thánh-tông trị vì được 21 năm, làm Thái-thượng-hoàng được 13 năm, thọ 51 tuổi. III. TRẦN NHÂN-TÔNG (1279-1293) Niên hiệu: Thiệu-bảo 紹 寶 (1279-1284) Trùng-hưng 重 興 (1285-1293) 1. VIỆC CHÍNÍ H-TRỊ. Thái-tử Trần Khâm 陳 昑 lên làm vua, tức là vua Nhân-tông 仁 宗. Lúc bấy giờ sứ nhà Nguyên 元 đi lại hạch điều này, trách điều nọ, triều-đình cũng có lắm việc bối-rối. Nhưng nhờ có Thánh-tông thượng-hoàng còn coi mọi việc và các quan triều-đình nhiều người có tài-trí, vua Nhân-tông lại là ông vua thông-minh, quả-quyết, mà người trong nước thì từ vua quan cho chí dân-sự đều một lòng cả, cho nên từ năm giáp\u0002thân (1284) đến năm mậu-tí (1288) hai lần quân Mông-cổ sang đánh phá rồi không làm gì được. Trừ việc chiến-tranh với Mông-cổ ra, để sau sẽ nói, trong đời vua Nhân-tông lại còn giặc Lào, thường hay sang quấy\u0002nhiễu ở chỗ biên-thùy, bởi vậy năm canh-dần (1290) vua Nhân-tông lại phải ngự giá đi đánh Lào. 2. VIỆC VĂN-HỌC. Đời vua Nhân-tông có nhiều giặc-giã, tuy vậy việc văn-học cũng hưng-thịnh lắm. Xem bài hịch của Hưng-đạo-vương 興 道 王, thơ của ông Trần quang Khải 陳 光 啓 và của ông Phạm ngũ Lão 范 五 老 thì biết là văn\u0002chương đời bấy giờ có khí-lực mạnh-mẽ lắm."
+    }
+   ],
+   "row_id": "r022"
+  },
+  {
+   "qid": "c130-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Lý Thường Kiệt đã giết bao nhiêu người ở Khâm Châu và Liêm Châu vào năm 1075?",
+   "reference": "Hơn 8.000 người",
+   "answer": "[1] Lý Thường Kiệt đem quân sang vây đánh Khâm-châu 欽 州 và Liêm-châu 廉 州 (thuộc tỉnh Quảng\u0002đông), giết hại hơn 8.000 người.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "0b8bcfb5-b2ac-44e4-b001-1304c667f895",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý",
+     "page": 136,
+     "text": "Vậy quân Đại-Việt sang đánh để cứu-vớt nhân\u0002dân, vân vân... Năm ất-mão (1075) Lý thường Kiệt đem quân sang vây đánh Khâm-châu 欽 州 và Liêm-châu 廉 州 (thuộc tỉnh Quảng\u0002đông) giết hại hơn 8.000 người. Đạo quân của Tôn Đản sang 137 đánh Ung-châu 邕 州 (tức là thành Nam-ninh thuộc tỉnh Quảng-tây), quan Đô-giám Quảng-tây là Trương thủ Tiết 張 守 節 đem binh lại cứu Ung-châu , bị Lý thường Kiệt đón đánh ở Côn-lôn quan 崑 崙 關 (gần Nam-ninh) chém Trương thủ Tiết ở trận tiền. Tôn Đản vây thành Ung-châu hơn 40 ngày, quan tri-châu là Tô Dam 蘇 緘 kiên cố giữ mãi. Đến khi quân nhà Lý hạ được thành, thì Tô Dam bắt người nhà tất cả là 36 người chết trước, rồi tự đốt mà chết. Người trong thành cũng bắt\u0002chước quan tri-châu, không ai chịu hàng cả. Quân nhà Lý vào thành giết hại gần đến 58.000 (?) người. Lý thường Kiệt và Tôn Đản sang đánh nhà Tống giết hại cả thảy đến 10 vạn người, rồi lại bắt người lấy của đem về nước. 5. NHÀ TỐNG LẤY ĐẤT QUẢNG-NGUYÊN."
+    }
+   ],
+   "row_id": "r023"
+  },
+  {
+   "qid": "c207-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Trần Hưng Đạo mất ngày tháng năm nào?",
+   "reference": "Ngày 20 tháng 8 năm 1300",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "877bd208-49e0-49a5-817b-add278ee5c9c",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ hai)",
+     "page": 212,
+     "text": "Thật là một thời rất thịnh về đời nhà Trần vậy. 2. TRẦN HƯNG-ĐẠO-VƯƠNG MẤT. Trong đời vua Anh-tông có mấy người danh tướng như là: Thượng-tướng Trần quang Khải 上 相 陳 光 啓, thắng trận Chương-dương ngày trước, mất năm giáp-ngọ (1294), và Hưng-đạo-vương 213 Trần quốc Tuấn 興 道 王 陳 國 峻 mất ngày 20 tháng tám năm canh-tí (1300). Hưng-đạo-vương là một danh tướng đệ-nhất nước Nam, đánh giặc Nguyên có công to với nước, được phong làm Thái-sư, Thượng-phụ, Thượng-quốc-công, Bình bắc đại nguyên-súy, Hưng-đạo đại-vương 太 師, 尙 父, 上 國 公, 平 北 大 元 帥, 興 道 大 王. Vua lại sai người về Vạn-kiếp làm sinh-từ để thờ ngài ở chỗ dinh cũ của ngài đóng ngày trước. Hưng-đạo-vương làm quan đến đời vua Anh-tông thì xin về trí-sĩ ở Vạn-kiếp. Khi ngài sắp mất, vua Anh-tông có ngự giá đến thăm, nhận thấy ngài bệnh nặng, mới hỏi rằng: « Thượng-phụ một mai khuất núi, phỏng có quân bắc lại sang thì làm thế nào? » Hưng-đạo-vương tâu rằng: « Nước ta thủa xưa, Triệu Võ\u0002vương dựng nghiệp, Hán-đế đem binh đến đánh, Võ-vương sai dân đốt sạch đồng-áng, không để lương-thảo cho giặc chiếm được, rồi đem đại quân sang châu Khâm, châu Liêm đánh quận Tràng-sa [3] , dùng đoản binh mà đánh được, đó là một thời."
+    }
+   ],
+   "row_id": "r024"
+  },
+  {
+   "qid": "uh4",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Trận Điện Biên Phủ năm 1954 do ai chỉ huy và kéo dài bao nhiêu ngày?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r025"
+  },
+  {
+   "qid": "uh13",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Bản dịch tiếng Anh đầu tiên của Bình Ngô đại cáo do ai thực hiện và công bố vào năm nào?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "Tôi không tìm thấy thông tin cụ thể về bản dịch tiếng Anh đầu tiên của Bình Ngô đại cáo. Trong các đoạn văn được cung cấp, không có thông tin liên quan đến việc ai đã thực hiện bản dịch đầu tiên của văn bản này. Đồng thời, thông tin về thời điểm công bố bản dịch cũng không được cung cấp.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "104aad38-d2c0-466c-9aaa-ee3913986f2e",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 293,
+     "text": "Vương Thông thì lĩnh bộ binh đi sau. Bình-định-vương tiễn-biệt rất hậu. Giặc Minh lục-tục về bắc, bấy giờ mới thật là: Nam quốc sơn hà, nam đế cư; nước Nam lại được tự chủ như cũ. 22. TỜ BÌNÌ H NGÔ ĐẠI-CÁO. Bình-định-vương dẹp xong giặc Minh rồi, sai ông Nguyễn Trãi làm tờ bá cáo cho thiên\u0002hạ biết. Tờ Bình Ngô đại-cáo này làm bằng Hán-văn, là một bản văn\u0002chương rất có giá-trị trong đời Lê."
+    },
+    {
+     "number": 2,
+     "chunk_id": "47947b0a-295a-4671-b5f2-f050fbaa7d60",
+     "section": "Việt Nam sử lược — Quyển I",
+     "page": 6,
+     "text": "163 — 172 Chương X. 173 — 188 Chương XI. 189 — 197 Chương XII. 199 — 206 Chương XIII. 211 — 216 Chương XIV. 217 — 245 Chương XV. 247 — 276 Phụ-lục. 277 — 280 281 Bắc-thuộc lần thứ ba Kết-quả của thời-đại Bắc-thuộc Nhà Ngô Nhà Đinh Nhà Tiền-Lê Nhà Lý Nhà Lý (tiếp theo) Nhà Trần (Thời-kỳ thứ nhất) Giặc nhà Nguyên — I Giặc nhà Nguyên — II Nhà Trần (Thời-kỳ thứ hai) Nhà Trần (Thời-kỳ thứ ba) Nhà Hồ Nhà Hậu-Trần Thuộc nhà Minh Mười năm đánh quân Tàu Nhà Lê Phiên âm bài Bình Ngô đại\u0002cáo Những-sách soạn-giả dùng để kê-cứu 7 BẢN - ĐỒ 1. 27 2. 45 3. 69 4. 135 BIỂU - ĐỒ 1. 83 2. 88 3. 92 4. 117 5. 197 6. 207 7. 271 Nước Tàu về đời nhà Tần Nước Tàu về đời Tam-quốc Nước Tàu về đời Ngũ Quý Nước Nam khi nhà Trần chống với Mông-cổ Ngô-triều thế-phổ Đinh-triều thế-phổ Tiền-Lê triều thế-phổ Lý-triều thế-phổ Hồ-triều thế-phổ Trần-triều thế-phổ Lê-triều thế-phổ"
+    }
+   ],
+   "row_id": "r026"
+  },
+  {
+   "qid": "uh3",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Pháp đánh chiếm Đà Nẵng năm 1858 dưới sự chỉ huy của đô đốc nào?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r027"
+  },
+  {
+   "qid": "c34-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Trong thời nhà Chu ở Trung Quốc, trường đại học được gọi là gì?",
+   "reference": "Tích Ung hoặc nhà Thành Quân",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "07fe773a-b808-48ce-842e-7614fb1e019c",
+     "section": "THƯỢNG-CỔ THỜI ĐẠI > Xã-hội nước Tàu",
+     "page": 36,
+     "text": "Đánh xong nhà Ân, vua Vũ-vương 武 王 phong cho hơn 70 người làm vua chư-hầu, chia ra làm 5 bậc là: công, hầu, bá, tử, nam. Nước phong cho tước công, tước hầu thì rộng 100 dặm gọi là đại-quốc; nước phong cho người tước bá thì rộng 70 dặm, gọi là trung quốc; nước phong cho người tước tử, tước nam thì rộng 50 dặm, gọi là tiểu quốc. Những nước không đủ 50 dặm, thì gọi là nước phụ-dung 附 庸. 2. QUAN-CHẾ. Nhà Hạ đặt tam-công 三 公, cửu-khanh 九 卿, 27 đại-phu 大 夫, 81 nguyên-sĩ 元 士. Nhà Ân đặt hai quan tướng 二 相, sáu quan thái 六 太 là: thái-tể, thái-tông, thái-tử, thái-chúc, thái-sĩ, thái-bốc; năm quan 五 官 là: tư-đồ, tư-mã, tư-không, tư-sĩ, tư-khấu; sáu phủ 六 府 là: tư-thể, tư-mộc, tư-thủy, tư-thảo, tư-khí, tư\u0002hóa; sáu công 六 工 là: thổ-công, kim-công, thạch-công, thủy-công, thú-công và thảo-công. Đến nhà Chu, ông Chu-công đặt ra sáu quan 六 官 gọi là: thiên-quan 天 官, địa-quan 地 官, xuân-quan 春 官, hạ-quan 夏 官, thu-quan 秋 官, đông-quan 冬 官. Mỗi một quan lại có 60 thuộc-quan, cộng cả lại là 360 người. 37 Người làm đầu thiên-quan 天 官, gọi là trủng-tể 冢 宰, thống cả việc chính-trị trong nước, việc thu-nạp cả năm và mọi việc ở trong cung."
+    }
+   ],
+   "row_id": "r028"
+  },
+  {
+   "qid": "u13",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Những phát hiện khảo cổ học nào sau năm 1975 đã làm thay đổi hiểu biết của chúng ta về thời kỳ Hùng Vương?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[1] không đưa ra thông tin về những phát hiện khảo cổ học sau năm 1975 liên quan đến thời kỳ Hùng Vương.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "6cd22c5a-0fc1-4f7b-bdd7-210fe02c7ee2",
+     "section": "Tựa",
+     "page": 10,
+     "text": "Hiềm vì sử nước ta thì làm bằng chữ Nho cả, mà chữ Nho thì từ rày trở đi chắc rồi mỗi ngày một kém đi. Hiện nay số người đọc được chữ Nho còn nhiều, mà trong nước còn không có mấy người biết được chuyện nước nhà, huống chi mai sau này chữ Nho bỏ không học nữa, thì sự khảo-cứu về những việc quan-hệ đến lịch-sử nước mình sẽ khó biết bao nhiêu! Nay nhân sự học ở nước ta đã thay-đổi, chữ quốc-ngữ đã phổ-thông cả trong nước, chi bằng ta lấy tiếng nước nhà mà kể chuyện nước nhà, ta soạn ra bộ VIỆT-NAM SỬ-LƯỢC, xếp-đặt theo thứ-tự, chia ra từng thời-đại, đặt thành chương, thành mục rõ-ràng, để ai ai cũng có thể xem được sử, ai ai cũng có thể hiểu được chuyện, khiến cho sự học sử của người mình được tiện-lợi hơn trước. Bộ VIỆT-NAM SỬ-LƯỢC này, soạn-giả chia ra làm 5 thời\u0002đại. Thời đại-thứ nhất là Thượng-cổ thời-đại, kể từ họ Hồng-bàng cho đến hết đời nhà Triệu. Trong thời-đại ấy, từ chương thứ III, bàn về xã-hội nước Tàu trước đời nhà Tần, phần nhiều là những chuyện hoang-đường huyền-hoặc cả. Những nhà chép sử đời trước cũng theo tục truyền mà chép lại, chứ không có di-tích gì mà khảo-cứu cho đích-xác."
+    }
+   ],
+   "row_id": "r029"
+  },
+  {
+   "qid": "c183-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Tướng Nguyên nào thua Trần Nhật Duật ở bến Hàm Tử?",
+   "reference": "Toa Đô",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "0d8eec01-4e45-4744-a97f-17f9933c1b12",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I",
+     "page": 174,
+     "text": "174 CHƯƠNG VII GIẶC NHÀ NGUYÊN ( 1284-1288 ) I 1. Sài Thung sang sứ An-nam 2. Trần di Ái theo nhà Nguyên 3. Thoát Hoan sang đánh lần thứ nhất 4. Trần Hưng-đạo-vương quân thua về vạn-kiếp 5. Thành Thăng-long thất thủ 6. Toa Đô đánh Nghệ-an 7. Hưng-đạo-vương đem vua về Thanh-hóa 8. Trận Hàm-tử-quan: Trần nhật Duật phá quân Toa Đô 9. Trận Chương-dương-độ: Trần quang Khải khôi-phục Thăng-long 10. Trận Tây-kết: tướng nhà Trần chém Toa Đô 11. Trận Vạn-kiếp: Thoát Hoan trốn chạy về Tàu 1. SÀI THUNG SANG SỨ AN-NAM. Nhà Nguyên nghe tin Trần Thái-tông mới mất và Thánh-tông nhượng vị, liền sai Lễ-bộ thượng-thư là Sài-Thung 柴 樁 sang sứ, đi tự Giang\u0002lăng (Hồ-bắc), qua Ung-châu (Quảng-tây) rồi sang nước Nam, chứ không đi qua tỉnh Vân-nam như các sứ-thần trước. Sài Thung đến kinh-thành, lên mặt kiêu-ngạo, cưỡi ngựa đi thẳng vào cửa Dương-minh, rồi cho người đưa thư vào trách Nhân-tông rằng: « Sao không xin phép triều-đình nhà 175 Nguyên, mà dám tự lập, vậy phải sang chầu Thiên-triều Hoàng-đế mới xong ». Nhân-tông sai quan đại-thần ra tiếp. Thung không thèm đáp lễ; vua bày yến mời, Thung không thèm đến. Đình-thần An-nam ai cũng lấy làm tức giận nhưng không dám nói ra."
+    }
+   ],
+   "row_id": "r030"
+  },
+  {
+   "qid": "c333-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Vua nào lệnh cho Ngô Sĩ Liên viết sách Đại Việt sử ký?",
+   "reference": "Vua Lê Thánh Tông",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "8c7d0694-107b-4af0-a270-00a5dddc3657",
+     "section": "Những-sách soạn-giả dùng để kê-cứu",
+     "page": 335,
+     "text": "335 NHỮNG SÁCH SOẠN-GIẢ DÙNG ĐỂ KÊ-CỨU A. SÁCH CHỮ NHO VÀ CHỮ QUỐC-NGỮ: 1. Đại Việt sử-ký, của Ngô Sĩ-Liên 2. Khâm-định Việt-sử Thông-giám cương-mục 3. Trần-triều thế-phổ hành trạng 4. Bình Nguyên công-thần thực lục 5. Hoàng Lê nhất thống chí 6. Lịch-triều hiến-chương, của Phan huy Chú 7. Đại Nam thực lục tiền biên 8. Đại Nam thực lục chính biên 9. Đại Nam thống chí 10. Đại Nam chính biên liệt truyện 11. Đại Nam điển lễ toát-yếu, của Đỗ văn Tâm 12. Minh-mệnh chính yếu 13. Quốc-triều sử toát-yếu, của Cao xuân Dục 14. Thanh-triều sử-ký 15. Trung-quốc lịch-sử 16. Hạnh-Thục ca, của bà Nguyễn nhược Thị B. SÁCH CHỮ PHÁP: 1. Cours d'Histoire Annamite, par Trương vĩnh Ký 2. Notion d'Histoire d'Annam, par Maybon et Ruisssier 3. Pays d'Annam, par E. Luro 4. L'Empire d'Annam, par Gosselin 5. Abrégé de l'Histoire d'Annam, par Shreiner 336 6. Histoire de la Cochinchine, par P. Cultru 7. Les Origines du Tonkin, par J. Dupuis 8. Le Tonkin de 1872 à 1886, par J. Dupuis 9. La Vie de Monseigneur Puginier, par E. Louvet 10. L'insurrection de Gia-định, par J. Silvestre (Revue Indochinoise — Juillet - Aout 1915) 337"
+    }
+   ],
+   "row_id": "r031"
+  },
+  {
+   "qid": "c63-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Ai là thứ sử Giao Châu được nhà Lương cử sang cai trị và nổi tiếng tàn bạo khiến dân chúng căm phẫn?",
+   "reference": "Tiêu Tư",
+   "answer": "[Tài liệu không cung cấp thông tin cụ thể về thứ sử Giao Châu được nhà Lương cử và nổi tiếng là tàn bạo.]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "b5653a51-c077-419c-947e-db8a624a9519",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai",
+     "page": 69,
+     "text": "Đàn hòa Chi vào đất Lâm-ấp lấy được vàng bạc châu-báu rất nhiều. Sử chép rằng Đàn hòa Chi lấy được một cái tượng bằng vàng mấy người ôm không xuể, đem nấu-đúc được hơn 10 vạn cân. Từ đấy người Tàu biết 70 Lâm-ấp có nhiều của, cứ chực sang lấy. Đàn hòa Chi cũng từ đấy mà bị gièm pha, phải cách chức đuổi về. 3. SỰ BIẾN-LOẠN Ở ĐẤT GIAO-CHÂU. Năm Kỷ-mùi (479) nhà Tống mất ngôi, nhà Tề kế nghiệp, trị-vì được 22 năm thì nhà Lương lại cướp ngôi nhà Tề. Trong đời Nam Bắc-triều, đất Giao-châu không được mấy khi yên-ổn, vì quan Tàu sang cai-trị có nhiều người thấy bên Tàu loạn, cũng muốn tìm cách để độc-lập, bởi vậy quan lại cứ giết lẫn nhau. Đời nhà Lương lại sai Tiêu-Tư 蕭 諮 sang làm thứ-sử Giao\u0002châu. Tiêu Tư là một người tàn-bạo, làm cho lòng người ai cũng oán-giận. Bởi vậy ông Lý Bôn 李 賁 mới có cơ-hội mà nổi lên, lập ra nhà Tiền Lý 前 李. 1. ↑ Về cuối đời Đông-Hán lại dời về Long-biên 龍 編. 2. ↑ Bà Triệu, các kỳ xuất-bản trước để là Triệu Ẩu. Nay xét ra nên để là Triệu thị Chinh. 3. ↑ Ngũ-Hồ là 5 rợ: Hung-nô 匈 奴 và rợ Yết 羯 (chủng-loại Mông-cổ), rợ Tiên-ti 鮮 卑 (chủng-loại Mãn-châu), rợ Chi 氏 và rợ Khương 羌 (chủng\u0002loại Tây-tạng)."
+    },
+    {
+     "number": 2,
+     "chunk_id": "45447564-9111-40c5-b6e9-86b0da261fd1",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai",
+     "page": 59,
+     "text": "Từ đó chính-trị nhà Đông Hán càng ngày càng ngặt thêm, mà những quan-lại sang cai-trị Giao-chỉ thường có lắm người tàn-ác, tham-nhũng, bắt dân lên rừng xuống bể để tìm những châu-báu. Dân ở quận Hợp-phố cứ phải xuống bể mò ngọc trai khổ quá, đến đổi phải bỏ xứ mà đi. Triều-đình thì xa, quan-lại ra cai-trị thì tha hồ mà tung\u0002hoành, tiếng oan-ức kêu không thấu vào đâu, cho nên thường hay có sự loạn-lạc, làm cho dân-gian phải nhiều sự khổ-sở. 2. LÝ TIẾN VÀ LÝ CẦM. Quan cai-trị đã tàn-ác, nhà vua lại bạc-đãi người bản-xứ. Đời bấy giờ người mình dẫu có học-hành thông-thái cũng không được giữ việc chính-trị. Mãi đến đời vua Linh-đế 靈 帝 (168-189) cuối nhà Đông\u0002Hán mới có một người bản-xứ là Lý Tiến 李 進 được cất lên làm Thứ-sử ở Giao-chỉ. Lý Tiến dâng sớ xin cho người Giao-chỉ được bổ đi làm quan như ở trung-châu bên Tàu. Nhưng Hán-đế chỉ cho những người đỗ mậu-tài 茂 才 hoặc hiếu-liêm 孝 廉 được làm lại-thuộc ở trong xứ mà thôi, chứ không được đi làm quan ở châu khác. Bấy giờ có người Giao-chỉ tên là Lý Cầm 李 琴 làm lính túc-vệ hầu vua ở 60 trong điện, rủ mấy người bản-xứ ra phục xuống sân mà kêu cầu thảm-thiết."
+    }
+   ],
+   "row_id": "r032"
+  },
+  {
+   "qid": "c230-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Cuối thời Trần, ai là người đề xuất thu thuế thân 3 quan tiền mỗi năm?",
+   "reference": "Đỗ Tử Bình",
+   "answer": "[3]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 3,
+     "chunk_id": "d5ddf2e0-9d2d-4f85-9cd8-9eeba37ecbcd",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 161,
+     "text": "1. Một thứ gọi là ruộng quốc-khố: hạng nhất mỗi mẫu đánh thuế 6 thạch 80 thăng thóc; hạng nhì mỗi mẫu 4 thạch; hạng 3 mỗi mẫu 3 thạch. 2. Một thứ gọi là thác-điền [2] : hạng nhất mỗi mẫu đánh thuế một thạch thóc; hạng nhì ba mẫu lấy một thạch, hạng ba, bốn mẫu lấy một thạch. 162 Còn ruộng ao của công-dân thì mỗi mẫu lấy ba thăng thóc thuế. Ruộng muối phải đóng bằng tiền. Các thứ thuế: Có sách chép rằng nhà Trần đánh cả thuế trầu cau, thuế hương yên-tức, và tôm, cá, rau, quả, gì cũng đánh thuế cả. Còn như vàng bạc tiêu-dụng trong nước thì tiêu bằng phân, lượng đã đúc sẵn, có hiệu nhà nước. Khi nào đóng nộp cho vua quan, thì một tiền là 70 đồng, mà thường tiêu với nhau thì một tiền chỉ có 69 đồng mà thôi. 5. VIỆC ĐẮP ĐÊ. Nước Nam ta ở mạn đường ngược thì lắm núi, mà ở mạn trung châu thì nhiều sông ngòi, cho nên đến mùa lụt nước ngàn, nước lũ chảy về ngập mất cả đồng\u0002điền. Vì vậy năm mậu-thân (1244) Thái-tông sai quan ở các lộ đắp đê ở hai bên bờ sông cái (Hồng-hà), gọi là Đỉnh-nhĩ\u0002đê. Lại đặt quan để coi việc đê, gọi là Hà-đê chánh phó-sứ hai viên. Hễ chỗ nào mà đê đắp vào ruộng của dân, thì nhà nước cứ chiếu theo giá ruộng mà bồi thường cho chủ ruộng. 6. VIỆC HỌC-HÀNH."
+    }
+   ],
+   "row_id": "r033"
+  },
+  {
+   "qid": "c146-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Vua Trần Thái Tông bao nhiêu tuổi khi lên ngôi?",
+   "reference": "8 tuổi",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "9351aa1b-1def-4990-88e0-3498c5467603",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 167,
+     "text": "Được ít lâu quân Mông-cổ ở nước Nam không quen thủy\u0002thổ xem ra bộ mỏi-mệt. Thái-tông mới tiến binh lên đánh ở Đông-bộ-đầu. Quân Mông-cổ thua chạy về đến trại Qui-hóa, lại bị chủ trại ở đấy chiêu-tập thổ dân ra đón đánh. Quân Mông-cổ thua to, rút về Vân-nam, đi đường mỏi-mệt, đến đâu cũng không cướp-phá gì cả, cho nên người ta gọi là giặc Phật. 168 Quân Mông-cổ tuy thua phải rút về, nhưng chẳng bao lâu vua Mông-cổ dứt được nhà Tống, lấy được nước Tàu, rồi có ý muốn bắt vua nước Nam ta sang chầu ở Bắc-kinh, bởi vậy lại sai sứ sang đòi lệ cống. Vua Thái-tông sai Lê phụ Trần 黎 輔 陳 sang sứ xin cứ ba năm sang cống một lần. Mùa xuân năm mậu-ngọ (1258), Thái-tông nhường ngôi cho Thái-tử là Trần Hoảng 陳 晃, để dạy-bảo mọi việc về cách trị nước, và để phòng ngày sau anh em không tranh nhau. Triều-đình tôn Thái-tông lên làm Thái-thượng-hoàng 太 上 皇 để cùng coi việc nước. Thái-tông trị-vì được 33 năm, làm Thái-thượng-hoàng được 19 năm thì mất, thọ 60 tuổi. II. TRẦN THÁNH-TÔNG (1258-1278) Niên-hiệu: Thiệu-long 紹 隆 (1258-1272) Bảo-phù 寶 符 (1273-1278) 1. VIỆC CHÍNÍ H-TRỊ. Thái-tử Hoảng 晃 lên ngôi, tức là vua Thánh-tông 聖 宗, đổi niên-hiệu là Thiệu-long 紹 隆."
+    }
+   ],
+   "row_id": "r034"
+  },
+  {
+   "qid": "c222-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Năm 1369, hoàng thái hậu đưa ai lên ngôi thay cho vua Dụ Tông?",
+   "reference": "Dương Nhật Lễ",
+   "answer": "[1] Năm 1369, hoàng thái hậu nhất định lập người con nuôi của Cung\u0002túc-vương lên làm vua thay cho vua Dụ Tông.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "2354a666-79e1-4117-9dde-ce48ac56f32d",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba)",
+     "page": 227,
+     "text": "4. DƯƠNG NHẬT-LỄ (1369-1370). Năm kỷ-dậu (1369), vua Dụ-tông mất, không có con. Triều-đình định lập Cung\u0002định-vương 恭 定 王 là anh Dụ-tông lên làm vua, nhưng mà bà Hoàng-thái-hậu nhất định lập người con nuôi của Cung\u0002túc-vương 恭 肅 王 là Dương nhật Lễ 楊 日 禮. Nguyên mẹ Nhật Lễ là người con hát, lấy người hát-bội tên là Dương Khương 楊 姜, có thai rồi mới bỏ Dương Khương mà lấy Cung-túc-vương, sinh ra Nhật Lễ. Nay lên làm vua, Nhật Lễ muốn cải họ là Dương để dứt ngôi nhà Trần, rồi giết bà Hoàng-thái-hậu và Cung-định-vương. Bấy giờ Cung-tĩnh-vương Phủ ở chỗ Kinh-sư cũng sợ bị hại, vả lại tính-khí cũng nhu-nhược, không có ý tranh cạnh, mới bỏ trốn lên mạn Đà-giang. Các quan tôn-thất nhà Trần mới hội nhau đem binh về bắt Nhật Lễ giết đi, rồi rước Cung\u0002tĩnh-vương về làm vua. Tức là vua Nghệ-tông 藝 宗. II. TRẦN NGHỆ-TÔNG (1370-1372) Niên-hiệu: Thiệu-khánh 紹 慶 228 Khi Nghệ-tông giết Nhật Lễ rồi, mẹ Nhật Lễ chạy sang Chiêm-thành, xin vua nước ấy là Chế bồng Nga đem quân sang đánh An-nam. Quân Chiêm vượt bể vào cửa Đại-an, kéo lên đánh Thăng-long. Quan quân đánh không nổi. Nghệ\u0002tông phải lánh mình chạy sang Đông-ngạn (ở Cổ-pháp làng Đình-bảng)."
+    }
+   ],
+   "row_id": "r035"
+  },
+  {
+   "qid": "c266-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Đặng Dung bị áp giải ra Yên Kinh rồi chuyện gì đã xảy ra?",
+   "reference": "Đặng Dung tử tiết.",
+   "answer": "Đặng Dung bị áp giải ra Yên Kinh, nhưng không lâu sau đó, khi quân của Đặng Dung đã thua, ông phải bỏ bỏ Bình-thành chạy về Nghệ-an. Khi quân của Trương Phụ đánh đến, Đặng Dung cùng với các con ông đều tự tử tiết.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "b4de4a5a-9c98-4a5d-b5f0-f0ffe61915df",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Hậu-Trần",
+     "page": 255,
+     "text": "Bấy giờ quân nhà Trần ít lắm. Trương Phụ thấy vậy đem binh đánh úp lại, bọn Đặng Dung địch không nổi phải bỏ chạy. Từ khi thua trận ấy rồi, Trần quí Khoách thế yếu quá không thể chống với quân giặc được nữa, phải vào ẩn núp ở trong rừng núi. Chẳng được bao lâu Trần quí Khoách, Nguyễn cảnh Dị, Đặng Dung, Nguyễn Súy đều bị bắt, và phải giải về Yên-kinh cả. Đi đến giữa đường, Quí Khoách nhảy xuống bể tự-tử, bọn ông Đặng Dung cũng tử tiết cả. Cha con ông Đặng Dung đều hết lòng giúp nước phò vua, tuy không thành công được, nhưng cái lòng trung-liệt của nhà họ Đặng cũng đủ làm cho người đời sau tưởng nhớ đến, bởi vậy hiện nay còn có đền thờ ở huyện Can-lộc, tỉnh Hà-tĩnh. 256 Ông Đặng Dung có làm bài thơ thuật hoài như sau này, mà ngày nay còn có nhiều người vẫn truyền tụng: 世 事 悠 悠 奈 老 何 Thế sự du du nại lão hà! 無 窮 天 地 入 酣 歌 Vô cùng thiên địa nhập hàm ca. 時 來 屠 釣 成 功 易 Thời lai đồ điếu thành công dị, 事 去 英 雄 飲 恨 多 Sự khứ anh hùng ẩm hận đa. 致 主 有 懷 扶 地 軸 Trí chủ hữu hoài phù địa trục, 洗 兵 無 路 挽 天 河 Tẩy binh vô lộ vãn thiên hà. 國 讎 未 復 頭 先 白 Quốc thù vị phục đầu tiên bạch. 幾 度 龍 泉 帶 月 磨 Kỷ độ long tuyền đái nguyệt ma! Dịch: Việc đời bối-rối tuổi già vay, Trời đất vô-cùng một cuộc say."
+    },
+    {
+     "number": 2,
+     "chunk_id": "0b5951d4-e255-47dc-b359-86814194bd4c",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Hậu-Trần",
+     "page": 254,
+     "text": "Quí Khoách tôn Giản-định lên làm Thái-thượng-hoàng để cùng lo việc khôi-phục. 5. TRƯƠNG PHỤ TRỞ SANG AN-NAM. Vua nhà Minh thấy Mộc Thạnh bại binh, lại sai Trương Phụ làm thống-binh, Vương Hữu 王 友 làm phó đem binh sang cứu viện. Quân nhà Trần bấy giờ chia ra là mấy đạo đi đánh dẹp các châu huyện ở mạn Hải-dương. Giản-định đóng quân ở Hạ-hồng (Ninh-giang), Quí Khoách đóng ở Bình-than. Khi Trương Phụ sang đến nơi, tiến binh đánh đuổi, Giản-định đem binh thuyền chạy về đến huyện Mỹ-lương (giáp Sơn-tây và phủ Nho-quan) gặp quân Trương Phụ đuổi đến bắt được giải về Kim-lăng. Giản-định bị bắt rồi, Quí Khoách ở Bình-than sai Đặng Dung đến giữ Hàm-tử-quan (huyện Đông-an, Hưng-yên). Nhưng quân của Đặng Dung thiếu lương, phải bỏ chạy. Quí Khoách thấy quân của Đặng Dung đã thua, liệu thế giữ không nổi, bèn bỏ Bình-than chạy về Nghệ\u0002an. Trương Phụ thắng trận, đi đến đâu giết hại quân dân, và làm những điều tàn-bạo gớm-ghê như là: xếp người thành núi, hoặc rút ruột người treo lên cây, hoặc nấu thịt người để lấy đầu. Còn những người An-nam ai tòng-phục nhà Minh mà giết được nhiều người bản-quốc thì được thưởng cho làm quan. Thật bấy giờ tha hồ cho bọn hung-ác đắc chí!"
+    }
+   ],
+   "row_id": "r036"
+  },
+  {
+   "qid": "u3",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Các cuộc khai quật khảo cổ học hiện đại tại khu vực Đông Bắc Bộ đã phát hiện được những di chỉ nào liên quan đến hoạt động quân sự của nhà Trần trong cuộc kháng chiến chống Nguyên Mông lần thứ nhất?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r037"
+  },
+  {
+   "qid": "c283-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Năm 1423, Bình Định Vương rút quân về nơi nào?",
+   "reference": "Lam Sơn",
+   "answer": "[1] [3]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "ace908be-0cc5-458d-8a65-71ec1eaf4a76",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 273,
+     "text": "Quân Minh và quân Lào thừa thế đổ đến vây kín bốn mặt. Vương thấy thế nguy quá, mới bảo các tướng rằng: « Quân giặc vây kín rồi, nếu không liều sống chết đánh tháo lấy đường chạy ra, thì chết cả! » Quân-sĩ ai nấy đều cố sức đánh phá, quân giặc phải lùi. Vương lại đem quân về núi Chí-linh. Từ khi Bình-định-vương đem binh về Chí-linh, lương-thực một ngày một kém, trong hai tháng trời quân-sĩ phải ăn rau ăn cỏ, có bao nhiêu voi ngựa làm thịt ăn hết cả. Tướng-sĩ mỏi-mệt, đều muốn nghỉ-ngơi, xin vương hãy tạm hòa với giặc. Vương bất-đắc-dĩ sai Lê Trăn 黎 臻 đi xin hòa. Quan nhà Minh bấy giờ thấy đánh không lợi, cũng thuận cho hòa. 9. BÌNÌ H-ĐỊNH-VƯƠNG HẾT LƯƠNG PHẢI HÒA VỚI GIẶC. Năm quí-mão (1423) Bình-định-vương đem quân về Lam-sơn. Bấy giờ tướng nhà Minh là bọn Trần Trí 陳 智, Sơn Thọ 山 壽 thường hay cho vương trâu, ngựa, cá mắm và thóc lúa; vương cũng cho Lê Trăn đưa vàng bạn ra tạ. Nhưng sau bọn Trần Trí ngờ có bụng giả-dối, bắt giữ Lê Trăn lại, không cho về, vì vậy vương mới tuyệt giao không đi lại nữa, rồi đem quân về đóng ở núi Lư-sơn 蘆 山. 10. BÌNÌ H-ĐỊNH-VƯƠNG LẤY ĐẤT NGHỆ-AN. Năm giáp-thìn (1424) Bình-định-vương hội các tướng bàn kế tiến thủ."
+    },
+    {
+     "number": 3,
+     "chunk_id": "f380c12a-ce4a-4f53-93af-54ff36c65d37",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 269,
+     "text": "Dẫu có dùng kế đánh được đôi ba trận, nhưng vẫn không có đủ sức mà chống-giữ với quân nghịch, cho nên phải về núi Chí-linh [1] 270 ba lần, và phải nguy-cấp mấy phen, thật là { gian-truân vất\u0002vả. Sau nhờ hồng-phúc nước Nam, Bình-định-vương lấy được đất Nghệ-an, rồi từ đó mới có thể vẫy-vùng, đánh ra mặt Bắc, lấy lại được giang-sơn nước nhà. 2. VỀ CHÍ-LINH LẦN THỨ NHẤT. Khi quan nhà Minh là Mã-kỳ 馬 騏 ở Tây-đô, nghe tin Bình-định-vương nổi lên ở núi Lam-sơn, liền đem quân đến đánh. Vương sang đóng ở núi Lạc-thủy (Cẩm-thủy, phủ Quảng-hóa) để đợi quân Minh. Đến khi quân Mã Kỳ đến, phục binh của vương đổ ra đánh, đuổi được quân nghịch, nhưng vì thế yếu lắm chống giữ không nổi, vương phải bỏ vợ con để giặc bắt được, đem bại binh chạy về đóng ở núi Chí-linh. 3. VỀ CHÍ-LINH LẦN THỨ HAI. Tháng tư năm kỷ-hợi (1419) Bình-định-vương lại ra đánh lấy đồn Nga-lạc (thuộc huyện Nga-sơn, Thanh-hóa) giết được tướng nhà Minh là Nguyễn Sao 阮 抄, nhưng quân của vương bấy giờ hãy còn ít, đánh lâu không được, lại phải rút về Chí-linh. Quan nhà Minh biết rằng Chí-linh là chỗ Bình-định-vương lui tới, bèn đem binh đến vây đánh."
+    }
+   ],
+   "row_id": "r038"
+  },
+  {
+   "qid": "c91-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Lão Tử quê ở đâu và sinh năm bao nhiêu trước Công nguyên?",
+   "reference": "Lão Tử là người nước Sở (thuộc tỉnh Hồ Bắc) và sinh năm 604 trước Tây lịch.",
+   "answer": "[1] Lão-tử là người nước Sở 楚 (thuộc tỉnh Hồ\u0002bắc), sinh vào năm 604 tr. Tây\u0002lịch về đời vua Định-vương nhà Chu 周 定 王, sống được 81 tuổi.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "5e472682-4449-4292-973c-748caf51cf27",
+     "section": "Kết-quả của thời-đại Bắc-thuộc",
+     "page": 97,
+     "text": "97 Đến đời nhà Tần 秦, vua Thỉ-hoàng 始 皇 giết những người nho-học, đốt cả sách-vở, đạo Nho phải một lúc gian-nan. Đến đời vua Cao-tổ nhà Hán 漢 高 祖 lại tôn-kính đạo Nho, sai làm lễ thái-lao tế đức Khổng-tử. Đến đời vua Vũ-đế nhà Hán 漢 武 帝 lại đặt quan bác-sĩ để dạy năm kinh. Từ đấy trở đi, đạo Nho mỗi ngày một thịnh, dẫu trong nước có đạo Lão, đạo Phật mặc lòng, bao giờ đạo Nho vẫn trọng hơn. 3. ĐẠO-GIÁO. Đạo-giáo là bởi đạo của ông Lão-tử 老 子 mà thành ra. Lão-tử là người nước Sở 楚 (thuộc tỉnh Hồ\u0002bắc) họ là Lý 李, tên là Đam 聃, sinh vào năm 604 tr. Tây\u0002lịch về đời vua Định-vương nhà Chu 周 定 王, sống được 81 tuổi, đến năm 523 tr. Tây-lịch, vào đời vua Cảnh-vương nhà Chu 周 景 王 thì mất. Tông-chỉ của Lão-tử là trước khi có trời đất, thì chỉ có Đạo 道. Đạo là bản-thể của vũ-trụ, là cái gốc nguyên-thỉ của các sự tạo-hóa. Vạn vật đều bởi Đạo mà sinh ra. Vậy sửa mình và trị nước nên phải theo Đạo, nghĩa là người ta nên điềm\u0002tĩnh, vô vi, cứ tự-nhiên, chứ không nên dùng trí-lực mà làm gì cả. Lão Tử soạn ra sách Đạo-đức kinh 道 德 經, rồi sau có Văn\u0002tử 文 子, Thi-tử 尸 子, Trang-tử 莊 子, và Liệt-tử 列 子 noi theo mà truyền-bá cái tông-chỉ ấy."
+    }
+   ],
+   "row_id": "r039"
+  },
+  {
+   "qid": "c313-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Ai bị đưa lên ngôi vua vì lý do là dòng dõi nhà Trần để xin hòa với nhà Minh?",
+   "reference": "Trần Cao",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "be4c48aa-17ca-408f-945a-1edffb66cb0c",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 283,
+     "text": "16. VƯƠNG THÔNG XIN HÒA LẦN THỨ NHẤT. Vương Thông ở Đông-quan cứ bị thua mãi, liệu thế đánh không được nữa, muốn bãi binh về Tàu, nhưng sợ mang tiếng, bèn lục tờ chiếu của vua nhà Minh, niên hiệu Vĩnh-lạc (1407) nói về việc tìm con cháu họ Trần, rồi cho người ra nói với Bình-định-vương tìm người dòng-dõi họ Trần lập lên, để xin bãi binh. Vương nghĩ đánh nhau mãi, trong nước tàn-hại, dân-tình khổ-sở, bèn y theo lời Vương Thông. Nhân lúc bấy giờ có người tên là Hồ Ông 胡 翁 trốn ở Ngọc-ma, xưng là cháu ba đời vua Nghệ-tông, vương bèn cho người đi đón Hồ Ông về đổi tên là Trần Cao 陳 高 lập nên làm vua, mà vương thì xưng làm Vệ-quốc-công để cầu phong với nhà Minh, cho chóng xong việc. Vương Thông cho người đưa thư ra xin hòa, và xin cho đem toàn quân về nước. Bình-định-vương thuận cho, định ngày để Vương Thông gọi quân ở các nơi về hội tại Đông-đô, rồi về Tàu. Việc đã định như thế, nhưng mà bấy giờ có mấy người An-nam theo nhà Minh, như những tên Trần Phong 陳 封, Lương nhữ Hốt 梁 汝 笏 sợ rằng quân Minh về thì mình phải giết, bèn lấy chuyện Ô mã Nhi ngày trước can Vương Thông đừng rút quân về."
+    }
+   ],
+   "row_id": "r040"
+  },
+  {
+   "qid": "c139-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Tô Hiến Thành mất lúc nào?",
+   "reference": "Năm 1179 (Kỷ Hợi)",
+   "answer": "Tô Hiến Thành mất lúc năm kỷhợi (1179) [1].",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "2254c56e-fef2-419f-af95-00e012b10d9c",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý (tiếp theo)",
+     "page": 146,
+     "text": "Tô hiến Thành giúp vua Cao-tông trị nước, đến năm kỷ\u0002hợi(1179) thì mất. Sử chép rằng khi ông đau có quan Tham\u0002tri chính-sự là Vũ tán Đường 武 贊 唐, ngày đêm hầu-hạ. Đến khi bà Đỗ Thái-hậu [4] ra thăm hỏi ngày sau ai thay được ông, ông tâu rằng: có quan Gián-nghị đại-phu Trần trung Tá 陳 忠 佐. Thái-hậu ngạc-nhiên nói rằng sao không cử Vũ tán Đường? Ông đáp: « Nếu bệ-hạ hỏi người hầu-hạ, thì xin cử ngươi Tán Đường, hỏi người giúp nước thì tôi xin cử ngươi Trung Tá ». 147 Tô hiến Thành không những là một người có tài thao-lược, dẹp giặc yên dân mà thôi, cách thờ vua thật là trung-thành cho nên người đời sau thường ví ông với Gia cát Lượng đời Tam-quốc bên Tàu. Tô hiến Thành mất rồi, Triều-đình không theo lời ông ấy dặn, cử Đỗ yên Di 杜 安 頣 làm phụ-chính và Lý kính Tu 李 敬 修 làm đế-sư. Đình-thần bấy giờ có người đứng-đắn, cho nên bà Chiêu-linh Thái-hậu không dám mưu sự phế-lập. Đến khi Cao-tông lớn lên cầm quyền trị nước, thì cứ hay đi săn bắn chơi bời, làm cung xây điện, bắt trăm họ phải phục\u0002dịch khổ-sở. Ngoài biên thì quân mường thổ ở bên Tàu sang quấy nhiễu ở phía bắc, người Chiêm-thành sang đánh ở phía nam; trong nước thì trộm cướp nổi lên như ong dấy."
+    }
+   ],
+   "row_id": "r041"
+  },
+  {
+   "qid": "c156-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Vị thủ lĩnh Mông Cổ nào đã chinh phạt Trung Á, Ba Tư rồi tiến vào Đông Âu đầu thế kỷ 13?",
+   "reference": "Thành Cát Tư Hãn (Thiết Mộc Chân)",
+   "answer": "[1] Mông-kha (Mong-ké) lên làm vua, tức là Nguyên Hiến-tông.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "de0ef629-a78c-4f98-bb9c-2b15fb6d5a4a",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 165,
+     "text": "11. QUÂN MÔNG-CỔ XÂM-PHẠM ĐẤT AN-NAM. Trong khi nhà Lý mất ngôi, nhà Trần lên làm vua ở An-nam, thì nhà Tống bên Tàu bị người Mông-cổ đánh phá. Nguyên ở phía bắc nước Tàu có một dân-tộc gọi là Mông-cổ 蒙 古, ở vào khoảng thượng-lưu sông Hắc-long-giang (Amour). Người Mông-cổ hung-tợn, mà lại có tính hiếu chiến, người nào cưỡi ngựa cũng giỏi, và bắn tên không ai bằng. Binh-lính thường là quân kị, mà xếp-đặt thành cơ nào đội ấy, thật là có thứ-tự, và người nào cũng tinh nghề chiến\u0002đấu. Bởi tính-chất và binh-pháp của người Mông-cổ như thế, cho nên Thiết-mộc-chân (Témoudjine) tức là Thành-cát tư-hãn (Gengis khan), miếu-hiệu là Nguyên Thái-tổ, mới chiếm giữ được cả vùng Trung-Á, cùng đất Ba-tư, sang đến phía đông\u0002bắc Âu-la-ba. Sau quân Mông-cổ lại lấy được nước Tây-hạ, phía tây-bắc nước Tàu, dứt được nước Kim và tràn sang đến nước Triều-tiên (Cao-ly). Thành-cát-tư-hãn mất, người con thứ ba là A-loa đài (Agotai) lên làm vua tức là Nguyên Thái-tông. A-loa-đài truyền cho con là Quí-do (Gouyouk) tức là Nguyên Định\u0002tông. 166 Quí-do làm vua được non ba năm thì mất, ngôi vua Mông-cổ về chi khác. Người em con nhà chú là Mông-kha (Mong-ké) lên làm vua, tức là Nguyên Hiến-tông."
+    }
+   ],
+   "row_id": "r042"
+  },
+  {
+   "qid": "c118-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Nùng Trí Cao đặt tên nước là gì khi nổi dậy năm 1048?",
+   "reference": "Đại Nam",
+   "answer": "Nùng Trí Cao đặt tên nước của mình là Đại-lịch-quốc. [1]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "f20fd200-2f50-4f3c-9649-4958eaad728a",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý",
+     "page": 126,
+     "text": "3. GIẶC NÙNG. Lúc ấy châu Quảng-nguyên 廣 源 州 (Lạng-sơn) có những người Nùng cứ hay làm loạn. Năm mậu-đần (1038) có Nùng tồn Phúc 儂 存 福 làm phản, tự xưng là Chiêu-thánh Hoàng-đế 昭 聖 皇 帝, lập A-nùng làm Ninh-đức Hoàng-hậu, đặt quốc-hiệu là Tràng-sinh-quốc rồi đem quân đi đánh-phá các nơi. Năm kỷ-mão (1039) Thái-tông thân chinh đi đánh, bắt được Nùng tồn Phúc và con là Nùng trí Thông đem về kinh làm tội. Còn A-nùng và con là Nùng trí Cao chạy thoát được. Năm tân-tị (1041) Nùng trí Cao 儂 智 高 cùng với mẹ là A\u0002nùng về lấy châu Đảng-do 攩 猶 州 (gần châu Quảng\u0002nguyên) lập ra một nước gọi là Đại-lịch-quốc 大 曆 國. Thái-tông sai tướng lên đánh bắt được đem về Thăng-long. Nhưng vua nghĩ trước đã giết cha và anh, nay thương tình không giết, tha cho về và lại phong cho làm Quảng-nguyên mục. Sau lại gia phong cho tước Thái-bảo. Năm mậu-tí (1048) Nùng trí Cao lại phản, xưng là Nhân-huệ Hoàng-đế 仁 惠 皇 帝 quốc-hiệu là Đại-nam 大 南. Thái\u0002tông sai quan thái-úy Quách thịnh Dật 郭 成 溢 lên đánh không được. Bấy giờ Trí Cao xin phụ-thuộc vào nước Tàu, vua nhà Tống không cho. Trí Cao bèn đem quân sang đánh lấy Ung-châu 邕 州, rồi chiếm cả thảy được 8 châu ở đất Quảng-đông và Quảng-tây."
+    }
+   ],
+   "row_id": "r043"
+  },
+  {
+   "qid": "u0",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Các nhà khảo cổ học hiện đại đã tìm thấy những bằng chứng vật chất nào về kinh đô Đông Kinh thời Lê sơ dưới lòng Hà Nội ngày nay?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[3]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 3,
+     "chunk_id": "af21c0ae-ca4e-4793-8ab2-505f7c1eed92",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lê",
+     "page": 314,
+     "text": "Triều-đình đã mấy phen sai quan vào đánh đuổi, nhưng vẫn không chừa. Đến năm 315 bính-dần (1446) Triều-đình sai Lê Thụ 黎 受, Lê Khả 黎 可 đem quân sang đánh Chiêm\u0002thành lấy được thành Đồ-bàn, bắt được Bí Cai và cả phi tần đem về để ở Đông-kinh, rồi lập người cháu vua Bồ-đề là Mã-kha-qui-Lai lên làm vua. Năm mậu-thìn (1448) lại có xứ Bồn-man 盆 蠻 xin nội thuộc nước ta, đặt làm châu Qui\u0002hợp 歸 合. Đất Bồn-man phía đông-nam giáp tỉnh Nghệ-an, tỉnh Quảng-bình, phía tây-bắc giáp tỉnh Hưng-hóa, tỉnh Thanh-hóa. Tuy vậy, nhưng vì bà Thái-hậu hay nghe những lời nói gièm, chém giết các quan cựu-thần như là Lê Khả 黎 可, Lê khắc Phục 黎 克 復, làm cho nhiều người không phục. Năm quí-dậu (1453), Nhân-tông mới bắt đầu thân chính. Trước hết ngài truy-tặng cho những người công-thần và cấp ruộng quan-điền cho con cháu các ông Lê Sát, Lê Ngân, và Lê khắc Phục. Lại sai ông Phan phù Tiên 潘 孚 先 làm bộ quốc-sử kể từ vua Thái-tông nhà Trần cho đến khi thuộc nhà Minh, cả thảy là 10 quyển. Trước các vương-hầu và các quan văn-vũ đều cứ theo phẩm-hàm của mình mà ăn lộc lấy thuế trong 50 hộ hay là 100 hộ. Nay Nhân-tông lại cho thêm tiền tuế bổng nữa."
+    }
+   ],
+   "row_id": "r044"
+  },
+  {
+   "qid": "c330-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Phụ nữ góa chồng chưa có con thời phong kiến phải ở đâu và chịu tang thế nào theo Việt Nam sử lược?",
+   "reference": "Phải ở nhà chồng để giữ đủ tang lễ, không được chuyển vận của cải mang về nhà mình.",
+   "answer": "[1] Phụ nữ góa chồng chưa có con phải ở nhà chồng để giữ đủ tang-lễ, không được chuyển-vận, của-cải mang về nhà mình. [1] Phụ nữ góa chồng chưa có con phải ở nhà chồng để giữ đủ tang-lễ, không được chuyển-vận, của-cải mang về nhà mình.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "53effb02-fcbe-45e3-8afd-8b89a1a3f12d",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lê",
+     "page": 318,
+     "text": "4. Làm kẻ tử-đệ nên yêu-mến anh em, hòa-thuận với hương-đảng, phải lấy lễ-nghĩa mà cư\u0002xử; nếu trái phép thì người tôn-trưởng đánh-đập dạy-bảo, có tội to thì phải đem nộp quan để trừng-trị. 5. Ở chốn hương-đảng tông-tộc, có việc hoạn-nạn thì phải giúp-đỡ lẫn nhau; nếu ai có tiếng là người hạnh-nghĩa tốt, thì các quan phủ huyện sở tại phải bẩm lên tòa Thừa, tòa Hiến, để tâu vua mà tinh biểu cho. 6. Đàn-bà có lỗi mà cha mẹ và chồng đã trừng-trị thì nên phải sửa mình đổi lỗi, không được tự-tiện trốn đi, làm hư mất nết đàn-bà. 7. Người đàn-bà góa không được chứa những đứa trai trẻ ở trong nhà, nói dối là con nuôi để ám hành những việc gian dâm. 8. Người đàn-bà góa chồng, đối với các con vợ cả, hoặc vợ lẽ, nàng hầu, nên có lòng thương-xót, không được mưu-mô để chiếm đoạt gia-tài làm của riêng mình. 9. Đàn-bà góa chồng, chưa có con-cái, phải ở nhà chồng để giữ đủ tang-lễ, không được chuyển-vận, của-cải mang về nhà mình. 10. Làm đàn-bà thì phải theo chồng, không được cậy cha mẹ mình phú-quí mà khinh nhà chồng, nếu không như thế thì bắt tội đến cha mẹ. 11. Kẻ sĩ-phu nên quí phẩm-hạnh và giữ phép quan, nếu cứ xu-nịnh những kẻ quyền quí để cậy thế làm càn thì phải cách bỏ đi không kể đến nữa."
+    }
+   ],
+   "row_id": "r045"
+  },
+  {
+   "qid": "c274-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Thời Minh thuộc, sổ hộ khẩu gọi là gì?",
+   "reference": "hoàng sách",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "e9a5c649-dfba-46d8-a4f7-503ed9013ae2",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Thuộc nhà Minh",
+     "page": 264,
+     "text": "Những chỗ nào mà không có vệ-sở thì lập đồn ở chỗ hiểm-yếu rồi lấy dân binh ra giữ. 7. PHÉP HỘ-THIẾP VÀ HOÀNG-SÁCH. Việc điền hộ ở An-nam bấy giờ phải theo như lệ bên Tàu. Những dân đinh trong nước, thì ai cũng phải có một cái giấy biên tên tuổi và hương-quán để lúc nào có khám hỏi thì phải đưa ra. Cái giấy ấy biên theo như ở trong quyển sổ của quan giữ. Hễ giấy của ai mà không hợp như ở trong sổ thì người ấy phải bắt đi lính. Việc cai-trị ở trong nước, thì chia ra làm lý 里 và giáp 甲. Ở chỗ thành-phố thì gọi là phường 妨; ở chung-quanh thành- 265 phố thì gọi là tương 廂; ở nhà quê thì gọi là lý. Lý lại chia ra giáp. Cứ 110 hộ làm một lý và 10 hộ làm một giáp. Lý thì có lý\u0002trưởng, giáp thì có giáp-thủ. Mỗi một năm có người làm lý-trưởng coi việc trong lý. Mỗi một lý, một phường hay là một tương có một quyển sách để biên tất cả số đinh số điền vào đấy. Còn những người tàn-tật cô-quả thì biên riêng ra ở sau, gọi là kỷ-linh 畸 零. Ở đầu quyển sách lại có cái địa-đồ. Khi nào quyển sổ ấy xong rồi, thì biên ra làm 4 bản, một bản có bìa vàng, cho nên gọi là hoàng-sách 黄 册 để gửi về bộ Hộ, còn 3 bản bìa xanh, thì để ở bố-chính-ti, ở phủ và huyện, mỗi nơi một bản."
+    }
+   ],
+   "row_id": "r046"
+  },
+  {
+   "qid": "c28-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Trọng Thủy tự vẫn ở chỗ nào sau khi an táng Mị Châu?",
+   "reference": "Trọng Thủy nhảy xuống cái giếng ở trong Loa thành mà tự tử.",
+   "answer": "An-dương-vương mới đem Mị Châu lên ngựa mà chạy về phía nam. Chạy đến núi Mộ-dạ 墓 夜 山 (thuộc huyện Đông-thành, tỉnh Nghệ-an), gần bờ bể, vua thấy giặc đuổi kíp quá, mới khấn Kim-qui lên cứu, Kim-quy lên nói rằng: « Giặc ngồi sau lưng nhà vua đấy! » An-dương-vương tức giận quá, rút gươm ra chém Mị Châu đi, rồi nhảy xuống bể mà tự tận (2). Trọng Thỉ theo dấu lông ngỗng của vợ rắc, đem binh đuổi đến núi Mộ-dạ, thấy xác vợ chết nằm đó, thương-xót vô cùng, vội-vàng đem về cấp-táng, xong rồi, nhảy xuống cái giếng ở trong Loa-thành mà tự-tử.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "a21b484e-c400-49ad-b940-6eb1cadc5325",
+     "section": "THƯỢNG-CỔ THỜI ĐẠI > Nhà Thục",
+     "page": 33,
+     "text": "An-dương-vương mới đem Mị Châu lên ngựa mà chạy về phía nam. Chạy đến núi Mộ-dạ 墓 夜 山 (thuộc huyện Đông-thành, tỉnh Nghệ-an) gần bờ bể, vua thấy giặc đuổi kíp quá, mới khấn Kim-qui lên cứu, Kim-quy lên nói rằng: « Giặc ngồi sau lưng nhà vua đấy! » An-dương-vương tức giận quá, rút gươm ra chém Mị Châu đi, rồi nhảy xuống bể mà tự tận [2] . Trọng Thỉ theo dấu lông ngỗng của vợ rắc, đem binh đuổi đến núi Mộ-dạ, thấy xác vợ chết nằm đó, thương-xót vô 34 cùng, vội-vàng đem về cấp-táng, xong rồi, nhảy xuống cái giếng ở trong Loa-thành mà tự-tử. Nay ở làng Cổ-loa trước đền thờ An-dương-vương có cái giếng tục truyền là Trọng Thỉ chết ở giếng ấy. Tục lại truyền rằng Mị-Châu bị giết rồi, vì nỗi tình thực mà phải thác oan, cho nên máu nàng ấy chảy xuống bể, những con trai ăn phải hóa ra có ngọc trân-châu. Hễ ai lấy được ngọc ấy đem về rửa vào nước cái giếng ở trong Loa-thành là chỗ Trọng Thỉ đã tự-tử, thì ngọc ấy trong và đẹp thêm ra. 1. ↑ Xin đừng lầm nước Nam-việt ngày xưa với Nam-Việt của nước Việt\u0002nam hiện nay. 2. ↑ Nay ở trên núi Mộ-dạ, gần xã Cao-ái, huyện Đông-thành, tỉnh Nghệ-an, có đền thờ An-dương-vương."
+    }
+   ],
+   "row_id": "r047"
+  },
+  {
+   "qid": "c79-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Cao Biền xây lại thành Đại La cạnh con sông nào?",
+   "reference": "Sông Tô Lịch",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "231992d1-2868-4883-a764-e83c5fc9994b",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba",
+     "page": 86,
+     "text": "9. CÔNG-VIỆC CỦA CAO BIỀN. Vua nhà Đường đổi An\u0002nam làm Tĩnh-hải 靜 海, phong cho Cao Biền làm Tiết-độ\u0002sứ. Cao Biền chỉnh-đốn mọi công-việc, lập đồn-ải ở mạn biên-thùy để phòng giữ giặc-giã, làm sổ sưu-thuế để chi dụng việc công [3] . Cao Biền trị dân có phép tắc cho nên ai cũng kính-phục, bởi vậy mới gọi tôn lên là Cao-vương 高 王. Cao Biền đắp lại thành Đại-la 大 羅 ở bờ sông Tô-lịch 蘇 瀝 江. Thành ấy bốn mặt dài hơn 1982 trượng linh 5 thước, cao hai trượng linh 6 thước, đắp một đường đê bao bọc ở ngoài dài hơn 2125 trượng linh 8 thước, cao 1 trượng rưỡi, dày 2 thượng. Trong thành cho dân sự làm nhà hơn 40 vạn nóc (?). Sử chép rằng Cao Biền dùng phép phù-thủy khiến Thiên-lôi phá những thác-ghềnh ở các sông để cho thuyền-bè đi được. Thiên-lôi ấy có lẽ là Cao Biền dùng thuốc súng chăng? Tục lại truyền rằng Cao Biền thấy bên Giao-châu ta lắm đất đế-vương, thường cứ cỡi diều giấy đi yểm đất, phá những chỗ sơn-thủy đẹp, và hại mất nhiều long-mạch. Những chuyện ấy là chuyện ngoa ngôn, không có lẽ gì mà tin được. Năm ất-vị (875) vua nhà Đường sai Cao Biền sang làm Tiết\u0002độ-sứ ở Tây-xuyên (Tứ-xuyên). Biền dâng người cháu họ là Cao Tầm 高 潯 làm Tiết-độ-sứ ở Giao-châu."
+    }
+   ],
+   "row_id": "r048"
+  },
+  {
+   "qid": "c69-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Vua Lâm Ấp Phạm Phạm Chí đã làm gì để chống lại quân Tùy?",
+   "reference": "Đem quân ra giữ những chỗ hiểm yếu ở bên này sông Đồ Lê.",
+   "answer": "[1] Phạm phạm Chí dâng biểu tạ tội và xin triều cống như cũ.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "35914635-ff7e-4f67-8ae5-db5cdbf014b7",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba",
+     "page": 76,
+     "text": "76 CHƯƠNG V BẮC THUỘC LẦN THỨ BA ( 603 — 939 ) I. NHÀ TÙY: Việc đánh Lâm-ấp II. NHÀ ĐƯỜNG 1. Chính-trị nhà Đường 2. An-nam đô-hộ phủ 3. Mai Hắc-đế 4. Giặc bể 5. Bố-cái Đại-vương 6. Việc đánh nước Hoàn-vương 7. Nam-chiếu cướp phá Giao-châu 8. Cao Biền bình giặc Nam-chiếu 9. Công việc của Cao Biền 10. Sự trị-loạn của nước Tàu III. ĐỜI NGŨ-QUÍ 1. Tình-thế nước Tàu 2. Họ Khúc dấy nghiệp: Khúc thừa Dụ 3. Khúc Hạo 4. Khúc thừa Mỹ 5. Dương diên Nghệ và Kiều công Tiện 6. Ngô Quyền phá quân Nam-hán I. NHÀ TÙY (589-617) VIỆC ĐÁNH LÂM-ẤP. Nhà Tùy 隋 làm vua bên Tàu được 28 năm thì mất. Trong bấy nhiêu năm thì sử không chép chuyện gì lạ, chỉ nói rằng năm ất-sửu (605), vua nhà Tùy 77 nghe nói ở Lâm-ấp có nhiều của, bèn sai tướng là Lưu Phương đem quân đi đánh. Vua Lâm-ấp lúc bấy giờ là Phạm phạm Chí 梵 范 志 đem quân ra giữ những chỗ hiểm-yếu, ở bên này sông Đồ-lê (?) để chống cự với quân Tàu. Nhưng chẳng bao lâu quân Lâm\u0002ấp phải thua bỏ chạy. Lưu Phương thừa thế tiến quân sang sông đuổi đánh, gặp đại binh Lâm-ấp kéo đến, có nhiều voi, thế rất mạnh. Lưu Phương bèn dùng mưu: sai quân đào hố lấy cỏ phủ lên, rồi sai quân ra đánh nhử, giả tảng bại trận."
+    }
+   ],
+   "row_id": "r049"
+  },
+  {
+   "qid": "uh0",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Hồ Chí Minh đọc Tuyên ngôn Độc lập ở đâu và vào ngày nào?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[1] không cung cấp thông tin về Hồ Chí Minh đọc Tuyên ngôn Độc lập ở đâu và vào ngày nào.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "a0eb429f-a6b1-405b-b94f-f9525e7d8e5d",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Hồ",
+     "page": 248,
+     "text": "Khi quân nhà Minh đến Long-châu thì đại-tướng Chu Năng chết, phó-tướng Trương Phụ lên thay. Đạo quân của Trương Phụ ở Quảng-tây đi từ đất Bằng-tường sang đánh lấy cửa Ba-lụy, tức Nam-quan bây giờ, rồi tiến sang phía tây-bắc về mé sông Cái [1] . Còn đạo quân của Mộc Thạnh ở Vân-nam theo đường Mông-tự sang đánh lấy cửa Phú-lĩnh (thuộc tỉnh Tuyên-quang) rồi tiến sang đến sông Thao. Cả hai đạo hội ở Bạch-hạc, đóng đồn ở bờ sông phía bắc. Tuy rằng nhà Hồ trước đã phòng-bị, nhưng mà tướng nhà Minh biết rằng người An-nam không phục họ Hồ, bèn làm hịch kể tội họ Hồ, và nói rằng 249 quân Tàu sang là để lập dòng-dõi nhà Trần lên, cứu cho dân khỏi sự khổ-sở. Trương Phụ sai viết hịch ấy vào những mảnh ván nhỏ bỏ xuống sông, trôi đến đâu, quân-sĩ An-nam bắt được, nhiều người không đánh và theo hàng quân Minh; vì thế cho nên quân Minh đi đến đâu đánh được đến đấy. Quân Hồ phải lui về giữ thành Đa-bang. Ở chỗ thành Đa-bang, quân Hồ lập đồn-ải liên-tiếp ở phía nam sông Thao và sông Cái, tức là dọc sông Hồng-hà, rồi đóng cọc cắm ở giữa sông, thuyền-bè không đi lại được, có ý để cho quân Minh mỏi-mệt rồi sẽ đánh. 7. THÀNH ĐA-BANG THẤT THỦ. Quân Minh tiến lên mắc có thành Đa\u0002bang ngăn-trở."
+    }
+   ],
+   "row_id": "r050"
+  },
+  {
+   "qid": "c149-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Trần Thủ Độ đã xử lý con cháu nhà Lý ra sao?",
+   "reference": "Hại hết cả dòng dõi họ Lý và bắt những người họ Lý phải cải thành họ Nguyễn.",
+   "answer": "Trần Thủ Độ đã bắt vua Trần Thái Tông bỏ đi và giáng xuống làm công chúa, rồi đem người chị bà Chiêu-thánh tức là vợ Trần Liễu vào làm Hoàng hậu, bởi vì người chị đã có thai được ba tháng.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "8f2bb035-7fd5-40a0-a533-55dd2ada4d3b",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 157,
+     "text": "Lý Huệ-tông tuy đã xuất gia đi ở chùa rồi nhưng Thủ Độ vẫn định bụng giết đi, cho khỏi sự lo về sau. Một hôm Huệ-tông ngồi nhổ cỏ ở sân chùa Chân-giáo, Thủ Độ đi qua trông thấy, mới nói rằng: « Nhổ cỏ thì phải nhổ cả rể cái nó đi! » Huệ-tông nghe thế, phủi tay đứng dậy nói rằng: « Nhà ngươi nói ta hiểu rồi ». Được mấy hôm, Thủ Độ cho người đến mời Huệ-tông, Huệ-tông biết ý, vào nhà sau thắt cổ tự-tận. Thủ Độ đưa bách quan đến tế khóc xong rồi hỏa táng, chôn ở tháp Bảo-quang. Còn Thái-hậu là Trần-thị giáng xuống làm Thiên-cực công\u0002chúa để gả cho Trần thủ Độ (Trần thủ Độ và Thiên-cực công-chúa là hai chị em họ). Bao nhiêu những cung-nhân nhà Lý thì đưa gả cho những Tù-trưởng các mường. 158 Thủ Độ đã hại Huệ-tông rồi, lại muốn trừ nốt các tôn-thất nhà Lý. Đến năm nhâm-thìn (1232) nhân làm lễ Tiên-hậu 先 后 nhà Lý ở thôn Thái-đường, làng Hoa-lâm (huyện Đông\u0002ngạn, tỉnh Bắc-ninh), Thủ Độ sai đào hầm, làm nhà lá ở trên, để đến khi các tôn-thất nhà Lý vào đấy tế-lễ, thì sụt cả xuống hố rồi đổ đất chôn sống cả. Thủ Độ chỉ lo làm cho thế nào cho ngôi nhà Trần được vững-bền, cho nên không những là tàn-ác với nhà Lý mà thôi, đến luân-thường ở trong nhà, cũng làm loạn cả."
+    },
+    {
+     "number": 2,
+     "chunk_id": "2f7af3fe-468d-4302-9ad2-ace04cd8a788",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 159,
+     "text": "Hai anh em ôm nhau mà khóc. Thủ Độ nghe tin, đến rút gươm toan giết Trần Liễu, Thái-tông can mãi mới thôi. Sau Thái-tông lấy đất Yên-phụ, Yên-đường, Yên-sinh và Yên-bang (ở huyện Đông-triều và phủ Kinh-môn, Hải-dương) cho Trần Liễu làm thái-ấp và phong cho làm An-sinh-vương 安 生 王. Thủ Độ đã hại hết cả dòng dõi họ Lý, lại muốn cho hậu thế không ai nhớ đến họ Lý nữa, mới nhân vì tổ nhà Trần tên là Lý, bắt trong nước ai là họ Lý đều phải cải là họ Nguyễn. Thủ Độ là người rất gian-ác đối với nhà Lý, nhưng lại là một người đại công-thần của nhà Trần. Một tay cáng-đáng bao nhiêu trọng-sự, giúp Thái-tông bình-phục được giặc-giã trong nước và chỉnh-đốn lại mọi việc, làm cho nước Nam ta bấy giờ được cường-thịnh, ngày sau có thể chống-cự với Mông-cổ, khỏi phải làm nô-lệ những kẻ hùng-cường. 2. VIỆC ĐÁNH-DẸP GIẶC-GIÃ. Nước An-nam từ khi vua Cao-tông nhà Lý thất chính, trong nước chỗ nào cũng có giặc-giã. Ở mạn Quốc-oai thì có giặc Mường làm loạn, ở Hồng-châu thì có Đoàn Thượng 段 尚 chiếm giữ đất Đường-hào, tự xưng làm vua, ở Bắc-giang thì có Nguyễn Nộn 阮 嫩 độc-lập xưng vương ở làng Phù-đổng. Ấy là một nước mà chia ra làm mấy giang-sơn."
+    }
+   ],
+   "row_id": "r051"
+  },
+  {
+   "qid": "uh2",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Vua Gia Long lên ngôi năm nào và đóng đô ở đâu?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "Vua Gia Long lên ngôi năm 1426 và đóng đô ở Thăng Long. Dựa vào thông tin từ [3], vua Gia Long (vua Cao Tông của nhà Lý) đã dời đô từ Hoa Lư về Thăng Long vào năm 1010, đặt niên hiệu là Thái Bình Nguyên Vạn. Năm 1426, ông lên ngôi làm vua và đặt niên hiệu là Vĩnh Long.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 3,
+     "chunk_id": "13630f0a-5cf1-4274-9094-c4ddb70a665c",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý (tiếp theo)",
+     "page": 145,
+     "text": "Nhà Đinh lên đặt là Đại-cồ-việt, vua Lý Thánh-tông đổi là Đại\u0002việt. Nhưng Tàu vẫn phong cho vua ta là Giao-chỉ quận\u0002vương, đến bấy giờ mới đổi là An-nam quốc-vương. Nước ta thành tên là nước An-nam khởi đầu từ đấy. Năm tân-mão và năm nhâm-thìn (1171-1172) Anh-tông đi chơi xem sơn-xuyên hiểm-trở, đường-sá xa gần và sự sinh\u0002hoạt của dân-gian, rồi sai quan làm quyển địa-đồ nước An\u0002nam[2] . Năm ất-mùi (1175), Anh-tông phong cho Tô hiến Thành làm Thái-phó Bình-chương-quân-quốc trọng-sự 太 傅 平 章 軍 國 重 事 và gia phong vương tước. Anh-tông đau, ủy thác 146 Thái-tử là Long Cán 龍 幹 cho Tô hiến Thành. Anh-tông mất, trị vì được 37 năm, thọ 40 tuổi. VII. LÝ CAO-TÔNG (1176-1210) Niên-hiệu: Trinh-phù 貞 符 (1176- 1185) — Thiên-tư gia-thụy 天 資 嘉 瑞 (1186-1201) — Thiên-gia bảo-hữu 天 嘉 寶 祐 (1202-1204) — Trị-bình-long-ứng 治 平 龍 應 (1205-1210). 1. TÔ HIẾN THÀNH LÀM PHỤ-CHÁNH. Khi vua Anh\u0002tông mất, Thái-tử Long Cán chưa đầy 3 tuổi, bà Chiêu-linh Thái-hậu muốn lập người con trưởng là con mình tên là Long Xưởng [3] lên làm vua, đem vàng bạc đút lót cho vợ Tô hiến Thành, nhưng ông nhất thiết không chịu, bèn cứ theo di-chiếu mà lập Long Cán, tức là vua Cao-tông 高 宗."
+    }
+   ],
+   "row_id": "r052"
+  },
+  {
+   "qid": "uh5",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Hiệp định Genève năm 1954 chia Việt Nam tại vĩ tuyến nào?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "The passage provided does not contain information about the Geneva Agreement of 1954 or the division of Vietnam at any specific latitude. The text is about the history of Vietnam and does not provide the required information.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "fe157e46-1b8a-40bf-a7ff-a521804e117f",
+     "section": "Nước Việt Nam",
+     "page": 16,
+     "text": "Vua Minh-mệnh lại cải làm Đại-nam 大 南. Quốc-hiệu nước ta thay-đổi đã nhiều lần, tuy rằng ngày nay ta vẫn theo thói quen dùng hai chữ An-nam 安 南, nhưng vì hai chữ ấy có ngụ ý phải thần-phục nước Tàu, vậy thì ta nên nhất định lấy tên Việt-nam 越 南 mà gọi nước nhà. 2. VỊ-TRÍ VÀ DIỆN TÍCÍ H. Nước Việt-nam ở về phía đông\u0002nam châu Á-tế-á, hẹp bề ngang, dài bề dọc, hình cong như chữ S, trên phía Bắc và dưới phía Nam phình rộng ra, khúc giữa miền Trung thì eo hẹp lại. Đông và Nam giáp bể Trung-quốc (tức là bể Nam-hải); Tây giáp Ai-lao và Cao-miên; Bắc giáp nước Tàu, liền với tỉnh Quảng-đông, Quảng-tây và Vân-nam. Diện-tích cả nước rộng chừng độ 312.000 ki-lô-mét vuông chia ra như sau này: Bắc Việt : 105.000 km2 Trung Việt : 150.000 km2 Nam Việt : 57.000 km2 3. ĐỊA-THẾ. Nước ta hiện chia ra làm ba cõi: Bắc-Việt, Trung-Việt và Nam-Việt. Đất Bắc-Việt có sông Hồng-hà (tức là sông Nhị-hà) và sông Thái-bình. Mạn trên gọi là 17 Thượng-du lắm rừng nhiều núi, ít người ở. Mạn dưới gọi là Trung-châu, đất đồng bằng, người ở chen-chúc đông lắm."
+    },
+    {
+     "number": 2,
+     "chunk_id": "178bbc4f-9ca5-41de-a6ea-a6fb101798ad",
+     "section": "Nước Việt Nam",
+     "page": 15,
+     "text": "15 NƯỚC VIỆT NAM 1. Quốc-hiệu 2. Vị-trí và diện-tích 3. Địa-thế 4. Chủng loại 5. Gốc-tích 6. Người Việt-nam 7. Sự mở-mang bờ-cõi 8. Lịch-sử Việt-nam 1. QUỐC-HIỆU. Nước Việt-nam 越 南 ta về đời Hồng bàng (2897-258 tr. Tây-lịch) gọi là Văn-lang 文 郎, đời Thục An\u0002dương-vương (257-207 tr. Tây-lịch?) thì gọi là Âu-lạc 甌 駱. Đến nhà Tần 秦 (246-206 tr. Tây-lịch?) lược định phía nam thì đặt làm Tượng-quận 象 郡, sau nhà Hán (202 tr. Tây-lịch 220 sau Tây-lịch) dứt nhà Triệu, chia đất Tượng-quận ra làm ba quận là Giao-chỉ 交 趾, Cửu-chân 九 真 và Nhật-nam 日 南. Đến cuối đời nhà Đông-Hán, vua Hiến-đế đổi Giao-chỉ 交 趾 làm Giao-châu 交 州. Nhà Đường (618-907) lại đặt là An-nam Đô-hộ-phủ 安 南 都 護 府. Từ khi nhà Đinh (968-980) dẹp xong loạn Thập-nhị Sứ\u0002quân, lập nên một nước tự-chủ, đổi quốc-hiệu là Đại-cồ-việt 大 瞿 越. Vua Lý Thánh-tông đổi là Đại-Việt 大 越, đến đời vua Anh-tông, nhà Tống bên Tàu mới công-nhận là An-nam quốc 安 南 國. 16 Đến đời vua Gia-long, thống-nhất được cả Nam Bắc (1802), lấy lẽ rằng Nam là An-nam, Việt là Việt-thường mới đặt quốc-hiệu là Việt-nam 越 南. Vua Minh-mệnh lại cải làm Đại-nam 大 南."
+    }
+   ],
+   "row_id": "r053"
+  },
+  {
+   "qid": "c169-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "1284 Trần Quốc Tuấn duyệt quân ở đâu?",
+   "reference": "Bến Đông Bộ Đầu",
+   "answer": "Trần quốc Tuấn truyền hịch cho các vương-hầu hội hết quân-sĩ tại bến Đông\u0002bộ-đầu 東 步 頭 để điểm-duyệt.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "a93d9934-16fd-470d-91f3-b366ef230caa",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I",
+     "page": 178,
+     "text": "Quan trấn-thủ Lạng-sơn do-thám được tin ấy, sai người về Kinh-đô phi báo. Nhân-tông ngự thuyền ra sông Bình-than 平 灘[1] chỗ sông Đuống nối với sông Thái-bình, để hội các vương-hầu bách quan lại bàn kế chống giữ. Các quan, người thì nói nên để cho quân Nguyên mượn đường, người thì bảo nên đưa đồ sang cống để xin hoãn binh. Duy có Trần quốc Tuấn 陳 國 峻 và Trần khánh Dư 陳 慶 餘 quyết xin đem quân đi phòng-giữ các nơi hiểm-yếu, không cho quân Mông-cổ sang nước Nam. Nhân-tông ưng nghe lời ấy. Đến tháng mười năm quí-mùi (1283) phong cho Hưng-đạo-vương là Trần quốc Tuấn làm Tiết-chế thống-lĩnh mọi quân đi chống giữ với quân nhà Nguyên. Qua tháng tám năm giáp-thân (1284) ông Trần quốc Tuấn truyền hịch cho các vương-hầu hội hết quân-sĩ tại bến Đông\u0002bộ-đầu 東 步 頭 để điểm-duyệt. Quân thủy và quân bộ cả thảy 20 vạn. Ông Trần quốc Tuấn truyền cho các tướng-sĩ rằng: « Bản\u0002chức phụng-mệnh thống đốc quân-sĩ ra phá giặc. Các vương-hầu và các tướng-sĩ, ai nấy phải cần giữ phép-tắc, đi đâu không được nhiễu dân và phải đồng lòng hết sức đánh giặc, chớ thấy thua mà ngã lòng, chớ thấy được mà tự kiêu, việc quân có luật, phép nước không thân, các ngươi phải giữ »."
+    }
+   ],
+   "row_id": "r054"
+  },
+  {
+   "qid": "c89-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Theo Khổng Tử, nên cư xử với người khác ra sao?",
+   "reference": "Điều gì mà mình không muốn người ta làm cho mình, thì mình đừng làm cho ai.",
+   "answer": "Đạo của Khổng-tử truyền cho thầy Tăng Sâm 曾 参; Tăng Sâm truyền cho Khổng Cấp 孔 伋; Khổng Cấp truyền cho thầy Mạnh Kha 孟 軻 tức là thầy Mạnh-tử 孟 子. Thầy Mạnh-tử là một nhà đại hiền-triết nước Tàu, làm sách Mạnh-tử, bàn sự trọng nhân nghĩa, khinh công lợi, và cho tính người ta vốn lành, ai cũng có thể nên được Nghiêu, Thuấn cả.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "3a65b09d-f94e-4ebe-973b-569d668fbdbb",
+     "section": "Kết-quả của thời-đại Bắc-thuộc",
+     "page": 96,
+     "text": "Cái đạo luân-lý của ngài có thể truyền cho muôn đời về sau không bao giờ vượt qua được. Đối với mọi người thì ngài dạy: « Kỷ sở bất dục, vật thi ư nhân 己 所 不 欲 勿 施 於 人: điều gì mà mình không muốn người ta làm cho mình, thì mình đừng làm cho ai ». Đối với việc bổn\u0002phận của mình thì ngài dạy: Quân-tử động nhi thế vi thiên\u0002hạ đạo, hành nhi thế vi thiên-hạ pháp, ngôn nhi thế vi thiên\u0002hạ tắc, viễn chi tắc vọng, cận chi tắc bất yếm. 君 子 動 而 世 為 天 下 道， 行 而 世 為 天 下 法， 言 而 世 為 天 下 則， 遠 之 則 望， 近 之 則 下 饜: người quân-tử cử\u0002động việc gì là để làm đạo cho thiên-hạ, nói-năng điều gì là để làm mực cho thiên-hạ; người ở xa thì muốn lại gần, người ở gần thì không bao giờ chán [2] . Đạo của Khổng-tử truyền cho thầy Tăng Sâm 曾 参; Tăng Sâm truyền cho Khổng Cấp 孔 伋; Khổng Cấp truyền cho thầy Mạnh Kha 孟 軻 tức là thầy Mạnh-tử 孟 子. Thầy Mạnh-tử là một nhà đại hiền-triết nước Tàu, làm sách Mạnh-tử, bàn sự trọng nhân nghĩa, khinh công lợi, và cho tính người ta vốn lành, ai cũng có thể nên được Nghiêu, Thuấn cả. 97 Đến đời nhà Tần 秦, vua Thỉ-hoàng 始 皇 giết những người nho-học, đốt cả sách-vở, đạo Nho phải một lúc gian-nan."
+    },
+    {
+     "number": 2,
+     "chunk_id": "53effb02-fcbe-45e3-8afd-8b89a1a3f12d",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lê",
+     "page": 318,
+     "text": "4. Làm kẻ tử-đệ nên yêu-mến anh em, hòa-thuận với hương-đảng, phải lấy lễ-nghĩa mà cư\u0002xử; nếu trái phép thì người tôn-trưởng đánh-đập dạy-bảo, có tội to thì phải đem nộp quan để trừng-trị. 5. Ở chốn hương-đảng tông-tộc, có việc hoạn-nạn thì phải giúp-đỡ lẫn nhau; nếu ai có tiếng là người hạnh-nghĩa tốt, thì các quan phủ huyện sở tại phải bẩm lên tòa Thừa, tòa Hiến, để tâu vua mà tinh biểu cho. 6. Đàn-bà có lỗi mà cha mẹ và chồng đã trừng-trị thì nên phải sửa mình đổi lỗi, không được tự-tiện trốn đi, làm hư mất nết đàn-bà. 7. Người đàn-bà góa không được chứa những đứa trai trẻ ở trong nhà, nói dối là con nuôi để ám hành những việc gian dâm. 8. Người đàn-bà góa chồng, đối với các con vợ cả, hoặc vợ lẽ, nàng hầu, nên có lòng thương-xót, không được mưu-mô để chiếm đoạt gia-tài làm của riêng mình. 9. Đàn-bà góa chồng, chưa có con-cái, phải ở nhà chồng để giữ đủ tang-lễ, không được chuyển-vận, của-cải mang về nhà mình. 10. Làm đàn-bà thì phải theo chồng, không được cậy cha mẹ mình phú-quí mà khinh nhà chồng, nếu không như thế thì bắt tội đến cha mẹ. 11. Kẻ sĩ-phu nên quí phẩm-hạnh và giữ phép quan, nếu cứ xu-nịnh những kẻ quyền quí để cậy thế làm càn thì phải cách bỏ đi không kể đến nữa."
+    }
+   ],
+   "row_id": "r055"
+  },
+  {
+   "qid": "c308-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Bình Ngô đại cáo nhắc hai tướng Nguyên nào bị giết và bắt sống?",
+   "reference": "Toa Đô bị giết ở cửa Hàm Tử, Ô Mã bị bắt sống ở sông Bạch Đằng.",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r056"
+  },
+  {
+   "qid": "c344-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Trịnh Duy Sản mưu lập vua khác rồi giết vua Tương Dực cùng những ai?",
+   "reference": "Trịnh Duy Sản mưu với Lê Quảng Độ và Trình Chí Sâm.",
+   "answer": "[2] (TỰ-CHỦ THỜI-ĐẠI › Nhà Lê, page 324) Nguyễn hoằng Dụ 阮 弘 裕, Trịnh duy Sản 鄭 惟 產, Nguyễn hoằng Dụ 阮 弘 裕, Trịnh Tuy 鄭 緯",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 2,
+     "chunk_id": "09619a16-a369-4274-bee3-e8fe4fce1f0a",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lê",
+     "page": 324,
+     "text": "Sau quan quân sang đánh, Trần Cao lui về đóng ở Châu-sơn, thuộc phủ Từ-sơn. Vua sai An-hòa\u0002hầu là Nguyễn hoằng Dụ 阮 弘 裕 sang đóng quân ở Bồ-đề để chống giữ. Tuy trong nước giặc cướp như thế, nhưng vua cũng không chịu sửa-sang việc gì cả, lại khinh-dể các quan triều-thần. Bấy giờ có Nguyên-quận-công là Trịnh duy Sản 原 郡 公 鄭 惟 產, trước vẫn có công đi đánh giặc, nhưng sau vì hay can vua mà phải đánh. Trịnh duy Sản tức giận bèn mưu với Lê quảng Độ 黎 廣 度 và Trình chí Sâm 程 志 森 để lập vua khác, rồi giả mượn tiếng đi đánh giặc, đêm đem binh vào cửa Bắc-thần giết vua Tương-dực. Ngài trị-vì được 8 năm, thọ được 24 tuổi. VIII. LÊ CHIÊU-TÔNG VÀ LÊ CUNG-HOÀNG (1516-1527) 325 Niên-hiệu: Quang-thiệu 光 紹 (1516-1526) Thống-nguyên 統 元 (1527) Bọn Trịnh duy Sản giết vua Tương-dực rồi, hội triều-đình lại định lập con Mục-ý-vương là Quang Trị 光 治, mới có 8 tuổi, nhưng Võ-tá-hầu là Phùng Mại 馮 邁 bàn nên lập cháu ba đời vua Thánh-tông là con Cẩm-giang-vương tên là Ỷ 椅, đã 14 tuổi. Đảng Trịnh duy Sản bắt Phùng Mại chém ngay ở chỗ nghị-sự, rồi lập Quang Trị. Quang Trị mới làm vua được ba ngày, chưa kịp đổi niên-hiệu, thì bị Trịnh duy Đại 鄭 惟 岱 là anh Trịnh duy Sản đem vào Tây-kinh."
+    }
+   ],
+   "row_id": "r057"
+  },
+  {
+   "qid": "u19",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Những bằng chứng khảo cổ học nào được phát hiện sau năm 1930 đã làm thay đổi hiểu biết của chúng ta về đời sống thường nhật của người dân Trung Quốc thời Xuân Thu Chiến Quốc?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "b7e75f8f-c98e-4b3e-8c63-03043b8097b1",
+     "section": "THƯỢNG-CỔ THỜI ĐẠI > Xã-hội nước Tàu",
+     "page": 40,
+     "text": "Tuy vậy, đến đời Xuân-thu những người thứ dân lên làm tướng văn tướng võ cũng nhiều. Trong gia-đình thì già trẻ trên dưới phân-biệt nghiêm lắm. Con phải theo cha, vợ phải theo chồng, con-trai con-gái từ 7 41 tuổi trở đi, là không được ăn một mâm, nằm một chiếu nữa. Con trai 30 tuổi mới lấy vợ, gái 20 tuổi mới lấy chồng mà hai người cùng họ không được lấy nhau. Nước Tàu về đời Tam-đại 三 代 cũng sùng sự tế-tự lắm. Thường cúng-tế thiên, địa, nhật, nguyệt, sơn, xuyên, lâm, trạch. Nhà vua lập đàn Nam-giao để tế Thượng-đế. Lại có nhà Xã-tắc để tế Thổ-thần và Hậu-tắc. Còn sự thờ-phụng tổ\u0002tiên thì từ vua cho đến thứ-dân đều lấy làm một việc rất quan-trọng trong đời người. Xem như thế, thì xã-hội nước Tàu về đời Tam-đại đã văn\u0002minh lắm, nhưng sau đến cuối đời nhà Chu, vì nhà vua suy\u0002nhược, cho nên chư-hầu, người xưng hầu, kẽ xưng vương rồi tranh nhau, đánh nhau như Ngũ Bá đời Xuân-thu, Thất-hùng đời Chiến-quốc, làm cho trăm họ lầm-than khổ-sở. Sau nhà Tần thống-nhất được thiên-hạ, mới bỏ lệ phong\u0002kiến, lập ra quận huyện; bỏ phép tỉnh-điền, lập thiên-mạch; cấm nho-học đốt sách-vở, việc chính-trị thì cốt dùng pháp\u0002luật, để lấy quyền-lực mà áp-chế."
+    }
+   ],
+   "row_id": "r058"
+  },
+  {
+   "qid": "c186-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Toa Đô mất mạng ra sao khi bị quân đội nhà Trần bao vây tấn công?",
+   "reference": "Toa Đô trúng tên chết",
+   "answer": "Khi bị quân đội nhà Trần bao vây tấn công, Toa Đô và Ô Mã Nhi đã chạy trốn ra mặt bể. Khi chạy đến mé sau một dãy núi, họ bị quân An Nam vây đánh. Toa Đô trúng tên chết, còn Ô Mã Nhi tìm cách thoát thân. Ông tìm đường chạy vào Thanh-hoa, nhưng bị quân ta đánh đuổi mạnh. Ông phải một mình lẻn xuống chiếc thuyền nhỏ chạy ra biển, trốn về Tàu.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "3ddb98c3-b5d5-4dae-82f7-badab75e1f4e",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I",
+     "page": 192,
+     "text": "Khi quân ra đến Tây-kết, Hưng-đạo-vương chia quân ra đánh trại quân Nguyên, và đặt phục binh để bắt Toa Đô. Quân ta đánh hăng quá, quân Nguyên không địch nổi, Toa Đô và Ô mã Nhi đem binh lên bộ chạy ra mặt bể, nhưng khi chạy đến mé sau một dãy núi, thì bị quân An-nam vây đánh, Toa Đô trúng tên chết, còn Ô mã Nhi thì tìm đường chạy vào Thanh-hóa, nhưng bị quân ta đánh đuổi ngặt quá, phải một mình lẻn xuống chiếc thuyền con chạy ra bể, trốn về Tàu được. Khi các tướng thắng trận, đưa đầu Toa Đô về nộp, Nhân\u0002tông thấy người dũng-kiện mà lại hết lòng với chúa, mới than rằng: « Làm bầy tôi nên như người này! » rồi cởi áo ngự-hào đắp vào đầu Toa Đô, sai quan dùng lễ mai-táng cho tử-tế. Trận Tây-kết đánh vào tháng năm, năm ất-dậu (1285) quan quân bắt được quân Nguyên hơn 3 vạn người, và chiến\u0002thuyền khí-giới không biết bao nhiêu mà kể. Hưng-đạo-vương được trận toàn thắng, mở tiệc khao thưởng ba quân, rồi lên đánh mặt bắc, để tiểu-trừ Thoát Hoan. 11. TRẬN VẠN-KIẾP: Thoát Hoan trốn chạy về Tàu. Bấy giờ Thoát Hoan đóng quân ở Bắc-giang, nghe tin Toa Đô tử trận, Ô mã Nhi đã trốn về Tàu, quân-binh tướng-sĩ ai nấy đều ngã lòng cả."
+    },
+    {
+     "number": 2,
+     "chunk_id": "d303976c-815d-493d-90e7-29863810a02d",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I",
+     "page": 191,
+     "text": "10. TRẬN TÂY-KẾT: Tướng nhà Trần chém được Toa Đô. Toa Đô đóng quân ở Thiên-trường xa cách Thoát Hoan hơn 200 dặm, cho nên chưa biết Thoát Hoan đã thua chạy về Bắc-giang rồi, bèn tiến binh vào đóng ở sông Thiên-mạc [12] định để hợp sức với Thoát Hoan làm thế ỷ-giốc. Được mấy hôm Toa Đô biết đạo tiền quân của mình đã bại trận, mà các bến thì chỗ nào cũng có quân nhà Trần án ngữ, mới lui về đóng ở Tây-kết 西 結[13] rồi cho người đi dò xem quân Thoát Hoan đóng ở đâu. Quân An-nam từ khi đánh được trận Hàm-tử và trận Chương-dương rồi, quân-thế phấn-chấn lắm. Hưng-đạo\u0002vương mừng rỡ, vào tâu với Nhân-tông xin một mặt sai Chiêu-văn-vương Trần nhật Duật, hợp với Thượng-tướng Trần quang Khải dẫn quân chặn các đường, không cho Thoát Hoan, Toa Đô đi lại thông tin với nhau, và một mặt xin tự tiến binh ra đánh Toa Đô, rồi đánh Thoát Hoan. 192 Nhân-tông nghe lời ấy, cho Hưng-đạo-vương tùy ý mà sai khiến. Khi quân ra đến Tây-kết, Hưng-đạo-vương chia quân ra đánh trại quân Nguyên, và đặt phục binh để bắt Toa Đô."
+    }
+   ],
+   "row_id": "r059"
+  },
+  {
+   "qid": "u14",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Các nhà khảo cổ học đã tìm thấy những di chỉ nào liên quan đến kinh đô Hoa Lư thời Đinh được khai quật sau năm 1930?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "Question cannot be answered with the given data. There is no information about archaeological finds related to the kingdom of Hoa Lu during the Đinh dynasty after 1930 in the provided passages.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "713ff550-4afa-4881-a7c1-333e91297669",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý",
+     "page": 122,
+     "text": "Khi Lê Long Đĩnh mất, thì Lý công Uẩn đã ngoài 35 tuổi. Bấy giờ lòng người đã oán-giận nhà Tiền-Lê lắm, ở trong triều có bọn Đào cam Mộc 陶 甘 沐 cùng với sư Vạn Hạnh 萬 行 mưu tôn Lý công Uẩn lên làm vua. Lý công Uẩn bèn lên ngôi hoàng-đế, tức là vua Thái-tổ nhà Lý 李 太 祖. 2. DỜI ĐÔ VỀ THĂNG-LONG THÀNH. Thái-tổ thấy đất Hoa-lư chật-hẹp không có thể mở-mang ra làm chỗ đô-hội được, bèn định dời đô về La-thành. Tháng 7 năm Thuận\u0002thiên nguyên-niên (1010), thì khởi sự dời đô. Khi ra đến La\u0002thành, Thái-tổ lấy cớ có điềm trông thấy rồng vàng hiện ra, 123 bèn đổi Đại-la thành là Thăng-long thành 昇 龍 城, tức là thành Hà-nội bây giờ. Cải Hoa-lư làm Trường-an phủ và Cổ\u0002pháp làm Thiên-đức phủ. 3. LẤY KINH TAM-TẠNG. Nhà Lý bấy giờ sùng đạo Phật, nhà vua trọng đãi những người đi tu, lấy tiền kho ra để làm chùa đúc chuông. Tháng 6 năm mậu-ngọ (1018) vua sai quan là Nguyễn đạo Thanh 阮 道 清 và Phạm Hạc 范 鶴 sang Tàu lấy kinh Tam-tạng 三 藏 經 đem về để vào kho Đại-hưng. 4. VIỆC CHÍNÍ H-TRỊ. Lúc bấy giờ ở bên nhà Tống có nhiều việc, cho nên cũng không sinh sự lôi thôi gì với nước ta."
+    }
+   ],
+   "row_id": "r060"
+  },
+  {
+   "qid": "c332-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Ai lo việc dựng bia cấm nam nữ tắm chung bến theo luật nhà Lê?",
+   "reference": "Phủ huyện",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r061"
+  },
+  {
+   "qid": "c56-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Triệu Thị Chinh sinh ra ở đâu?",
+   "reference": "Huyện Nông Cống",
+   "answer": "[2] Khi NƯỚC TÀU VỀ ĐỜI TAM-QUỐC 64 vào ở trong núi chiêu mộ hơn 1.000 tráng-sĩ để làm thủ-hạ. Anh thấy thế mới can bà, thì bà bảo rằng: « Tôi muốn cưỡi cơn gió mạnh, đạp đường sóng dữ, chém cá tràng-kình ở bể đông, quét sạch bờ-cõi, để cứu dân ra khỏi nơi đắm-đuối, chứ không thèm bắt-chước người đời cúi đầu cong lưng để làm tì-thiếp người ta.» Năm mậu-thìn (248) vì quan-lại nhà Ngô tàn-ác, dân-gian khổ-sở, Triệu quốc Đạt mới khởi binh đánh quận Cửu-chân.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 2,
+     "chunk_id": "b9396c7f-b73a-454b-b986-098d0cb91e63",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai",
+     "page": 63,
+     "text": "Khi NƯỚC TÀU VỀ ĐỜI TAM-QUỐC 64 vào ở trong núi chiêu mộ hơn 1.000 tráng-sĩ để làm thủ-hạ. Anh thấy thế mới can bà, thì bà bảo rằng: « Tôi muốn cưỡi cơn gió mạnh, đạp đường sóng dữ, chém cá tràng-kình ở bể đông, quét sạch bờ-cõi, để cứu dân ra khỏi nơi đắm-đuối, chứ không thèm bắt-chước người đời cúi đầu cong lưng để làm tì-thiếp người ta.» Năm mậu-thìn (248) vì quan-lại nhà Ngô tàn-ác, dân-gian khổ-sở, Triệu quốc Đạt mới khởi binh đánh quận Cửu-chân. Bà đem quân ra đánh giúp anh, quân-sĩ của Triệu quốc Đạt thấy bà làm tướng có can-đảm, bèn tôn lên làm chủ. Khi bà ra trận thì cưỡi voi và mặc áo giáp vàng là Nhụy-kiều tướng\u0002quân. Thứ-sử Giao-châu là Lục Dận đem quân đi đánh, bà chống nhau với nhà Ngô được năm sáu tháng. Nhưng vì quân ít thế cô, đánh mãi phải thua, bà đem quân chạy đến xã Bồ-điền (nay là xã Phú-điền thuộc huyện Mỹ-hóa) thì tự-tử. Bấy giờ mới 23 tuổi. Về sau vua Nam-đế nhà Tiền-Lý, khen là người trung-dũng sai lập miếu thờ, phong là: « Bật chinh anh-liệt hùng tài trinh nhất phu-nhân ». Nay ở xã Phú-điền, tỉnh Thanh-hóa còn có đền thờ. 4. NHÀ NGÔ CHIA ĐẤT GIAO-CHÂU."
+    }
+   ],
+   "row_id": "r062"
+  },
+  {
+   "qid": "c50-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Sử gia nào bảo rằng hai chị em Trưng Trắc, Trưng Nhị chiếm được 65 thành và tự lập làm vua một cách dễ dàng?",
+   "reference": "Lê Văn Hưu",
+   "answer": "[1] Sử gia Lê văn Hưu nói rằng hai chị em Trưng Trắc, Trưng Nhị chiếm được 65 thành và tự lập làm vua một cách dễ dàng.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "7fd66a5c-d861-4507-9b2d-be17933cb28a",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Trưng-vương",
+     "page": 57,
+     "text": "Đến ngày nay có nhiều nơi lập đền thờ hai bà để ghi-tạc cái danh-tiếng hai người nữ anh-hùng nước Việt-nam ta [2] . Sử-gia Lê văn Hưu 黎 文 休 nói rằng: « Trưng Trắc, Trưng Nhị là đàn-bà nổi lên đánh lấy được 65 thành-trì, lập quốc xưng vương dễ như giở bàn tay. Thế mà từ cuối đời nhà Triệu cho đến đời nhà Ngô hơn một nghìn năm, người mình cứ cúi đầu bó tay làm tôi-tớ người Tàu, mà không biết xấu\u0002hổ với hai người đàn-bà họ Trưng! ». 1. ↑ Sử chép rằng Lãng-bạc là Hồ-tây ở gần Hà-nội, nhưng có người bác đi, bảo không. 2. ↑ Nay ở làng Hát-môn, huyện Phúc-thọ, tỉnh Sơn-tây và ở bãi Đồng-nhân, ở gần Hà-nội có đền thờ hai bà, đến ngày mồng 6 tháng 2 thì có hội."
+    }
+   ],
+   "row_id": "r063"
+  },
+  {
+   "qid": "c93-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Đức Phật Thích Ca Mâu Ni xuất thân từ gia đình nào tại Ấn Độ?",
+   "reference": "Ngài là con một nhà quý tộc đất Ấn Độ.",
+   "answer": "[2] (Kết-quả của thời-đại Bắc-thuộc, page 99) Đức Thích-ca Mâu Ni là con một nhà quí-tộc đất Ấn-độ.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 2,
+     "chunk_id": "e239b65f-19d9-4dd4-a88f-4586e888547f",
+     "section": "Kết-quả của thời-đại Bắc-thuộc",
+     "page": 99,
+     "text": "Người ta gặp phải những sự khổ-não như thế là tại mình cứ mắc trong vòng luân hồi 輪 迴 mãi. Vậy muốn cho khỏi sự khổ-não thì phải ra ngoài luân hồi mới được; mà ra ngoài luân hồi thì phải cắt cho đứt những cái nhân-duyên nó trói\u0002buộc mình ở trần gian này. Ra được ngoài Luân-hồi thì lên đến cõi nát-bàn (nirvana) tức là thành Phật, bất sinh bất tuyệt (xem sách Phật-giáo và sách Phật-lục của tác-giả). Nguyên đạo Phật 佛 là do ở đạo Bà-la-môn (Brahmane) mà ra, nhưng tông-chỉ đạo Phật không giống đạo Bà-la-môn cho nên hai đạo chống nhau mãi, thành ra đến ba bốn trăm năm sau, khi đức Thích-ca mất rồi, đạo Phật mới phát-đạt ra ở Ấn-độ. Đạo Phật sang nước Tàu kể từ nhà Tây-Hán. Đời vua Hán vũ-đế 漢 武 帝 (140 - 86) quân nhà Hán đi đánh Hung-nô 匈 奴 đã lấy được tượng Kim-nhân và biết rằng người 100 Hung-nô có thói đốt hương thờ Phật [4] . Đời vua Ai-đế 哀 帝 năm Nguyên-thọ nguyên-niên, là lịch tây năm thứ 2, vua nhà Hán sai Tần cảnh Hiến 秦 景 憲 sang sứ rợ Nhục-chi 肉 氏 có học khẩu-truyền được kinh nhà Phật. Đến đời vua Minh-đế nhà Đông-Hán, có Ban Siêu 班 超 đi sứ các nước ở Tây-vực 西 棫 biết đạo Phật thịnh-hành ở phương Tây."
+    }
+   ],
+   "row_id": "r064"
+  },
+  {
+   "qid": "c322-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Vua Lê Thái Tông trị vì trong bao lâu trước khi băng hà?",
+   "reference": "9 năm",
+   "answer": "[1] Vua Thái-tông 太 宗 lên làm vua thì ngài mới có 11 tuổi, cho nên công-việc gì cũng ở quan Phụ-chính là Lê Sát 黎 察 quyết định hết cả.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "811cd315-0d9d-452c-8a3d-892a158b2e92",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lê",
+     "page": 313,
+     "text": "Thế mới biết chỉ có ông Trương tử Phòng 張 子 房 nhà Hán là người kiến cơ hơn cả ! Vua Thái-tổ làm vua được 6 năm thì mất, thọ được 49 tuổi. II. LÊ THÁI-TÔNG (1434-1442) Niên-hiệu: Thiệu-bình 紹 平 (1434-1439) Đại-bảo 大 寶 (1440-1442) Khi vua Thái-tông 太 宗 lên làm vua thì ngài mới có 11 tuổi, cho nên công-việc gì cũng ở quan Phụ-chính là Lê Sát 黎 察 quyết định hết cả. Lê Sát là một người ít học nhưng vì trước theo vua Thái-tổ lập được công to, quan làm đến Đại-tư-đồ 大 司 徒. Nay làm Phụ-chính, thường hay cậy quyền, trái phép, làm nhiều điều kiêu-hãnh, hễ triều-thần ai là người không tòng-phục thì tìm cách làm hại. Vua Thái-tông tuy còn trẻ tuổi nhưng vốn có tính thông-minh, làm vua được ít lâu thì ra thân chính lấy, rồi giết Lê Sát đi để thu lấy quyền. Song cũng vì ít tuổi mà lại không có người phù-tá, cho nên sau thành say-đắm tửu sắc làm lắm điều không được chính-đính. 314 Đời Thái-tông làm vua thì trong nước phải mấy năm đại hạn, nước lụt và hoàng-trùng làm hại mùa-màng, dân phải đói khổ. Ở mạn mường-mán lại có đôi ba đám giặc nổi lên làm loạn, có khi vua phải thân chinh đi đánh, có khi chỉ sai quan đi tiễu-trừ, cũng dẹp yên được."
+    }
+   ],
+   "row_id": "r065"
+  },
+  {
+   "qid": "c303-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Mộc Thạnh đã hành động ra sao khi hay tin Liễu Thăng bại trận?",
+   "reference": "Mộc Thạnh đem quân chạy.",
+   "answer": "Mộc Thạnh khi hay tin Liễu Thăng bại trận, đã rút quân và chạy trốn. Ông đã sai quân đi chặn đường lương-thuộ, nhưng không ngờ thành Xương-giang đã bị Trần Nguyên Hãn chiếm mất. Vì vậy, Mộc Thạnh chỉ còn cách chạy để thoát thân.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "53cec7b4-28d3-4ba1-8c63-7ce7b1feee7c",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 289,
+     "text": "Lý Khánh thì tự-tử (ngày 28). Còn bọn Hoàng Phúc và Thôi Tụ đem bại binh chạy về thành Xương-giang (thành của nhà Minh xây ở xã Thọ\u0002xương, phủ Lạng-giang), đi đến nữa đường bị quân của Lê Sát đuổi đến đánh phá một trận; Thôi Tụ cố đánh lấy đường chạy về Xương-giang, không ngờ thành ấy đã bị bọn Trần nguyên Hãn lấy mất rồi, quân Minh sợ-hãi quá bèn lập trại đắp lũy ở giữa đồng để chống giữ. Bình-định-vương sai quân thủy-bộ vây đánh, sai Trần nguyên Hãn chặn đường tải lương của quân Minh, lại sai Phạm Vấn 范 問, Lê Khôi 黎 魁, Nguyễn Xí 阮 織, đem quân thiết đội vào đánh chém quân Minh được hơn 5 vạn, bắt sống được Hoàng Phúc, Thôi Tụ và 3 vạn quân. Thôi Tụ không chịu hàng phải giết. Bấy giờ Mộc Thạnh với bọn Phạm văn Xảo và Trịnh Khả đang giữ nhau ở cửa Lê-hoa. Trước vương cũng đã liệu rằng Mộc Thạnh là người lão luyện tất chờ xem quân Liễu Thăng thắng bại thế nào rồi mới tiến, bèn sai đưa thư dặn bọn Văn Xảo cứ giữ vững chứ đừng ra đánh. Đến khi quân Liễu 290 Thăng thua rồi, Vương cho những tên tì-tướng đã bắt được, đem những giấy má ấn tín lên cho Mộc Thạnh biết."
+    },
+    {
+     "number": 2,
+     "chunk_id": "c61335a1-f96f-4449-9c15-ae55ef8759f6",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 306,
+     "text": "Năm đinh-mùi tháng chín, Liễu Thăng từ Khâu-ôn tiếng sang; lại năm nay tháng mười, Mộc Thạnh tự Vân-nam kéo đến. Ta đã điều binh giữ hiểm để ngăn lối Bắc-quân; ta lại sai tướng chẹn ngang để tuyệt đường lương-đạo. Mười tám, Liễu Thăng thua ở Chi-lăng, hai mươi, Liễu Thăng chết ở Mã-yên. Hai\u0002mươi-lăm, Lương Minh trận vong; hai-mươi-tám, Lý Khánh tự vẫn. Lưỡi dao ta đang sắc, ngọn giáo giặc phải lùi. Lại thêm quân bốn mặt vây thành, hẹn đến rằm tháng mười diệt tặc. Sĩ-tốt ra oai tì hổ, thần-thứ đủ mặt trảo nha. Gươm mài đá, đá núi cũng mòn; voi uống nước, nước sông phải cạn. Đánh một trận sạch không kình-ngạc, đánh hai trận tan-tác chim-muông. Cơn gió to trút sạch lá khô, tổ kiến hổng sụt 307 toang đê cũ. Thôi Tụ phải quì mà xin lỗi, Hoàng Phúc tự trói để ra hàng. Lạng-giang, Lạng-sơn thây chất đầy đường, Xương-giang, Bình-than máu trôi đỏ nước. Gớm-ghê thay! sắc phong-vân cũng đổi; thảm-đạm thay! sáng nhật-nguyệt phải mờ. Binh Vân-nam nghẽn ở Lê-hoa, sợ mà mất mật; quân Mộc Thạnh tan chưn Cần-trạm, chạy để thoát thân. Suối máu Lãnh-câu, nước sông rền-rĩ; thành xương Đan-xá, cỏ nội đầm-đìa. Hai mặt cứu binh, cắm đầu trốn chạy; các thành cùng khấu, cởi giáp xuống đầu."
+    }
+   ],
+   "row_id": "r066"
+  },
+  {
+   "qid": "c151-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Năm 1242, vua Trần Thái Tông đã phân chia nước Nam thành bao nhiêu lộ?",
+   "reference": "12 lộ",
+   "answer": "[3] Năm nhâm-dần (1242) Thái-tông chia nước Nam ra làm 12 lộ.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 3,
+     "chunk_id": "2f7af3fe-468d-4302-9ad2-ace04cd8a788",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 159,
+     "text": "Hai anh em ôm nhau mà khóc. Thủ Độ nghe tin, đến rút gươm toan giết Trần Liễu, Thái-tông can mãi mới thôi. Sau Thái-tông lấy đất Yên-phụ, Yên-đường, Yên-sinh và Yên-bang (ở huyện Đông-triều và phủ Kinh-môn, Hải-dương) cho Trần Liễu làm thái-ấp và phong cho làm An-sinh-vương 安 生 王. Thủ Độ đã hại hết cả dòng dõi họ Lý, lại muốn cho hậu thế không ai nhớ đến họ Lý nữa, mới nhân vì tổ nhà Trần tên là Lý, bắt trong nước ai là họ Lý đều phải cải là họ Nguyễn. Thủ Độ là người rất gian-ác đối với nhà Lý, nhưng lại là một người đại công-thần của nhà Trần. Một tay cáng-đáng bao nhiêu trọng-sự, giúp Thái-tông bình-phục được giặc-giã trong nước và chỉnh-đốn lại mọi việc, làm cho nước Nam ta bấy giờ được cường-thịnh, ngày sau có thể chống-cự với Mông-cổ, khỏi phải làm nô-lệ những kẻ hùng-cường. 2. VIỆC ĐÁNH-DẸP GIẶC-GIÃ. Nước An-nam từ khi vua Cao-tông nhà Lý thất chính, trong nước chỗ nào cũng có giặc-giã. Ở mạn Quốc-oai thì có giặc Mường làm loạn, ở Hồng-châu thì có Đoàn Thượng 段 尚 chiếm giữ đất Đường-hào, tự xưng làm vua, ở Bắc-giang thì có Nguyễn Nộn 阮 嫩 độc-lập xưng vương ở làng Phù-đổng. Ấy là một nước mà chia ra làm mấy giang-sơn."
+    }
+   ],
+   "row_id": "r067"
+  },
+  {
+   "qid": "c201-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Người nào đã hiến kế để vua Nhân Tông xử tử Ô Mã Nhi?",
+   "reference": "Hưng Đạo Vương",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r068"
+  },
+  {
+   "qid": "c220-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Người nào đã dâng sớ xin vua Trần Dụ Tông chém bảy quyền thần?",
+   "reference": "Chu Văn An",
+   "answer": "[1] [2] Ở đây [1] nói về việc Chu văn An dâng sớ lên vua xin chém bảy người quyền thần, nhưng không nói rõ người dâng sớ là ai. [2] nói thêm rằng người dâng sớ là Chu văn An, một nhà danh-nho thời đó đang làm quan tại triều và đã bỏ quan về ở núi Chí-linh.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "c3b1bc06-ca89-4e9b-b99b-78ea05df873d",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba)",
+     "page": 224,
+     "text": "Từ năm Đại-trị nguyên-niên (1358) trở đi, Thượng\u0002hoàng mất rồi, bọn cựu-thần như ông Trương hán Siêu, ông Nguyễn trung Ngạn cũng mất cả, từ đó việc chính-trị bỏ trễ\u0002nải. Kẻ gian-thần mỗi ngày một đắc chí. Ông Chu văn An 朱 文 安 là một nhà danh-nho thời bấy giờ và đang làm quan tại triều, thấy chính-trị bại-hoại, làm sớ dâng lên xin chém bảy người quyền thần. Vua không nghe, ông ấy bỏ quan về ở núi Chí-linh. 225 Vua Dụ-tông về sau cứ rượu-chè chơi-bời, xây cung điện, đào hồ đắp núi, rồi lại cho gọi những người nhà giàu vào trong điện để đánh bạc. Bắt vương-hầu công-chúa phải đặt chuyện hát-tuồng [1] và bắt các quan thi nhau uống rượu, ai uống rượu được một trăm thăng thì thưởng cho hai trật. Chính-sự như thế, cho nên giặc cướp nổi lên như ong dấy: ở mạn Hải-dương thì có giặc Ngô Bệ 呉 陛 làm loạn ở núi Yên phụ; ở các nơi thì chỗ nào cũng có giặc nổi lên cướp phá. Dân-tình khổ-sở, năm nào cũng phải đói-kém. Cơ\u0002nghiệp nhà Trần bắt đầu suy từ đấy. 2. VIỆC GIAO-THIỆP VỚI NƯỚC TÀU. Bấy giờ ở bên Tàu, nhà Nguyên đã suy, trong nước rối loạn, có bọn Trần hữu Lượng 陳 友 諒, Trương sĩ Thành 張 士 誠, Chu nguyên Chương 朱 元 璋 khởi binh đánh-phá."
+    }
+   ],
+   "row_id": "r069"
+  },
+  {
+   "qid": "c346-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Trần Cao khi truyền ngôi cho con đã làm gì để lẩn trốn?",
+   "reference": "Cắt tóc đi tu",
+   "answer": "Trần C lại chạy về Lạng-nguyên, và thấy sự-nghiệp không thành, bèn nhường quyền lại cho con là Thăng 昇 rồi cắt tóc đi tu để trốn cho khỏi nạn.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "2b5641fe-798b-469e-ad16-ba69cf6cd7e5",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lê",
+     "page": 311,
+     "text": "Nhưng vì trước phải lấy cớ lập con cháu nhà Trần để cầu hòa với nhà Minh, cho nên phải tôn Trần Cao 陳 高 lên làm vua. Nay việc chiến-tranh đã xong, lòng người theo về Bình-định-vương, mà Trần Cao cũng biết chừng không ai để cho mình ở yên, bèn trốn vào châu Ngọc-ma (thuộc phủ Trấn-ninh) nhưng bị quan quân đuổi bắt được, đem về bắt phải uống thuốc độc mà chết. Trần Cao chết rồi, Bình-định-vương lên ngôi tức là vua Thái-tổ 太 祖 nhà Lê 黎, đặt quốc\u0002hiệu là Đại-Việt 大 越. Năm ấy là năm mậu-thân, lịch Tây là năm 1428. Vua Thái-tổ sai sứ sang cầu phong bên Tàu, nhưng mà nhà Minh không chịu, bắt phải tìm con cháu nhà Trần để lập lên làm vua. Sứ nhà Minh đi về hai ba lần, sau vua Thái-tổ bắt các quan viên và phụ lão trong nước làm tờ khai rằng con cháu nhà Trần thật không còn ai nữa, và xin phong cho ngài là Lê Lợi làm vua nước Nam. Vua nhà Minh thấy vậy mới thuận phong vương cho ngài. Từ đấy lệ cứ 3 năm phải sang cống nhà Minh một lần, mà lần nào cũng phải đúc hai người bằng vàng gọi là: « đại thân kim nhân 代 身 金 人 ». Có lẽ là lúc đánh trận Chi-lăng có giết mất tướng nhà Minh là Liễu Thăng 柳 升 và Lương Minh 梁 銘, cho nên phải đúc hai người bằng vàng thế mạng."
+    },
+    {
+     "number": 2,
+     "chunk_id": "754a30a9-bed9-4dcf-bb6e-d8e4c9d32a49",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 158,
+     "text": "Chiêu\u0002thánh Hoàng-hậu lấy Thái-tông đã được 12 năm mà vẫn chưa có con [1] , Thủ Độ bắt Thái-tông bỏ đi và giáng xuống làm công-chúa, rồi đem người chị bà Chiêu-thánh tức là vợ Trần Liễu 陳 柳 vào làm Hoàng-hậu, bởi vì người chị đã có thai được ba tháng. Làm loạn nhân-luân như thế, thì tự thượng-cổ mới có là một. Trần Liễu tức giận, đem quân làm loạn. Vua Thái-tông bị Thủ Độ hiếp chế như thế, trong bụng cũng không yên, đến đêm trốn ra, lên ở chùa Phù-vân, trên núi Yên-tử (huyện Yên-hưng, tỉnh Quảng-yên). Trần thủ Độ biết tin ấy, đem quần-thần đi đón Thái-tông về. Thái-tông không chịu về, nói rằng: « Trẫm còn nhỏ-dại, không kham nổi việc to lớn, các quan nên chọn người khác để cho khỏi nhục xã-tắc ». Thủ Độ nói mãi không nghe, ngảnh lại bảo bách quan rằng: « Hoàng-thượng ở đâu là Triều-đình ở đấy! ». Nói đoạn, truyền sắp sửa xây cung-điện ở chùa Phù-vân. Quốc-sư ở chùa ấy thấy thế, vào van lạy Thái-tông về Triều, Thái-tông bất-đắc-dĩ truyền xa-giá về Kinh. 159 Được ít lâu Trần Liễu biết sức mình không làm gì nổi, bèn nhân lúc Thái-tông ngự thuyền đi chơi, giả làm người đánh cá lẻn xuống thuyền ngự, xin hàng. Hai anh em ôm nhau mà khóc."
+    }
+   ],
+   "row_id": "r070"
+  },
+  {
+   "qid": "c27-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Trọng Thủy đã đổi thứ gì trong nỏ thần của An Dương Vương?",
+   "reference": "Cái móng của Kim Quy",
+   "answer": "[2] (THƯỢNG-CỔ THỜI ĐẠI › Nhà Thục, page 32)",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 2,
+     "chunk_id": "92f97bc9-8770-4a48-9a3d-db13688f0c5b",
+     "section": "THƯỢNG-CỔ THỜI ĐẠI > Nhà Thục",
+     "page": 32,
+     "text": "Lúc nào có giặc thì đem cái nỏ ấy ra bắn một phát, giặc chết hàng vạn người. 33 Cũng nhờ có cái nỏ ấy cho nên Triệu Đà đánh không được An-dương-vương. Triệu Đà dùng kế, cho con là Trọng Thỉ 仲 始 sang lấy Mị Châu 媚 洙 là con gái An-dương-vương, giả kết nghĩa hòa thân để do thám tình thực. Trọng Thỉ lấy được Mị Châu rồi, hỏi dò vợ rằng: « Bên Âu\u0002lạc có tài gì mà không ai đánh được? » Mị Châu nói chuyện cái nỏ, và lấy cho chồng xem. Trọng Thỉ bèn lấy cái móng của Kim-qui đi, làm cái lẫy giả thay vào, rồi định về báo tin cho cha biết. Khi sắp ra về, Trọng Thỉ hỏi Mị Châu rằng: « Tôi về, mà nhỡ có giặc-giã đánh-đuổi, thì rồi tôi biết đâu mà tìm? » — Mị Châu nói rằng: « Thiếp có áo lông ngỗng, hễ khi thiếp có chạy về đâu, thiếp sẽ lấy lông ấy mà rắc ra ở dọc đường thì rồi sẽ biết ». Trọng Thỉ về kể lại với Triệu Đà tình đầu mọi sự, Triệu Đà bèn khởi binh sang đánh Âu-lạc. An-dương-vương cậy có cái nỏ, không phòng-bị gì cả, đến khi quân giặc đến gần chân thành mới đem nỏ ra bắn, thì không thấy hiệu-nghiệm nữa. An-dương-vương mới đem Mị Châu lên ngựa mà chạy về phía nam."
+    }
+   ],
+   "row_id": "r071"
+  },
+  {
+   "qid": "u10",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Các cuộc khai quật khảo cổ học hiện đại tại khu vực thành Tây Đô (Thanh Hóa) đã phát hiện những hiện vật gì liên quan đến triều đại Nhà Hậu Trần?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r072"
+  },
+  {
+   "qid": "c196-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Sau thất bại ở Vân Đồn, quân Nguyên gặp vấn đề gì về lương thực?",
+   "reference": "Lương thực của quân Nguyên một ngày một cạn.",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "29f1c913-c259-45bb-8d1f-eb30c323c108",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — II",
+     "page": 199,
+     "text": "Hưng-đạo-vương rút quân về giữ Thăng-long và sai tướng rước xa-giá tạm lánh về Hám-nam 噉 南 (?) Nhưng sau khi bị bọn Ô mã Nhi đuổi ngặt quá, Thượng\u0002hoàng và Nhân-tông phải xuống thuyền ra bể đi vào Thanh- 200 hóa. Ô mã Nhi đuổi không kịp, đem quân trở về qua Long-hưng (phủ Tiên-hưng, Thái-bình) biết ở đấy có Thiên-lăng, là lăng tổ nhà Trần, bèn sai quân đến phá nát cả đi. Thoát Hoan đem binh-mã tiến lên vây đánh Thăng-long không được, phải rút về giữ Vạn-kiếp, Chí-linh và Phả-lại, Hưng-đại-vương cũng tiến quân lên lập trại để chống với giặc. Nhân-tông thấy quân Nguyên đã lùi rồi bèn rước Thượng\u0002hoàng ra Bắc. 3. TRẬN VÂN-ĐỒN: Trần khánh Dư cướp lương của quân Nguyên. Quân Nguyên đóng mãi ở Vạn-kiếp lương thực sắp cạn, Thoát Hoan bèn sai Ô mã Nhi dẫn thủy-quân ra cửa bể Đại-bàng (huyện Nghi-dương, Hải-dương) [4] đón thuyền lương của Trương văn Hổ. Ô mã Nhi đem thuyền đi đến ải Vân-đồn (Vân-hải, Quảng-yên) gặp quân của Nhân-huệ\u0002vương Trần khánh Dư 仁 惠 王 陳 慶 餘 chặn đường không cho đi. Ô mã Nhi thúc quân đánh rát một trận, quân Khánh Dư thua bỏ chạy cả. Quân Nguyên kéo thẳng ra bể đi đón thuyền lương. Thượng-hoàng nghe tin thủy-quân ở Vân-đồn bại trận, cho sứ ra bắt Khánh Dư về hỏi tội."
+    }
+   ],
+   "row_id": "r073"
+  },
+  {
+   "qid": "c111-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Lê Long Đĩnh thường chơi trò gì?",
+   "reference": "Giết người",
+   "answer": "[1] Long Đĩnh làm vua được 2 năm đổi niên-hiệu là Cảnh-thụy (1008-1009). Đến buổi chầu, Long Đĩnh thường nằm mà thị triều, cho nên tục gọi là 120 Ngọa-triều.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "3bb6a9db-8781-4b48-ac36-f3b525d0d7dd",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Tiền-Lê",
+     "page": 119,
+     "text": "Còn khi ra buổi chầu, có ai tấu sớ điều gì thì cho những thằng hề nói khôi-hài hay là nhại tiếng làm trò. Long Đĩnh làm vua được 2 năm đổi niên-hiệu là Cảnh-thụy (1008-1009). Sang năm sau là năm kỷ-dậu (1009) thì mất, làm vua được 4 năm, thọ 24 tuổi. Vì lúc sống dâm-dục quá độ, mắc bệnh không ngồi được, đến buổi chầu thì cứ nằm mà thị triều, cho nên tục gọi là 120 Ngọa-triều. Long Đĩnh mất rồi, con thì bé, đình-thần nhân dịp tôn Lý công Uẩn lên làm vua, khai sáng nên cơ-nghiệp nhà Lý. Nhà Tiền-Lê làm vua được 3 đời, cả thảy được 29 năm. TIỀN LÊ-TRIỀU THẾ-PHỔ 前 黎 朝 世 譜 1. Đại-hành Lê Hoàn 大 行 黎 桓 Long Du 龍 鍮 Ngân Tích 銀 錫 2. Trung-tông Long Việt 中 宗 龍 鉞 3. Đế Long Đĩnh (Ngọa\u0002triều) 帝 龍 鋌 Sạ 乍"
+    }
+   ],
+   "row_id": "r074"
+  },
+  {
+   "qid": "u2",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Bằng chứng khảo cổ học nào về các trận đánh trong mười năm kháng chiến chống quân Tàu đã được tìm thấy ở khu vực biên giới phía Bắc Việt Nam ngày nay?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r075"
+  },
+  {
+   "qid": "c86-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Ai đánh đuổi quân Tàu về Bắc, kết thúc thời Bắc thuộc?",
+   "reference": "Ông Ngô Quyền",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "cd2b2a60-ca5f-4255-aeaa-dfa4ff411f01",
+     "section": "Kết-quả của thời-đại Bắc-thuộc",
+     "page": 93,
+     "text": "93 CHƯƠNG IV KẾTẾ -QUẢ CỦA THỜI BẮC-THUỘC 1. Người nước Nam nhiễm văn-minh của Tàu 2. Nho-giáo 3. Đạo-giáo 4. Phật-giáo 5. Sự tiến-hóa của người nước Nam 1. NGƯỜI NƯỚC NAM NHIỄM VĂN-MINH CỦA TÀU. Từ khi vua Vũ-đế nhà Hán sai Lộ bác Đức 路 博 德 sang đánh lấy Nam-việt cho đến đời Ngũ-Quí, ông Ngô Quyền 吳 權 đánh-đuổi người Tàu về bắc, tính vừa tròn 1.050 năm. Xứ Giao-châu ta bị người Tàu sang cai-trị bấy lâu năm thì chắc là sự sinh-hoạt của người bản-xứ cũng bị thay-đổi một cách khác hẳn với trước. Khi đất Giao-châu còn gọi là Văn\u0002lang hay là Âu-lạc thì người bản-xứ ăn ở thế nào, phong-tục làm sao, nay cũng không có di-tích gì mà kê-cứu ra cho rõ được. Có lẽ cũng tự-hồ như Mường hay là Mán ở mạn thượng-du đất Bắc-Việt bây giờ. Giả sử có đem vua Hùng\u0002vương họ Hồng-bàng và vua An-dương-vương họ Thục mà sánh với mấy người Quan-lang ở mạn thượng-du thì dễ thường cũng không xa sự thực là mấy. Nhưng đây là một điều nói phỏng mà thôi, chứ lấy gì làm đích-xác?"
+    }
+   ],
+   "row_id": "r076"
+  },
+  {
+   "qid": "u1",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Di tích khảo cổ nào từ thời Lê sơ đã được phát hiện và khai quật tại khu vực Lam Kinh từ sau năm 1930, và những phát hiện đó đã thay đổi hiểu biết của chúng ta về kiến trúc cung đình thời Lê như thế nào?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[1] không chứa thông tin yêu cầu trong câu hỏi.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "52b3e027-0c0a-401c-b6cb-79b71c0fd940",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 304,
+     "text": "Vậy nên: Lưu Cung sợ uy mất vía, Triệu Tiết nghe tiếng giật mình. Cửa Hàm-tử giết tươi Toa Đô, sông Bạch-đằng bắt sống Ô Mã. Xét xem cổ-tích, đã có minh-trưng [10] . Vừa rồi: Vì họ Hồ chính-sự phiền-hà, để trong nước nhân-dân oán bạn. Quân cuồng Minh đã thừa cơ tứ ngược [11] , bọn gian-tà còn bán nước cầu vinh. Nướng dân đen trên ngọn lửa hung\u0002tàn, vùi con đỏ xuống dưới hầm tai-vạ. Chước dối đủ muôn nghìn khóe, ác chứa ngót hai mươi năm. Bại nhân-nghĩa, nát cả càn-khôn, nặng khoa-liễm[12] vét không sơn trạch. Nào lên rừng đào mỏ, nào xuống bể mò châu, nào hố bẫy hươu đen, nào lưới dò chim sả. Tàn-hại cả côn-trùng thảo-mộc; nheo-nhóc thay quan quả điên-liên [13] . Kẻ há miệng, đứa nhe răng, máu mỡ bấy no-nê chưa chán. Nay xây nhà, mai đắp đất, chân tay nào phục-dịch cho vừa. Nặng-nề về những nỗi phu-phen, bắt-bớ mất cả nghề canh-cửi. Độc-ác thay! trúc rừng không ghi hết tội; dơ-bẩn thay ! nước bể không rửa sạch mùi. Lẽ nào trời đất tha cho, ai bảo thần-nhân nhịn được. Ta đây: 305 Núi Lam-sơn dấy nghĩa, chốn hoang-dã nương mình. Ngắm non sông căm nỗi thế thù, thề sống chết cùng quân nghịch\u0002tặc. Đau lòng nhức óc, chốc là mười mấy nắng mưa; nếm mật nằm gai, há phải một hai sớm tối."
+    }
+   ],
+   "row_id": "r077"
+  },
+  {
+   "qid": "u4",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Di tích khảo cổ nào từ thời Trần đã được phát hiện và khai quật ở Nam Định từ sau năm 1930?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r078"
+  },
+  {
+   "qid": "c158-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Thời vua Trần Thái Tông, quân Mông Cổ đã làm gì khi vào thành Thăng Long?",
+   "reference": "Quân Mông Cổ giết phá cả nam phụ lão ấu trong thành.",
+   "answer": "[1] [6] Khi Mông-kha mất, vua Mông-cổ là Hốt-tất-liệt lên làm vua, tức là Nguyên Thế-tổ. Hốt-tất-liệt lại sang đánh nhà Tống. Từ đó cả nước Tàu thuộc về Mông-cổ cai trị.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "dc027f39-3599-4b67-9ec2-f647c48395ac",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 166,
+     "text": "Trần quốc Tuấn ít quân đánh không nổi, lùi về đóng ở Sơn\u0002tây. Quân Mông-cổ kéo tràn xuống đến sông Thao. Thái- 167 tông phải ngự giá thân chinh, nhưng đánh không được, chạy về đóng ở sông Hồng-hà [3] . Quân Mông-cổ tiến lên đánh đuổi quân nhà Trần đến Đông-bộ-đầu (phía đông sông Nhị\u0002hà ở hạt huyện Thượng-phúc). Thái-tông phải bỏ kinh-đô, chạy về đóng ở sông Thiên-mạc (về hạt huyện Đông-an, tỉnh Hưng-yên). Quân Mông-cổ vào thành Thăng-long, thấy ba người sứ Mông-cổ còn phải trói, giam ở trong ngục, đến khi cởi trói ra thì một người chết. Ngột-lương-hợp-thai thấy thế tức giận quá, cho quân ra giết phá cả nam phụ lão ấu ở trong thành. Bấy giờ thế nguy, Thái-tông ngự thuyền đến hỏi Thái-úy là Trần nhật Hiệu 陳 日 皎. Nhật Hiệu không nói gì cả, cầm sào viết xuống nước hai chữ « Nhập Tống 入 宋 ». Thái\u0002tông lại đi đến hỏi Thái-sư Trần thủ Độ. Thủ Độ nói rằng: « Đầu tôi chưa rơi xuống đất, thì xin Bệ-hạ đừng lo! ». Thái-tông nghe thấy Thủ Độ nói cứng-cỏi như thế, trong bụng mới yên. Được ít lâu quân Mông-cổ ở nước Nam không quen thủy\u0002thổ xem ra bộ mỏi-mệt. Thái-tông mới tiến binh lên đánh ở Đông-bộ-đầu."
+    },
+    {
+     "number": 6,
+     "chunk_id": "de0ef629-a78c-4f98-bb9c-2b15fb6d5a4a",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 165,
+     "text": "11. QUÂN MÔNG-CỔ XÂM-PHẠM ĐẤT AN-NAM. Trong khi nhà Lý mất ngôi, nhà Trần lên làm vua ở An-nam, thì nhà Tống bên Tàu bị người Mông-cổ đánh phá. Nguyên ở phía bắc nước Tàu có một dân-tộc gọi là Mông-cổ 蒙 古, ở vào khoảng thượng-lưu sông Hắc-long-giang (Amour). Người Mông-cổ hung-tợn, mà lại có tính hiếu chiến, người nào cưỡi ngựa cũng giỏi, và bắn tên không ai bằng. Binh-lính thường là quân kị, mà xếp-đặt thành cơ nào đội ấy, thật là có thứ-tự, và người nào cũng tinh nghề chiến\u0002đấu. Bởi tính-chất và binh-pháp của người Mông-cổ như thế, cho nên Thiết-mộc-chân (Témoudjine) tức là Thành-cát tư-hãn (Gengis khan), miếu-hiệu là Nguyên Thái-tổ, mới chiếm giữ được cả vùng Trung-Á, cùng đất Ba-tư, sang đến phía đông\u0002bắc Âu-la-ba. Sau quân Mông-cổ lại lấy được nước Tây-hạ, phía tây-bắc nước Tàu, dứt được nước Kim và tràn sang đến nước Triều-tiên (Cao-ly). Thành-cát-tư-hãn mất, người con thứ ba là A-loa đài (Agotai) lên làm vua tức là Nguyên Thái-tông. A-loa-đài truyền cho con là Quí-do (Gouyouk) tức là Nguyên Định\u0002tông. 166 Quí-do làm vua được non ba năm thì mất, ngôi vua Mông-cổ về chi khác. Người em con nhà chú là Mông-kha (Mong-ké) lên làm vua, tức là Nguyên Hiến-tông."
+    }
+   ],
+   "row_id": "r079"
+  },
+  {
+   "qid": "c248-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Năm 1405, nhà Minh yêu cầu Đại Ngu giao vùng đất nào?",
+   "reference": "Đất Lộc Châu",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "b43e0a5c-b396-42a3-adb7-abb70b306f95",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Hồ",
+     "page": 247,
+     "text": "Hồ quí Ly bèn bắt những quan viên phụ lão làm tờ khai nói y như lời sứ An-nam đã sang nói. Vì thế cho nên Thành-tổ không có cớ gì mà từ-chối, phải phong cho Hồ Hán Thương làm An-nam quốc-vương 安 南 國 王. Đến năm giáp-thân (1404) có Trần Khang 陳 康 ở mạn Lão-qua đi đường Vân-nam sang Yên-kinh, đổi tên là Trần thiêm Bình 陳 添 平, xưng là con vua Nghệ-tông rồi kể rõ sự tình Hồ quí Ly tiếm nghịch. Vua Thành-tổ nhà Minh sai quan ngự-sử Lý Ỷ 李 錡 sang tra-xét việc ấy. Lý Ỷ về tâu quả thật là họ Hồ làm điều thoán-đoạt. Từ đấy nhà Minh muốn mượn tiếng đánh Hồ để lấy đất An-nam. Ở bên này cha con họ Hồ cũng biết ý ấy, hết sức tìm cách chống-giữ. Năm ất-dậu (1405) nhà Minh sai sứ sang đòi đất Lộc-châu. Trước Hồ quí Ly đã không chịu, sau phải cắt ra 59 thôn ở Cổ-lâu nhường cho Tàu. Tuy vậy nhà Minh vẫn cứ trách nhà Hồ làm điều tiếm nghịch. Sứ nhà Hồ sang Tàu thì nhà Minh giữ lại, không cho ai về, lại cho người sang An-nam dò xem sơn xuyên đạo lộ hiểm-trở thế nào, để liệu đường tiến binh."
+    }
+   ],
+   "row_id": "r080"
+  },
+  {
+   "qid": "c100-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Ngô Xương Văn đã làm gì với Dương Tam Kha sau khi bắt được ông ta?",
+   "reference": "Không nỡ giết, chỉ giáng xuống làm Trương Dương-công.",
+   "answer": "[1]提及了 Ngô xương Văn 在将 Dương tam Kha 楊 三 哥 捕捉后，将他降为张杨公 張 楊 公。这表明他并未处决他，而是让他担任一个较低级别的官职。",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "885441d4-10c7-464b-9556-0f3ba9dae5d1",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Ngô",
+     "page": 106,
+     "text": "Năm canh-tuất (905) có dân ở tại thôn Thái-bình (thuộc Sơn-tây) làm loạn. Dương tam Kha sai Ngô xương Văn cùng với tướng là Dương cát Lợi 楊 吉 利 và Đỗ cảnh Thạc 杜 景 碩 đem quân đi đánh. Đi đến Từ-liêm, Ngô xương Văn mưu với hai tướng đem quân trở về bắt Dương tam Kha. Ngô xương Văn nghĩ tình cậu cháu không nỡ giết, chỉ giáng xuống làm Trương Dương-công 張 楊 公. 3. HẬU NGÔ-VƯƠNG (950-965). Ngô vương Văn bỏ Dương tam Kha đi rồi, xưng là Nam-tấn-vương 南 晉 王 và sai người đi đến làng Trà-hương rước anh là Ngô xương 107 Ngập về cùng coi việc nước. Ngô xương Ngập về xưng là Thiên-sách-vương 天 策 王. Cả hai anh em làm vua, sử gọi là Hậu Ngô-vương. Làm vua được ít lâu, Thiên-sách vương đã toan giữ lấy quyền một mình, nhưng đến năm giáp-dần (954) thì mất. Thế-lực nhà Ngô bấy giờ mỗi ngày một kém, giặc-giã nổi lên khắp cả mọi nơi. Nam-tấn-vương phải thân chinh đi đánh dẹp. Khi đi đánh giặc ở hai thôn Thái-bình, không may bị tên bắn chết. Bấy giờ là năm ất-sửu (965), Nam-tấn\u0002vương làm vua được 15 năm. II. THẬP-NHỊ SỨ-QUÂN (945-967). Từ khi Dương tam Kha tiếm-vị rồi, những người thổ-hào ở các nơi như bọn Trần Lãm, Kiểu công Hãn v. v... đều xướng lên độc-lập, xưng là Sứ-quân 使 君."
+    }
+   ],
+   "row_id": "r081"
+  },
+  {
+   "qid": "c210-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Thái độ của vua và dân lúc Hưng Đạo Vương qua đời ra sao?",
+   "reference": "Ai cũng thương tiếc; nhân dân nhiều nơi lập đền thờ phụng.",
+   "answer": "[1] Nhân-tông nghe Hưng-đạo-vương thua chạy về Vạn-kiếp, liền ngự một chiếc thuyền nhỏ xuống Hải-đông (tức là Hải\u0002dương) rồi cho vời Hưng-đạo-vương đến bàn việc, nhân thấy quân mình thua, trong bụng lo sợ, mới bảo Hưng-đạo-vương 181 rằng: « Thế giặc to như vậy, mà chống với nó thì dân-sự tàn\u0002hại, hay là trẫm hãy chịu hàng đi để cứu muôn dân ».",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "88876a45-500e-456e-ab8f-257ddaf77afc",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I",
+     "page": 180,
+     "text": "Nhưng sau vì Khả-li và Lộc-châu thất thủ, quân An-nam phải rút về ải Chi-lăng 支 棱[3]. Thoát Hoan dẫn đại binh đến đánh Chi-lăng, Hưng-đạo-vương kém thế, thua chạy ra bến Bái-tân, xuống thuyền cùng với bọn gia\u0002tướng, là Dã Tượng 野 象 và Yết Kiêu 歇 驕 về Vạn-kiếp. Các tướng thu nhặt tàn quân dần dần cũng kéo về đấy cả. Nhân-tông nghe Hưng-đạo-vương thua chạy về Vạn-kiếp, liền ngự một chiếc thuyền nhỏ xuống Hải-đông (tức là Hải\u0002dương) rồi cho vời Hưng-đạo-vương đến bàn việc, nhân thấy quân mình thua, trong bụng lo sợ, mới bảo Hưng-đạo-vương 181 rằng: « Thế giặc to như vậy, mà chống với nó thì dân-sự tàn\u0002hại, hay là trẫm hãy chịu hàng đi để cứu muôn dân » Hưng-đạo-vương tâu rằng: « Bệ-hạ nói câu ấy thì thật là lời nhân-đức, nhưng mà Tôn-miếu Xã-tắc thì sao? Nếu bệ-hạ muốn hàng, xin trước hãy chém đầu tôi đi đã, rồi sau sẽ hàng! ». Vua nghe lời nói trung-liệt như vậy, trong bụng mới yên. Hưng-đạo-vương chiêu-tập quân các đạo, hội tại Vạn-kiếp được hơn 20 vạn quân, thế lại nổi to. Bấy giờ Hưng-đạo vương có soạn ra một quyển Binh-thư yếu-lược 兵 書 要 略 rồi truyền hịch khuyên-răn các tướng-sĩ."
+    }
+   ],
+   "row_id": "r082"
+  },
+  {
+   "qid": "uh10",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Sông Bạch Đằng ngày nay chảy qua những tỉnh thành nào và dài bao nhiêu ki-lô-mét?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[4] (TỰ-CHỦ THỜI-ĐẠI › Giặc nhà Nguyên — II, page 203)\nCác tướng đi đâu đấy cả rồi. Hưng-đạo-vương tiến quân lên đánh giặc, sực nghe tin báo rằng Ô mã Nhi đã kéo quân về đến Bạch-đằng, Hưng-đạo-vương mới hô quân sĩ, trỏ sông Hóa-giang (6) mà thề rằng: \"Trận này không phá xong giặc Nguyên, thì không về đến sông này nữa!\"\n\n[6] (BẮC-THUỘC THỜI-ĐẠI › Bắc-thuộc lần thứ ba, page 90)\nKiểu công Tiện cho sang cầu cứu ở bên Nam-Hán, Hán-chủ nhân dịp cho thái-tử là Hoằng Tháo 弘 操 đưa quân đi trước, mình tự dẫn quân đi tiếp ứng. 91 Khi quân Hoằng Tháo vào gần đến sông Bạch-đằng 白 藤 江, thì bên này Ngô Quyền đã giết được Kiểu công Tiện (938), rồi một mặt truyền lệnh cho quân-sĩ phải hết sức phòng bị, một mặt sai người lấy gỗ cặp sắt nhọn, cắm ngầm ở dưới lòng sông Bạch-đằng, xong rồi chờ đến lúc nước thủy-triều lên, cho quân ra khiêu chiến; quân Nam-Hán đuổi theo, đến lúc nước xuống, Ngô Quyền hồi quân đánh ập lại, quân Nam-hán thua chạy, bao nhiêu thuyền mắc vào cộc gỗ thủng-nát mất cả, người chết quá nửa. Hoằng Tháo bị Ngô Quyền bắt được, đem về giết đi. Hán-chủ nghe tin ấy, khóc òa lên, rồi đem quân về Phiên\u0002ngung, không dám sang quấy nhiễu nữa.\n\n[5] (TỰ-CHỦ THỜI-ĐẠI › Giặc nhà Nguyên — II, page 202)\nCác tướng thấy vậy bèn vào bàn với Thoát Hoan rằng: \"Quân ta đóng ở đây, thành-trì đã không có, kho-tàng lại cạn cả; và bây giờ là đang lúc hết xuân sang hạ, khí trời nồng-nực, mà lại những chổ hiểm-yếu đều mất cả, chi bằng hãy rút quân về, rồi sau sẽ liệu kế khác\". Thoát Hoan thấy quân-thế của Hưng-đạo-vương mạnh lắm, chưa có thể phá được, bèn nghe lời các tướng, sai Ô mã Nhi, Phàn Tiếp dẫn thủy-quân theo đường sông Bạch-đằng (5) về trước. Còn mặt bộ thì sai Trình bằng Phi, Trương Quân dẫn binh đi chặn hậu. Sửa-soạn định vài hôm nữa thì rút về.\n\n[4] (TỰ-CHỦ THỜI-ĐẠI › Giặc nhà Nguyên — II, page 203)\nCác tướng thấy vậy bèn vào bàn với Thoát Hoan rằng: \"Quân ta đóng ở đây, thành-trì đã không có, kho-tàng lại cạn cả; và bây giờ là đang lúc hết xuân sang hạ, khí trời nồng-nực, mà lại những chổ hiểm-yếu đều mất cả, chi bằng hãy rút quân về, rồi sau sẽ liệu kế khác\". Thoát Hoan thấy quân-thế của Hưng-đạo-vương mạnh lắm, chưa có thể phá được, bèn nghe lời các tướng, sai Ô mã Nhi, Phàn Tiếp dẫn thủy-quân theo đường sông Bạch-đằng (5) về trước. Còn mặt bộ thì sai Trình bằng Phi, Trương Quân dẫn binh đi chặn hậu. Sửa-soạn định vài hôm nữa thì rút về.\n\nSông Bạch Đằng ngày nay chảy qua tỉnh Kiên Giang và Kiên Hải, dài khoảng 162 kilômét.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 4,
+     "chunk_id": "ea620dd2-e128-487d-b9cf-4bc018a26570",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — II",
+     "page": 203,
+     "text": "Các tướng đi đâu đấy cả rồi. Hưng-đạo-vương tiến quân lên đánh giặc, sực nghe tin báo rằng Ô mã Nhi đã kéo quân về đến Bạch-đằng, Hưng-đạo-vương mới hô quân sĩ, trỏ sông Hóa-giang [6] mà thề rằng: « Trận này không phá xong giặc Nguyên, thì không về đến sông này nữa! » Quân-sĩ ai nấy đều xin quyết chiến, kéo một mạch đến sông Bạch-đằng. Những chiến-thuyền của Ô mã Nhi, Phàn Tiếp theo giòng sông Bạch-đằng, bỗng chốc thấy tướng nhà Trần là Nguyễn Khoái dẫn chiến thuyền đến khiêu-chiến. Ô mã Nhi tức giận thúc quân xông vào đánh, Nguyễn Khoái liền quay thuyền chạy. Bấy giờ đang lúc thủy-triều lên, mặt nước mênh-mông, Ô mã Nhi vô tình, thấy địch quân chạy, cứ việc thúc thuyền đuổi theo. Nguyễn Khoái nhử quân Nguyên đi khỏi xa chỗ đóng cọc, rồi mới quay thuyền đánh vật lại. Hai bên đánh đang hăng, thì đại quân của Hưng-đạo-vương tiếp đến. Ô mã Nhi, Phàn Tiếp thấy quan quân to thế lắm, mới quay thuyền chạy trở 204 lại. Khi chạy đến khúc sông có cọc đóng thì nước thủy-triều đã rút xuống, thuyền của quân Nguyên vướng mắc phải cọc, đổ nghiêng đổ ngửa, đắm vỡ mất nhiều. Quan quân thừa thắng đánh cực hăng, quân Nguyên chết như rạ, máu loang đỏ cả khúc sông."
+    },
+    {
+     "number": 5,
+     "chunk_id": "bbe0371f-0c97-40eb-9a92-fce2cc630e7c",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — II",
+     "page": 202,
+     "text": "Các tướng thấy vậy bèn vào bàn với Thoát Hoan rằng: « Quân ta đóng ở đây, thành-trì đã không có, kho-tàng lại cạn cả; và bây giờ là đang lúc hết xuân sang hạ, khí trời nồng-nực, mà lại những chổ hiểm-yếu đều mất cả, chi bằng hãy rút quân về, rồi sau sẽ liệu kế khác ». Thoát Hoan thấy quân-thế của Hưng-đạo-vương mạnh lắm, chưa có thể phá được, bèn nghe lời các tướng, sai Ô mã Nhi, Phàn Tiếp dẫn thủy-quân theo đường sông Bạch-đằng [5] về trước. Còn mặt bộ thì sai Trình bằng Phi, Trương Quân dẫn binh đi chặn hậu. Sửa-soạn định vài hôm nữa thì rút về. 203 Hưng-đạo-vương biết mưu ấy, bèn sai Nguyễn Khoái dẫn binh lẻn qua đường tắt mé sông thượng-lưu sông Bạch-đằng, kiếm gỗ đẽo nhọn bịt sắt đóng khắp giữaa giòng sông, rồi phục binh chờ đến lúc nào nước thủy-triều lên thì đem binh ra khiêu-chiến, nhử cho thuyền giặc qua chỗ đóng cọc. Hễ lúc nào nước thủy-triều xuống thì quay binh lại hết sức mà đánh. Lại sai Phạm ngũ Lão, Nguyễn chế Nghĩa dẫn quân lên phục ở ải Nội-bàng (thuộc Lạng-sơn) chờ quân Nguyên chạy lên đến đấy thi đổ ra mà đánh. Các tướng đi đâu đấy cả rồi."
+    },
+    {
+     "number": 6,
+     "chunk_id": "f95b77c1-10e8-4e0b-a9d9-a5fdeaab2a62",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba",
+     "page": 90,
+     "text": "Kiểu công Tiện cho sang cầu cứu ở bên Nam-Hán, Hán-chủ nhân dịp cho thái-tử là Hoằng Tháo 弘 操 đưa quân đi trước, mình tự dẫn quân đi tiếp ứng. 91 Khi quân Hoằng Tháo vào gần đến sông Bạch-đằng 白 藤 江, thì bên này Ngô Quyền đã giết được Kiểu công Tiện (938), rồi một mặt truyền lệnh cho quân-sĩ phải hết sức phòng bị, một mặt sai người lấy gỗ cặp sắt nhọn, cắm ngầm ở dưới lòng sông Bạch-đằng, xong rồi chờ đến lúc nước thủy-triều lên, cho quân ra khiêu chiến; quân Nam-Hán đuổi theo, đến lúc nước xuống, Ngô Quyền hồi quân đánh ập lại, quân Nam-hán thua chạy, bao nhiêu thuyền mắc vào cộc gỗ thủng-nát mất cả, người chết quá nửa. Hoằng Tháo bị Ngô Quyền bắt được, đem về giết đi. Hán-chủ nghe tin ấy, khóc òa lên, rồi đem quân về Phiên\u0002ngung, không dám sang quấy nhiễu nữa. Ngô Quyền trong thì giết được nghịch-thần, báo thù cho chủ, ngoài thì phá được cường-địch, bảo toàn được nước, thật là một người trung-nghĩa lưu danh thiên cổ, mà cũng nhờ có tay Ngô Quyền, nước Nam ta mới cởi được ách Bắc-thuộc hơn một nghìn năm, và mở đường cho Đinh, Lê, Lý, Trần, về sau này được tự-chủ ở cõi Nam vậy. NƯƠC TÀU VỀ ĐỜI NGŨ-QUÍ 92 1."
+    }
+   ],
+   "row_id": "r083"
+  },
+  {
+   "qid": "c55-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Sĩ Huy làm gì sau khi cha ông là Sĩ Nhiếp qua đời?",
+   "reference": "Sĩ Huy tự xưng làm Thái thú.",
+   "answer": "[3]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 3,
+     "chunk_id": "61af4b9f-4576-46b8-8217-65cdaa24d087",
+     "section": "BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai",
+     "page": 59,
+     "text": "Bấy giờ có người Giao-chỉ tên là Lý Cầm 李 琴 làm lính túc-vệ hầu vua ở 60 trong điện, rủ mấy người bản-xứ ra phục xuống sân mà kêu cầu thảm-thiết. Hán-đế mới cho một người Giao-chỉ đỗ mậu-tài đi làm quan-lệnh ở Hạ-dương 夏 陽 令 và một người đỗ hiếu-liêm làm quan-lệnh ở Lục-hợp 六 合 令. Về sau Lý Cầm làm đến quan Tư-lệ Hiệu-úy 司 隸 校 尉 và lại có Trương Trọng 張 重 cũng là người Giao-chỉ làm thái-thú ở Kim-thành 金 成 太 守. Người Giao-chỉ ta được làm quan như người bên Tàu, khởi đầu từ Lý Tiến và Lý Cầm vậy. 3. SĨ NHIẾP (187-226). Về cuối đời nhà Đông-Hán, giặc cướp nổi lên khắp cả bốn phương, triều-đình không có uy\u0002quyền ra đến ngoài, thiên-hạ chỗ nào cũng có loạn. Đất Giao-chỉ bấy giờ nhờ có quan thái-thú là Sĩ Nhiếp 士 燮 cùng với anh em chia nhau giữ các quận huyện, cho nên mới được yên. Tiên-tổ nhà ông Sĩ Nhiếp là người nước Lỗ 魯, vì lúc Vương Mãng 王 莽 cướp ngôi nhà Hán, mới tránh loạn sang ở đất Quảng-tín 廣 信, quận Thương-ngô 蒼 梧, đến đời ông thân\u0002sinh ra Sĩ Nhiếp là sáu đời. Ông thân-sinh tên là Sĩ Tứ 士 賜 làm thái-thú quận Nhật-nam 日 南, cho Sĩ Nhiếp về du-học ở đất Kinh-sư, đỗ hiếu-liêm được bổ Thượng-thư-lang, vì việc quan phải cách, rồi về chịu tang cha."
+    }
+   ],
+   "row_id": "r084"
+  },
+  {
+   "qid": "c11-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Trung Việt rộng bao nhiêu?",
+   "reference": "150.000 km2",
+   "answer": "[3] Đất Trung-Việt thì chỉ có một giải ở men bờ bể, còn ở trong có núi Tràng-sơn chạy dọc từ Bắc-Việt vào gần đến Nam\u0002Việt, cho nên người chỉ ở được mạn gần bể mà thôi.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 3,
+     "chunk_id": "9ab6a0ee-3521-4551-a908-d95e8cd5697f",
+     "section": "Nước Việt Nam",
+     "page": 16,
+     "text": "Mạn trên gọi là 17 Thượng-du lắm rừng nhiều núi, ít người ở. Mạn dưới gọi là Trung-châu, đất đồng bằng, người ở chen-chúc đông lắm. Đất Trung-Việt thì chỉ có một giải ở men bờ bể, còn ở trong có núi Tràng-sơn chạy dọc từ Bắc-Việt vào gần đến Nam\u0002Việt, cho nên người chỉ ở được mạn gần bể mà thôi. Đất Nam-Việt thì ở vào khúc dưới sông Mê-kông (tức là sông Cửu-long), lại có sông Đồng-nai chảy ở mé trên, cho nên đất tốt, ruộng nhiều, dân-gian trù-phú và dễ làm ăn hơn cả. 4. CHỦNG-LOẠI. Người Việt-nam có nhiều dân-tộc ở, như là ở về miền thượng-du Bắc-Việt thì có dân Thái, (tức là Thổ), Mường, Mán, Mèo; ở về miền rừng núi Trung-Việt thì có dân Mọi, và Chàm, (tức là Hời), ở về miền Nam-Việt thì có dân Mọi, Chàm, Chà-và và Khách, vân vân. Những dân ấy ở trong ba nơi tất cả đến non một triệu người. Còn thì dân-tộc Việt-nam ở hết cả. Số người Việt-nam ở trong ba nơi có thể chia ra như sau này: Bắc-Việt : 8.700.000 người Trung-Việt : 5.650.000 người Nam-Việt : 4.616.000 người Cả thảy cọng lại được độ chừng non 19 triệu người [1] . 18 5. GỐC-TÍCÍ H. Theo ý-kiến của những nhà kê-cứu của nước Pháp, thì người Việt-nam và người Thái đều ở miền núi Tây-tạng xuống."
+    }
+   ],
+   "row_id": "r085"
+  },
+  {
+   "qid": "c174-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Trần Quốc Tuấn hận chuyện gì chưa trả được thù với lính xâm lược?",
+   "reference": "Chưa được sả thịt lột da quân giặc.",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r086"
+  },
+  {
+   "qid": "c200-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Ai đã liều mình che chở cho Thoát Hoan thoát khỏi ổ phục kích của quân Trần?",
+   "reference": "Trình Bằng Phi",
+   "answer": "Toa Đô đã liều mình che chở cho Thoát Hoan thoát khỏi ổ phục kích của quân Trần.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "d303976c-815d-493d-90e7-29863810a02d",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I",
+     "page": 191,
+     "text": "10. TRẬN TÂY-KẾT: Tướng nhà Trần chém được Toa Đô. Toa Đô đóng quân ở Thiên-trường xa cách Thoát Hoan hơn 200 dặm, cho nên chưa biết Thoát Hoan đã thua chạy về Bắc-giang rồi, bèn tiến binh vào đóng ở sông Thiên-mạc [12] định để hợp sức với Thoát Hoan làm thế ỷ-giốc. Được mấy hôm Toa Đô biết đạo tiền quân của mình đã bại trận, mà các bến thì chỗ nào cũng có quân nhà Trần án ngữ, mới lui về đóng ở Tây-kết 西 結[13] rồi cho người đi dò xem quân Thoát Hoan đóng ở đâu. Quân An-nam từ khi đánh được trận Hàm-tử và trận Chương-dương rồi, quân-thế phấn-chấn lắm. Hưng-đạo\u0002vương mừng rỡ, vào tâu với Nhân-tông xin một mặt sai Chiêu-văn-vương Trần nhật Duật, hợp với Thượng-tướng Trần quang Khải dẫn quân chặn các đường, không cho Thoát Hoan, Toa Đô đi lại thông tin với nhau, và một mặt xin tự tiến binh ra đánh Toa Đô, rồi đánh Thoát Hoan. 192 Nhân-tông nghe lời ấy, cho Hưng-đạo-vương tùy ý mà sai khiến. Khi quân ra đến Tây-kết, Hưng-đạo-vương chia quân ra đánh trại quân Nguyên, và đặt phục binh để bắt Toa Đô."
+    }
+   ],
+   "row_id": "r087"
+  },
+  {
+   "qid": "c288-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Bình Định Vương phái ai đi đánh Quốc Oai, Quảng Oai và các nơi khác để chặn quân tiếp viện từ Vân Nam?",
+   "reference": "Lý Triện, Phạm Văn Xảo, Trịnh Khả, Đỗ Bí",
+   "answer": "Bình-định-vương phái Lý Triện, Phạm văn Xảo, Trịnh Khả, Đỗ Bí đi đánh Quốc-oai, Quảng-oai, Gia-hưng, Quí-hóa, Đà-giang, Tam-đái (Bạch-hạc), Tuyên-quang để chặn đường viện binh ở Vân-nam sang. [1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "6cabc4e5-3a12-4399-b380-942e909d95b2",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu",
+     "page": 277,
+     "text": "Từ đây binh-thế của Bình-định-vương một ngay một mạnh, các tướng tôn ngài lên làm « Đại thiên hành-hóa 代 天 行 化 », nghĩa là thay trời làm mọi việc. 13. QUÂN BÌNÌ H-ĐỊNH-VƯƠNG TIẾN RA ĐÔNG-ĐÔ. Năm bính ngọ (1426) vương thấy tinh-binh của nhà Minh ở cả Nghệ-an, ở ngoài Đông-đô không có bao nhiêu người, bèn sai Lý Triện 李 篆, Phạm văn Xảo 范 文 巧, Trịnh Khả, Đỗ Bí ra đánh Quốc-oai, Quảng-oai, Gia-hưng, Quí-hóa, Đà-giang, Tam-đái (Bạch-hạc), Tuyên-quang để chặn đường viện binh ở Vân-nam sang. Sau Lưu nhân Chú và Bùi Bị 裴 僃 ra đánh Thiên-trường, Kiến-xương, Tân-hưng, Thượng\u0002hồng (Bình-giang), Hạ-hồng (Ninh-giang), Bắc-giang, Lạng\u0002giang, để chặn đường viện binh ở Lưỡng Quảng sang. Lại sai Đinh Lễ 丁 禮, Nguyễn Xí 阮 熾 đem binh đi thẳng ra đánh Đông-quan. Quân của Bình-định-vương đi đến đâu giữ kỷ-luật rất nghiêm, không xâm-phạm đến của ai chút gì, cho nên ai ai cũng vui lòng theo phục. Bọn Lý Triện lấy được Quốc-oai và Tam-đái rồi đem quân vệ đánh Đông-quan. Quan tham-tướng nhà Minh là Trần Trí đem binh ra đóng ở Ninh-kiều [6] (phía tây phủ Giao châu) và ở Ứng-thiên (?) để chống giữ; quân Lý Triện đến đánh, Trần Trí thua chạy về 278 đóng ở phía tây sông Ninh-giang (khúc trên sông Đáy)."
+    }
+   ],
+   "row_id": "r088"
+  },
+  {
+   "qid": "c164-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Hàn Thuyên quê ở tỉnh nào?",
+   "reference": "Hải Dương",
+   "answer": "[5] Nguyễn Thuyên là người Thanh-lâm 青 林(4), tỉnh Hải-dương, có tiếng tài làm văn như ông Hàn Dũ 韓 愈 bên Tàu ngày xưa",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 5,
+     "chunk_id": "84730f22-eddb-453d-9b12-2612d6c8699b",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Thuộc nhà Minh",
+     "page": 263,
+     "text": "Trần nguyên Đào 陳 元 璹 2 » Thảo-nhàn-hiệu-tần 討 閒 效 顰, Hồ tôn Vụ 胡 尊 務 1 » Việt-nam thế-chí 越 南 世 志 1 bộ Việt-sử cương-mục 越 史 綱 目 1 » Đại-việt sử-ký 大 越 史 記, Lê văn Hưu 黎 文 休 30 quyển Nhị-khê thi-tập 蕊 溪 詩 集, Nguyễn phi Khanh 阮 飛 卿 1 » Phi-sa tập 披 砂 集, Hàn Thuyên 韓 詮 1 » Việt-điện-u-linh tập 越 甸 幽 靈 集, Lý tế Xuyên 李 濟 川 1 » Những sách ấy bây giờ không biết mất đâu cả, không thấy quyển nào nữa, thật là một cái thiệt hại cho người nước mình. 264 Còn những người đi học, ở các phủ, châu, huyện, trước thì ở phủ mỗi năm 2 người, ở châu 2 năm 3 người, ở huyện mỗi năm 1 người, sau cải lại ở phủ mỗi năm 1 người, ở châu 3 năm 2 người, ở huyện 2 năm 1 người, được làm học trò tuế\u0002cống cho vào học Quốc-tử-giám, rồi bổ đi làm quan. 5. VIỆC TRẠM-DỊCH. Từ thành Đông-quan (tức là Hà-nội) cho đến huyện Gia-lâm, phủ Từ-sơn, thì đặt trạm để chạy giấy bằng ngựa; từ huyện Chí-linh, huyện Đông-triều cho đến phủ Vạn-ninh là nơi giáp đất Khâm-châu nước Tàu thì đặt trạm chạy giấy bằng thuyền. 6. VIỆC BINH-LÍNÍ H. Việc bắt lính thì cứ theo sổ bộ mà bắt. Ở những nơi gọi là vệ-sở thì mỗi một bộ phải ba suất đinh đi lính, nhưng từ Thanh-hóa về nam người ở ít, thì mỗi hộ chỉ phải hai suất đinh đi lính mà thôi."
+    }
+   ],
+   "row_id": "r089"
+  },
+  {
+   "qid": "c142-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Cậu của Trần thị, người được phong Thái úy Thuận lưu bá, là ai?",
+   "reference": "Tô Trung Từ",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "c77ed26b-9288-441a-a423-78e0cd01ef11",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Lý (tiếp theo)",
+     "page": 149,
+     "text": "Bấy giờ Trần Lý đã bị quân cướp giết, chúng theo về người con thứ là Trần tự Khánh 陳 嗣 慶. Huệ-tông bèn phong cho Tự Khánh làm Chương-tín-hầu và cho người cậu Trần-thị là Tô trung Từ làm Thái-úy Thuận-lưu-bá. Năm quí-dậu (1213) Thái-hậu làm khổ Trần-thị ở trong cung, anh Trần-thị là Tự Khánh đem quân đến chốn kinh sư, nói rằng xin rước vua đi. Huệ-tông không biết tình-ý gì, nghi Tự Khánh có ý phản-nghịch bèn giáng Trần-thị xuống làm Ngự-nữ. Tự Khánh nghe tin ấy, thân đến quân môn xin lỗi và rước vua đi. Huệ-tông càng nghi lắm, bèn cùng với Thái\u0002hậu đi lên Lạng-châu (Lạng-sơn). 150 Tự Khánh lại phát binh xin rước vua như trước, Huệ-tông sợ lại rước Thái-hậu về huyện Bình-hợp (?). Khi bấy giờ bà Thái-hậu cho Tự Khánh là phản-trắc, thường chỉ mặt Trần-thị mà xỉ mắng và xui Huệ-tông bỏ đi. Huệ\u0002tông không nghe. Thái hậu định bỏ thuốc độc cho Trần-thị, nhưng Huệ-tông biết ý, đến bữa ăn thì ăn một nửa, còn một nửa cho Trần-thị ăn và ngày đêm không cho đi đâu. Sau vì Thái-hậu làm ngặt quá, Huệ-tông và Trần-thị đêm lẻn ra đi đến nhà tướng-quân Lê Mịch 黎 覓 ở huyện Yên-duyên rồi lại đến Cửu-liên (?), cho đòi Tự Khánh đến chầu. 2. QUYỀN VỀ HỌ TRẦN. Trần tự Khánh đem quân đến hộ giá."
+    }
+   ],
+   "row_id": "r090"
+  },
+  {
+   "qid": "c15-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Tính cách chung của người Việt khi gặp nguy hiểm là gì?",
+   "reference": "Họ thường nhút nhát, hay khiếp sợ và muốn sự hòa bình.",
+   "answer": "[1] Người Việt-nam từ Bắc chí Nam, đều theo một phong-tục, nói một thứ tiếng (2) cùng giữ một kỷ-niệm, thật là cái tính đồng-nhất của một dân-tộc từ đầu nước đến cuối nước. Tuy vậy vẫn hay có tính tình vặt, cũng có khi quỉ-quyệt, và hay bài-bác nhạo-chế. Thường thì nhút-nhát, 20 hay khiếp-sợ và muốn sự hòa-bình, nhưng mà đã đi trận\u0002mạc thì cũng có can-đảm, biết giữ kỹ-luật.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "778936ee-cb95-4dd9-845a-92386db05fb9",
+     "section": "Nước Việt Nam",
+     "page": 20,
+     "text": "Người Việt-nam từ Bắc chí Nam, đều theo một phong-tục, nói một thứ tiếng [2] cùng giữ một kỷ-niệm, thật là cái tính đồng-nhất của một dân-tộc từ đầu nước đến cuối nước. 7. SỰ MỞ-MANG BỜ-CÕI. Người nòi-giống Việt-nam ta mỗi ngày một nẩy-nở ra nhiều, mà ở phía bắc thì đã có nước Tàu cường-thịnh, phía tây thì lắm núi nhiều rừng, đường đi lại không tiện, cho nên mới theo bờ bể lần xuống phía nam, đánh Lâm-ấp, dứt Chiêm-thành, chiếm đất Chân-lạp, mở ra bờ-cõi bây giờ. 8. LỊCH-SỬ VIỆT-NAM. Từ khi người Việt-nam lập thành nước đến giờ, kể hàng mấy nghìn năm, phải người Tàu cai\u0002trị mấy lần, chịu khổ-sở biết bao nhiêu phen, thế mà sau lại 21 lập được cái nền tự-chủ, và vẫn giữ được cái tính đặc-biệt của giống mình, ấy là đủ tỏ ra rằng khí-lực của người mình không đến nỗi kém-hèn cho lắm. Tuy rằng mình chưa làm được việc gì cho vẻ-vang bằng người, nhưng mình còn có thể hy-vọng một ngày kia cũng nên được một nước cường\u0002thịnh. Vậy ghi-chép những cơ-hội gian-truân, những sự biến-cố của nước mình đã trải qua, và kể những công-việc của người mình làm từ đời nọ qua đời kia, để cho mọi người trong nước đều biết, ấy là sách Việt-nam sử."
+    }
+   ],
+   "row_id": "r091"
+  },
+  {
+   "qid": "c23-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Theo sách Việt Nam sử lược, các câu chuyện về thời Thượng cổ được ghi lại từ bao giờ?",
+   "reference": "Từ thế kỷ 15 trở đi (thời ông Ngô Sĩ Liên)",
+   "answer": "Câu trả lời cho câu hỏi \"Theo sách Việt Nam sử lược, các câu chuyện về thời Thượng cổ được ghi lại từ bao giờ?\" có thể được tìm thấy trong [3]. Theo đoạn trích, sách Việt Nam sử lược được soạn từ khi họ Hồng-bàng, và việc soạn lại bộ Đại Việt sử ký của Lê Văn H 出土, theo như đoạn trích mô tả, sách sử này được ghi lại từ Triệu Võ-vương 制 武 王 đến Lý Chiêu-hoàng 李 昭 皇, cách thời gian bắt đầu của thời Thượng cổ, tức là cuối thập tam thế kỷ.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 3,
+     "chunk_id": "2ab509c3-5066-4a1d-8ca4-362b33599bf1",
+     "section": "THƯỢNG-CỔ THỜI ĐẠI > Họ Hồng-bàng",
+     "page": 27,
+     "text": "Ngày hôm sau Sơn-tinh đến trước lấy được Mỵ-nương đem về núi Tản-viên (tức là núi Ba-vì ở tỉnh Sơn-tây). 28 Thủy-tinh đến sau, thấy Sơn-tinh lấy mất Mỵ-nương, tức giận vô cùng, mới làm ra mưa to gió lớn, rồi dâng nước lên đánh Sơn-tinh. Sơn-tinh ở trên núi không việc gì: hễ nước lên cao bao nhiêu, thì Sơn-tinh làm núi cao lên bấy nhiêu. Sơn-tinh lại dùng sấm-sét đánh xuống, Thủy-tinh phải rút nước chạy về. Từ đó Sơn-tinh và Thủy-tinh thù nhau, mỗi năm đánh nhau một lần, dân-gian thật là cực-khổ. Truyện này là nhân vì ở Bắc-Việt năm nào đến tháng 6, tháng 7 cũng có nước lũ ở trên mạn ngược chảy xuống tràn vào trong đồng-áng, ngập mất cả ruộng đất. Người ta không hiểu là tại lẽ gì, mới tưởng tượng mà đặt ra câu chuyện Sơn\u0002tinh Thủy-tinh đánh nhau vậy. Tóm lại mà xét, nước ta khởi đầu có quốc-sử từ cuối thập\u0002tam thế-kỷ: đến đời vua Thánh-tông nhà Trần, mới có quan Hàn-lâm học-sĩ là Lê văn Hưu 黎 文 休 soạn xong bộ Đại\u0002Việt sử-ký 大 越 史 記, chép từ Triệu Võ-vương 趙 武 王 đến Lý Chiêu-hoàng 李 昭 皇. Hai trăm rưỡi năm về sau lại có ông Ngô Sĩ-Liên 吳 士 連, làm quan Lễ-bộ tả-thị-lang đời vua Thánh-tông nhà Lê, soạn lại bộ Đại-Việt sử-ký: chép từ họ Hồng-bàng đến vua Lê Thái-tổ."
+    }
+   ],
+   "row_id": "r092"
+  },
+  {
+   "qid": "u7",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Hệ thống chữ viết cổ trên các hiện vật khảo cổ thời Hùng Vương đã được giải mã như thế nào sau những phát hiện mới nhất?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "6cd22c5a-0fc1-4f7b-bdd7-210fe02c7ee2",
+     "section": "Tựa",
+     "page": 10,
+     "text": "Hiềm vì sử nước ta thì làm bằng chữ Nho cả, mà chữ Nho thì từ rày trở đi chắc rồi mỗi ngày một kém đi. Hiện nay số người đọc được chữ Nho còn nhiều, mà trong nước còn không có mấy người biết được chuyện nước nhà, huống chi mai sau này chữ Nho bỏ không học nữa, thì sự khảo-cứu về những việc quan-hệ đến lịch-sử nước mình sẽ khó biết bao nhiêu! Nay nhân sự học ở nước ta đã thay-đổi, chữ quốc-ngữ đã phổ-thông cả trong nước, chi bằng ta lấy tiếng nước nhà mà kể chuyện nước nhà, ta soạn ra bộ VIỆT-NAM SỬ-LƯỢC, xếp-đặt theo thứ-tự, chia ra từng thời-đại, đặt thành chương, thành mục rõ-ràng, để ai ai cũng có thể xem được sử, ai ai cũng có thể hiểu được chuyện, khiến cho sự học sử của người mình được tiện-lợi hơn trước. Bộ VIỆT-NAM SỬ-LƯỢC này, soạn-giả chia ra làm 5 thời\u0002đại. Thời đại-thứ nhất là Thượng-cổ thời-đại, kể từ họ Hồng-bàng cho đến hết đời nhà Triệu. Trong thời-đại ấy, từ chương thứ III, bàn về xã-hội nước Tàu trước đời nhà Tần, phần nhiều là những chuyện hoang-đường huyền-hoặc cả. Những nhà chép sử đời trước cũng theo tục truyền mà chép lại, chứ không có di-tích gì mà khảo-cứu cho đích-xác."
+    }
+   ],
+   "row_id": "r093"
+  },
+  {
+   "qid": "c229-blind",
+   "kind": "blind",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Quân Chiêm Thành tấn công kinh thành bao nhiêu lần dưới thời Trần Phế Đế?",
+   "reference": "Ba lần",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "04a62ec9-e351-4313-81fd-222182287c82",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba)",
+     "page": 230,
+     "text": "Đại-tướng là Đỗ Lễ 杜 禮 can mãi vua không nghe. Khi quân gần đến thành Đồ-bàn, quả-nhiên bị quân Chiêm đổ ra vây đánh. Quan quân thua to; Duệ-tông chết ở trận, tướng-sĩ quân lính chết mười phần đến bảy tám. Bấy giờ Đỗ tử Bình lĩnh hậu quân không đem binh lên cứu, Lê quí Ly cũng bỏ chạy về. Thế mà hai người về kinh, Nghệ\u0002tông thượng-hoàng chỉ giáng Đỗ tử Bình xuống làm lính mà thôi. IV. TRẦN PHẾ-ĐẾ (1377-1388) 231 Niên-hiệu: Xương-phù 昌 符 Thượng-hoàng được tin Duệ-tông chết trận rồi, bèn lập con Duệ-tông là Hiễn 睍 lên nối ngôi, tức là vua Phế-đế. 1. CHIÊM-THÀNH SANG PHÁ THĂNG-LONG. Quân Chiêm-thành đã phá được quân An-nam và giết được Duệ\u0002tông rồi, qua tháng sau đem quân sang đánh Thăng-Long. Thượng-hoàng nghe tin giặc đến, sai tướng ra giữ Đại-an hải-khẩu. Giặc biết chỗ ấy có phòng-bị, đi vào cửa Thần-phù (sông Chính-đại, thuộc huyện Yên-mô, Ninh-bình) rồi lên cướp phá thành Thăng-long, không ai chống giữ được. Tháng năm năm mậu-ngọ (1378) quân Chiêm-thành lại sang đánh đất Nghệ-an, rồi lại vào sông Đại-hoàng lên đánh Thăng-long lần nữa. Quân Chiêm-thành biết nước Nam suy-nhược, cứ sang cướp phá. Năm canh-thân (1380) lại sang phá ở đất Thanh-hóa, Nghệ-an."
+    }
+   ],
+   "row_id": "r094"
+  },
+  {
+   "qid": "uh14",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Vua Lê Thái Tổ cao bao nhiêu và nặng bao nhiêu cân?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r095"
+  },
+  {
+   "qid": "c224-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Vua Nghệ Tông tin tưởng và giao chức Khu mật đại sứ cho ai?",
+   "reference": "Lê Quý Ly",
+   "answer": "[1] Vua Nghệ Tông tin tưởng và giao chức Khu mật đại sứ cho Lê quý Ly.",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "e21e0005-dabf-450e-89dd-519d51f176a8",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba)",
+     "page": 228,
+     "text": "Quan quân đánh không nổi. Nghệ\u0002tông phải lánh mình chạy sang Đông-ngạn (ở Cổ-pháp làng Đình-bảng). Quân Chiêm vào thành, đốt sạch cung điện, bắt đàn-bà con-gái, lấy hết các đồ báu ngọc, rồi rút quân về. Nghệ-tông là một ông vua nhu-nhược, việc gì cũng để cho người ngoại-thích là Lê quí Ly 黎 季 犛 quyết đoán cả. Quý Ly là dòng-dõi người ở Chiết-giang bên Tàu, tổ là Hồ hưng Dật 胡 興 逸 từ đời Ngũ-Quí sang ở nước ta, làng Bào-đột, huyện Quỳnh-lưu. Sau ông tổ tứ-đại là Hồ Liêm dời ra ở Thanh-hóa, làm con nuôi nhà Lê Huấn 黎 訓, cho nên mới đổi họ là Lê. Lê quý Ly có hai người cô lấy vua Minh-tông. Một người sinh ra vua Nghệ-tông, một người sinh ra vua Duệ-tông. Vì thế cho nên Nghệ-tông càng tin dùng lắm, phong cho làm Khu-mật đại-sứ 樞 密 大 使, lại gia tước Trung tuyên-hầu 忠 宣 侯. Năm nhâm-tí (1372) Nghệ-tông truyền ngôi cho em là Kính 曔, rồi về ở phủ Thiên-trường làm Thái-thượng-hoàng. III. TRẦN DUỆ-TÔNG (1372-1377) Niên-hiệu: Long-khánh 隆 慶 229 1. VIỆC CHÍNÍ H-TRỊ. Thái-tử Kính lên ngôi, tức là vua Duệ-tông 睿 宗, lập Lê-thị làm hoàng-hậu (Lê-thị là em họ Quí Ly). Duệ-tông có tính quyết đoán hơn Nghệ-tông, nhưng mà quyền-bính vẫn ở tay Nghệ-tông thượng-hoàng cả."
+    }
+   ],
+   "row_id": "r096"
+  },
+  {
+   "qid": "u17",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Di tích khảo cổ học nào ở Hoa Lư ngày nay cho biết thêm về kiến trúc cung điện thời Tiền Lê mà sách Việt Nam sử lược không đề cập?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r097"
+  },
+  {
+   "qid": "u9",
+   "kind": "unanswerable",
+   "system": "topk6",
+   "top_k": 6,
+   "question": "Các cuộc khai quật khảo cổ học tại kinh thành Thăng Long thời nhà Lê đã phát hiện những loại hình gốm sứ nào và chúng cho thấy điều gì về quan hệ thương mại với nước ngoài?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "[4] (TỰ-CHỦ THỜI-ĐẠI › Nhà Trần (Thời-kỳ thứ nhất), page 169) Các cuộc giao-thiệp thương-mãi với nước ngoài thời nhà Trần gặp nhiều khó khăn, cụ thể như việc vua Mông-cổ thường xuyên cho sứ giả sang sách\u0002nhiễu điều nọ điều kia, và dụ vua An-nam sang chầu. Tuy nhiên, điều này vẫn chưa ngăn lại việc giao-thiệp, đặc biệt là việc cống mà Mông-cổ đặt ra. Mỗi hạng gồm 3 người như sĩ-nhã, thầy-bố, thầy-thuốc, thầy-thiên-chúa và thợ-thuyền, cùng với các vật phẩm như sừng-tê, ngà-voi, đồi-mồi, châu-báu và vật lạ. Điều này cho thấy việc giao-thiệp thương-mãi giữa Việt-Nam và Mông-cổ vẫn diễn ra, mặc dù gặp nhiều khó khăn.",
+   "abstained": false,
+   "retrieved": 6,
+   "passages": [
+    {
+     "number": 4,
+     "chunk_id": "281edd98-d5db-484a-a0b0-961ee00292ea",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất)",
+     "page": 169,
+     "text": "Thánh-tông lại bắt các vương-hầu, phò-mã phải chiêu-tập những người nghèo-đói lưu-lạc để khai-khẩn hoang điền làm trang hộ. Trang-điền có từ đấy. 2. SỰ GIAO-THIỆP VỚI MÔNG-CỔ. Nước tuy được yên, song việc giao-thiệp với Tàu một ngày một khó thêm. Đời bấy giờ Mông-cổ đã đánh được nhà Tống rồi, chỉ chực lấy nước An-nam, nhưng vì trước tướng Mông-cổ đã đánh thua một trận, vả trong nước Tàu cũng chưa được yên, cho nên vua Mông cổ muốn dụng kế dụ vua An-nam sang hàng-phục, để khỏi dùng can-qua. Vậy cứ vài năm lại cho sứ sang sách\u0002nhiễu điều nọ điều kia, và dụ vua An-nam sang chầu, nhưng vua ta cứ nay lần mai lữa, không chịu đi. Sau nhân dịp Thái- 170 tông nhường ngôi cho Thánh-tông, vua Mông-cổ sai sứ sang phong vương cho Thánh-tông, và tuy không bắt nước Nam phải đổi phục-sắc và chính-trị, nhưng định cho ba năm phải một lần cống. Mà lệ cống thì phải cho nho-sĩ, thầy thuốc, thầy bói, thầy toán-số và thợ-thuyền mỗi hạng ba người, cùng với các đồ sản-vật như là sừng tê, ngà voi, đồi-mồi, châu-báu và các vật lạ. Vua Mông-cổ lại đặt quan Đạt-lỗ\u0002hoa-xích (tiếng Mông-cổ tức là quan Chưởng-ấn), để đi lại giám-trị các châu-quận nước Nam."
+    }
+   ],
+   "row_id": "r098"
+  },
+  {
+   "qid": "c240-blind",
+   "kind": "blind",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Hồ Quý Ly xây thành Tây Đô ở chỗ nào?",
+   "reference": "ở động Yên Tôn (nay thuộc xã Yên Tôn, huyện Vĩnh Lộc, Thanh Hóa)",
+   "answer": "[1]",
+   "abstained": false,
+   "retrieved": 1,
+   "passages": [
+    {
+     "number": 1,
+     "chunk_id": "4b787c07-881b-468f-af10-9343b670820d",
+     "section": "TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba)",
+     "page": 241,
+     "text": "Lộ coi phủ coi châu, châu coi huyện. Lộ nào cũng phải có một tập sổ sách về những việc đinh, điền, kiện\u0002tụng, đến cuối năm thì đệ về Kinh để kê-cứu. Quí Ly lại phân nước ra từng hạt một, đặt chức đô-đốc, đô\u0002hộ, đô-thống, tổng-quản, thái-thú, để phong cho những người vây-cánh của mình. 4. LẬP TÂY-ĐÔ. Quí Ly định dời Kinh-đô vào Thanh-hóa cho dễ đường thoán-đoạt, bèn sai quan vào xây thành Tây-đô ở động Yên-tôn (nay còn di-tích ở xã Yên-tôn, huyện Vĩnh\u0002lộc, tục gọi là Tây-giai). Đến năm bính-tí (1396) Quí Ly bắt Thuận-tông phải dời kinh về Tây-đô. Qua tháng ba năm sau, Quí Ly lập mưu cho người đạo-sĩ vào trong cung xui Thuận\u0002tông nhường ngôi mà đi tu tiên. Thuận-tông phải nhường ngôi cho con, rồi đi tu tiên ở cung Bảo-thanh tại núi Đại-lại 大 吏 (thuộc huyện Vĩnh-lộc, Thanh-hóa). 242 5. SỰ PHẾ-LẬP: TRẦN THIẾU-ĐẾ (1398-1400). Quý Ly bắt Thuận-tông nhường ngôi rồi, lập Thái-tử là Án 按 lên làm vua. Thái-tử bấy giờ mới có 3 tuổi, tức là Thiếu-đế 少 帝, niên-hiệu là Kiến Tân 建 新. Lê quí Ly làm phụ-chính tự xưng làm Khâm-đức hưng-liệt đại-vương 欽 德 興 烈 大 王, rồi sai người giết Thuận-tông đi."
+    }
+   ],
+   "row_id": "r099"
+  },
+  {
+   "qid": "u24",
+   "kind": "unanswerable",
+   "system": "topk1",
+   "top_k": 1,
+   "question": "Di tích khảo cổ nào từ thời kỳ đầu nhà Trần được phát hiện gần đây và có ý nghĩa gì đối với việc hiểu biết về đời sống thường dân thế kỷ 13?",
+   "reference": "Sách không có câu trả lời cho câu hỏi này (câu hỏi ngoài phạm vi sách).",
+   "answer": "This book does not seem to answer that question.",
+   "abstained": true,
+   "retrieved": 0,
+   "passages": [],
+   "row_id": "r100"
+  }
+ ]
+}
