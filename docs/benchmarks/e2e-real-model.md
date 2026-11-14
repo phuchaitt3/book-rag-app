@@ -57,3 +57,34 @@ Set `CHAT_RATE_LIMIT=0` on the API for the check: it sends 208 questions in a fe
 ## Limits
 
 One book, one machine, one run per arm, no repeats. The questions were written from the HTML chunks of the same book, so the PDF's text and chunk boundaries are new to them. The answer quality was checked on one question only; no figure here measures the generated answers.
+
+## Re-measurement after the BM25 fix, 2026-11-14 (#241)
+
+The first run (above) is kept as it was. #204 then replaced the full-text leg with BM25 from stored per-book statistics ([ADR 0011](../adr/0011-bm25-in-postgres-stored-statistics.md)). This section repeats the run on the shipped code to measure the app's own number after the fix.
+
+**Result.** Hit@5 is **86.5%** without the reranker (was 75.5%) and **94.2%** with it (was 88.9%). Hit@1 is **64.9%** (was 47.6%) and **84.1%** (was 80.8%). The no-reranker Hit@5 equals the 86.5% that [retrieval-gap.md](retrieval-gap.md) predicted from the fix alone. The reranker still adds the most at rank 1 (+19.2 points Hit@1, +7.7 Hit@5) and costs about 2.7 s of median retrieval time (0.116 s to 2.827 s).
+
+| Arm | Hit@1 | Hit@5 | MRR@6 | Median retrieval time |
+|---|---|---|---|---|
+| Reranker off | 64.9% (58.2–71.2) | 86.5% (81.7–90.9) | 74.2% (69.1–79.0) | 0.116 s |
+| Reranker on | **84.1%** (78.8–88.9) | **94.2%** (90.9–97.1) | 88.3% (84.4–92.0) | 2.827 s |
+
+Intervals are bootstrap 95% (10,000 resamples of the 208 questions, seed 241). MRR is over the 6 cited chunks (`top_k` 6, the same as the first run, so the paired comparison holds); it is MRR@6, not MRR@10. Pre-fix MRR@6 was 58.2% (52.6–64.0) off and 84.4% (79.7–88.7) on.
+
+**Paired difference against the pre-fix run** (same 208 questions, post-fix minus pre-fix, in points; [retrieval_compare.py](../../experiments/e2e/retrieval_compare.py)):
+
+| Arm | Hit@1 | Hit@5 | MRR@6 |
+|---|---|---|---|
+| Reranker off | +17.3 (+11.1 to +23.1) | +11.1 (+5.8 to +16.8) | +15.9 (+11.5 to +20.5) |
+| Reranker on | +3.4 (+1.0 to +6.2) | +5.3 (+1.9 to +8.7) | +3.9 (+1.5 to +6.7) |
+
+Every interval excludes zero. Post-fix, reranker on minus off: Hit@1 +19.2 (+13.5 to +25.0), Hit@5 +7.7 (+3.8 to +11.5), MRR@6 +14.1 (+10.1 to +18.3). Raw ranks: [retrieval-postfix-no-rerank.json](../../experiments/e2e/results/retrieval-postfix-no-rerank.json) and [retrieval-postfix-rerank.json](../../experiments/e2e/results/retrieval-postfix-rerank.json).
+
+**Conditions that differ from the first run.**
+
+- Code: `main` at commit `e0bb10a` (the first run was at `df0fb2e`).
+- PDF: fetched again on 2026-11-14; the export had been regenerated, so the bytes differ (6,331,925 bytes, SHA-256 `e343ad1e6b144e13d6ae1db6ef7438b0e97fc4e06ff7f563bb2a4a404f188167`). It parsed to the same 392 chunks and all 208 questions were scored (none skipped). The ingestion job succeeded in 209 s (the first run: 202 s). The first run's other gap, the PDF's text, was measured as 1 to 3 points in #199.
+- One fresh stack and one ingested book served both arms; the API container was recreated with `RERANKER_PROVIDER=none`, then `tei`. `CHAT_RATE_LIMIT=0`. The API log shows no reranker failure or timeout, so no question fell back to the fused order.
+- Same machine, embedder (bge-m3 through Ollama), reranker image and depth as the first run. The API used the fake LLM, since the check stops after the `citations` event; the answer model was not run, so this run does not say whether the stack answers end to end after the fix (the optional part of #241 was not done).
+
+**Limits.** One book, one machine, one run per arm, no repeats; the two arms share one ingested book. The two PDF exports differ slightly, so the paired difference mixes the code change with a small change in the text; #199 bounds the text effect at 1 to 3 points. The questions were written from the HTML chunks of the same book.

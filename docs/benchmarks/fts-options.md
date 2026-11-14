@@ -118,7 +118,7 @@ BM25 here is the in-memory BM25 over Postgres lexemes (the ranking ceiling of th
 
 - Adopting any of these changes the search design, so it needs an ADR, and the choice is a latency-against-quality trade that is the user's to weigh: BM25 in Postgres restores the 11 points but multiplies the leg's time by about 5 on this book. Follow-up issue: bound the candidate set (for example, take the GIN matches on only the query's rarest words) and re-time.
 - The reranker (ADR 0009) still hides the gap when it works; the fix matters when it is off or fails, and for Hit@1 before reranking.
-- The end-to-end re-measurement with the reranker off and on, listed in #204, waits for the chosen design.
+- The end-to-end re-measurement with the reranker off and on, listed in #204, was made on 2026-11-14 at `e0bb10a` (#241): through the app, Hit@5 is 86.5% without the reranker and 94.2% with it (was 75.5% and 88.9%); Hit@1 is 64.9% and 84.1% (was 47.6% and 80.8%). See [e2e-real-model.md](e2e-real-model.md).
 
 ## Limits
 
