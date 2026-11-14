@@ -4,7 +4,7 @@ Measured results for retrieval and answering. Each note links the script that pr
 
 - [viquad-retrieval.md](viquad-retrieval.md): v1 against v2 retrieval on UIT-ViQuAD2.0, with v1's reworded questions.
 - [book-retrieval.md](book-retrieval.md): the same arms on the app's own chunks of one book (Việt Nam sử lược, Quyển I), with generated questions. Includes the fusion-weight test (#180): equal weights stay.
-- [e2e-real-model.md](e2e-real-model.md): one real run of the app on a PDF, with and without the reranker.
+- [e2e-real-model.md](e2e-real-model.md): one real run of the app on a PDF, with and without the reranker, repeated after the BM25 fix (#241: Hit@5 86.5% off, 94.2% on).
 - [retrieval-gap.md](retrieval-gap.md): why the app is below the benchmark (the full-text leg).
 - [fts-options.md](fts-options.md): ways to fix the full-text leg (#204): BM25 in Postgres matches the benchmark; its latency cost.
 - [set-local-cost.md](set-local-cost.md): the extra `SET LOCAL` statement in vector search costs one round trip (#93).

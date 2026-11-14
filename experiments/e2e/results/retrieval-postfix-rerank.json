@@ -1,0 +1,1065 @@
+{
+ "summary": {
+  "label": "postfix-rerank",
+  "book_id": "cac36b11-6f0c-492b-b897-bff6f5d4900a",
+  "kind": "blind",
+  "top_k": 6,
+  "questions": 208,
+  "scored": 208,
+  "skipped_evidence_not_in_one_chunk": 0,
+  "retrieval_s_median": 2.827,
+  "hit@1": 84.1,
+  "hit@1_ci95": [
+   78.8,
+   88.9
+  ],
+  "hit@5": 94.2,
+  "hit@5_ci95": [
+   90.9,
+   97.1
+  ]
+ },
+ "skipped": [],
+ "results": [
+  {
+   "id": "c0-blind",
+   "rank": 1,
+   "retrieval_s": 3.741
+  },
+  {
+   "id": "c2-blind",
+   "rank": 1,
+   "retrieval_s": 2.656
+  },
+  {
+   "id": "c3-blind",
+   "rank": 1,
+   "retrieval_s": 2.827
+  },
+  {
+   "id": "c5-blind",
+   "rank": null,
+   "retrieval_s": 2.684
+  },
+  {
+   "id": "c8-blind",
+   "rank": null,
+   "retrieval_s": 2.788
+  },
+  {
+   "id": "c11-blind",
+   "rank": 1,
+   "retrieval_s": 2.597
+  },
+  {
+   "id": "c13-blind",
+   "rank": 1,
+   "retrieval_s": 2.842
+  },
+  {
+   "id": "c15-blind",
+   "rank": 1,
+   "retrieval_s": 2.538
+  },
+  {
+   "id": "c17-blind",
+   "rank": 1,
+   "retrieval_s": 2.945
+  },
+  {
+   "id": "c20-blind",
+   "rank": 1,
+   "retrieval_s": 2.647
+  },
+  {
+   "id": "c22-blind",
+   "rank": 1,
+   "retrieval_s": 3.067
+  },
+  {
+   "id": "c23-blind",
+   "rank": 1,
+   "retrieval_s": 2.778
+  },
+  {
+   "id": "c26-blind",
+   "rank": 1,
+   "retrieval_s": 2.703
+  },
+  {
+   "id": "c27-blind",
+   "rank": 1,
+   "retrieval_s": 2.983
+  },
+  {
+   "id": "c28-blind",
+   "rank": 1,
+   "retrieval_s": 2.599
+  },
+  {
+   "id": "c29-blind",
+   "rank": 1,
+   "retrieval_s": 3.008
+  },
+  {
+   "id": "c33-blind",
+   "rank": 1,
+   "retrieval_s": 2.96
+  },
+  {
+   "id": "c34-blind",
+   "rank": 1,
+   "retrieval_s": 2.899
+  },
+  {
+   "id": "c35-blind",
+   "rank": 1,
+   "retrieval_s": 2.89
+  },
+  {
+   "id": "c36-blind",
+   "rank": 1,
+   "retrieval_s": 2.759
+  },
+  {
+   "id": "c39-blind",
+   "rank": 1,
+   "retrieval_s": 2.851
+  },
+  {
+   "id": "c40-blind",
+   "rank": 1,
+   "retrieval_s": 2.898
+  },
+  {
+   "id": "c43-blind",
+   "rank": 1,
+   "retrieval_s": 2.728
+  },
+  {
+   "id": "c44-blind",
+   "rank": 1,
+   "retrieval_s": 2.924
+  },
+  {
+   "id": "c45-blind",
+   "rank": 2,
+   "retrieval_s": 3.064
+  },
+  {
+   "id": "c46-blind",
+   "rank": 1,
+   "retrieval_s": 2.98
+  },
+  {
+   "id": "c48-blind",
+   "rank": 1,
+   "retrieval_s": 2.705
+  },
+  {
+   "id": "c50-blind",
+   "rank": 1,
+   "retrieval_s": 3.095
+  },
+  {
+   "id": "c52-blind",
+   "rank": 1,
+   "retrieval_s": 3.01
+  },
+  {
+   "id": "c53-blind",
+   "rank": 1,
+   "retrieval_s": 2.786
+  },
+  {
+   "id": "c55-blind",
+   "rank": 1,
+   "retrieval_s": 2.849
+  },
+  {
+   "id": "c56-blind",
+   "rank": 1,
+   "retrieval_s": 2.745
+  },
+  {
+   "id": "c57-blind",
+   "rank": 1,
+   "retrieval_s": 2.552
+  },
+  {
+   "id": "c58-blind",
+   "rank": 1,
+   "retrieval_s": 2.766
+  },
+  {
+   "id": "c62-blind",
+   "rank": 1,
+   "retrieval_s": 2.973
+  },
+  {
+   "id": "c63-blind",
+   "rank": 1,
+   "retrieval_s": 3.002
+  },
+  {
+   "id": "c65-blind",
+   "rank": 1,
+   "retrieval_s": 2.806
+  },
+  {
+   "id": "c66-blind",
+   "rank": 1,
+   "retrieval_s": 2.617
+  },
+  {
+   "id": "c69-blind",
+   "rank": 1,
+   "retrieval_s": 2.832
+  },
+  {
+   "id": "c74-blind",
+   "rank": 1,
+   "retrieval_s": 2.831
+  },
+  {
+   "id": "c75-blind",
+   "rank": 1,
+   "retrieval_s": 2.805
+  },
+  {
+   "id": "c76-blind",
+   "rank": 1,
+   "retrieval_s": 2.927
+  },
+  {
+   "id": "c78-blind",
+   "rank": 1,
+   "retrieval_s": 2.763
+  },
+  {
+   "id": "c79-blind",
+   "rank": 1,
+   "retrieval_s": 2.84
+  },
+  {
+   "id": "c80-blind",
+   "rank": 1,
+   "retrieval_s": 2.989
+  },
+  {
+   "id": "c81-blind",
+   "rank": 3,
+   "retrieval_s": 3.106
+  },
+  {
+   "id": "c82-blind",
+   "rank": 1,
+   "retrieval_s": 2.859
+  },
+  {
+   "id": "c84-blind",
+   "rank": 1,
+   "retrieval_s": 2.82
+  },
+  {
+   "id": "c85-blind",
+   "rank": 1,
+   "retrieval_s": 2.778
+  },
+  {
+   "id": "c86-blind",
+   "rank": 1,
+   "retrieval_s": 2.71
+  },
+  {
+   "id": "c89-blind",
+   "rank": 1,
+   "retrieval_s": 2.967
+  },
+  {
+   "id": "c91-blind",
+   "rank": 1,
+   "retrieval_s": 2.811
+  },
+  {
+   "id": "c93-blind",
+   "rank": 1,
+   "retrieval_s": 2.897
+  },
+  {
+   "id": "c95-blind",
+   "rank": 1,
+   "retrieval_s": 2.985
+  },
+  {
+   "id": "c96-blind",
+   "rank": null,
+   "retrieval_s": 2.706
+  },
+  {
+   "id": "c97-blind",
+   "rank": null,
+   "retrieval_s": 2.551
+  },
+  {
+   "id": "c98-blind",
+   "rank": null,
+   "retrieval_s": 2.832
+  },
+  {
+   "id": "c100-blind",
+   "rank": 1,
+   "retrieval_s": 2.938
+  },
+  {
+   "id": "c101-blind",
+   "rank": 1,
+   "retrieval_s": 2.877
+  },
+  {
+   "id": "c102-blind",
+   "rank": 1,
+   "retrieval_s": 2.98
+  },
+  {
+   "id": "c104-blind",
+   "rank": 4,
+   "retrieval_s": 2.761
+  },
+  {
+   "id": "c105-blind",
+   "rank": 1,
+   "retrieval_s": 2.907
+  },
+  {
+   "id": "c106-blind",
+   "rank": 1,
+   "retrieval_s": 2.752
+  },
+  {
+   "id": "c108-blind",
+   "rank": 1,
+   "retrieval_s": 2.878
+  },
+  {
+   "id": "c109-blind",
+   "rank": 2,
+   "retrieval_s": 2.625
+  },
+  {
+   "id": "c111-blind",
+   "rank": 1,
+   "retrieval_s": 2.797
+  },
+  {
+   "id": "c113-blind",
+   "rank": 1,
+   "retrieval_s": 2.721
+  },
+  {
+   "id": "c118-blind",
+   "rank": 1,
+   "retrieval_s": 2.898
+  },
+  {
+   "id": "c121-blind",
+   "rank": 1,
+   "retrieval_s": 2.883
+  },
+  {
+   "id": "c122-blind",
+   "rank": 5,
+   "retrieval_s": 2.802
+  },
+  {
+   "id": "c123-blind",
+   "rank": 1,
+   "retrieval_s": 2.874
+  },
+  {
+   "id": "c125-blind",
+   "rank": 1,
+   "retrieval_s": 2.857
+  },
+  {
+   "id": "c126-blind",
+   "rank": 1,
+   "retrieval_s": 2.9
+  },
+  {
+   "id": "c127-blind",
+   "rank": 2,
+   "retrieval_s": 2.808
+  },
+  {
+   "id": "c128-blind",
+   "rank": 1,
+   "retrieval_s": 2.737
+  },
+  {
+   "id": "c130-blind",
+   "rank": 1,
+   "retrieval_s": 2.798
+  },
+  {
+   "id": "c131-blind",
+   "rank": 1,
+   "retrieval_s": 2.498
+  },
+  {
+   "id": "c132-blind",
+   "rank": 1,
+   "retrieval_s": 2.707
+  },
+  {
+   "id": "c133-blind",
+   "rank": 1,
+   "retrieval_s": 2.769
+  },
+  {
+   "id": "c134-blind",
+   "rank": 1,
+   "retrieval_s": 2.663
+  },
+  {
+   "id": "c136-blind",
+   "rank": 1,
+   "retrieval_s": 3.116
+  },
+  {
+   "id": "c139-blind",
+   "rank": 1,
+   "retrieval_s": 2.937
+  },
+  {
+   "id": "c142-blind",
+   "rank": 1,
+   "retrieval_s": 2.956
+  },
+  {
+   "id": "c143-blind",
+   "rank": 1,
+   "retrieval_s": 3.01
+  },
+  {
+   "id": "c145-blind",
+   "rank": 3,
+   "retrieval_s": 2.992
+  },
+  {
+   "id": "c146-blind",
+   "rank": 2,
+   "retrieval_s": 2.9
+  },
+  {
+   "id": "c148-blind",
+   "rank": 1,
+   "retrieval_s": 2.942
+  },
+  {
+   "id": "c149-blind",
+   "rank": 1,
+   "retrieval_s": 2.689
+  },
+  {
+   "id": "c151-blind",
+   "rank": 1,
+   "retrieval_s": 2.804
+  },
+  {
+   "id": "c152-blind",
+   "rank": 1,
+   "retrieval_s": 2.935
+  },
+  {
+   "id": "c153-blind",
+   "rank": 1,
+   "retrieval_s": 2.859
+  },
+  {
+   "id": "c155-blind",
+   "rank": 1,
+   "retrieval_s": 2.815
+  },
+  {
+   "id": "c156-blind",
+   "rank": 1,
+   "retrieval_s": 2.969
+  },
+  {
+   "id": "c158-blind",
+   "rank": 1,
+   "retrieval_s": 2.815
+  },
+  {
+   "id": "c161-blind",
+   "rank": 1,
+   "retrieval_s": 2.775
+  },
+  {
+   "id": "c162-blind",
+   "rank": 1,
+   "retrieval_s": 2.823
+  },
+  {
+   "id": "c164-blind",
+   "rank": 1,
+   "retrieval_s": 2.618
+  },
+  {
+   "id": "c166-blind",
+   "rank": 1,
+   "retrieval_s": 2.789
+  },
+  {
+   "id": "c167-blind",
+   "rank": 1,
+   "retrieval_s": 2.625
+  },
+  {
+   "id": "c169-blind",
+   "rank": 1,
+   "retrieval_s": 2.691
+  },
+  {
+   "id": "c170-blind",
+   "rank": 1,
+   "retrieval_s": 2.714
+  },
+  {
+   "id": "c171-blind",
+   "rank": null,
+   "retrieval_s": 2.624
+  },
+  {
+   "id": "c173-blind",
+   "rank": 1,
+   "retrieval_s": 2.678
+  },
+  {
+   "id": "c174-blind",
+   "rank": null,
+   "retrieval_s": 2.801
+  },
+  {
+   "id": "c182-blind",
+   "rank": null,
+   "retrieval_s": 2.569
+  },
+  {
+   "id": "c183-blind",
+   "rank": 4,
+   "retrieval_s": 2.73
+  },
+  {
+   "id": "c186-blind",
+   "rank": 1,
+   "retrieval_s": 2.832
+  },
+  {
+   "id": "c187-blind",
+   "rank": 1,
+   "retrieval_s": 2.602
+  },
+  {
+   "id": "c189-blind",
+   "rank": 1,
+   "retrieval_s": 3.005
+  },
+  {
+   "id": "c193-blind",
+   "rank": 2,
+   "retrieval_s": 2.837
+  },
+  {
+   "id": "c194-blind",
+   "rank": 2,
+   "retrieval_s": 2.718
+  },
+  {
+   "id": "c196-blind",
+   "rank": 2,
+   "retrieval_s": 2.612
+  },
+  {
+   "id": "c199-blind",
+   "rank": 1,
+   "retrieval_s": 2.654
+  },
+  {
+   "id": "c200-blind",
+   "rank": 3,
+   "retrieval_s": 2.791
+  },
+  {
+   "id": "c201-blind",
+   "rank": 4,
+   "retrieval_s": 2.693
+  },
+  {
+   "id": "c202-blind",
+   "rank": 1,
+   "retrieval_s": 2.741
+  },
+  {
+   "id": "c203-blind",
+   "rank": 1,
+   "retrieval_s": 2.953
+  },
+  {
+   "id": "c204-blind",
+   "rank": 1,
+   "retrieval_s": 2.964
+  },
+  {
+   "id": "c205-blind",
+   "rank": 1,
+   "retrieval_s": 2.844
+  },
+  {
+   "id": "c206-blind",
+   "rank": 1,
+   "retrieval_s": 2.929
+  },
+  {
+   "id": "c207-blind",
+   "rank": 1,
+   "retrieval_s": 2.827
+  },
+  {
+   "id": "c208-blind",
+   "rank": 1,
+   "retrieval_s": 2.998
+  },
+  {
+   "id": "c209-blind",
+   "rank": null,
+   "retrieval_s": 3.161
+  },
+  {
+   "id": "c210-blind",
+   "rank": 1,
+   "retrieval_s": 2.883
+  },
+  {
+   "id": "c212-blind",
+   "rank": 1,
+   "retrieval_s": 2.94
+  },
+  {
+   "id": "c215-blind",
+   "rank": 1,
+   "retrieval_s": 2.833
+  },
+  {
+   "id": "c216-blind",
+   "rank": 1,
+   "retrieval_s": 2.86
+  },
+  {
+   "id": "c219-blind",
+   "rank": 2,
+   "retrieval_s": 2.808
+  },
+  {
+   "id": "c220-blind",
+   "rank": 1,
+   "retrieval_s": 2.715
+  },
+  {
+   "id": "c221-blind",
+   "rank": 1,
+   "retrieval_s": 2.704
+  },
+  {
+   "id": "c222-blind",
+   "rank": 1,
+   "retrieval_s": 3.009
+  },
+  {
+   "id": "c224-blind",
+   "rank": 1,
+   "retrieval_s": 2.941
+  },
+  {
+   "id": "c226-blind",
+   "rank": 1,
+   "retrieval_s": 2.882
+  },
+  {
+   "id": "c228-blind",
+   "rank": 1,
+   "retrieval_s": 2.877
+  },
+  {
+   "id": "c229-blind",
+   "rank": 1,
+   "retrieval_s": 2.792
+  },
+  {
+   "id": "c230-blind",
+   "rank": 1,
+   "retrieval_s": 2.782
+  },
+  {
+   "id": "c232-blind",
+   "rank": 1,
+   "retrieval_s": 2.816
+  },
+  {
+   "id": "c234-blind",
+   "rank": 1,
+   "retrieval_s": 2.702
+  },
+  {
+   "id": "c236-blind",
+   "rank": 1,
+   "retrieval_s": 3.011
+  },
+  {
+   "id": "c239-blind",
+   "rank": 1,
+   "retrieval_s": 3.104
+  },
+  {
+   "id": "c240-blind",
+   "rank": 1,
+   "retrieval_s": 2.862
+  },
+  {
+   "id": "c241-blind",
+   "rank": 1,
+   "retrieval_s": 2.809
+  },
+  {
+   "id": "c243-blind",
+   "rank": 1,
+   "retrieval_s": 2.827
+  },
+  {
+   "id": "c244-blind",
+   "rank": 1,
+   "retrieval_s": 2.885
+  },
+  {
+   "id": "c246-blind",
+   "rank": 1,
+   "retrieval_s": 2.607
+  },
+  {
+   "id": "c248-blind",
+   "rank": 1,
+   "retrieval_s": 2.763
+  },
+  {
+   "id": "c249-blind",
+   "rank": 1,
+   "retrieval_s": 2.745
+  },
+  {
+   "id": "c252-blind",
+   "rank": 1,
+   "retrieval_s": 2.645
+  },
+  {
+   "id": "c253-blind",
+   "rank": 1,
+   "retrieval_s": 2.878
+  },
+  {
+   "id": "c254-blind",
+   "rank": 1,
+   "retrieval_s": 2.86
+  },
+  {
+   "id": "c258-blind",
+   "rank": 1,
+   "retrieval_s": 2.733
+  },
+  {
+   "id": "c259-blind",
+   "rank": 1,
+   "retrieval_s": 3.135
+  },
+  {
+   "id": "c260-blind",
+   "rank": 1,
+   "retrieval_s": 2.936
+  },
+  {
+   "id": "c261-blind",
+   "rank": 1,
+   "retrieval_s": 2.746
+  },
+  {
+   "id": "c263-blind",
+   "rank": 1,
+   "retrieval_s": 2.649
+  },
+  {
+   "id": "c265-blind",
+   "rank": 1,
+   "retrieval_s": 2.908
+  },
+  {
+   "id": "c266-blind",
+   "rank": 1,
+   "retrieval_s": 2.903
+  },
+  {
+   "id": "c267-blind",
+   "rank": 1,
+   "retrieval_s": 2.983
+  },
+  {
+   "id": "c269-blind",
+   "rank": 1,
+   "retrieval_s": 2.718
+  },
+  {
+   "id": "c273-blind",
+   "rank": 1,
+   "retrieval_s": 2.788
+  },
+  {
+   "id": "c274-blind",
+   "rank": 1,
+   "retrieval_s": 2.838
+  },
+  {
+   "id": "c275-blind",
+   "rank": 1,
+   "retrieval_s": 2.8
+  },
+  {
+   "id": "c278-blind",
+   "rank": 1,
+   "retrieval_s": 2.879
+  },
+  {
+   "id": "c280-blind",
+   "rank": 1,
+   "retrieval_s": 2.871
+  },
+  {
+   "id": "c281-blind",
+   "rank": 1,
+   "retrieval_s": 2.804
+  },
+  {
+   "id": "c283-blind",
+   "rank": 1,
+   "retrieval_s": 2.622
+  },
+  {
+   "id": "c284-blind",
+   "rank": 1,
+   "retrieval_s": 2.808
+  },
+  {
+   "id": "c288-blind",
+   "rank": 1,
+   "retrieval_s": 3.097
+  },
+  {
+   "id": "c289-blind",
+   "rank": 1,
+   "retrieval_s": 2.638
+  },
+  {
+   "id": "c290-blind",
+   "rank": 1,
+   "retrieval_s": 2.769
+  },
+  {
+   "id": "c292-blind",
+   "rank": 1,
+   "retrieval_s": 2.739
+  },
+  {
+   "id": "c294-blind",
+   "rank": 1,
+   "retrieval_s": 3.261
+  },
+  {
+   "id": "c295-blind",
+   "rank": 2,
+   "retrieval_s": 2.973
+  },
+  {
+   "id": "c296-blind",
+   "rank": 1,
+   "retrieval_s": 2.701
+  },
+  {
+   "id": "c297-blind",
+   "rank": 1,
+   "retrieval_s": 2.742
+  },
+  {
+   "id": "c298-blind",
+   "rank": 1,
+   "retrieval_s": 2.742
+  },
+  {
+   "id": "c303-blind",
+   "rank": 1,
+   "retrieval_s": 2.698
+  },
+  {
+   "id": "c304-blind",
+   "rank": 1,
+   "retrieval_s": 2.699
+  },
+  {
+   "id": "c305-blind",
+   "rank": null,
+   "retrieval_s": 2.663
+  },
+  {
+   "id": "c306-blind",
+   "rank": null,
+   "retrieval_s": 2.644
+  },
+  {
+   "id": "c307-blind",
+   "rank": 1,
+   "retrieval_s": 2.577
+  },
+  {
+   "id": "c308-blind",
+   "rank": 2,
+   "retrieval_s": 2.892
+  },
+  {
+   "id": "c309-blind",
+   "rank": 3,
+   "retrieval_s": 2.794
+  },
+  {
+   "id": "c311-blind",
+   "rank": 1,
+   "retrieval_s": 2.635
+  },
+  {
+   "id": "c313-blind",
+   "rank": 1,
+   "retrieval_s": 2.802
+  },
+  {
+   "id": "c315-blind",
+   "rank": 1,
+   "retrieval_s": 3.031
+  },
+  {
+   "id": "c317-blind",
+   "rank": 1,
+   "retrieval_s": 2.817
+  },
+  {
+   "id": "c318-blind",
+   "rank": 1,
+   "retrieval_s": 2.986
+  },
+  {
+   "id": "c319-blind",
+   "rank": 1,
+   "retrieval_s": 2.907
+  },
+  {
+   "id": "c321-blind",
+   "rank": 1,
+   "retrieval_s": 2.966
+  },
+  {
+   "id": "c322-blind",
+   "rank": 2,
+   "retrieval_s": 3.149
+  },
+  {
+   "id": "c325-blind",
+   "rank": 1,
+   "retrieval_s": 3.003
+  },
+  {
+   "id": "c326-blind",
+   "rank": null,
+   "retrieval_s": 3.056
+  },
+  {
+   "id": "c327-blind",
+   "rank": 1,
+   "retrieval_s": 2.937
+  },
+  {
+   "id": "c328-blind",
+   "rank": 1,
+   "retrieval_s": 3.019
+  },
+  {
+   "id": "c330-blind",
+   "rank": 1,
+   "retrieval_s": 2.653
+  },
+  {
+   "id": "c332-blind",
+   "rank": 1,
+   "retrieval_s": 2.791
+  },
+  {
+   "id": "c333-blind",
+   "rank": 2,
+   "retrieval_s": 2.924
+  },
+  {
+   "id": "c334-blind",
+   "rank": 1,
+   "retrieval_s": 2.989
+  },
+  {
+   "id": "c335-blind",
+   "rank": 1,
+   "retrieval_s": 2.827
+  },
+  {
+   "id": "c336-blind",
+   "rank": 1,
+   "retrieval_s": 2.916
+  },
+  {
+   "id": "c338-blind",
+   "rank": 1,
+   "retrieval_s": 3.12
+  },
+  {
+   "id": "c339-blind",
+   "rank": 1,
+   "retrieval_s": 2.893
+  },
+  {
+   "id": "c344-blind",
+   "rank": 1,
+   "retrieval_s": 2.965
+  },
+  {
+   "id": "c346-blind",
+   "rank": 3,
+   "retrieval_s": 2.955
+  },
+  {
+   "id": "c348-blind",
+   "rank": 1,
+   "retrieval_s": 2.992
+  },
+  {
+   "id": "c350-blind",
+   "rank": 1,
+   "retrieval_s": 2.739
+  },
+  {
+   "id": "c351-blind",
+   "rank": 1,
+   "retrieval_s": 3.075
+  }
+ ]
+}
