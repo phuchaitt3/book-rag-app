@@ -96,6 +96,16 @@ uv run ruff check . && uv run ruff format --check . && uv run mypy && uv run pyt
 pnpm lint:web && pnpm typecheck:web && pnpm build:web
 ```
 
+### Supply-chain checks
+
+`.github/workflows/security.yml` runs on pull requests, on pushes to `main` and weekly:
+
+- **codeql**: CodeQL static analysis (default queries) for Python and JavaScript/TypeScript, reported to code scanning.
+- **images**: builds the API, worker and web images without pushing them, scans each with Trivy (full report as SARIF to code scanning; the job fails only on a fixable CRITICAL vulnerability), and uploads a CycloneDX SBOM per image as a workflow artifact (`sbom-api`, `sbom-worker`, `sbom-web`).
+- **dependency-review**: on pull requests, flags newly added dependencies with known vulnerabilities.
+
+Every job has least-privilege `permissions:` and every action is pinned by commit SHA.
+
 ### Pre-commit
 
 The same checks run on every commit (ruff, ruff format, mypy, and web lint and typecheck when `apps/web` changes), and CI runs them on all files.
