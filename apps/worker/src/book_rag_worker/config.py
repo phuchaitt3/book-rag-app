@@ -23,7 +23,7 @@ class WorkerSettings(BaseSettings):
     s3_region: str = "auto"
     embedding_provider: str = "ollama"  # "ollama", or "fake" (no model, for tests)
     embedding_model: str = "bge-m3"
-    ollama_url: str = "http://localhost:11434"
+    ollama_url: str = "http://127.0.0.1:11434"
     embed_batch_size: int = 32
     # Experiment (ADR 0008): with "qdrant" or "shadow" the worker also copies each batch of
     # vectors to Qdrant. EXPIRES 2026-12-15, see #120.

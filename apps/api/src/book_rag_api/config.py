@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     llm_model: str = "qwen2.5:7b-instruct"
     embedding_provider: str = "ollama"
     embedding_model: str = "bge-m3"
-    ollama_url: str = "http://localhost:11434"
+    ollama_url: str = "http://127.0.0.1:11434"
     # Chat limits (#191). Retrieval (embedding the question plus the search) gets
     # `retrieval_timeout` seconds. The model stream may pause at most `llm_idle_timeout` seconds
     # between pieces and run at most `llm_total_timeout` seconds in all. Each client address may
@@ -48,7 +48,7 @@ class Settings(BaseSettings):
     # Only the top `rerank_depth` fused candidates are scored; on an error or after
     # `rerank_timeout` seconds the fused order is used.
     reranker_provider: Literal["none", "fake", "tei"] = "none"
-    reranker_url: str = "http://localhost:8080"
+    reranker_url: str = "http://127.0.0.1:8080"
     rerank_depth: int = Field(default=20, ge=1, le=60)
     rerank_timeout: float = Field(default=10.0, gt=0)
     # Experiment (ADR 0008): "pgvector" (default), "qdrant", or "shadow" (pgvector answers and

@@ -35,7 +35,7 @@ class OllamaLLM:
     def __init__(
         self,
         model: str,
-        base_url: str = "http://localhost:11434",
+        base_url: str = "http://127.0.0.1:11434",
         post: PostFn = http_post,
     ) -> None:
         self._model = model
@@ -62,7 +62,7 @@ class OllamaEmbedder:
         self,
         model: str,
         dimension: int,
-        base_url: str = "http://localhost:11434",
+        base_url: str = "http://127.0.0.1:11434",
         post: PostFn = http_post,
     ) -> None:
         self._model = model
