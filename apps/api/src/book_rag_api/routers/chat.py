@@ -23,6 +23,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.providers import LLM
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
+from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.auth import Owner
 from book_rag_api.config import Settings
 from book_rag_api.metrics import Metrics
@@ -139,9 +140,12 @@ async def answer_events(
     abstain: str | None = None,
     metrics: Metrics | None = None,
     started: float | None = None,
+    tracer: Tracer | None = None,
 ) -> AsyncIterator[str]:
     """`started` is `time.perf_counter()` at the request's start; with `metrics` it times the
-    first token of a model answer."""
+    first token of a model answer. `tracer` opens the `llm.stream` span (its child `llm.first_token`
+    ends at the first piece)."""
+    tracer = tracer or NoopTracer()
     if abstain is not None:
         if metrics is not None:
             metrics.abstained(abstain)
@@ -154,13 +158,21 @@ async def answer_events(
     citations = citations_for(book, chunks)
     yield sse("citations", [c.model_dump(mode="json") for c in citations])
     try:
-        stream = llm.stream(build_messages(question, book.title, chunks))
-        first = True
-        async for piece in with_timeouts(stream, idle=idle_timeout, total=total_timeout):
-            if first and metrics is not None and started is not None:
-                metrics.first_token(time.perf_counter() - started)
-            first = False
-            yield sse("token", TokenEvent(text=piece).model_dump())
+        with tracer.span("llm.stream", book_id=str(book.id), citations=len(citations)) as span:
+            stream = llm.stream(build_messages(question, book.title, chunks))
+            pieces = with_timeouts(stream, idle=idle_timeout, total=total_timeout)
+            with tracer.span("llm.first_token", book_id=str(book.id)):
+                first = await anext(pieces, None)
+            count = 0
+            if first is not None:
+                if metrics is not None and started is not None:
+                    metrics.first_token(time.perf_counter() - started)
+                count = 1
+                yield sse("token", TokenEvent(text=first).model_dump())
+                async for piece in pieces:
+                    count += 1
+                    yield sse("token", TokenEvent(text=piece).model_dump())
+            span.set_attribute("pieces", count)
     except TimeoutError:
         log.warning("model stream timed out")
         yield sse("error", ErrorEvent(message="the model took too long; try again").model_dump())
@@ -228,6 +240,7 @@ async def chat(
             abstain=abstain_reason(chunks, settings),
             metrics=request.app.state.metrics,
             started=started,
+            tracer=request.app.state.tracer,
         ),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},

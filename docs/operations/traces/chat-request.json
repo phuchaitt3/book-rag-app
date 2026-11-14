@@ -1,0 +1,447 @@
+{
+  "spans": [
+    {
+      "name": "POST /books/{book_id}/chat",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "9dca82b65c9fac70",
+      "parent_span_id": null,
+      "kind": "SERVER",
+      "start_unix_nano": 1794696310845606100,
+      "duration_ms": 425.652,
+      "status": "UNSET",
+      "attributes": {
+        "http.scheme": "http",
+        "http.host": "test:None",
+        "http.flavor": "1.1",
+        "http.target": "/books/df6cc1e6-f1e8-489f-9e5e-f5bab18a0a4f/chat",
+        "http.url": "http://test/books/df6cc1e6-f1e8-489f-9e5e-f5bab18a0a4f/chat",
+        "http.method": "POST",
+        "http.server_name": "test",
+        "http.user_agent": "python-httpx/0.28.1",
+        "net.peer.ip": "127.0.0.1",
+        "net.peer.port": 123,
+        "http.route": "/books/{book_id}/chat",
+        "http.status_code": 200
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http receive",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "714e8e90f421ca48",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696310849623900,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.request"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http receive",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "145dc18eeafd88f0",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696310849623900,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.request"
+      }
+    },
+    {
+      "name": "SELECT",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "19f400a1df715ced",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "CLIENT",
+      "start_unix_nano": 1794696310883178300,
+      "duration_ms": 4.566,
+      "status": "UNSET",
+      "attributes": {
+        "net.peer.name": "localhost",
+        "net.peer.port": 58335,
+        "db.name": "test",
+        "db.user": "test",
+        "db.statement": "SELECT books.id, books.owner_id, books.title, books.author, books.language, books.storage_key, books.page_count, books.created_at \nFROM books \nWHERE books.id = $1::UUID AND books.owner_id = $2::VARCHAR",
+        "db.system": "postgresql",
+        "db.operation": "SELECT"
+      }
+    },
+    {
+      "name": "SELECT",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "edb1cad32f9ddc22",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "CLIENT",
+      "start_unix_nano": 1794696310890615100,
+      "duration_ms": 3.377,
+      "status": "UNSET",
+      "attributes": {
+        "net.peer.name": "localhost",
+        "net.peer.port": 58335,
+        "db.name": "test",
+        "db.user": "test",
+        "db.statement": "SELECT ingestion_jobs.status \nFROM ingestion_jobs \nWHERE ingestion_jobs.book_id = $1::UUID ORDER BY ingestion_jobs.created_at DESC \n LIMIT $2::INTEGER",
+        "db.system": "postgresql",
+        "db.operation": "SELECT"
+      }
+    },
+    {
+      "name": "embed_query",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "b15b03b8dc035075",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696310895658900,
+      "duration_ms": 0.584,
+      "status": "UNSET",
+      "attributes": {
+        "book_id": "df6cc1e6-f1e8-489f-9e5e-f5bab18a0a4f"
+      }
+    },
+    {
+      "name": "vector_search",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "3d6640d7a569be8f",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696310896242600,
+      "duration_ms": 261.381,
+      "status": "UNSET",
+      "attributes": {
+        "book_id": "df6cc1e6-f1e8-489f-9e5e-f5bab18a0a4f",
+        "k": 30,
+        "candidates": 2
+      }
+    },
+    {
+      "name": "lexical_search",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "cc126d2f71cf9b6d",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696310897351200,
+      "duration_ms": 226.506,
+      "status": "UNSET",
+      "attributes": {
+        "book_id": "df6cc1e6-f1e8-489f-9e5e-f5bab18a0a4f",
+        "k": 30,
+        "candidates": 1
+      }
+    },
+    {
+      "name": "SELECT",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "1b26ebbaca61e111",
+      "parent_span_id": "cc126d2f71cf9b6d",
+      "kind": "CLIENT",
+      "start_unix_nano": 1794696310910600300,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "net.peer.name": "localhost",
+        "net.peer.port": 58335,
+        "db.name": "test",
+        "db.user": "test",
+        "db.statement": "SELECT EXISTS (SELECT 1 FROM book_terms t JOIN books b ON b.id = t.book_id WHERE t.book_id = $1 AND b.owner_id = $2)",
+        "db.system": "postgresql",
+        "db.operation": "SELECT"
+      }
+    },
+    {
+      "name": "SELECT",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "d2d0f04ee61e8288",
+      "parent_span_id": "3d6640d7a569be8f",
+      "kind": "CLIENT",
+      "start_unix_nano": 1794696310946001200,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "net.peer.name": "localhost",
+        "net.peer.port": 58335,
+        "db.name": "test",
+        "db.user": "test",
+        "db.statement": "SELECT extversion FROM pg_extension WHERE extname = 'vector'",
+        "db.system": "postgresql",
+        "db.operation": "SELECT"
+      }
+    },
+    {
+      "name": "SELECT",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "b5ecffd74d4da719",
+      "parent_span_id": "cc126d2f71cf9b6d",
+      "kind": "CLIENT",
+      "start_unix_nano": 1794696310971785000,
+      "duration_ms": 152.072,
+      "status": "UNSET",
+      "attributes": {
+        "net.peer.name": "localhost",
+        "net.peer.port": 58335,
+        "db.name": "test",
+        "db.user": "test",
+        "db.statement": "SELECT chunks.id, chunks.book_id, chunks.section_id, chunks.ordinal, chunks.text, chunks.page, chunks.section_path, chunks.embedding, chunks.tsv, chunks.token_count \nFROM chunks JOIN books ON books.id = chunks.book_id \nWHERE chunks.book_id = $1::UUID AND books.owner_id = $2::VARCHAR AND (chunks.tsv @@ to_tsquery($3::REGCONFIG, $4::VARCHAR)) ORDER BY ts_rank_cd(chunks.tsv, to_tsquery($3::REGCONFIG, $4::VARCHAR)) DESC \n LIMIT $5::INTEGER",
+        "db.system": "postgresql",
+        "db.operation": "SELECT"
+      }
+    },
+    {
+      "name": "SET",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "a9b17b8122df3925",
+      "parent_span_id": "3d6640d7a569be8f",
+      "kind": "CLIENT",
+      "start_unix_nano": 1794696310998658100,
+      "duration_ms": 3.528,
+      "status": "UNSET",
+      "attributes": {
+        "net.peer.name": "localhost",
+        "net.peer.port": 58335,
+        "db.name": "test",
+        "db.user": "test",
+        "db.statement": "SET LOCAL hnsw.iterative_scan = strict_order",
+        "db.system": "postgresql",
+        "db.operation": "SET"
+      }
+    },
+    {
+      "name": "SELECT",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "4fa56b803645e4cf",
+      "parent_span_id": "3d6640d7a569be8f",
+      "kind": "CLIENT",
+      "start_unix_nano": 1794696311006743900,
+      "duration_ms": 148.859,
+      "status": "UNSET",
+      "attributes": {
+        "net.peer.name": "localhost",
+        "net.peer.port": 58335,
+        "db.name": "test",
+        "db.user": "test",
+        "db.statement": "SELECT chunks.id, chunks.book_id, chunks.section_id, chunks.ordinal, chunks.text, chunks.page, chunks.section_path, chunks.embedding, chunks.tsv, chunks.token_count \nFROM chunks JOIN books ON books.id = chunks.book_id \nWHERE chunks.book_id = $1::UUID AND books.owner_id = $2::VARCHAR AND chunks.embedding IS NOT NULL ORDER BY chunks.embedding <=> $3 \n LIMIT $4::INTEGER",
+        "db.system": "postgresql",
+        "db.operation": "SELECT"
+      }
+    },
+    {
+      "name": "fuse",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "3981638f2f560f0a",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311157623300,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "book_id": "df6cc1e6-f1e8-489f-9e5e-f5bab18a0a4f",
+        "vector_candidates": 2,
+        "top_k": 2,
+        "lexical_candidates": 1,
+        "fused_candidates": 2
+      }
+    },
+    {
+      "name": "rerank",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "26aeb1f4016bb578",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311157623300,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "book_id": "df6cc1e6-f1e8-489f-9e5e-f5bab18a0a4f",
+        "candidates": 2,
+        "fallback": false
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "89e21afa35033999",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.start",
+        "http.status_code": 200
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "cddf29d035e32a37",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "llm.first_token",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "85b9bdafbba4d18d",
+      "parent_span_id": "8ce62d858a2cd110",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "book_id": "df6cc1e6-f1e8-489f-9e5e-f5bab18a0a4f"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "9ba247453db4a704",
+      "parent_span_id": "8ce62d858a2cd110",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "feac1f8e1f714944",
+      "parent_span_id": "8ce62d858a2cd110",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "470058d257e016fb",
+      "parent_span_id": "8ce62d858a2cd110",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "194f20092a306c6b",
+      "parent_span_id": "8ce62d858a2cd110",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "08615732ed6be3e7",
+      "parent_span_id": "8ce62d858a2cd110",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "e0d32349bd2aa56a",
+      "parent_span_id": "8ce62d858a2cd110",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "cb90c201ac9ffa92",
+      "parent_span_id": "8ce62d858a2cd110",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "llm.stream",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "8ce62d858a2cd110",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "book_id": "df6cc1e6-f1e8-489f-9e5e-f5bab18a0a4f",
+        "citations": 2,
+        "pieces": 7
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "7295a9a4cd5b6f63",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http send",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "491d12c243c29aa5",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.response.body"
+      }
+    },
+    {
+      "name": "POST /books/{book_id}/chat http receive",
+      "trace_id": "9a934743b133af4b80260b87b5858a4b",
+      "span_id": "b043cab7c5ae4073",
+      "parent_span_id": "9dca82b65c9fac70",
+      "kind": "INTERNAL",
+      "start_unix_nano": 1794696311271258000,
+      "duration_ms": 0.0,
+      "status": "UNSET",
+      "attributes": {
+        "asgi.event.type": "http.disconnect"
+      }
+    }
+  ]
+}
