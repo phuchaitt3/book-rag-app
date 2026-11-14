@@ -20,6 +20,9 @@ class RetrievedChunk:
     section_path: str | None
     # Fusion score, replaced by the reranker's score when a reranker is used.
     score: float = 0.0
+    # True when `score` came from the reranker, False for the fused (RRF) score. The two scales
+    # differ, so an abstain threshold is set for each (#222).
+    reranked: bool = False
 
 
 class ChunkSearcher(Protocol):
@@ -104,7 +107,9 @@ class HybridRetriever:
         started = time.perf_counter()
         try:
             scores = await reranker.rerank(query, [c.text for c in head])
-            rescored = [replace(c, score=s) for c, s in zip(head, scores, strict=True)]
+            rescored = [
+                replace(c, score=s, reranked=True) for c, s in zip(head, scores, strict=True)
+            ]
         except Exception as error:
             # A slow or broken reranker should cost answer quality, not the answer.
             log.warning("reranker failed; using the fused order", exc_info=True)

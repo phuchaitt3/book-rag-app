@@ -69,6 +69,7 @@ def create_app(
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.settings = settings
+        app.state.metrics = metrics
         app.state.engine = create_engine(settings.database_url)
         app.state.storage = storage or _s3_storage(settings)
         app.state.queue = queue or create_queue(settings.database_url)

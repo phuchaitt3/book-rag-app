@@ -4,6 +4,10 @@ from typing import Literal
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# Measured defaults, docs/benchmarks/abstain.md.
+ABSTAIN_RERANKED: float | None = 0.2557
+ABSTAIN_FUSED: float | None = 0.0299
+
 
 class Settings(BaseSettings):
     """Runtime settings, read from environment variables (and `.env`, `.env.local` in development).
@@ -51,6 +55,13 @@ class Settings(BaseSettings):
     reranker_url: str = "http://127.0.0.1:8080"
     rerank_depth: int = Field(default=20, ge=1, le=60)
     rerank_timeout: float = Field(default=10.0, gt=0)
+    # Abstain (#222): when the best passage scores under the threshold the chat endpoint
+    # replies with a fixed "not found in this book" answer and does not call the model. The
+    # two scores are on different scales (the reranker's relevance score, or the fused RRF
+    # score when no reranker ran), so each has its own threshold; None turns that one off.
+    # Defaults: see docs/benchmarks/abstain.md.
+    abstain_below_reranked: float | None = ABSTAIN_RERANKED
+    abstain_below_fused: float | None = ABSTAIN_FUSED
     # Experiment (ADR 0008): "pgvector" (default), "qdrant", or "shadow" (pgvector answers and
     # Qdrant is compared in the log). EXPIRES 2026-12-15, see #120.
     vector_store: Literal["pgvector", "qdrant", "shadow"] = "pgvector"

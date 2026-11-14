@@ -10,6 +10,10 @@ The reply is parsed as the server-sent events the API documents (`citations`, `t
 - citation validity: every `[n]` marker in the answer names a returned citation;
 - answer overlap: token F1 and reference recall between the answer and the test set's
   reference answer (answerable questions only);
+- abstention (#222): the `done` event's `abstained` flag. On the questions the book does not
+  answer (`kind` unanswerable) the abstain rate is the share that abstained, higher is better;
+  on the answerable ones the false-abstain rate is the share that abstained, lower is better.
+  Both come with a bootstrap 95% interval;
 - format errors (not a valid stream, no `done`, empty answer, non-200) and stream errors (an
   `error` event).
 
@@ -20,7 +24,7 @@ and a live run points it at the running API. Live run:
 
 Environment: API_URL (http://localhost:8000), DATABASE_URL
 (postgresql://bookrag:bookrag@localhost:5432/bookrag), QUESTIONS (the committed set), KINDS
-(blind), TOP_K (6), LIMIT (0 = all), LABEL (run), OUT_DIR (evals/results).
+(blind,unanswerable), TOP_K (6), LIMIT (0 = all), LABEL (run), OUT_DIR (evals/results).
 """
 
 from __future__ import annotations
@@ -29,6 +33,7 @@ import asyncio
 import importlib.util
 import json
 import os
+import random
 import re
 import statistics
 import sys
@@ -123,6 +128,8 @@ def score_stream(
         "stream_error": False,
         "answer": "",
         "citations": 0,
+        "answerable": row.get("kind") != "unanswerable",
+        "abstained": False,
     }
     if status != 200:
         result["format_error"] = f"status {status}"
@@ -136,12 +143,22 @@ def score_stream(
     answer = "".join(d.get("text", "") for n, d in events if n == "token")
     result["answer"] = answer
     result["stream_error"] = "error" in names
+    done = next((d for n, d in events if n == "done"), None)
+    result["abstained"] = isinstance(done, dict) and done.get("abstained") is True
     cites = events[0][1] if names[:1] == ["citations"] else None
     if not isinstance(cites, list):
         result["format_error"] = "first event is not citations"
         return result
     result["format_error"] = _stream_problem(names, answer)
     result["citations"] = len(cites)
+    if result["abstained"]:
+        # The fixed reply has no citations or markers, so the citation checks do not apply; for
+        # an answerable question it counts as a miss.
+        if row.get("evidence"):
+            result.update(citation_rank=None, cited_answer_hit=False)
+        if row.get("answer"):
+            result.update(token_f1=0.0, reference_recall=0.0)
+        return result
     numbers = [int(m) for m in MARKER.findall(answer)]
     invalid = [n for n in numbers if not 1 <= n <= len(cites)]
     result.update(markers=len(numbers), invalid_markers=len(invalid), citation_valid=not invalid)
@@ -167,7 +184,19 @@ def _mean(results: list[dict[str, Any]], key: str) -> float | None:
     return round(statistics.fmean(r[key] for r in results), 4) if results else None
 
 
+def rate_interval(flags: Sequence[bool], seed: int = 222, reps: int = 10_000) -> list[float]:
+    """Bootstrap 95% interval, in percent, of the share of True in `flags`."""
+    n = len(flags)
+    if not n:
+        return []
+    rng = random.Random(seed)
+    means = sorted(sum(flags[rng.randrange(n)] for _ in range(n)) / n for _ in range(reps))
+    return [round(100 * means[int(0.025 * reps)], 1), round(100 * means[int(0.975 * reps)], 1)]
+
+
 def summarise(results: list[dict[str, Any]], **meta: Any) -> dict[str, Any]:
+    unanswerable = [r["abstained"] for r in results if not r["answerable"]]
+    answerable = [r["abstained"] for r in results if r["answerable"]]
     streamed = [r for r in results if "citation_valid" in r]
     with_evidence = [r for r in results if "citation_rank" in r]
     with_ref = [r for r in results if "token_f1" in r]
@@ -176,6 +205,12 @@ def summarise(results: list[dict[str, Any]], **meta: Any) -> dict[str, Any]:
         "questions": len(results),
         "format_errors": sum(r["format_error"] is not None for r in results),
         "stream_errors": sum(r["stream_error"] for r in results),
+        "abstain_rate_unanswerable_pct": _pct(unanswerable),
+        "abstain_rate_unanswerable_ci95": rate_interval(unanswerable),
+        "unanswerable_questions": len(unanswerable),
+        "false_abstain_rate_answerable_pct": _pct(answerable),
+        "false_abstain_rate_answerable_ci95": rate_interval(answerable),
+        "answerable_questions": len(answerable),
         "scored_for_hit": len(with_evidence),
         "citation_hit_pct": _pct([r["citation_rank"] is not None for r in with_evidence]),
         "cited_answer_hit_pct": _pct([r["cited_answer_hit"] for r in with_evidence]),
@@ -187,11 +222,30 @@ def summarise(results: list[dict[str, Any]], **meta: Any) -> dict[str, Any]:
     }
 
 
+def _with_ci(value: float | None, ci: Sequence[float]) -> str:
+    return "n/a" if value is None else f"{value} ({ci[0]}-{ci[1]})"
+
+
 def markdown(summary: Mapping[str, Any]) -> str:
     rows = [
         ("Questions sent", summary["questions"]),
         ("Format errors", summary["format_errors"]),
         ("Stream errors (`error` event)", summary["stream_errors"]),
+        (
+            "Abstain rate on unanswerable % "
+            f"(n={summary['unanswerable_questions']}, higher is better)",
+            _with_ci(
+                summary["abstain_rate_unanswerable_pct"], summary["abstain_rate_unanswerable_ci95"]
+            ),
+        ),
+        (
+            "False-abstain rate on answerable % "
+            f"(n={summary['answerable_questions']}, lower is better)",
+            _with_ci(
+                summary["false_abstain_rate_answerable_pct"],
+                summary["false_abstain_rate_answerable_ci95"],
+            ),
+        ),
         (f"Citation hit % (n={summary['scored_for_hit']})", summary["citation_hit_pct"]),
         ("Cited-answer hit %", summary["cited_answer_hit_pct"]),
         ("Citation validity %", summary["citation_valid_pct"]),
@@ -267,7 +321,7 @@ async def main() -> None:
     default_set = ROOT / "experiments" / "book-testset" / "questions.jsonl"
     rows = load_questions(
         Path(env.get("QUESTIONS", default_set)),
-        env.get("KINDS", "blind").split(","),
+        env.get("KINDS", "blind,unanswerable").split(","),
         int(env.get("LIMIT", "0")),
     )
     database_url = env.get("DATABASE_URL", "postgresql://bookrag:bookrag@localhost:5432/bookrag")

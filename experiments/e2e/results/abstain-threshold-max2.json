@@ -1,0 +1,536 @@
+[
+ {
+  "label": "rerank",
+  "max_false_abstain_on_seen": 0.02,
+  "chosen_threshold": 0.2556656,
+  "chosen": {
+   "seen": {
+    "unanswerable": {
+     "n": 21,
+     "pct": 90.5,
+     "ci95": [
+      76.2,
+      100.0
+     ]
+    },
+    "answerable": {
+     "n": 208,
+     "pct": 1.9,
+     "ci95": [
+      0.5,
+      3.8
+     ]
+    }
+   },
+   "blind": {
+    "unanswerable": {
+     "n": 19,
+     "pct": 100.0,
+     "ci95": [
+      100.0,
+      100.0
+     ]
+    },
+    "answerable": {
+     "n": 208,
+     "pct": 5.3,
+     "ci95": [
+      2.4,
+      8.7
+     ]
+    }
+   }
+  },
+  "table": [
+   {
+    "seen_answerable_quantile": 0.0,
+    "threshold": 0.064317144,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 66.7,
+      "ci95": [
+       47.6,
+       85.7
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 73.7,
+      "ci95": [
+       52.6,
+       89.5
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 1.4,
+      "ci95": [
+       0.0,
+       3.4
+      ]
+     }
+    }
+   },
+   {
+    "seen_answerable_quantile": 0.02,
+    "threshold": 0.2556656,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 90.5,
+      "ci95": [
+       76.2,
+       100.0
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 1.9,
+      "ci95": [
+       0.5,
+       3.8
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 100.0,
+      "ci95": [
+       100.0,
+       100.0
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 5.3,
+      "ci95": [
+       2.4,
+       8.7
+      ]
+     }
+    }
+   },
+   {
+    "seen_answerable_quantile": 0.05,
+    "threshold": 0.6958889,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 100.0,
+      "ci95": [
+       100.0,
+       100.0
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 4.8,
+      "ci95": [
+       1.9,
+       7.7
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 100.0,
+      "ci95": [
+       100.0,
+       100.0
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 17.8,
+      "ci95": [
+       12.5,
+       23.1
+      ]
+     }
+    }
+   },
+   {
+    "seen_answerable_quantile": 0.1,
+    "threshold": 0.8704679,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 100.0,
+      "ci95": [
+       100.0,
+       100.0
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 9.6,
+      "ci95": [
+       5.8,
+       13.9
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 100.0,
+      "ci95": [
+       100.0,
+       100.0
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 31.2,
+      "ci95": [
+       25.0,
+       37.5
+      ]
+     }
+    }
+   },
+   {
+    "seen_answerable_quantile": 0.2,
+    "threshold": 0.9389554,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 100.0,
+      "ci95": [
+       100.0,
+       100.0
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 19.7,
+      "ci95": [
+       14.4,
+       25.0
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 100.0,
+      "ci95": [
+       100.0,
+       100.0
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 42.8,
+      "ci95": [
+       36.1,
+       49.5
+      ]
+     }
+    }
+   }
+  ],
+  "score_summary": {
+   "seen_answerable": {
+    "min": 0.064317144,
+    "median": 0.9886158,
+    "max": 0.9998696
+   },
+   "seen_unanswerable": {
+    "min": 0.0021575184,
+    "median": 0.046248283,
+    "max": 0.4620338
+   },
+   "blind_answerable": {
+    "min": 0.03466724,
+    "median": 0.9655119,
+    "max": 0.99965584
+   },
+   "blind_unanswerable": {
+    "min": 0.0018941829,
+    "median": 0.023201982,
+    "max": 0.17181261
+   }
+  }
+ },
+ {
+  "label": "no-rerank",
+  "max_false_abstain_on_seen": 0.02,
+  "chosen_threshold": 0.029906956136464335,
+  "chosen": {
+   "seen": {
+    "unanswerable": {
+     "n": 21,
+     "pct": 33.3,
+     "ci95": [
+      14.3,
+      52.4
+     ]
+    },
+    "answerable": {
+     "n": 208,
+     "pct": 1.9,
+     "ci95": [
+      0.5,
+      3.8
+     ]
+    }
+   },
+   "blind": {
+    "unanswerable": {
+     "n": 19,
+     "pct": 21.1,
+     "ci95": [
+      5.3,
+      42.1
+     ]
+    },
+    "answerable": {
+     "n": 208,
+     "pct": 4.3,
+     "ci95": [
+      1.9,
+      7.2
+     ]
+    }
+   }
+  },
+  "table": [
+   {
+    "seen_answerable_quantile": 0.0,
+    "threshold": 0.029083245521601686,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 23.8,
+      "ci95": [
+       4.8,
+       42.9
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 5.3,
+      "ci95": [
+       0.0,
+       15.8
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 2.4,
+      "ci95": [
+       0.5,
+       4.8
+      ]
+     }
+    }
+   },
+   {
+    "seen_answerable_quantile": 0.02,
+    "threshold": 0.029906956136464335,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 33.3,
+      "ci95": [
+       14.3,
+       52.4
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 1.9,
+      "ci95": [
+       0.5,
+       3.8
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 21.1,
+      "ci95": [
+       5.3,
+       42.1
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 4.3,
+      "ci95": [
+       1.9,
+       7.2
+      ]
+     }
+    }
+   },
+   {
+    "seen_answerable_quantile": 0.05,
+    "threshold": 0.031009615384615385,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 38.1,
+      "ci95": [
+       19.0,
+       57.1
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 4.8,
+      "ci95": [
+       2.4,
+       7.7
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 42.1,
+      "ci95": [
+       21.1,
+       63.2
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 8.2,
+      "ci95": [
+       4.8,
+       12.0
+      ]
+     }
+    }
+   },
+   {
+    "seen_answerable_quantile": 0.1,
+    "threshold": 0.0315136476426799,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 47.6,
+      "ci95": [
+       28.6,
+       66.7
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 9.1,
+      "ci95": [
+       5.3,
+       13.5
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 57.9,
+      "ci95": [
+       36.8,
+       78.9
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 16.8,
+      "ci95": [
+       12.0,
+       22.1
+      ]
+     }
+    }
+   },
+   {
+    "seen_answerable_quantile": 0.2,
+    "threshold": 0.032018442622950824,
+    "seen": {
+     "unanswerable": {
+      "n": 21,
+      "pct": 57.1,
+      "ci95": [
+       38.1,
+       76.2
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 17.3,
+      "ci95": [
+       12.0,
+       22.6
+      ]
+     }
+    },
+    "blind": {
+     "unanswerable": {
+      "n": 19,
+      "pct": 73.7,
+      "ci95": [
+       52.6,
+       89.5
+      ]
+     },
+     "answerable": {
+      "n": 208,
+      "pct": 26.4,
+      "ci95": [
+       20.7,
+       32.7
+      ]
+     }
+    }
+   }
+  ],
+  "score_summary": {
+   "seen_answerable": {
+    "min": 0.029083245521601686,
+    "median": 0.03252247488101534,
+    "max": 0.03278688524590164
+   },
+   "seen_unanswerable": {
+    "min": 0.01639344262295082,
+    "median": 0.03177805800756621,
+    "max": 0.03278688524590164
+   },
+   "blind_answerable": {
+    "min": 0.02557875991581674,
+    "median": 0.03252247488101534,
+    "max": 0.03278688524590164
+   },
+   "blind_unanswerable": {
+    "min": 0.0251661918328585,
+    "median": 0.03131881575727918,
+    "max": 0.03278688524590164
+   }
+  }
+ }
+]

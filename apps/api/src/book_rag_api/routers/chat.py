@@ -1,7 +1,9 @@
 """Ask a question about one book; the answer streams back as server-sent events.
 
 Events, in order: `citations` (once, before the first token), `token` (many), then `done`.
-If the model fails part-way, `error` is sent instead of `done`.
+If the model fails part-way, `error` is sent instead of `done`. When the book has no passage
+good enough to answer from, the reply is a fixed "not found" text with no citations, the model
+is not called, and `done` carries `abstained: true` (#222).
 """
 
 import asyncio
@@ -21,8 +23,9 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 from book_rag.providers import LLM
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
 from book_rag_api.config import Settings
+from book_rag_api.metrics import Metrics
 from book_rag_api.models import Book, IngestionJob
-from book_rag_api.prompts import NO_PASSAGES_REPLY, build_messages
+from book_rag_api.prompts import NO_PASSAGES_REPLY, NOT_FOUND_REPLY, build_messages
 from book_rag_api.rate_limit import RateLimiter
 
 router = APIRouter(prefix="/books", tags=["chat"])
@@ -41,6 +44,8 @@ class Citation(BaseModel):
     book_title: str
     section: str | None
     page: int | None
+    # The passage's relevance score: the reranker's, or the fused score if no reranker ran.
+    score: float
 
 
 class TokenEvent(BaseModel):
@@ -51,6 +56,9 @@ class TokenEvent(BaseModel):
 
 class DoneEvent(BaseModel):
     """The answer is complete."""
+
+    # True when the reply is the fixed not-found text, not an answer from the book.
+    abstained: bool = False
 
 
 class ErrorEvent(BaseModel):
@@ -77,9 +85,25 @@ def citations_for(book: Book, chunks: list[RetrievedChunk]) -> list[Citation]:
             book_title=book.title,
             section=c.section_path,
             page=c.page,
+            score=c.score,
         )
         for n, c in enumerate(chunks, start=1)
     ]
+
+
+def abstain_reason(chunks: list[RetrievedChunk], settings: Settings) -> str | None:
+    """Why the question should get the not-found reply, or None to answer it.
+
+    The best passage is the first (both the fused and the reranked order put it there). Its
+    score is compared with the threshold for its own scale; a threshold of None never abstains.
+    """
+    if not chunks:
+        return "no_passages"
+    best = chunks[0]
+    threshold = settings.abstain_below_reranked if best.reranked else settings.abstain_below_fused
+    if threshold is not None and best.score < threshold:
+        return "low_score"
+    return None
 
 
 async def with_timeouts(
@@ -110,13 +134,20 @@ async def answer_events(
     *,
     idle_timeout: float = 30.0,
     total_timeout: float = 180.0,
+    abstain: str | None = None,
+    metrics: Metrics | None = None,
 ) -> AsyncIterator[str]:
+    if abstain is not None:
+        if metrics is not None:
+            metrics.abstained(abstain)
+        # No citations: the passages found are not what the reply rests on.
+        reply = NO_PASSAGES_REPLY if abstain == "no_passages" else NOT_FOUND_REPLY
+        yield sse("citations", [])
+        yield sse("token", TokenEvent(text=reply).model_dump())
+        yield sse("done", DoneEvent(abstained=True).model_dump())
+        return
     citations = citations_for(book, chunks)
     yield sse("citations", [c.model_dump(mode="json") for c in citations])
-    if not chunks:
-        yield sse("token", TokenEvent(text=NO_PASSAGES_REPLY).model_dump())
-        yield sse("done", DoneEvent().model_dump())
-        return
     try:
         stream = llm.stream(build_messages(question, book.title, chunks))
         async for piece in with_timeouts(stream, idle=idle_timeout, total=total_timeout):
@@ -180,6 +211,8 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
             chunks,
             idle_timeout=settings.llm_idle_timeout,
             total_timeout=settings.llm_total_timeout,
+            abstain=abstain_reason(chunks, settings),
+            metrics=request.app.state.metrics,
         ),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},

@@ -52,6 +52,15 @@ class Metrics:
             ["reason"],
             registry=self.registry,
         )
+        self.abstentions = Counter(
+            "chat_abstentions",
+            "Questions answered with the fixed not-found reply, without calling the model.",
+            ["reason"],  # no_passages | low_score
+            registry=self.registry,
+        )
+
+    def abstained(self, reason: str) -> None:
+        self.abstentions.labels(reason).inc()
 
     def stage_done(self, stage: str, seconds: float) -> None:
         self.stage_seconds.labels(stage).observe(seconds)

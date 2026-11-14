@@ -169,3 +169,35 @@ def test_scoring_helpers(ae: ModuleType) -> None:
 def test_overlap_counts_repeats_and_ignores_markers(ae: ModuleType) -> None:
     assert ae.overlap("a a b [1]", "a b") == pytest.approx((0.8, 1.0))
     assert ae.overlap("x", "y") == (0.0, 0.0)
+
+
+def test_abstain_rates_split_by_answerability(ae: ModuleType) -> None:
+    def body(*events: tuple[str, object]) -> str:
+        return "".join(f"event: {n}\ndata: {json.dumps(d)}\n\n" for n, d in events)
+
+    abstain = body(
+        ("citations", []), ("token", {"text": "not found"}), ("done", {"abstained": True})
+    )
+    answer = body(
+        ("citations", [{"chunk_id": "a"}]),
+        ("token", {"text": "x [1]"}),
+        ("done", {"abstained": False}),
+    )
+    texts = {"a": "xin"}
+    out = {"kind": "unanswerable", "id": "u", "question": "?"}
+    ans = {"kind": "blind", "id": "b", "question": "?", "answer": "x", "evidence": "xin"}
+    results = [
+        ae.score_stream(200, abstain, out, texts),  # correct abstention
+        ae.score_stream(200, answer, out, texts),  # answered an unanswerable question
+        ae.score_stream(200, abstain, ans, texts),  # false abstention
+        ae.score_stream(200, answer, ans, texts),
+        ae.score_stream(200, answer, ans, texts),
+        ae.score_stream(200, answer, ans, texts),
+    ]
+    summary = ae.summarise(results)
+    assert summary["abstain_rate_unanswerable_pct"] == 50.0
+    assert summary["false_abstain_rate_answerable_pct"] == 25.0
+    assert summary["format_errors"] == 0
+    # The false abstention counts as a miss, not as a missing score.
+    assert summary["scored_for_hit"] == 4 and summary["citation_hit_pct"] == 75.0
+    assert "Abstain rate" in ae.markdown(summary)
