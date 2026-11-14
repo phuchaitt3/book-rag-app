@@ -83,6 +83,20 @@ groups:
           summary: Slow chat answers are spending the 30-day latency budget 6 times too fast
           runbook: docs/operations/runbook.md#chatlatencyslowburn
 
+      # SLO 5, first token within 20 s for 95% of model answers (budget 5%).
+      - alert: ChatFirstTokenSlow
+        expr: |
+          1 - (
+            sum(rate(chat_first_token_duration_seconds_bucket{le="20"}[30m]))
+            / sum(rate(chat_first_token_duration_seconds_count[30m]))
+          ) > (6 * 0.05)
+        for: 10m
+        labels:
+          severity: ticket
+        annotations:
+          summary: The first token takes over 20 s for more than 30% of answers
+          runbook: docs/operations/runbook.md#chatfirsttokenslow
+
       # SLO 3, retrieval within 5 s for 95% of questions.
       - alert: RetrievalSlow
         expr: |
@@ -133,8 +147,20 @@ groups:
           summary: Prometheus cannot scrape the API
           runbook: docs/operations/runbook.md#apitargetdown
 
-      # There is no ingestion-job metric yet (docs/operations/slo.md), so a stuck job cannot be
-      # alerted on; the upload route's 5xx rate is the closest signal.
+      # A job that waits in the queue, or runs, far longer than an ingestion takes is stuck
+      # (worker down, crashed mid-run). The age gauges are read from the table at scrape time.
+      - alert: IngestionStuck
+        expr: |
+          max(ingestion_oldest_queued_age_seconds) > 900
+          or max(ingestion_oldest_running_age_seconds) > 3600
+        for: 5m
+        labels:
+          severity: ticket
+        annotations:
+          summary: An ingestion job has waited over 15 minutes in the queue or run over an hour
+          runbook: docs/operations/runbook.md#ingestionstuck
+
+      # Upload failures at the route; stuck jobs after the upload are IngestionStuck.
       - alert: IngestionUploadErrors
         expr: |
           sum(rate(http_request_duration_seconds_count{route="/books",method="POST",status=~"5.."}[15m]))
