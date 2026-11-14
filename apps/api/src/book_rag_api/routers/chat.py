@@ -10,6 +10,7 @@ import asyncio
 import json
 import logging
 import math
+import time
 import uuid
 from collections.abc import AsyncIterator
 from typing import Annotated, Any
@@ -137,7 +138,10 @@ async def answer_events(
     total_timeout: float = 180.0,
     abstain: str | None = None,
     metrics: Metrics | None = None,
+    started: float | None = None,
 ) -> AsyncIterator[str]:
+    """`started` is `time.perf_counter()` at the request's start; with `metrics` it times the
+    first token of a model answer."""
     if abstain is not None:
         if metrics is not None:
             metrics.abstained(abstain)
@@ -151,7 +155,11 @@ async def answer_events(
     yield sse("citations", [c.model_dump(mode="json") for c in citations])
     try:
         stream = llm.stream(build_messages(question, book.title, chunks))
+        first = True
         async for piece in with_timeouts(stream, idle=idle_timeout, total=total_timeout):
+            if first and metrics is not None and started is not None:
+                metrics.first_token(time.perf_counter() - started)
+            first = False
             yield sse("token", TokenEvent(text=piece).model_dump())
     except TimeoutError:
         log.warning("model stream timed out")
@@ -168,6 +176,7 @@ async def answer_events(
 async def chat(
     book_id: uuid.UUID, body: ChatRequest, request: Request, owner: Owner
 ) -> StreamingResponse:
+    started = time.perf_counter()
     engine: AsyncEngine = request.app.state.engine
     retriever: HybridRetriever = request.app.state.retriever
     llm: LLM = request.app.state.llm
@@ -218,6 +227,7 @@ async def chat(
             total_timeout=settings.llm_total_timeout,
             abstain=abstain_reason(chunks, settings),
             metrics=request.app.state.metrics,
+            started=started,
         ),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
