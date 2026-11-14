@@ -34,7 +34,7 @@ from book_rag.retrieval import HybridRetriever, RetrievedChunk
 HERE = Path(__file__).parent
 DATA = Path(os.environ.get("DATA_DIR", HERE / "data"))
 QUESTIONS = Path(os.environ.get("QUESTIONS", HERE / "questions.jsonl"))
-OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://127.0.0.1:11434")
 RERANKER_URL = os.environ.get("RERANKER_URL", "http://127.0.0.1:8089")
 N = int(os.environ.get("N", "40"))
 DEPTH = int(os.environ.get("DEPTH", "20"))

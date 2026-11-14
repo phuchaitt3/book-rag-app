@@ -164,7 +164,7 @@ def tei_image(compose: Path) -> str | None:
 
 
 def collect_conditions(label: str) -> dict[str, Any]:
-    ollama_url = os.environ.get("OLLAMA_URL", "http://localhost:11434").rstrip("/")
+    ollama_url = os.environ.get("OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/")
     ollama: dict[str, Any] = {}
     try:
         ollama["version"] = _get_json(f"{ollama_url}/api/version").get("version")

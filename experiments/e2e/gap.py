@@ -44,7 +44,7 @@ from scipy import sparse
 HERE = Path(__file__).parent
 ROOT = HERE.parent.parent
 DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://bookrag:bookrag@localhost:5432/bookrag")
-OLLAMA = os.environ.get("OLLAMA_URL", "http://localhost:11434")
+OLLAMA = os.environ.get("OLLAMA_URL", "http://127.0.0.1:11434")
 BOOK_ID = os.environ["BOOK_ID"]
 QUESTIONS = ROOT / "experiments" / "book-testset" / "questions.jsonl"
 HTML_CHUNKS = Path(

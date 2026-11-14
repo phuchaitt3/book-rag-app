@@ -83,7 +83,7 @@ def container_mem(name_part: str) -> str:
 async def real_embeddings(out: str, pdf: str) -> None:
     parsed = parse_pdf(Path(pdf).read_bytes(), title="book")
     chunks = chunk_book(parsed)
-    embedder = OllamaEmbedder("bge-m3", EMBEDDING_DIM, "http://localhost:11434")
+    embedder = OllamaEmbedder("bge-m3", EMBEDDING_DIM, "http://127.0.0.1:11434")
     vectors: list[list[float]] = []
     texts = [c.text for c in chunks]
     for start in range(0, len(texts), 16):

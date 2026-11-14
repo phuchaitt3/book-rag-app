@@ -31,7 +31,7 @@ def post_json(url: str, payload: dict[str, Any], timeout: float) -> Any:
 class TeiReranker:
     def __init__(
         self,
-        base_url: str = "http://localhost:8080",
+        base_url: str = "http://127.0.0.1:8080",
         timeout: float = 10.0,
         post: JsonPostFn = post_json,
     ) -> None:

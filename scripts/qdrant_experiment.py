@@ -63,7 +63,7 @@ def summarise(latencies: list[float], seconds: float) -> dict:
 async def ingest(pdf: str, out: str) -> None:
     engine = create_async_engine(DB)
     sessions = async_sessionmaker(engine)
-    embedder = OllamaEmbedder("bge-m3", EMBEDDING_DIM, "http://localhost:11434")
+    embedder = OllamaEmbedder("bge-m3", EMBEDDING_DIM, "http://127.0.0.1:11434")
     index = make_index()
     data = await asyncio.to_thread(Path(pdf).read_bytes)
     async with sessions.begin() as s:
@@ -156,7 +156,7 @@ async def measure_book(out: str, seconds: float, qps: float, book_key: str, labe
     index = make_index()
     sql = SqlChunkSearcher(sessions)
     qdrant = QdrantChunkSearcher(index, sessions, sql)
-    embedder = OllamaEmbedder("bge-m3", EMBEDDING_DIM, "http://localhost:11434")
+    embedder = OllamaEmbedder("bge-m3", EMBEDDING_DIM, "http://127.0.0.1:11434")
 
     async with sessions() as s:
         texts = list(await s.scalars(select(Chunk.text).where(Chunk.book_id == book_id)))
