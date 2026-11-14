@@ -48,6 +48,11 @@ class Settings(BaseSettings):
     llm_idle_timeout: float = Field(default=30.0, gt=0)
     llm_total_timeout: float = Field(default=180.0, gt=0)
     chat_rate_limit: int = Field(default=30, ge=0)
+    # Shutdown (#228): on SIGTERM the API stops taking connections, then waits up to this many
+    # seconds for answers still streaming before it closes the pools. Keep it under the
+    # platform's termination grace period; run uvicorn with `--timeout-graceful-shutdown`
+    # set to the same value so it does not cut the streams first.
+    shutdown_drain_timeout: float = Field(default=20.0, ge=0)
     # Reranker (ADR 0009): "none" (default), "fake" (tests), or "tei" (the Compose service).
     # Only the top `rerank_depth` fused candidates are scored; on an error or after
     # `rerank_timeout` seconds the fused order is used.
