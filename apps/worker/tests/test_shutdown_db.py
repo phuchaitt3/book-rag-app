@@ -38,8 +38,8 @@ class BlockingEmbedder:
 
 
 @pytest.fixture
-def url(database_url: str) -> str:
-    return database_url
+def url(_database_url: str) -> str:  # noqa: F811
+    return _database_url
 
 
 async def start_job(
