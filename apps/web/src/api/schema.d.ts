@@ -172,6 +172,8 @@ export interface components {
             number: number;
             /** Page */
             page: number | null;
+            /** Score */
+            score: number;
             /** Section */
             section: string | null;
         };
@@ -179,7 +181,13 @@ export interface components {
          * DoneEvent
          * @description The answer is complete.
          */
-        DoneEvent: Record<string, never>;
+        DoneEvent: {
+            /**
+             * Abstained
+             * @default false
+             */
+            abstained: boolean;
+        };
         /**
          * ErrorEvent
          * @description The model failed part-way; the answer is cut short.

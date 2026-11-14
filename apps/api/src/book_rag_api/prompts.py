@@ -19,6 +19,8 @@ SYSTEM_PROMPT = (
 )
 
 NO_PASSAGES_REPLY = "I found no passages in this book that match the question."
+# Sent instead of an answer when the best passage scores under the abstain threshold (#222).
+NOT_FOUND_REPLY = "This book does not seem to answer that question."
 
 
 _ANGLE = str.maketrans({"<": "\u2039", ">": "\u203a", "\uff1c": "\u2039", "\uff1e": "\u203a"})

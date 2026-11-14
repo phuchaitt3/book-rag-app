@@ -150,6 +150,10 @@
             ],
             "title": "Page"
           },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
           "section": {
             "anyOf": [
               {
@@ -168,14 +172,21 @@
           "book_id",
           "book_title",
           "section",
-          "page"
+          "page",
+          "score"
         ],
         "title": "Citation",
         "type": "object"
       },
       "DoneEvent": {
         "description": "The answer is complete.",
-        "properties": {},
+        "properties": {
+          "abstained": {
+            "default": false,
+            "title": "Abstained",
+            "type": "boolean"
+          }
+        },
         "title": "DoneEvent",
         "type": "object"
       },

@@ -325,6 +325,8 @@ def main() -> None:
                     {
                         "id": f"u{j}",
                         "kind": "unanswerable",
+                        "answerable": False,
+                        "split": "seen" if j % 2 == 0 else "blind",
                         "question": out["question"],
                         "source_id": f"u{j}",
                         "source_chunk": None,

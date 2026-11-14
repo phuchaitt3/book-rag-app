@@ -19,7 +19,7 @@ from book_rag.retrieval import RetrievedChunk
 from book_rag_api.config import Settings
 from book_rag_api.main import create_app
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob
-from book_rag_api.prompts import NO_PASSAGES_REPLY, build_messages
+from book_rag_api.prompts import NO_PASSAGES_REPLY, NOT_FOUND_REPLY, build_messages
 from book_rag_api.routers.chat import sse
 
 ALEMBIC_INI = Path(__file__).parents[1] / "alembic.ini"
@@ -217,8 +217,35 @@ async def test_book_without_chunks_replies_without_calling_the_model(
     assert parse_sse(response.text) == [
         ("citations", []),
         ("token", {"text": NO_PASSAGES_REPLY}),
-        ("done", {}),
+        ("done", {"abstained": True}),
     ]
+
+
+async def test_best_score_under_the_threshold_abstains_without_calling_the_model(
+    database_url: str, book_id: UUID
+) -> None:
+    # Fused scores are under 0.04, so a threshold of 1 puts every question under it.
+    async for client in make_client(database_url, BrokenLLM(), abstain_below_fused=1.0):
+        response = await client.post(f"/books/{book_id}/chat", json={"question": "sông Hồng"})
+        metrics = (await client.get("/metrics")).text
+
+    assert parse_sse(response.text) == [
+        ("citations", []),
+        ("token", {"text": NOT_FOUND_REPLY}),
+        ("done", {"abstained": True}),
+    ]
+    assert 'chat_abstentions_total{reason="low_score"} 1.0' in metrics
+
+
+async def test_threshold_off_answers_and_says_it_did_not_abstain(
+    database_url: str, book_id: UUID
+) -> None:
+    async for client in make_client(database_url, FakeLLM("ok [1]"), abstain_below_fused=None):
+        response = await client.post(f"/books/{book_id}/chat", json={"question": "sông Hồng"})
+
+    events = parse_sse(response.text)
+    assert events[-1] == ("done", {"abstained": False})
+    assert all("score" in c for c in events[0][1])  # type: ignore[attr-defined]
 
 
 def test_prompt_numbers_passages_and_carries_the_question() -> None:
