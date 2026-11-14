@@ -29,7 +29,7 @@ from book_rag_api.config import Settings, get_settings
 from book_rag_api.db import create_engine, ping
 from book_rag_api.jobs import create_queue
 from book_rag_api.jobs import router as jobs_router
-from book_rag_api.metrics import Metrics, MetricsMiddleware
+from book_rag_api.metrics import Metrics, MetricsMiddleware, read_job_rows
 from book_rag_api.models import EMBEDDING_DIM
 from book_rag_api.observability import (
     RequestIdMiddleware,
@@ -118,8 +118,9 @@ def create_app(
         return HealthStatus(status="ok")
 
     @app.get("/metrics", include_in_schema=False)
-    async def metrics_endpoint() -> Response:
+    async def metrics_endpoint(request: Request) -> Response:
         """Prometheus text format (ADR 0010). Unauthenticated: only the scraper may reach it."""
+        await metrics.refresh_jobs(lambda: read_job_rows(request.app.state.engine))
         return Response(metrics.render(), media_type=metrics.content_type)
 
     @app.get(
