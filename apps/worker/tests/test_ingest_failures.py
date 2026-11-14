@@ -28,7 +28,7 @@ from book_rag_worker.config import WorkerSettings
 from book_rag_worker.ingest import MAX_RETRIES, fail_stuck_jobs, run_ingestion
 from book_rag_worker.worker import Worker, build_worker
 
-BATCH = 4
+BATCH = 2  # the test book has only 6 chunks, so small batches give it several
 
 
 class CountingEmbedder(FakeEmbedder):
