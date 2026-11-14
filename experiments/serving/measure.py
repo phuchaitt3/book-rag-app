@@ -15,13 +15,18 @@ Percentiles use the nearest-rank method: for n sorted values and percentile p, t
 1-based rank ceil(p/100 * n). The median is the 50th percentile by the same method (the lower
 middle value for even n). Records with an error or a missing timing are left out of that timing.
 
-Environment: API_URL, BOOK_ID (required), LABEL, QUESTIONS, WARMUP, OUT_DIR, OLLAMA_URL,
+Since #259 the summary also holds p95, p99, the error share and 95% bootstrap intervals
+(10,000 resamples, seed 259) for the median and p90; SUBSET (a questions file) adds the same
+statistics over the counted questions of that file.
+
+Environment: API_URL, BOOK_ID (required), LABEL, QUESTIONS, WARMUP, SUBSET, OUT_DIR, OLLAMA_URL,
 LLM_MODEL, EMBEDDING_MODEL. Standard library only.
 """
 
 import json
 import math
 import os
+import random
 import re
 import subprocess
 import sys
@@ -44,6 +49,33 @@ def percentile(values: list[float], p: float) -> float | None:
     ordered = sorted(values)
     rank = max(1, math.ceil(p / 100 * len(ordered)))
     return ordered[min(rank, len(ordered)) - 1]
+
+
+def bootstrap_ci(
+    values: list[float],
+    p: float,
+    resamples: int = 10_000,
+    seed: int = 259,
+    level: float = 95.0,
+) -> tuple[float, float] | None:
+    """Percentile-bootstrap confidence interval for the nearest-rank percentile `p`.
+
+    Resamples `values` with replacement `resamples` times (random.Random(seed)), takes the
+    nearest-rank percentile of each resample, and returns the (100-level)/2 and
+    100-(100-level)/2 nearest-rank percentiles of those statistics. None for an empty list.
+    """
+    if not values:
+        return None
+    rng = random.Random(seed)
+    n = len(values)
+    stats = sorted(
+        percentile([values[rng.randrange(n)] for _ in range(n)], p) or 0.0 for _ in range(resamples)
+    )
+    tail = (100.0 - level) / 2
+    lo = percentile(stats, tail)
+    hi = percentile(stats, 100.0 - tail)
+    assert lo is not None and hi is not None
+    return lo, hi
 
 
 def parse_sse_stream(lines: Iterable[tuple[float, str]], start: float) -> dict[str, Any]:
@@ -79,19 +111,30 @@ def parse_sse_stream(lines: Iterable[tuple[float, str]], start: float) -> dict[s
     return rec
 
 
-def summarise(records: list[dict[str, Any]]) -> dict[str, Any]:
-    """n, error count, and median and p90 of each timing over the records."""
+def summarise(records: list[dict[str, Any]], ci: bool = False) -> dict[str, Any]:
+    """n, error count and share, median and p90 of each timing over the records.
+
+    With ci=True also p95, p99 and 95% bootstrap intervals (median and p90).
+    """
+    errors = sum(1 for r in records if r.get("error"))
     out: dict[str, Any] = {
         "n": len(records),
-        "errors": sum(1 for r in records if r.get("error")),
+        "errors": errors,
+        "error_share": errors / len(records) if records else None,
     }
     for key in TIMINGS:
         vals = [r[key] for r in records if not r.get("error") and r.get(key) is not None]
-        out[key] = {
+        entry: dict[str, Any] = {
             "n": len(vals),
             "median": percentile(vals, 50),
             "p90": percentile(vals, 90),
         }
+        if ci:
+            entry["p95"] = percentile(vals, 95)
+            entry["p99"] = percentile(vals, 99)
+            for name, p in (("median", 50), ("p90", 90)):
+                entry[f"{name}_ci95"] = bootstrap_ci(vals, p)
+        out[key] = entry
     return out
 
 
@@ -163,6 +206,21 @@ def tei_image(compose: Path) -> str | None:
     return m.group(1) if m else None
 
 
+def _free_ram_gb() -> float | None:
+    out = _run(
+        [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            "(Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory",
+        ]
+    )
+    try:
+        return round(int(out or "") / 1024 / 1024, 2)
+    except ValueError:
+        return None
+
+
 def collect_conditions(label: str) -> dict[str, Any]:
     ollama_url = os.environ.get("OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/")
     ollama: dict[str, Any] = {}
@@ -181,6 +239,7 @@ def collect_conditions(label: str) -> dict[str, Any]:
         "gpu": _run(
             ["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"]
         ),
+        "free_ram_gb": _free_ram_gb(),
         "ollama": ollama,
         "tei_image": tei_image(REPO / "compose.reranker.yaml"),
     }
@@ -212,7 +271,13 @@ def main() -> int:
     with (out_dir / f"{label}.jsonl").open("w", encoding="utf-8") as f:
         for r in records:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    summary = {**summarise(records), "conditions": collect_conditions(label)}
+    summary: dict[str, Any] = {**summarise(records, ci=True)}
+    subset_ids = os.environ.get("SUBSET")
+    if subset_ids:
+        # The #190 subset: ids listed in a questions file, reported beside the full set.
+        ids = {q["id"] for q in json.loads(Path(subset_ids).read_text(encoding="utf-8"))[warmup:]}
+        summary["subset"] = summarise([r for r in records if r["id"] in ids], ci=True)
+    summary["conditions"] = collect_conditions(label)
     (out_dir / f"{label}-summary.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )

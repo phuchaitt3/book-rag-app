@@ -98,3 +98,45 @@ def test_ask_against_fake_server() -> None:
     assert rec["error"] is False
     assert rec["token_events"] == 2
     assert 0 <= rec["t_citations"] <= rec["t_first_token"] <= rec["t_total"]
+
+
+def test_bootstrap_ci_is_deterministic_and_brackets_the_statistic() -> None:
+    vals = [float(i) for i in range(1, 101)]
+    a = measure.bootstrap_ci(vals, 50, resamples=2000, seed=1)
+    b = measure.bootstrap_ci(vals, 50, resamples=2000, seed=1)
+    assert a == b
+    lo, hi = a
+    assert lo <= measure.percentile(vals, 50) <= hi
+    assert 35 < lo < hi < 65
+    assert measure.bootstrap_ci(vals, 50, resamples=2000, seed=2) != a
+
+
+def test_bootstrap_ci_degenerate_inputs() -> None:
+    assert measure.bootstrap_ci([], 50) is None
+    assert measure.bootstrap_ci([4.0, 4.0, 4.0], 90, resamples=100) == (4.0, 4.0)
+    assert measure.bootstrap_ci([7.0], 50, resamples=50) == (7.0, 7.0)
+
+
+def test_bootstrap_ci_p90_is_above_median_ci() -> None:
+    vals = [float(i) for i in range(1, 201)]
+    med = measure.bootstrap_ci(vals, 50, resamples=1000, seed=3)
+    p90 = measure.bootstrap_ci(vals, 90, resamples=1000, seed=3)
+    assert med[1] < p90[0]
+
+
+def test_summarise_with_ci_reports_tail_and_error_share() -> None:
+    recs = [
+        {"t_citations": 1.0, "t_first_token": float(i), "t_total": 20.0, "error": False}
+        for i in range(1, 51)
+    ]
+    recs.append({"t_citations": None, "t_first_token": None, "t_total": None, "error": True})
+    s = measure.summarise(recs, ci=True)
+    assert s["n"] == 51
+    assert s["errors"] == 1
+    assert s["error_share"] == pytest.approx(1 / 51)
+    ft = s["t_first_token"]
+    assert ft["n"] == 50
+    assert ft["p95"] == 48.0
+    assert ft["p99"] == 50.0
+    assert ft["median_ci95"][0] <= ft["median"] <= ft["median_ci95"][1]
+    assert "p95" not in measure.summarise(recs)["t_first_token"]
