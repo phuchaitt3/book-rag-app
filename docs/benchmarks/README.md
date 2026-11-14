@@ -7,6 +7,7 @@ Measured results for retrieval and answering. Each note links the script that pr
 - [e2e-real-model.md](e2e-real-model.md): one real run of the app on a PDF, with and without the reranker, repeated after the BM25 fix (#241: Hit@5 86.5% off, 94.2% on).
 - [retrieval-gap.md](retrieval-gap.md): why the app is below the benchmark (the full-text leg).
 - [fts-options.md](fts-options.md): ways to fix the full-text leg (#204): BM25 in Postgres matches the benchmark; its latency cost.
+- [agent-eval.md](agent-eval.md): a tool-using agent over the MCP tools against single-shot chat on 40 two-part questions (#243): no measurable gain (45.0% against 42.5% both-hit); a larger k does better (65.0%).
 - [set-local-cost.md](set-local-cost.md): the extra `SET LOCAL` statement in vector search costs one round trip (#93).
 
 ## Checklist for a test set
