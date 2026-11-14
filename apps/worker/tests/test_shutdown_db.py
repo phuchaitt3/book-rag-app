@@ -116,8 +116,13 @@ async def test_stop_lets_a_job_that_finishes_in_time_complete(
     await asyncio.wait_for(task, 60)
 
     status, error, queue_status = await read_state(url, job_id)
-    logs = " | ".join(f"{r.name}: {r.getMessage()}" for r in caplog.records)
-    assert (status, queue_status) == ("succeeded", "succeeded"), (error, logs)
+    logs = " | ".join(
+        f"{r.name}: {r.getMessage()[:150]}"
+        for r in caplog.records
+        if not r.name.startswith(("procrastinate.blueprints", "procrastinate.periodic"))
+    )
+    if (status, queue_status) != ("succeeded", "succeeded"):
+        pytest.fail(f"state={(status, error, queue_status)} logs={logs}", pytrace=False)
 
 
 async def test_the_interrupted_job_runs_again_and_succeeds(url: str, tmp_path: Path) -> None:
