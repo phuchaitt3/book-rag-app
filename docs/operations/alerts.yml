@@ -1,0 +1,147 @@
+# Prometheus alerting rules for the API (#226). Targets and reasoning: docs/operations/slo.md.
+# Every alert has an entry of the same name in docs/operations/runbook.md (a test checks it).
+# Metric names are the ones apps/api/src/book_rag_api/metrics.py exports (a test checks that too).
+# Validate: promtool check rules docs/operations/alerts.yml
+groups:
+  - name: book-rag-slo
+    rules:
+      # SLO 1, chat availability 99% (budget 1%). Page at burn rate 14.4 over 1h and 5m.
+      - alert: ChatAvailabilityFastBurn
+        expr: |
+          (
+            sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat",status=~"5.."}[1h]))
+            / sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[1h]))
+            > (14.4 * 0.01)
+          and
+            sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat",status=~"5.."}[5m]))
+            / sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[5m]))
+            > (14.4 * 0.01)
+          )
+          and sum(increase(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[5m])) >= 5
+        labels:
+          severity: page
+        annotations:
+          summary: Chat is failing fast enough to spend 2% of the 30-day error budget in an hour
+          runbook: docs/operations/runbook.md#chatavailabilityfastburn
+
+      - alert: ChatAvailabilitySlowBurn
+        expr: |
+          (
+            sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat",status=~"5.."}[6h]))
+            / sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[6h]))
+            > (6 * 0.01)
+          and
+            sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat",status=~"5.."}[30m]))
+            / sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[30m]))
+            > (6 * 0.01)
+          )
+          and sum(increase(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[30m])) >= 5
+        labels:
+          severity: ticket
+        annotations:
+          summary: Chat errors are spending the 30-day error budget 6 times too fast
+          runbook: docs/operations/runbook.md#chatavailabilityslowburn
+
+      # SLO 2, whole answer within 30 s for 95% of requests (budget 5%).
+      - alert: ChatLatencyFastBurn
+        expr: |
+          (
+            1 - (
+              sum(rate(http_request_duration_seconds_bucket{route="/books/{book_id}/chat",le="30"}[1h]))
+              / sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[1h]))
+            ) > (14.4 * 0.05)
+          and
+            1 - (
+              sum(rate(http_request_duration_seconds_bucket{route="/books/{book_id}/chat",le="30"}[5m]))
+              / sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[5m]))
+            ) > (14.4 * 0.05)
+          )
+          and sum(increase(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[5m])) >= 5
+        labels:
+          severity: page
+        annotations:
+          summary: More than 72% of chat answers took over 30 s in the last hour (14.4x budget burn)
+          runbook: docs/operations/runbook.md#chatlatencyfastburn
+
+      - alert: ChatLatencySlowBurn
+        expr: |
+          (
+            1 - (
+              sum(rate(http_request_duration_seconds_bucket{route="/books/{book_id}/chat",le="30"}[6h]))
+              / sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[6h]))
+            ) > (6 * 0.05)
+          and
+            1 - (
+              sum(rate(http_request_duration_seconds_bucket{route="/books/{book_id}/chat",le="30"}[30m]))
+              / sum(rate(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[30m]))
+            ) > (6 * 0.05)
+          )
+          and sum(increase(http_request_duration_seconds_count{route="/books/{book_id}/chat"}[30m])) >= 5
+        labels:
+          severity: ticket
+        annotations:
+          summary: Slow chat answers are spending the 30-day latency budget 6 times too fast
+          runbook: docs/operations/runbook.md#chatlatencyslowburn
+
+      # SLO 3, retrieval within 5 s for 95% of questions.
+      - alert: RetrievalSlow
+        expr: |
+          1 - (
+            sum(rate(retrieval_duration_seconds_bucket{le="5"}[30m]))
+            / sum(rate(retrieval_duration_seconds_count[30m]))
+          ) > (6 * 0.05)
+        for: 10m
+        labels:
+          severity: ticket
+        annotations:
+          summary: Retrieval (time to the citations) is over 5 s for more than 30% of questions
+          runbook: docs/operations/runbook.md#retrievalslow
+
+  - name: book-rag-dependencies
+    rules:
+      # The reranker is optional (ADR 0009): when it fails, answers use the fused order, so users
+      # see no error, only lower quality. A sustained rate means it is down.
+      - alert: RerankerFallbackRateHigh
+        expr: |
+          sum(rate(rerank_fallbacks_total[15m]))
+          / sum(rate(retrieval_duration_seconds_count[15m])) > 0.1
+        for: 15m
+        labels:
+          severity: ticket
+        annotations:
+          summary: More than 10% of questions were answered without the reranker
+          runbook: docs/operations/runbook.md#rerankerfallbackratehigh
+
+      # SLO 4 and the failing-readiness case: /readyz answers 503 when the database does not.
+      - alert: ReadinessFailing
+        expr: |
+          sum(rate(http_request_duration_seconds_count{route="/readyz",status="503"}[5m]))
+          / sum(rate(http_request_duration_seconds_count{route="/readyz"}[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: page
+        annotations:
+          summary: Most readiness probes answer 503 (the database does not answer)
+          runbook: docs/operations/runbook.md#readinessfailing
+
+      - alert: ApiTargetDown
+        expr: up{job="book-rag-api"} == 0
+        for: 2m
+        labels:
+          severity: page
+        annotations:
+          summary: Prometheus cannot scrape the API
+          runbook: docs/operations/runbook.md#apitargetdown
+
+      # There is no ingestion-job metric yet (docs/operations/slo.md), so a stuck job cannot be
+      # alerted on; the upload route's 5xx rate is the closest signal.
+      - alert: IngestionUploadErrors
+        expr: |
+          sum(rate(http_request_duration_seconds_count{route="/books",method="POST",status=~"5.."}[15m]))
+          / sum(rate(http_request_duration_seconds_count{route="/books",method="POST"}[15m])) > 0.2
+        for: 15m
+        labels:
+          severity: ticket
+        annotations:
+          summary: More than 20% of book uploads fail with a 5xx
+          runbook: docs/operations/runbook.md#ingestionuploaderrors
