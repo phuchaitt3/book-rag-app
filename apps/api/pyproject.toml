@@ -18,6 +18,7 @@ dependencies = [
     "python-multipart>=0.0.32",
     "qdrant-client>=1.12",
     "prometheus-client>=0.26.0",
+    "mcp>=2.3",
 ]
 
 [build-system]

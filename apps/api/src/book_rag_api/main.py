@@ -23,7 +23,7 @@ from book_rag.providers import (
     Reranker,
     TeiReranker,
 )
-from book_rag.retrieval import ChunkSearcher, HybridRetriever
+from book_rag.retrieval import ChunkSearcher, HybridRetriever, RetrievalObserver
 from book_rag_api.books import router as books_router
 from book_rag_api.config import Settings, get_settings
 from book_rag_api.db import create_engine, ping
@@ -74,12 +74,11 @@ def create_app(
         app.state.queue = queue or create_queue(settings.database_url)
         app.state.llm = llm or _llm(settings)
         app.state.chat_limiter = RateLimiter(settings.chat_rate_limit, window=60.0)
-        searcher, index = _searcher(settings, async_sessionmaker(app.state.engine))
-        app.state.retriever = HybridRetriever(
-            searcher,
-            embedder or _embedder(settings),
-            reranker or _reranker(settings),
-            rerank_depth=settings.rerank_depth,
+        app.state.retriever, index = build_retriever(
+            settings,
+            async_sessionmaker(app.state.engine),
+            embedder=embedder,
+            reranker=reranker,
             observer=metrics,
         )
         try:
@@ -133,6 +132,27 @@ def create_app(
         return JSONResponse({"status": "ok", "database": "up"})
 
     return app
+
+
+def build_retriever(
+    settings: Settings,
+    sessions: async_sessionmaker[AsyncSession],
+    *,
+    embedder: Embedder | None = None,
+    reranker: Reranker | None = None,
+    observer: RetrievalObserver | None = None,
+) -> tuple[HybridRetriever, QdrantVectorIndex | None]:
+    """The retriever the chat endpoint uses, and the Qdrant index to close at shutdown when
+    there is one. The MCP server (`book_rag_api.mcp_server`) builds the same one."""
+    searcher, index = _searcher(settings, sessions)
+    retriever = HybridRetriever(
+        searcher,
+        embedder or _embedder(settings),
+        reranker or _reranker(settings),
+        rerank_depth=settings.rerank_depth,
+        observer=observer,
+    )
+    return retriever, index
 
 
 def _searcher(
