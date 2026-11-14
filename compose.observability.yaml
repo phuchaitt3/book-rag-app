@@ -1,8 +1,11 @@
-# Local Prometheus and Grafana for the API's /metrics (#226). Not for production.
+# Local Prometheus and Grafana for the API's /metrics (#226), and Jaeger for traces (#225).
+# Not for production.
 #   docker compose -f compose.yaml -f compose.observability.yaml up -d
-# Ports bind to 127.0.0.1 only. Grafana runs with anonymous Viewer access, reachable only from
+# Ports bind to 127.0.0.1 only (Jaeger: UI on 16686, OTLP over HTTP on 4318). Grafana runs with anonymous Viewer access, reachable only from
 # this machine; there are no secrets in this file.
 # Prometheus loads docs/operations/alerts.yml; Grafana loads docs/operations/grafana/book-rag.json.
+# Tracing is off in the API until OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318 is set
+# (docs/operations/tracing.md). Jaeger keeps traces in memory only; a restart drops them.
 # Not run on the machine that wrote it (no Docker daemon there): the first start is untested.
 services:
   prometheus:
@@ -26,3 +29,11 @@ services:
       - "127.0.0.1:3001:3000"
     depends_on:
       - prometheus
+  jaeger:
+    image: jaegertracing/all-in-one:1.62.0
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+      MEMORY_MAX_TRACES: "5000"
+    ports:
+      - "127.0.0.1:16686:16686"
+      - "127.0.0.1:4318:4318"

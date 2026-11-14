@@ -30,6 +30,8 @@ class WorkerSettings(BaseSettings):
     vector_store: Literal["pgvector", "qdrant", "shadow"] = "pgvector"
     qdrant_url: str = "http://localhost:6333"
     qdrant_collection: str = "chunks"
+    # Tracing (#225): off unless set, for example http://localhost:4318.
+    otel_exporter_otlp_endpoint: str | None = None
     # A job queued or running longer than this is failed by the periodic sweep.
     stuck_job_minutes: int = 60
 

@@ -3,7 +3,8 @@
 The API and the worker call `configure_logging`. `LOG_FORMAT=json` writes one JSON object per
 line (stdlib only); `text` (the default) keeps the plain local format. `request_id`, `book_id`
 and `job_id` live in context variables, so every log line written while they are bound carries
-them without the call site passing them along.
+them without the call site passing them along. With tracing on (#225), `trace_id` is added from
+the active span, so a log line finds its trace in Jaeger.
 """
 
 import contextvars
@@ -23,6 +24,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
+
+from book_rag_api.tracing import current_trace_id
 
 REQUEST_ID_HEADER = "X-Request-ID"
 PROBLEM_MEDIA_TYPE = "application/problem+json"
@@ -57,6 +60,9 @@ class JsonFormatter(logging.Formatter):
             value = var.get()
             if value is not None:
                 entry[name] = value
+        trace_id = current_trace_id()
+        if trace_id is not None:
+            entry["trace_id"] = trace_id
         for name in _EXTRA_FIELDS:
             if hasattr(record, name):
                 entry[name] = getattr(record, name)

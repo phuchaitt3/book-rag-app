@@ -15,6 +15,7 @@ from book_rag.chunking import Chunk as ParsedChunk
 from book_rag.chunking import chunk_book
 from book_rag.parsing import ParsedBook, parse_pdf
 from book_rag.providers import Embedder
+from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.lexical import refresh_book_stats
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, Section
 from book_rag_api.observability import bind_log_context, book_id_var
@@ -23,6 +24,16 @@ from book_rag_api.qdrant_index import QdrantVectorIndex
 log = logging.getLogger(__name__)
 
 ReadPdf = Callable[[str], bytes]
+
+# Spans per ingestion stage (#225). `__main__` installs a real tracer when
+# OTEL_EXPORTER_OTLP_ENDPOINT is set; until then every span is a no-op.
+_tracer: Tracer = NoopTracer()
+
+
+def set_tracer(tracer: Tracer | None) -> None:
+    global _tracer
+    _tracer = tracer or NoopTracer()
+
 
 _MAX_ERROR_CHARS = 2000
 
@@ -166,45 +177,58 @@ async def _run(
         job.started_at, job.finished_at = _now(), None
         await session.commit()
 
-    parsed = await asyncio.to_thread(lambda: parse_pdf(read_pdf(storage_key), title=title))
+    with _tracer.span("ingest.parse", book_id=str(book_id)) as span:
+        parsed = await asyncio.to_thread(lambda: parse_pdf(read_pdf(storage_key), title=title))
+        span.set_attribute("pages", parsed.page_count)
 
     await _set_stage(engine, job_id, "chunk")
-    chunks = await asyncio.to_thread(chunk_book, parsed)
+    with _tracer.span("ingest.chunk", book_id=str(book_id)) as span:
+        chunks = await asyncio.to_thread(chunk_book, parsed)
+        span.set_attribute("chunks", len(chunks))
     sections = _section_rows(book_id, parsed)
     chunk_rows = _chunk_rows(book_id, sections, chunks)
     to_embed = [(c.id, c.text) for c in chunk_rows]  # plain values: the ORM rows expire on commit
     # Replace what an earlier attempt stored, so a re-run never duplicates ordinals.
-    async with AsyncSession(engine) as session:
-        await session.execute(delete(Chunk).where(Chunk.book_id == book_id))
-        await session.execute(delete(Section).where(Section.book_id == book_id))
-        await session.execute(
-            update(Book).where(Book.id == book_id).values(page_count=parsed.page_count)
-        )
-        session.add_all(sections)
-        await session.flush()  # sections first: chunks reference them
-        session.add_all(chunk_rows)
-        await session.flush()
-        await refresh_book_stats(session, book_id)  # BM25 statistics (ADR 0011)
-        await session.commit()
+    with _tracer.span("ingest.store", book_id=str(book_id), chunks=len(chunk_rows)):
+        async with AsyncSession(engine) as session:
+            await session.execute(delete(Chunk).where(Chunk.book_id == book_id))
+            await session.execute(delete(Section).where(Section.book_id == book_id))
+            await session.execute(
+                update(Book).where(Book.id == book_id).values(page_count=parsed.page_count)
+            )
+            session.add_all(sections)
+            await session.flush()  # sections first: chunks reference them
+            session.add_all(chunk_rows)
+            await session.flush()
+            await refresh_book_stats(session, book_id)  # BM25 statistics (ADR 0011)
+            await session.commit()
 
     await _set_stage(engine, job_id, "embed")
-    if index is not None:
-        await index.delete_book(book_id)  # a re-run replaced the chunk ids, so drop the old points
-    for start in range(0, len(to_embed), batch_size):
-        batch = to_embed[start : start + batch_size]
-        vectors = await embedder.embed([text for _, text in batch])
-        async with AsyncSession(engine) as session:
-            await session.execute(
-                update(Chunk),
-                [{"id": id_, "embedding": v} for (id_, _), v in zip(batch, vectors, strict=True)],
-            )
-            await session.commit()  # commit per batch so the API shows progress
+    with _tracer.span("ingest.embed", book_id=str(book_id), chunks=len(to_embed)) as span:
         if index is not None:
-            # After the commit, so Qdrant never holds a vector Postgres lost. An upsert is
-            # idempotent, so a retried batch is harmless.
-            await index.upsert(
-                book_id, [(id_, v) for (id_, _), v in zip(batch, vectors, strict=True)]
-            )
+            # A re-run replaced the chunk ids, so drop the old points.
+            await index.delete_book(book_id)
+        batches = 0
+        for start in range(0, len(to_embed), batch_size):
+            batch = to_embed[start : start + batch_size]
+            vectors = await embedder.embed([text for _, text in batch])
+            async with AsyncSession(engine) as session:
+                await session.execute(
+                    update(Chunk),
+                    [
+                        {"id": id_, "embedding": v}
+                        for (id_, _), v in zip(batch, vectors, strict=True)
+                    ],
+                )
+                await session.commit()  # commit per batch so the API shows progress
+            if index is not None:
+                # After the commit, so Qdrant never holds a vector Postgres lost. An upsert is
+                # idempotent, so a retried batch is harmless.
+                await index.upsert(
+                    book_id, [(id_, v) for (id_, _), v in zip(batch, vectors, strict=True)]
+                )
+            batches += 1
+        span.set_attribute("batches", batches)
 
     async with AsyncSession(engine) as session:
         await session.execute(
@@ -248,7 +272,8 @@ async def _run_and_record(
     index: QdrantVectorIndex | None,
 ) -> None:
     try:
-        await _run(engine, job_id, read_pdf, embedder, batch_size, index)
+        with _tracer.span("ingest.job", job_id=str(job_id), attempts=attempts):
+            await _run(engine, job_id, read_pdf, embedder, batch_size, index)
     except Exception as exc:
         message = f"{type(exc).__name__}: {exc}"
         if is_transient(exc) and attempts < MAX_RETRIES:
