@@ -113,6 +113,7 @@ Settings are read from environment variables. Copy [.env.example](.env.example) 
 | Variable | Default | Meaning |
 |---|---|---|
 | `ENVIRONMENT` | `development` | Runtime environment name |
+| `LOG_FORMAT` | `text` | Log format of the API and the worker: `text` (plain, for local work) or `json` (one JSON object per line with `timestamp`, `level`, `logger`, `message` and, where known, `request_id`, `book_id`, `job_id`). Every API response carries `X-Request-ID` (the caller's, or a generated one); errors the API raises are `application/problem+json` (RFC 9457) with the same `request_id` |
 | `DATABASE_URL` | local Compose Postgres (`postgresql+asyncpg://...`) | Async SQLAlchemy connection URL |
 | `CORS_ORIGINS` | `["http://localhost:3000"]` | Origins allowed to call the API (JSON list) |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | API address the web app calls (set in `apps/web/.env.local`) |

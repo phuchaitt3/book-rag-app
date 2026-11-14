@@ -17,6 +17,7 @@ from book_rag.parsing import ParsedBook, parse_pdf
 from book_rag.providers import Embedder
 from book_rag_api.lexical import refresh_book_stats
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, Section
+from book_rag_api.observability import bind_log_context, book_id_var
 from book_rag_api.qdrant_index import QdrantVectorIndex
 
 log = logging.getLogger(__name__)
@@ -160,6 +161,7 @@ async def _run(
         if book is None or not book.storage_key:
             raise LookupError(f"book of job {job_id} has no uploaded file")
         book_id, title, storage_key = book.id, book.title, book.storage_key
+        book_id_var.set(str(book_id))  # run_ingestion resets it when the job ends
         job.status, job.stage, job.error = "running", "parse", None
         job.started_at, job.finished_at = _now(), None
         await session.commit()
@@ -228,6 +230,23 @@ async def run_ingestion(
     puts the job back to `queued` and raises `TransientIngestionError` for the queue to retry;
     the default means no retries are left.
     """
+    book_token = book_id_var.set(None)
+    try:
+        with bind_log_context(job_id=job_id):
+            await _run_and_record(engine, job_id, read_pdf, embedder, batch_size, attempts, index)
+    finally:
+        book_id_var.reset(book_token)
+
+
+async def _run_and_record(
+    engine: AsyncEngine,
+    job_id: uuid.UUID,
+    read_pdf: ReadPdf,
+    embedder: Embedder,
+    batch_size: int,
+    attempts: int,
+    index: QdrantVectorIndex | None,
+) -> None:
     try:
         await _run(engine, job_id, read_pdf, embedder, batch_size, index)
     except Exception as exc:
