@@ -1,0 +1,28 @@
+# Local Prometheus and Grafana for the API's /metrics (#226). Not for production.
+#   docker compose -f compose.yaml -f compose.observability.yaml up -d
+# Ports bind to 127.0.0.1 only. Grafana runs with anonymous Viewer access, reachable only from
+# this machine; there are no secrets in this file.
+# Prometheus loads docs/operations/alerts.yml; Grafana loads docs/operations/grafana/book-rag.json.
+# Not run on the machine that wrote it (no Docker daemon there): the first start is untested.
+services:
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    volumes:
+      - ./docs/operations/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./docs/operations/alerts.yml:/etc/prometheus/alerts.yml:ro
+    ports:
+      - "127.0.0.1:9090:9090"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  grafana:
+    image: grafana/grafana:11.3.0
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - ./docs/operations/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./docs/operations/grafana/book-rag.json:/var/lib/grafana/dashboards/book-rag.json:ro
+    ports:
+      - "127.0.0.1:3001:3000"
+    depends_on:
+      - prometheus
