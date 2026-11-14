@@ -56,8 +56,9 @@ async def test_upgrade_creates_extension_and_tables(database_url: str) -> None:
             vector = "[" + ",".join(["0.1"] * EMBEDDING_DIM) + "]"
             await conn.execute(
                 text(
-                    "WITH b AS (INSERT INTO books (id, title) VALUES (gen_random_uuid(), 'T')"
-                    " RETURNING id) INSERT INTO chunks (id, book_id, ordinal, text, embedding)"
+                    "WITH b AS (INSERT INTO books (id, title, owner_id)"
+                    " VALUES (gen_random_uuid(), 'T', 'dev-user') RETURNING id)"
+                    " INSERT INTO chunks (id, book_id, ordinal, text, embedding)"
                     " SELECT gen_random_uuid(), id, 0, 'Chào thế giới', CAST(:v AS vector) FROM b"
                 ),
                 {"v": vector},
@@ -106,7 +107,8 @@ async def test_ordinals_are_unique_per_book(database_url: str, table: str, const
             book_id = (
                 await conn.execute(
                     text(
-                        "INSERT INTO books (id, title) VALUES (gen_random_uuid(), 'U') RETURNING id"
+                        "INSERT INTO books (id, title, owner_id)"
+                        " VALUES (gen_random_uuid(), 'U', 'dev-user') RETURNING id"
                     )
                 )
             ).scalar_one()
@@ -123,5 +125,54 @@ async def test_ordinals_are_unique_per_book(database_url: str, table: str, const
         with pytest.raises(IntegrityError, match=constraint):
             async with engine.begin() as conn:
                 await conn.execute(insert, {"b": book_id})
+    finally:
+        await engine.dispose()
+
+
+async def test_owner_migration_backfills_the_dev_owner_and_downgrades(database_url: str) -> None:
+    config = alembic_config(database_url)
+    await asyncio.to_thread(command.downgrade, config, "base")
+    await asyncio.to_thread(command.upgrade, config, "0003")  # books exist before owners do
+
+    engine = create_async_engine(database_url)
+    try:
+        async with engine.begin() as conn:
+            await conn.execute(
+                text("INSERT INTO books (id, title) VALUES (gen_random_uuid(), 'Old')")
+            )
+
+        await asyncio.to_thread(command.upgrade, config, "0004")
+        async with engine.begin() as conn:
+            owners = (await conn.execute(text("SELECT owner_id FROM books"))).scalars().all()
+            assert owners == ["dev-user"]
+            indexes = (
+                await conn.execute(text("SELECT indexname FROM pg_indexes WHERE tablename='books'"))
+            ).scalars()
+            assert "ix_books_owner_id" in set(indexes)
+        # No default: an insert that forgets the owner fails instead of landing on the dev owner.
+        with pytest.raises(IntegrityError, match="owner_id"):
+            async with engine.begin() as conn:
+                await conn.execute(
+                    text("INSERT INTO books (id, title) VALUES (gen_random_uuid(), 'No owner')")
+                )
+
+        await asyncio.to_thread(command.downgrade, config, "0003")
+        async with engine.begin() as conn:
+            columns = (
+                await conn.execute(
+                    text(
+                        "SELECT column_name FROM information_schema.columns"
+                        " WHERE table_name = 'books'"
+                    )
+                )
+            ).scalars()
+            assert "owner_id" not in set(columns)
+            assert (await conn.execute(text("SELECT count(*) FROM books"))).scalar_one() == 1
+
+        # Upgrading again backfills again: the migration runs in both directions.
+        await asyncio.to_thread(command.upgrade, config, "head")
+        async with engine.begin() as conn:
+            owners = (await conn.execute(text("SELECT owner_id FROM books"))).scalars().all()
+            assert owners == ["dev-user"]
     finally:
         await engine.dispose()

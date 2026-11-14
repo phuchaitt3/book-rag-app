@@ -2,7 +2,7 @@
 
 import { type FormEvent, useRef, useState } from "react";
 
-import { API_URL, type Book, type Citation, chatPath } from "@/api/client";
+import { API_URL, type Book, type Citation, apiHeaders, chatPath } from "@/api/client";
 import { readEvents } from "@/api/stream";
 
 type Turn = { question: string; answer: string; citations: Citation[]; error?: string };
@@ -35,7 +35,7 @@ export function Chat({ book }: { book: Book }) {
     try {
       const res = await fetch(`${API_URL}${chatPath(book.id)}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: apiHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ question }),
         signal: abort.current.signal,
       });

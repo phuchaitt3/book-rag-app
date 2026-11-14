@@ -32,6 +32,9 @@ class Book(Base):
     __tablename__ = "books"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    # Who owns the book (#230): the id the identity dependency returns. No default: a caller
+    # that forgets the owner must fail, not write to someone else's library.
+    owner_id: Mapped[str] = mapped_column(Text, index=True)
     title: Mapped[str] = mapped_column(Text)
     author: Mapped[str | None] = mapped_column(Text)
     language: Mapped[str] = mapped_column(String(8), default="vi", server_default="vi")

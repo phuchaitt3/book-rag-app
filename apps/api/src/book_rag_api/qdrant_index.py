@@ -17,7 +17,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from book_rag.retrieval import RetrievedChunk
-from book_rag_api.models import EMBEDDING_DIM, Chunk
+from book_rag_api.models import EMBEDDING_DIM, Book, Chunk
 from book_rag_api.retrieval import SqlChunkSearcher
 
 log = logging.getLogger(__name__)
@@ -125,13 +125,18 @@ class QdrantChunkSearcher:
         self._text_searcher = text_searcher
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int
+        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         ids = await self._index.search(book_id, embedding, limit)
         if not ids:
             return []
         async with self._sessions() as session:
-            rows = await session.scalars(select(Chunk).where(Chunk.id.in_(ids)))
+            # Qdrant holds no owner: Postgres decides which of the points the caller may see.
+            rows = await session.scalars(
+                select(Chunk)
+                .join(Book, Book.id == Chunk.book_id)
+                .where(Chunk.id.in_(ids), Book.owner_id == owner_id)
+            )
             by_id = {
                 c.id: RetrievedChunk(id=c.id, text=c.text, page=c.page, section_path=c.section_path)
                 for c in rows
@@ -139,8 +144,10 @@ class QdrantChunkSearcher:
         # Qdrant's order is the ranking; a point whose chunk is gone from Postgres is skipped.
         return [by_id[i] for i in ids if i in by_id]
 
-    async def text_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
-        return await self._text_searcher.text_search(book_id, query, limit)
+    async def text_search(
+        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+    ) -> list[RetrievedChunk]:
+        return await self._text_searcher.text_search(book_id, query, limit, owner_id=owner_id)
 
 
 class ShadowChunkSearcher:
@@ -158,12 +165,14 @@ class ShadowChunkSearcher:
         self._tasks: set[asyncio.Task[None]] = set()  # keeps the tasks alive until they finish
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int
+        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         started = time.perf_counter()
-        result = await self._primary.vector_search(book_id, embedding, limit)
+        result = await self._primary.vector_search(book_id, embedding, limit, owner_id=owner_id)
         primary_ms = (time.perf_counter() - started) * 1000
-        task = asyncio.create_task(self._compare(book_id, embedding, limit, result, primary_ms))
+        task = asyncio.create_task(
+            self._compare(book_id, embedding, limit, owner_id, result, primary_ms)
+        )
         self._tasks.add(task)
         task.add_done_callback(self._tasks.discard)
         return result
@@ -173,12 +182,13 @@ class ShadowChunkSearcher:
         book_id: UUID,
         embedding: Sequence[float],
         limit: int,
+        owner_id: str,
         expected: list[RetrievedChunk],
         primary_ms: float,
     ) -> None:
         try:
             started = time.perf_counter()
-            found = await self._shadow.vector_search(book_id, embedding, limit)
+            found = await self._shadow.vector_search(book_id, embedding, limit, owner_id=owner_id)
             shadow_ms = (time.perf_counter() - started) * 1000
         except Exception:
             log.exception("vector_search shadow: the Qdrant search failed (book %s)", book_id)
@@ -194,8 +204,10 @@ class ShadowChunkSearcher:
             shadow_ms,
         )
 
-    async def text_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
-        return await self._primary.text_search(book_id, query, limit)
+    async def text_search(
+        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+    ) -> list[RetrievedChunk]:
+        return await self._primary.text_search(book_id, query, limit, owner_id=owner_id)
 
 
 async def vector_counts(

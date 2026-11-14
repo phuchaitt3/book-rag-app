@@ -9,6 +9,7 @@ from pydantic import TypeAdapter
 
 from book_rag.providers import LLM, FakeLLM, Message
 from book_rag.retrieval import RetrievedChunk
+from book_rag_api.auth import DEV_OWNER
 from book_rag_api.main import create_app
 from book_rag_api.models import Book
 from book_rag_api.openapi import document_app, render
@@ -59,7 +60,7 @@ class FailingLLM:
 
 
 async def _events(llm: LLM, chunks: list[RetrievedChunk]) -> list[tuple[str, object]]:
-    book = Book(id=uuid4(), title="Sách")
+    book = Book(id=uuid4(), title="Sách", owner_id=DEV_OWNER)
     text = "".join([piece async for piece in answer_events(llm, book, "câu hỏi?", chunks)])
     return [
         (block.split("\n")[0].removeprefix("event: "), json.loads(block.split("\n")[1][6:]))

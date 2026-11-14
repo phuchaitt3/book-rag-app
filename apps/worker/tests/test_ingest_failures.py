@@ -19,6 +19,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.providers import FakeEmbedder
+from book_rag_api.auth import DEV_OWNER, DEV_USER_HEADER
 from book_rag_api.config import Settings
 from book_rag_api.jobs import enqueue_ingestion
 from book_rag_api.main import create_app
@@ -73,7 +74,7 @@ class DyingEmbedder(CountingEmbedder):
 
 async def add_book(engine: AsyncEngine, storage_key: str = "book.pdf") -> uuid.UUID:
     async with AsyncSession(engine) as session:
-        book = Book(title="Sách thử", storage_key=storage_key)
+        book = Book(title="Sách thử", storage_key=storage_key, owner_id=DEV_OWNER)
         session.add(book)
         await session.flush()
         book_id = book.id
@@ -293,7 +294,11 @@ async def test_a_permanent_embedder_error_fails_once_and_the_api_shows_why(
         app = create_app(Settings(database_url=database_url))
         async with (
             app.router.lifespan_context(app),
-            AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client,
+            AsyncClient(
+                transport=ASGITransport(app=app),
+                base_url="http://test",
+                headers={DEV_USER_HEADER: DEV_OWNER},
+            ) as client,
         ):
             body = (await client.get(f"/ingestion-jobs/{job_id}")).json()
     assert body["status"] == "failed"

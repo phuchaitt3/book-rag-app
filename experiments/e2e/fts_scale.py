@@ -80,7 +80,7 @@ async def main() -> None:
             book_id = uuid4()
             t0 = time.perf_counter()
             async with sessions.begin() as session:
-                session.add(Book(id=book_id, title=f"synthetic-{size}"))
+                session.add(Book(id=book_id, title=f"synthetic-{size}", owner_id="dev-user"))
                 await session.flush()
                 for start in range(0, size, 2000):
                     session.add_all(
@@ -106,12 +106,12 @@ async def main() -> None:
                 ("ts_rank_cd", searcher._ts_rank_search),
             ):
                 for q in queries[:10]:  # warm-up, discarded
-                    await fn(book_id, q, LIMIT)
+                    await fn(book_id, q, LIMIT, owner_id="dev-user")
                 times = []
                 for _ in range(2):
                     for q in queries:
                         t = time.perf_counter()
-                        await fn(book_id, q, LIMIT)
+                        await fn(book_id, q, LIMIT, owner_id="dev-user")
                         times.append((time.perf_counter() - t) * 1000)
                 arm_times[name] = times
             row = {

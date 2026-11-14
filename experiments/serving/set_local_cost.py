@@ -44,7 +44,10 @@ async def main() -> None:
         own = [f"own passage {i} about rivers" for i in range(LIMIT)]
         other = [f"other passage {i} about mountains" for i in range(400)]
         own_v, other_v = await embedder.embed(own), await embedder.embed(other)
-        own_book, other_book = Book(id=uuid4(), title="own"), Book(id=uuid4(), title="other")
+        own_book, other_book = (
+            Book(id=uuid4(), title="own", owner_id="dev-user"),
+            Book(id=uuid4(), title="other", owner_id="dev-user"),
+        )
         engine = create_async_engine(url)
         sessions = async_sessionmaker(engine, expire_on_commit=False)
         async with sessions.begin() as session:

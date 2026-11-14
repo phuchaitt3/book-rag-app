@@ -122,11 +122,13 @@ Settings are read from environment variables. Copy [.env.example](.env.example) 
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `ENVIRONMENT` | `development` | Runtime environment name |
+| `ENVIRONMENT` | `development` | Runtime environment name. It also decides identity (#230): in `development` and `test` the API reads the caller's id from the `X-Dev-User` request header (a request without it is 401); in any other value the header is ignored and every data route answers 401, because no login is wired in yet (ADR 0006). Each book has one owner and a caller sees only their own books: another user's book is 404, not 403 |
+| `MCP_OWNER_ID` | `dev-user` | Whose books the MCP server reads (it has no login; every query is filtered by this id) |
 | `LOG_FORMAT` | `text` | Log format of the API and the worker: `text` (plain, for local work) or `json` (one JSON object per line with `timestamp`, `level`, `logger`, `message` and, where known, `request_id`, `book_id`, `job_id`). Every API response carries `X-Request-ID` (the caller's, or a generated one); errors the API raises are `application/problem+json` (RFC 9457) with the same `request_id` |
 | `DATABASE_URL` | local Compose Postgres (`postgresql+asyncpg://...`) | Async SQLAlchemy connection URL |
 | `CORS_ORIGINS` | `["http://localhost:3000"]` | Origins allowed to call the API (JSON list) |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | API address the web app calls (set in `apps/web/.env.local`) |
+| `NEXT_PUBLIC_DEV_USER` | `dev-user` | User id the web app sends as `X-Dev-User` (honoured only when the API runs in `development` or `test`; `dev-user` owns the books uploaded before owners existed) |
 
 Never commit `.env` files or keys.
 

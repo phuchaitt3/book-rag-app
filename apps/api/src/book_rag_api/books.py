@@ -8,10 +8,12 @@ from typing import Annotated
 import procrastinate
 import pypdfium2 as pdfium
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
+from fastapi.responses import Response
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
+from book_rag_api.auth import Owner
 from book_rag_api.config import Settings
 from book_rag_api.jobs import enqueue_ingestion
 from book_rag_api.models import Book
@@ -83,6 +85,7 @@ async def _read_capped(file: UploadFile, limit: int) -> bytes:
 
 @router.post("", status_code=status.HTTP_201_CREATED)
 async def upload_book(
+    owner: Owner,
     file: Annotated[UploadFile, File()],
     engine: Annotated[AsyncEngine, Depends(_engine)],
     storage: Annotated[ObjectStorage, Depends(_storage)],
@@ -110,6 +113,7 @@ async def upload_book(
     async with AsyncSession(engine) as session:
         book = Book(
             id=book_id,
+            owner_id=owner,
             title=(title or fallback).strip() or fallback,
             author=author,
             language=language,
@@ -125,8 +129,49 @@ async def upload_book(
 
 
 @router.get("")
-async def list_books(engine: Annotated[AsyncEngine, Depends(_engine)]) -> list[BookOut]:
-    """All books, newest first."""
+async def list_books(
+    owner: Owner, engine: Annotated[AsyncEngine, Depends(_engine)]
+) -> list[BookOut]:
+    """The caller's books, newest first."""
     async with AsyncSession(engine) as session:
-        books = (await session.scalars(select(Book).order_by(Book.created_at.desc()))).all()
+        books = (
+            await session.scalars(
+                select(Book).where(Book.owner_id == owner).order_by(Book.created_at.desc())
+            )
+        ).all()
     return [BookOut.model_validate(b, from_attributes=True) for b in books]
+
+
+@router.get("/{book_id}")
+async def get_book(
+    book_id: uuid.UUID, owner: Owner, engine: Annotated[AsyncEngine, Depends(_engine)]
+) -> BookOut:
+    """One of the caller's books. Another owner's book is 404, the same as a missing one."""
+    async with AsyncSession(engine) as session:
+        book = await session.scalar(select(Book).where(Book.id == book_id, Book.owner_id == owner))
+    if book is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "book not found")
+    return BookOut.model_validate(book, from_attributes=True)
+
+
+@router.delete("/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_book(
+    book_id: uuid.UUID,
+    owner: Owner,
+    engine: Annotated[AsyncEngine, Depends(_engine)],
+    storage: Annotated[ObjectStorage, Depends(_storage)],
+) -> Response:
+    """Delete one of the caller's books with its sections, chunks and jobs, and its PDF."""
+    async with AsyncSession(engine) as session:
+        # One statement, filtered by owner: another owner's book is not touched and is 404.
+        key = await session.scalar(
+            delete(Book)
+            .where(Book.id == book_id, Book.owner_id == owner)
+            .returning(func.coalesce(Book.storage_key, ""))
+        )
+        await session.commit()
+    if key is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "book not found")
+    if key:
+        await storage.delete(key)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
