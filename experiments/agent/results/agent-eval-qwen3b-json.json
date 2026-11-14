@@ -1,0 +1,3753 @@
+{
+ "summary": {
+  "label": "qwen3b-json",
+  "book_id": "f8bb7d7a-6339-41f6-83cd-7cb6f29a1a9b",
+  "commit": "fb14589",
+  "model": "qwen2.5:3b-instruct",
+  "mode": "json",
+  "max_steps": 4,
+  "top_k": 6,
+  "control_k": 12,
+  "seed": 243,
+  "pairs": 40,
+  "arms": {
+   "single": {
+    "questions": 40,
+    "both_hit_seen": {
+     "pct": 42.5,
+     "ci95": [
+      27.5,
+      57.5
+     ]
+    },
+    "part_hit_seen": {
+     "pct": 65.0,
+     "ci95": [
+      55.0,
+      75.0
+     ]
+    },
+    "both_hit_cited": {
+     "pct": 17.5,
+     "ci95": [
+      7.5,
+      30.0
+     ]
+    },
+    "part_hit_cited": {
+     "pct": 33.8,
+     "ci95": [
+      23.8,
+      43.8
+     ]
+    },
+    "chunks_seen": {
+     "mean": 6.0,
+     "ci95": [
+      6.0,
+      6.0
+     ]
+    },
+    "tool_calls": {
+     "mean": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ]
+    },
+    "seconds": {
+     "mean": 16.29,
+     "ci95": [
+      15.93,
+      16.64
+     ]
+    },
+    "token_f1": {
+     "mean": 0.15,
+     "ci95": [
+      0.11,
+      0.2
+     ]
+    },
+    "reference_recall": {
+     "mean": 0.41,
+     "ci95": [
+      0.31,
+      0.51
+     ]
+    },
+    "answers_without_marker_pct": 20.0,
+    "marker_invalid": 0,
+    "errors": 0,
+    "capped": 0
+   },
+   "agent": {
+    "questions": 40,
+    "both_hit_seen": {
+     "pct": 45.0,
+     "ci95": [
+      30.0,
+      60.0
+     ]
+    },
+    "part_hit_seen": {
+     "pct": 62.5,
+     "ci95": [
+      51.2,
+      72.5
+     ]
+    },
+    "both_hit_cited": {
+     "pct": 10.0,
+     "ci95": [
+      2.5,
+      20.0
+     ]
+    },
+    "part_hit_cited": {
+     "pct": 31.2,
+     "ci95": [
+      21.2,
+      41.2
+     ]
+    },
+    "chunks_seen": {
+     "mean": 5.8,
+     "ci95": [
+      5.33,
+      6.35
+     ]
+    },
+    "tool_calls": {
+     "mean": 2.02,
+     "ci95": [
+      1.62,
+      2.45
+     ]
+    },
+    "seconds": {
+     "mean": 49.92,
+     "ci95": [
+      27.11,
+      79.38
+     ]
+    },
+    "token_f1": {
+     "mean": 0.15,
+     "ci95": [
+      0.11,
+      0.19
+     ]
+    },
+    "reference_recall": {
+     "mean": 0.4,
+     "ci95": [
+      0.32,
+      0.49
+     ]
+    },
+    "answers_without_marker_pct": 20.0,
+    "marker_invalid": 0,
+    "errors": 4,
+    "capped": 11
+   },
+   "control": {
+    "questions": 40,
+    "both_hit_seen": {
+     "pct": 65.0,
+     "ci95": [
+      50.0,
+      80.0
+     ]
+    },
+    "part_hit_seen": {
+     "pct": 81.2,
+     "ci95": [
+      72.5,
+      90.0
+     ]
+    },
+    "both_hit_cited": {
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "part_hit_cited": {
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "chunks_seen": {
+     "mean": 12.0,
+     "ci95": [
+      12.0,
+      12.0
+     ]
+    },
+    "tool_calls": {
+     "mean": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ]
+    },
+    "seconds": {
+     "mean": 0.43,
+     "ci95": [
+      0.29,
+      0.63
+     ]
+    },
+    "token_f1": null,
+    "reference_recall": null,
+    "answers_without_marker_pct": 0.0,
+    "marker_invalid": 0,
+    "errors": 0,
+    "capped": 0
+   }
+  },
+  "agent_minus_single_both_seen_pts": [
+   2.5,
+   -15.0,
+   17.5
+  ],
+  "agent_minus_single_both_cited_pts": [
+   -7.5,
+   -22.5,
+   7.5
+  ]
+ },
+ "results": {
+  "single": [
+   {
+    "pair": [
+     "c303-blind",
+     "c183-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 1,
+    "marker_valid": true,
+    "token_f1": 0.23809523809523808,
+    "reference_recall": 0.7142857142857143,
+    "answer": "(1) [3] Mộc Thạnh được tin ấy, sợ quá, đem quân chạy, bị quân Trịnh Khả đuổi theo chém được hơn 1 vạn người và bắt được cả người lẫn ngựa mỗi thứ hơn một nghìn.",
+    "seconds": 16.360414599999785,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c121-blind",
+     "c326-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 1,
+    "marker_valid": true,
+    "token_f1": 0.10084033613445378,
+    "reference_recall": 0.46153846153846156,
+    "answer": "(1) [3] Thái-tông trị-vì được 27 năm, đến năm giáp-ngọ (1054) thì mất, thọ 55 tuổi. Điều này cho thấy Lý Thái Tông bắt bao gồm hơn 5.000 tù binh Chiêm Thành.\n\n(2) Lý Thái Tông mất năm giáp ngọ (1054), nên Lê Thánh Tông (thời Lê) sẽ được nghỉ hưu khi 55 tuổi. Tuy nhiên, câu hỏi không cung cấp thông tin về tuổi nghỉ hưu của Lê Thánh Tông, chỉ ra rằng thời Lý, thái tử mới lên ngôi khi 55 tuổi. Vì vậy, không thể trả lời câu hỏi thứ hai với thông tin được cung cấp trong đoạn văn.",
+    "seconds": 18.60920449999685,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c105-blind",
+     "c243-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.3225806451612903,
+    "reference_recall": 0.7142857142857143,
+    "answer": "(1) Con trai cả của vua Đinh Tiên Hoàng tên là Nam-việt-vương Liễn.\n(2) Hồ Quý Ly truyền ngôi cho Kính 曔.",
+    "seconds": 13.770379600013257,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c111-blind",
+     "c220-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.09523809523809525,
+    "reference_recall": 0.6,
+    "answer": "(1) Lê Trung Tông thường chơi trò đánh bạc, hát tuồng, và các trò chơi khác bằng cách làm cho các tù nhân chịu đau đớn, hoặc giả làm tai nạn để cười, cũng như nhại tiếng người khác làm trò.\n[6]\n\n(2) Ông Chu Văn Ann đã dâng sớ xin vua Trần Dụ Tông chém bảy quyền thần.\n[1]",
+    "seconds": 16.19484620000003,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c221-blind",
+     "c108-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "1. [2]\n2. [1]",
+    "seconds": 13.41107099999499,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c182-blind",
+     "c339-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.04,
+    "reference_recall": 0.038461538461538464,
+    "answer": "(1) Hai hoàng tử nhà Trần nào bỏ theo quân Nguyên? [3]\n\n(2) Vua Lê Hiến Tông cai trị đất nước theo đường lối nào? [1]",
+    "seconds": 16.384601400000975,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c86-blind",
+     "c169-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "(1) Ai đánh đuổi quân Tàu về Bắc, kết thúc thời Bắc thuộc?\n\n[5] Thái-tông không những là không chịu, lại bắt giam sứ Mông-cổ, rồi sai Trần quốc Tuấn đem binh lên giữ ở phía Bắc.\n\n(2) 1284 Trần Quốc Tuấn duyệt quân ở đâu?\n\n[3] Hưng-đạo-vương Trần quốc Tuấn tự dẫn đại quân đóng giữ núi Kì-cấp.",
+    "seconds": 16.47141019999981,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c193-blind",
+     "c232-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.1395348837209302,
+    "reference_recall": 0.6,
+    "answer": "(1) Vua Trần Nhân Tông giao cho Hưng Đạo Vương chỉ huy các vương hầu để phòng thủ khi quân Nguyên tấn công.\n\n(2) Vua Trần Thuận Tông trị vì thời kỳ niên hiệu Kiến Trung (1225-1237).",
+    "seconds": 16.943251099990448,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c317-blind",
+     "c338-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.21276595744680848,
+    "reference_recall": 0.8333333333333334,
+    "answer": "[1] Phạm tội lưu trở xuống được đóng tiền chuộc từ 70 tuổi trở lên, 10 tuổi trở xuống hay là đốc-tật.\n\n[2] Sau khi Cầm Công mất, vua Lê Thánh Tông bổ nhiệm Lê nhân Hiếu làm Tuyên úy đại sứ.",
+    "seconds": 15.995672300006845,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c284-blind",
+     "c278-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.46428571428571436,
+    "reference_recall": 0.9285714285714286,
+    "answer": "(1) Quan thiếu úy đã nêu kế hoạch tấn công Nghệ An trước trong chiến dịch chống quân Minh năm 1424 là Lê Chỉ.\n(2) Lê Lợi quê ở làng Lam-sơn, thuộc huyện Thụy-nguyên, phủ Thiệu-hóa, tỉnh Thanh-hóa.",
+    "seconds": 16.5777342000074,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c344-blind",
+     "c280-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 3,
+    "marker_valid": true,
+    "token_f1": 0.24615384615384614,
+    "reference_recall": 0.5714285714285714,
+    "answer": "(1) Trịnh Duy Sản mưu lập vua khác và giết vua Tương Dực cùng Nguyễn Hoằng Dụ. (citations: [1] [5])\n\n(2) Người có tình nguyện khoác long bào cưỡi voi ra chiến trường để chết thay cho Bình Định Vương lúc bị quân Minh bao vây tại Chí Linh là Lê Lai. (citations: [1])",
+    "seconds": 17.125295200006803,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c260-blind",
+     "c321-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "(1) [2]\n(2) [1]",
+    "seconds": 15.774021200006246,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c170-blind",
+     "c62-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.5217391304347826,
+    "reference_recall": 1.0,
+    "answer": "(1) Trần quốc Tuấn 興 道 王 陳 國 峻\n(2) Phạm dương Mại 范 陽 邁",
+    "seconds": 16.441845499997726,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c215-blind",
+     "c100-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 1,
+    "marker_valid": true,
+    "token_f1": 0.099009900990099,
+    "reference_recall": 0.38461538461538464,
+    "answer": "(1) Để trả lời câu hỏi này, chúng tôi cần tìm thông tin về việc ai đã giết tướng chỉ huy quân Ngưu Hống tại trại Trịnh Kỳ vào năm 1377. Tuy nhiên, trong các đoạn văn được cung cấp, không có thông tin liên quan đến vấn đề này. Tôi không thể trả lời câu hỏi này dựa trên thông tin có sẵn.\n\n(2) Theo thông tin trong đoạn văn [4], Ngô xương Văn đã nuôi làm con nuôi Dương Tam Kha sau khi bắt được ông ta.",
+    "seconds": 17.580618899999536,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c93-blind",
+     "c20-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "(1) [2]\n(2) [4]",
+    "seconds": 16.316129300001194,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c254-blind",
+     "c230-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.3,
+    "reference_recall": 1.0,
+    "answer": "(1) An phủ sứ Bắc Giang bị bắt không chịu hàng và bị giết là Nguyễn hy Chu [2].\n(2) Người đề xuất thu thuế thân 3 quan tiền mỗi năm là Đỗ tử Bình [1].",
+    "seconds": 15.763601500002551,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c173-blind",
+     "c66-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 1,
+    "marker_valid": true,
+    "token_f1": 0.5,
+    "reference_recall": 0.42857142857142855,
+    "answer": "(1) [1]\n(2) Dạ-trạch vương",
+    "seconds": 15.213179899990791,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c2-blind",
+     "c113-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "[1]  \n[6]",
+    "seconds": 13.10490029999346,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c289-blind",
+     "c208-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.22641509433962262,
+    "reference_recall": 1.0,
+    "answer": "(1) Hưng Đạo Vương cùng Lý Triện và Phạm văn Xảo, Trịnh Khả, Đỗ Bí đem quân đi đánh Trần Trí. [4]\n\n(2) Hưng Đạo Vương được ban tước hiệu Hưng Đạo Đại Vương khi làm Thái sư, Thượng phụ, Thượng quốc công, Bình bắc đại nguyên súy. [1]",
+    "seconds": 16.818048200002522,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c134-blind",
+     "c148-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.16666666666666666,
+    "reference_recall": 0.25,
+    "answer": "(2) Trần Thủ Độ bắt vua Trần Thái Tông phế Chiêu Thánh xuống làm công-chúa [1].\n(1) Lý Thường Kiệt quê ở Chiết Giang [6].",
+    "seconds": 16.27193360000092,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c36-blind",
+     "c164-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 3,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "[1] [6]\n[1]",
+    "seconds": 15.639387599992915,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c142-blind",
+     "c186-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 1,
+    "marker_valid": true,
+    "token_f1": 0.0606060606060606,
+    "reference_recall": 0.25,
+    "answer": "(1) Người được phong Thái úy Thuận lưu bá là Trần tự Khánh.\n\n(2) Cụ thể liên quan đến câu hỏi này, [3] cho thấy Toa Đô đã bị Trần nhật Duật đánh bại trong trận Hàm-tử-quan. Ông ấy bị quân đội nhà Trần bao vây và tấn công, kết quả là Toa Đô đã mất mạng.",
+    "seconds": 16.818275899990113,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c241-blind",
+     "c13-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.07804878048780488,
+    "reference_recall": 0.8,
+    "answer": "(1) [5] Lê Quý Ly lập mưu cho người đạo sĩ vào trong cung xui Thuận-tông nhường ngôi rồi đi tu tiên, và sau đó Lê Quý Ly lập Thái-tử là Án lên làm vua. Đây là thời điểm Lê Quý Ly bắt Thuận-tông phải dời kinh về Tây-đô, sau đó lập mưu cho việc phế truất Thuận-tông.\n\n(2) [4] Theo ý kiến của những nhà khảo cứu người Pháp, người Việt-nam và người Thái đều ở miền núi Tây-tạng xuống. Người Việt-nam theo sông Hồng-hà lần xuống phía đông-nam, lập ra nước Việt-nam ta bây giờ; còn người Thái thì theo sông Mê-kông xuống, lập ra nước Tiêm\u0002la (tức là Thái-lan) và các nước Lào. Chỉ biết rằng người Việt\u0002nam ta trước có hai ngón chân cái giao lại với nhau, cho nên Tàu mới gọi ta là Giao-chỉ. Dựa vào ý kiến này, có thể giả sử rằng người Việt có đặc điểm hai ngón chân cái giao lại với nhau, nhưng điều này không phải là sự thật đích xác, vì không có bằng chứng xác thực nào.",
+    "seconds": 18.620040699999663,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c236-blind",
+     "c53-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "(1) [1]\n(2) [2]",
+    "seconds": 15.704679899994517,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c290-blind",
+     "c35-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.032,
+    "reference_recall": 0.18181818181818182,
+    "answer": "(1) [3] Mời bạn đọc lại đoạn văn có liên quan đến câu hỏi này. Trong đó nói rằng Vương Thông mang quân đến giải vây Đông Quan, nhưng không rõ số lượng. Để trả lời chính xác câu hỏi này, cần phải tìm đoạn văn khác. Tôi không thể xác định chính xác số lượng quân mà Vương Thông và Mã Anh mang đến. Tôi xin lỗi vì không thể trả lời câu hỏi một.\n\n(2) [4] Vụng Thành Đông Đô, những trấn và lộ được phân chia theo sách \"Lịch-triều-hiến-chương địa-dư-chí\" của ông Phan huy Chú, và họ được giao cho những quan quân văn võ để quản lý.",
+    "seconds": 16.862573100006557,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c33-blind",
+     "c131-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.37499999999999994,
+    "reference_recall": 0.6,
+    "answer": "[1]  \n[6] Lý Thường Kiệt phục kích quân Tống ở sông Như-nguyệt.",
+    "seconds": 14.917656199992052,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c240-blind",
+     "c318-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 3,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "[1] [6]\n[3]",
+    "seconds": 15.683886300001177,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c57-blind",
+     "c196-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.07329842931937172,
+    "reference_recall": 0.5833333333333334,
+    "answer": "[2] (TỰ-CHỦ THỜI-ĐẠI › Giặc nhà Nguyên — II, page 199) Quân Nguyên đóng mãi ở Vạn-kiếp lương thực sắp cạn, Thoát Hoan bèn sai Ô mã Nhi dẫn thủy-quân ra cửa bể Đại-bàng (huyện Nghi-dương, Hải-dương) đón thuyền lương của Trương văn Hổ. Ô mã Nhi đem thuyền đi đến ải Vân-đồn (Vân-hải, Quảng-yên) gặp quân của Nhân-huệ-vương Trần khánh Dư chặn đường không cho đi. Ô mã Nhi thúc quân đánh rát một trận, quân Khánh Dư thua bỏ chạy cả. \n\nCâu trả lời cho câu hỏi thứ nhất: [4] (TỰ-CHỦ THỜI-ĐẠI › Giặc nhà Nguyên — II, page 196) Còn Trương văn Hổ thì chạy xuống chiếc thuyền nhỏ trốn về Quỳnh-châu. Khánh Dư thắng trận đưa thư về báo tiệp.\n\nCâu trả lời cho câu hỏi thứ hai: Quân Nguyên đóng mãi ở Vạn-kiếp lương thực sắp cạn, Thoát Hoan bèn sai Ô mã Nhi dẫn thủy-quân ra cửa bể Đại-bàng (huyện Nghi-dương, Hải-dương) đón thuyền lương của Trương văn Hổ.",
+    "seconds": 18.5630841999955,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c28-blind",
+     "c275-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.3291139240506329,
+    "reference_recall": 0.6190476190476191,
+    "answer": "(1) [1] nói rằng Trọng Thỉ tự vẫn ở giếng trong Loa-thành.\n\n(2) [2] cung cấp thông tin này: những người An-nam như Nguyễn Huân, Lương Hốt, Đỗ Trung theo hàng nhà Minh, khéo đường xu-nịnh, được làm quan to, lại càng ỷ thế của giặc, làm những điều tàn-bạo hung-ác hơn người Trung Quốc.",
+    "seconds": 15.994630399989546,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c304-blind",
+     "c332-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "(1) [5] Vua Thái-tổ sai sứ sang cầu phong bên Tàu, nhưng mà nhà Minh không chịu, bắt phải tìm con cháu nhà Trần để lập lên làm vua. (2) [3] Việc cai-trị 2. Việc thuế-lệ",
+    "seconds": 16.307889100004104,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c201-blind",
+     "c65-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 1,
+    "marker_valid": true,
+    "token_f1": 0.13559322033898308,
+    "reference_recall": 0.4444444444444444,
+    "answer": "(1) Không có thông tin trong các đoạn văn được cung cấp về người đã hiến kế để xử tử Ô Mã Nhi.\n(2) Theo thông tin từ đoạn văn [3], Lý Nam Đế đã giao quyền chỉ huy quân đội cho Triệu Quang Phục để đối phó với quân Lương.",
+    "seconds": 16.403177400003187,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c327-blind",
+     "c81-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.03389830508474576,
+    "reference_recall": 0.25,
+    "answer": "(1) [1] không cung cấp thông tin về Lê Thánh Tông chia nước ta thành mấy đạo. Cần phải tra cứu thông tin ở các đoạn khác.\n(2) [2] không cung cấp thông tin về thời gian Giao Châu tự chủ khi Trung Quốc có nội chiến. Cần phải tra cứu thông tin ở các đoạn khác.",
+    "seconds": 16.787461899992195,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c244-blind",
+     "c335-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.09677419354838708,
+    "reference_recall": 0.375,
+    "answer": "[1] (Tại câu hỏi 1) Hồ Quý Ly quy định người từ 15 tuổi trở lên phải đăng ký vào sổ hộ tịch.\n\n[4] (Tại câu hỏi 2) Trong đoạn văn liên quan đến nhà Trần, không có thông tin cụ thể về số lượng lính mà Lê Thánh Tông sai đánh Chiêm Thành năm 1470.",
+    "seconds": 16.315792600013083,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c207-blind",
+     "c313-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.32558139534883723,
+    "reference_recall": 0.875,
+    "answer": "(1) Trần Hưng Đạo mất ngày 20 tháng tám năm canh-tí (1300).\n(2) Trần Cao bị đưa lên ngôi vua vì lý do là dòng dõi nhà Trần để xin hòa với nhà Minh.",
+    "seconds": 15.986936200002674,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c334-blind",
+     "c52-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.07692307692307691,
+    "reference_recall": 0.3333333333333333,
+    "answer": "(1) Người giữ vai trò Tao đàn nguyên súy và cùng các quan trong triều làm thơ không được miêu tả trong các đoạn văn được cung cấp.\n(2) Người Giao Chỉ đầu tiên làm Thứ sử Giao Chỉ cuối thời Đông Hán là Lý Tiến.",
+    "seconds": 17.18424900001264,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c123-blind",
+     "c80-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0425531914893617,
+    "reference_recall": 0.16666666666666666,
+    "answer": "(1) Chưa xác định trong đoạn văn được cung cấp ai xây Văn Miếu đầu tiên thờ Khổng Tử ở Việt Nam.\n\n(2) Cao Biền giao cho Vi Trọng Tể làm Tiết độ sứ Giao Châu khi ông đi Tây Xuyên.",
+    "seconds": 16.48836659999506,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c305-blind",
+     "c8-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.06666666666666667,
+    "reference_recall": 0.1111111111111111,
+    "answer": "(1) [3] chỉ ra rằng Trương Phụ trở sang An-nam, không được biết rõ sáu sách đó dựa trên tài liệu nào.\n(2) [5] cho biết sách Việt Nam sử lược dựa trên tài liệu từ thời nhà Tần cho đến nhà Đường.",
+    "seconds": 15.902608800010057,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c234-blind",
+     "c348-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.25263157894736843,
+    "reference_recall": 0.5714285714285714,
+    "answer": "(1) Người đã chỉ điểm thuyền của Chế Bồng Nga cho Trần Khát Chân là những người đầy tớ của Chế Bồng Nga, họ bỏ trốn sang hàng với quân Trần Khát Chân.\n(2) Sau khi vua Chiêu Tông giao quyền chỉ huy quân đội cho Mạc Đăng Dung để đối phó với Hoàng Duy Nhạc, Mạc Đăng Dung đưa vua Chiêu Tông tới Gia-phúc (nay là Gia-lộc thuộc tỉnh Hải-dương).",
+    "seconds": 16.203146800005925,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c139-blind",
+     "c266-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.2,
+    "reference_recall": 0.5,
+    "answer": "(1) Tô Hiến Thành mất lúc 1179 (được ghi lại trong [2]).\n(2) Đặng Dung bị áp giải ra Yên Kinh sau đó tự tử trong một trận đánh (được ghi lại trong [1]).",
+    "seconds": 16.431378000008408,
+    "error": null,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c149-blind",
+     "c85-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.08571428571428572,
+    "reference_recall": 0.3,
+    "answer": "(1) Trần Thủ Độ đã thu-xếp trong việc cướp ngôi nhà Lý rồi, mới đem quân đi đánh-dẹp. Trước lên bình giặc Mường ở Quốc-oai, sau về đánh bọn Đoàn Thượng và Nguyễn Nộn. Nhưng thế-lực hai người ấy mạnh lắm, Trần Thủ Độ đánh không lại, bèn chia đất cho hai người làm vương để giảng\u0002hòa.\n\n[4] (TỰ-CHỦ THỜI-ĐẠI › Nhà Trần (Thời-kỳ thứ nhất), page 159)\n\n(2) [3] (BẮC-THUỘC THỜI-ĐẠI › Bắc-thuộc lần thứ ba, page 90) Kiểu công Tiện cho sang cầu cứu ở bên Nam-Hán, Hán-chủ nhân dịp cho thái-tử là Hoằng Tháo 弘 操 đưa quân đi trước, mình tự dẫn quân đi tiếp ứng.",
+    "seconds": 17.623010399998748,
+    "error": null,
+    "tool_calls": 1
+   }
+  ],
+  "agent": [
+   {
+    "pair": [
+     "c303-blind",
+     "c183-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 3,
+    "marker_valid": true,
+    "token_f1": 0.11764705882352942,
+    "reference_recall": 0.5714285714285714,
+    "answer": "[1] [2] Mộc Thạnh đã hành động khi hay tin Liễu Thăng bại trận là giữ vững cửa Lê-hoa. Đến khi quân Liễu 290 Thăng thua rồi, Vương cho những tên tì-tướng đã bắt được, đem những giấy má ấn tín lên cho Mộc Thạnh biết. [4] Tướng Nguyên Hồ nguyên Trừng bị quân Mộc Thạnh đánh bại ở bến Hàm Tử.",
+    "seconds": 18.099625100003323,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "Mộc Thạnh hành động khi Liễu Thăng bại trận và Tướng Nguyên thua Trần Nhật Duật ở bến Hàm Tử"
+     },
+     {
+      "chunk_id": "url_to_passage_1"
+     },
+     {
+      "chunk_id": "url_to_passage_1"
+     },
+     {
+      "chunk_id": "url_to_passage_1",
+      "context": 2
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu, p. 289",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Phiên âm bài Bình Ngô đại-cáo, p. 332",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu, p. 306"
+    ]
+   },
+   {
+    "pair": [
+     "c121-blind",
+     "c326-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "",
+    "seconds": 308.89306699999725,
+    "error": "TimeoutError: timed out",
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Lý Thái Tông bắt bao nhiêu tù binh Chiêm Thành sau khi chiếm thành Phật Thệ và quan thời vua Lê Thánh Tông bao nhiêu tuổi thì được nghỉ hưu"
+     }
+    ],
+    "citations": []
+   },
+   {
+    "pair": [
+     "c105-blind",
+     "c243-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 4,
+    "marker_valid": true,
+    "token_f1": 0.07142857142857142,
+    "reference_recall": 0.14285714285714285,
+    "answer": "[1] Con trai cả của vua Đinh Tiên Hoàng tên là Hạng Lang [3]. [4] Hồ Quý Ly truyền ngôi cho vua Thuận Tông [5].",
+    "seconds": 16.22959639999317,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "con trai cả của vua Đinh Tiên Hoàng tên là gì và Hồ Quý Ly truyền ngôi cho ai để cùng trị quốc"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba), p. 233",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Đinh, p. 112",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba), p. 241",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba), p. 234"
+    ]
+   },
+   {
+    "pair": [
+     "c111-blind",
+     "c220-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "",
+    "seconds": 308.42115080000076,
+    "error": "TimeoutError: timed out",
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Lê Thuận Đĩnh chơi trò gì Người đã dâng sớ xin vua Trần Dụ Tông chém bảy quyền thần"
+     }
+    ],
+    "citations": []
+   },
+   {
+    "pair": [
+     "c221-blind",
+     "c108-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "",
+    "seconds": 315.5463149999996,
+    "error": "TimeoutError: timed out",
+    "tool_calls": 2,
+    "steps": 2,
+    "capped": false,
+    "model_calls": 3,
+    "queries": [
+     {
+      "query": "vua Chiêm Thành năm 1368 An Nam Lê Hoàn Tiền Lê"
+     },
+     {
+      "chunk_id": "bytes 116-117"
+     }
+    ],
+    "citations": []
+   },
+   {
+    "pair": [
+     "c182-blind",
+     "c339-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.13114754098360656,
+    "reference_recall": 0.15384615384615385,
+    "answer": "[1] Hai hoàng tử nhà Trần là Trần Di Ái và Trần Quốc Toản bỏ theo quân Nguyên. [3] Vua Lê Hiến Tông cai trị đất nước theo đường lối cải tổ việc chính trị nước Tống.",
+    "seconds": 15.781197099990095,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "hai hoàng tử nhà tràn bỏ theo quân nguyên vua le hien tong cai troi theo duong loi"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I, p. 175",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba), p. 235"
+    ]
+   },
+   {
+    "pair": [
+     "c86-blind",
+     "c169-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.2105263157894737,
+    "reference_recall": 0.5714285714285714,
+    "answer": "[1] [3] Ai đánh đuổi quân Tàu về Bắc, kết thúc thời Bắc thuộc là Trần Quốc Tuấn. Về câu hỏi thứ hai, Trần Quốc Tuấn duyệt quân ở bến Đông bộ đầu.",
+    "seconds": 17.692543800003477,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "Ai đánh đuổi quân Tàu về Bắc, kết thúc thời Bắc thuộc? 1284 Trần Quốc Tuấn duyệt quân ở đâu?"
+     },
+     {
+      "chunk_id": "bytes 190-191"
+     },
+     {
+      "chunk_id": "bytes 190-191",
+      "context": 1
+     },
+     {
+      "chunk_id": "bytes 190-191",
+      "context": 1
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I, p. 178",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I, p. 179"
+    ]
+   },
+   {
+    "pair": [
+     "c193-blind",
+     "c232-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.04444444444444445,
+    "reference_recall": 0.2,
+    "answer": "[1] Vua Trần Nhân Tông giao cho Trần Quốc Tuấn chỉ huy các vương hầu để phòng thủ khi quân Nguyên tấn công. [1] Niên hiệu của vua Trần Thuận Tông không được tìm thấy trong các đoạn văn được tìm kiếm.",
+    "seconds": 15.141434000004665,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "vua tran nhan tong tran thuan tong"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lê, p. 320"
+    ]
+   },
+   {
+    "pair": [
+     "c317-blind",
+     "c338-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 1,
+    "marker_valid": true,
+    "token_f1": 0.14814814814814814,
+    "reference_recall": 0.6666666666666666,
+    "answer": "[1] cho những người 70 tuổi trở lên, 15 tuổi trở xuống hay là có phế-tật mà phạm tội lưu trở xuống, thì cũng được cho chuộc. Những người 80 tuổi trở lên, 10 tuổi trở xuống hay là đốc-tật, thì cứ thứ-tự giảm bớt cho.",
+    "seconds": 16.15069460000086,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "vietnam sử lược thời lê tuổi đóng tiền chuộc tước lưu trở và bổ nhiệm sau khi cầm công mất"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lê, p. 312"
+    ]
+   },
+   {
+    "pair": [
+     "c284-blind",
+     "c278-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.25925925925925924,
+    "reference_recall": 0.5,
+    "answer": "[1] Quan thiếu úy đã nêu kế hoạch tấn công Nghệ An trước trong chiến dịch chống quân Minh năm 1424 là Lưu Cung. [2] Lê Lợi quê ở làng Thanh Bình, thuộc huyện Thanh Oai, phủ Phong Châu, tỉnh Thanh Hóa.",
+    "seconds": 15.787588099992718,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "quan thieu uy nhat cong chien chong quan minh nam 1424 le loi que o hang, phu, phuoc, tinh"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lê, p. 318",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu, p. 304"
+    ]
+   },
+   {
+    "pair": [
+     "c344-blind",
+     "c280-blind"
+    ],
+    "seen": 6,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 1,
+    "marker_valid": true,
+    "token_f1": 0.15625,
+    "reference_recall": 0.35714285714285715,
+    "answer": "[1] Trịnh Duy Sản mưu lập vua khác rồi giết vua Tương Dực. Người nào tình nguyện khoác long bào cưỡi voi ra chiến trường để chết thay cho Bình Định Vương lúc bị quân Minh bao vây tại Chí Linh không được nêu trong các thông tin đã tìm thấy.",
+    "seconds": 26.972781700009364,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "Trịnh Duy Sản vua khác giết vua Tương Dực cùng người, người tình nguyện khoác long bào cưỡi voi ra chiến trường"
+     },
+     {
+      "chunk_id": "user_answer_1"
+     },
+     {
+      "chunk_id": "user_answer_1"
+     },
+     {
+      "query": "Trịnh duy Sản tình nguyện khoác long bào cưỡi voi ra chiến trường"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lê, p. 325"
+    ]
+   },
+   {
+    "pair": [
+     "c260-blind",
+     "c321-blind"
+    ],
+    "seen": 11,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 3,
+    "marker_valid": true,
+    "token_f1": 0.12121212121212122,
+    "reference_recall": 0.25,
+    "answer": "[1] Giản Định Đế dùng niên hiệu [1] khi khởi nghĩa chống quân Minh. [4] Từ 1442, Nguyễn Trãi có tên trên bia tiến sĩ ở Văn Miếu.",
+    "seconds": 35.08033409999916,
+    "error": null,
+    "tool_calls": 3,
+    "steps": 3,
+    "capped": false,
+    "model_calls": 4,
+    "queries": [
+     {
+      "query": "Giản Định Đế niên hiệu chống quân Minh bia tiến sĩ Văn Miếu"
+     },
+     {
+      "query": "Giản Định Đế niên hiệu chống quân Minh",
+      "k": 5
+     },
+     {
+      "query": "1442 bia tiến sĩ Văn Miếu",
+      "k": 5
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lê, p. 314",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ hai), p. 220"
+    ]
+   },
+   {
+    "pair": [
+     "c170-blind",
+     "c62-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "The total number of calls to search_book tool has reached 5, please use the above passages as reference. From [1], we can see that in the year 433 of the T'ang dynasty, the ruler of the L'min state was named Pham Yang Mai 范 陽 邁. From [5], we can learn that the L'min state was a country that often caused disturbances in the Giao-châu region. Therefore, the ruler of the L'min state, Pham Yang Mai, took the opportunity to invade the Giao-châu region. So, the total commander of the army stationed at Wan Ji was Pham Yang Mai.",
+    "seconds": 28.205169000008027,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "tổng chỉ huy quân đội đóng tại Vạn Kiếp vua nước Lâm Ấp năm 433 thời Tống Văn Đế"
+     },
+     {
+      "chunk_id": "user_answer_1"
+     },
+     {
+      "query": "tổng chỉ huy quân đội đóng tại Vạn Kiếp vua nước Lâm Ấp năm 433 thời Tống Văn Đế",
+      "k": 5
+     },
+     {
+      "chunk_id": "user_answer_1"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai, p. 68",
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai, p. 66"
+    ]
+   },
+   {
+    "pair": [
+     "c215-blind",
+     "c100-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.2222222222222222,
+    "reference_recall": 0.46153846153846156,
+    "answer": "[4] cho thấy năm 1377, tướng chỉ huy quân Ngưu Hống tại trại Trịnh Kỳ là Dương tam Kha đã bị Ngô xương Văn giết. [1] cho thấy sau khi bắt được Dương Tam Kha, Ngô Xương Văn đã làm Trương Dương-công.",
+    "seconds": 16.375253899997915,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "1377 giết tướng chỉ huy quân Ngưu Hống tại trại Trịnh Kỳ Ngô Xương Văn Dương Tam Kha"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Ngô, p. 105",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Ngô, p. 106"
+    ]
+   },
+   {
+    "pair": [
+     "c93-blind",
+     "c20-blind"
+    ],
+    "seen": 10,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.2093023255813954,
+    "reference_recall": 0.75,
+    "answer": "[1] Đức Phật Thích Ca Mâu Ni xuất thân từ một gia đình quý tộc tại Ấn Độ. [6] Vào thời Hùng vương thứ 6, có giặc mạnh đến mức không ai đánh bại được là giặc Ân. Giặc Ân được kể lại trong một câu chuyện truyền miệng, trong đó vua Hùng vương thứ 18 có một con gái tên Mỵ-nương, nhan sắc tuyệt trần, đã bị Sơn-tinh và Thủy-tinh cướp đi.",
+    "seconds": 25.17627119999088,
+    "error": null,
+    "tool_calls": 2,
+    "steps": 2,
+    "capped": false,
+    "model_calls": 3,
+    "queries": [
+     {
+      "query": "Đức Phật Thích Ca Mâu Ni xuất thân từ gia đình nào tại Ấn Độ"
+     },
+     {
+      "query": "vào thời Hùng vương thứ 6, có toán giặc nào mạnh đến mức không ai đánh bại được không",
+      "k": 5
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, Kết-quả của thời-đại Bắc-thuộc, p. 98",
+     "Vi?t Nam s? lu?c, THƯỢNG-CỔ THỜI ĐẠI > Họ Hồng-bàng, p. 27"
+    ]
+   },
+   {
+    "pair": [
+     "c254-blind",
+     "c230-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 3,
+    "marker_valid": true,
+    "token_f1": 0.07894736842105264,
+    "reference_recall": 0.5,
+    "answer": "[1] [3] Thuế thân thời bấy giờ tùy theo số ruộng mà đánh, ai có một hai mẫu ruộng thì phải đóng một năm một quan tiền thuế thân; ai có ba bốn mẫu, thì đóng hai quan; ai có năm mẫu trở lên, thì đóng ba quan. Ai không có mẫu nào, thì không phải đóng thuế. [2] Nguyễn Hy Chu bị quân Minh bắt được, không chịu hàng phải bị giết.",
+    "seconds": 16.778987500001676,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "An phủ sứ Bắc Giang thời Minh bị bắt, không chịu hàng và bị giết, cuối thời Trần, người đề xuất thu thuế thân 3 quan tiền mỗi năm"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba), p. 233",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất), p. 160",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Hồ, p. 250"
+    ]
+   },
+   {
+    "pair": [
+     "c173-blind",
+     "c66-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "",
+    "seconds": 308.2465130999917,
+    "error": "TimeoutError: timed out",
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Hưng Đạo vương tác phẩm trước khi viết bài hịch và Triệu Quang Phục thời đó"
+     }
+    ],
+    "citations": []
+   },
+   {
+    "pair": [
+     "c2-blind",
+     "c113-blind"
+    ],
+    "seen": 7,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.09523809523809525,
+    "reference_recall": 0.125,
+    "answer": "Hồi xưa người Việt ghi chép lịch sử bằng chữ Nho. Lý Công Uẩn quê ở Thăng Long, là trung tâm chính trị của nhà Lý.",
+    "seconds": 25.43830400001025,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "lịch sử người Việt chữ"
+     },
+     {
+      "chunk_id": "url_1"
+     },
+     {
+      "query": "hồi xưa người việt ghi chép lịch sử bằng loại chữ nào"
+     },
+     {
+      "chunk_id": "url_1"
+     }
+    ],
+    "citations": []
+   },
+   {
+    "pair": [
+     "c289-blind",
+     "c208-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.20512820512820512,
+    "reference_recall": 0.6666666666666666,
+    "answer": "[1] Hưng Đạo Vương được ban tước hiệu là Thái sư, Thượng phụ, Thượng quốc công, Bình bắc đại nguyên súy. [2] Phạm ngũ Lão đã cùng Lý Triện đem quân đi đánh Trần Trí.",
+    "seconds": 16.14421460000449,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Ai đã cùng Lý Triện đem quân đi đánh Trần Trí? Hưng Đạo Vương được ban tước hiệu gì khi làm Thái sư, Thượng phụ, Thượng quốc công, Bình bắc đại nguyên súy?"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ hai), p. 212",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu, p. 277"
+    ]
+   },
+   {
+    "pair": [
+     "c134-blind",
+     "c148-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 4,
+    "marker_valid": true,
+    "token_f1": 0.062015503875969,
+    "reference_recall": 0.3333333333333333,
+    "answer": "[1] Lý Thường Kiệt quê ở [5]. [2] Trần Thủ Độ bắt vua Trần Thái Tông bỏ đi và giáng xuống làm công-chúa, sau đó đem người chị bà Chiêu-thánh tức là vợ Trần Liễu vào làm Hoàng-hậu, bởi vì người chị đã có thai được ba tháng. [3] Trần Thủ Độ muốn trừ nốt các tôn-thất nhà Lý, đến năm nhâm-thìn (1232) nhân làm lễ Tiên-hậu nhà Lý ở thôn Thái-đường, làng Hoa-lâm (huyện Đông-triều, tỉnh Bắc-ninh), Thủ Độ sai đào hầm, làm nhà lá ở trên, để đến khi các tôn-thất nhà Lý vào đấy tế-lễ, thì sụt cả xuống hố rồi đổ đất chôn sống cả.",
+    "seconds": 16.742945299993153,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Lý Thường Kiệt quê ở đâu Trần Thủ Độ bắt vua Trần Thái Tông phế Chiêu Thánh"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất), p. 159",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lý, p. 137",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất), p. 157",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ nhất), p. 158"
+    ]
+   },
+   {
+    "pair": [
+     "c36-blind",
+     "c164-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.3414634146341463,
+    "reference_recall": 0.5384615384615384,
+    "answer": "(1) Sau khi lập nước Nam Việt, Triệu Đà đã tiếp tục truyền bá văn minh Trung Nguyên đến Nam Việt. (2) Hàn Thuyên quê ở tỉnh Heilongjiang.",
+    "seconds": 51.57346280000638,
+    "error": null,
+    "tool_calls": 3,
+    "steps": 3,
+    "capped": false,
+    "model_calls": 4,
+    "queries": [
+     {
+      "query": "Triệu Đà lập nước Nam Việt sau đó làm gì Hàn Thuyên quê ở tỉnh nào"
+     },
+     {
+      "chunk_id": "At the time Triệu Đà established the Nam Việt state, he continued to spread the civilization of the Central Plain to the south. This is why the people of the state gradually absorbed this civilization. The State of China in the time of the Han Dynasty 42. 1. The Nam Việt state of the time is not the same as the Nam Việt state of modern Vietnam. 2. Each 12,500 households make up a district, and 500 households make up a group. 3. The Nam Việt state of the time is not the same as the Nam Việt state of modern Vietnam. 3. The state of Han Dynasty, Emperor Wen of Han, appointed Han Yu as the Upper Minister of the Ministry of State Affairs. Han Yu was from Qinglin 青 林, Heilongjiang province, and was known for his literary talent, like Han Yu of the Tang Dynasty. Therefore, the emperor granted him the surname Han. After that, people followed this style and wrote poetry, which was called Han style. In the year 43 (1293), Emperor Wen of Han passed the throne to the Crown Prince named Yu 烇, and returned to the Heavenly Palace to become the Empress-Dowager. Emperor Wen ruled for 14 years and passed the throne for 13 years, living for 51 years. 1. The Empress Dowager at that time was only 19 years old. 2. According to the history, when Emperor Li Fu Xiu of the Li Dynasty went to fight the enemy and made many achievements, the emperor then granted him a title, and he refused, asking to climb a mountain and throw a dagger, and wherever the dagger fell, he would take the land as his estate. The emperor agreed. Li Fu Xiu climbed Bingshan Mountain and threw the dagger 10 li away. The emperor then granted the land around Bingshan Mountain to Li Fu Xiu, calling it the Dagger Estate. After that, it became known as the Dagger Estate, which was the estate for rewarding officials. 4. The history records that the river is called Fu Long. See the footnote on page 104. 4. The village of Lai Xia, the county of Qinglin, the Nam Sách prefecture, now belongs to Langtai county, Hebei province. 5. The state of Triệu, page 43. 43 Chapter IV STATE OF TRIỆU 趙 氏 (207-111 tr. Western Han) 1. Emperor Triệu Vũ 2. Emperor Triệu was enfeoffed by the Han Dynasty 3. Emperor Triệu was enthroned 4. Emperor Triệu was submissive to the Han Dynasty 5. Emperor Triệu Văn 6. Emperor Triệu Minh 7. Emperor Triệu Ai 8. Emperor Triệu Dương 1. Emperor TRIỆU WU-VƯƠNG (207-137 tr. Western Han). In the year 43 (207), Emperor Triệu defeated Emperor An-Duong, then merged the state of Âu-lạc into the Nam-hải district, establishing a state called Nam-việt 南 越, self-proclaimed as Emperor Wu-Vương 武 王, with the capital at Phien-ngung 番 禺, near the present-day city of Quang-chau. 2. Emperor WU-VƯƠNG ENFEOFFED BY THE HAN DYNASTY. While Emperor Triệu was establishing his state in Nam-việt, the Han Dynasty was about to establish its rule in the south. At that time, Emperor Han Wen was fighting the Qin Dynasty 秦, and the Han Dynasty was about to establish its rule. The social system and political system of the Han Dynasty were changing. Emperor Triệu was a Han Dynasty official, so when he conquered Âu-lạc, including the districts in the south, he established a state, he brought the political and legal system of the Han Dynasty to govern Nam-việt. Therefore, before discussing the Triệu state, we should examine the social system of the Han Dynasty at that time. 1. ENFEOFFMENT. In the early days of the Xia Dynasty 夏, the Han Dynasty divided the country into districts. Each district had a person in charge, forming a state, called the state of chư-hầu 諸 侯, which had to pay tribute to the emperor. 36 The number of these chư-hầu states varied from dynasty to dynasty. According to the history, when Emperor Taizu 大 禹 of the Xia Dynasty held a meeting of chư-hầu states at Mount Diao-sun, there were more than ten thousand chư-hầu states. When Emperor Wu-vương of the Chu Dynasty 周 went to fight the state of Zhu-vương of the Yin 殷 紂 王, there were 800 chư-hầu states. After defeating the Yin state, Emperor Wu-vương 武 王 enfeoffed more than 70 people as chư-hầu states, dividing them into five ranks: công, hầu, bá, tử, nam. "
+     },
+     {
+      "chunk_id": "At the time Triệu Đà established the Nam Việt state, he continued to spread the civilization of the Central Plain to the south. This is why the people of the state gradually absorbed this civilization. The State of China in the time of the Han Dynasty 42. 1. The Nam Việt state of the time is not the same as the Nam Việt state of modern Vietnam. 2. Each 12,500 households make up a district, and 500 households make up a group. 3. The Nam Việt state of the time is not the same as the Nam Việt state of modern Vietnam. 3. The state of Han Dynasty, Emperor Wen of Han, appointed Han Yu as the Upper Minister of the Ministry of State Affairs. Han Yu was from Qinglin 青 林, Heilongjiang province, and was known for his literary talent, like Han Yu of the Tang Dynasty. Therefore, the emperor granted him the surname Han. After that, people followed this style and wrote poetry, which was called Han style. In the year 43 (1293), Emperor Wen of Han passed the throne to the Crown Prince named Yu 烇, and returned to the Heavenly Palace to become the Empress-Dowager. Emperor Wen ruled for 14 years and passed the throne for 13 years, living for 51 years. 1. The Empress Dowager at that time was only 19 years old. 2. According to the history, when Emperor Li Fu Xiu of the Li Dynasty went to fight the enemy and made many achievements, the emperor then granted him a title, and he refused, asking to climb a mountain and throw a dagger, and wherever the dagger fell, he would take the land as his estate. The emperor agreed. Li Fu Xiu climbed Bingshan Mountain and threw the dagger 10 li away. The emperor then granted the land around Bingshan Mountain to Li Fu Xiu, calling it the Dagger Estate. After that, it became known as the Dagger Estate, which was the estate for rewarding officials. 4. The history records that the river is called Fu Long. See the footnote on page 104. 4. The village of Lai Xia, the county of Qinglin, the Nam Sách prefecture, now belongs to Langtai county, Hebei province. 5. The state of Triệu, page 43. 43 Chapter IV STATE OF TRIỆU 趙 氏 (207-111 tr. Western Han) 1. Emperor Triệu Vũ 2. Emperor Triệu was enfeoffed by the Han Dynasty 3. Emperor Triệu was enthroned 4. Emperor Triệu was submissive to the Han Dynasty 5. Emperor Triệu Văn 6. Emperor Triệu Minh 7. Emperor Triệu Ai 8. Emperor Triệu Dương 1. Emperor TRIỆU WU-VƯƠNG (207-137 tr. Western Han). In the year 43 (207), Emperor Triệu defeated Emperor An-Duong, then merged the state of Âu-lạc into the Nam-hải district, establishing a state called Nam-việt 南 越, self-proclaimed as Emperor Wu-Vương 武 王, with the capital at Phien-ngung 番 禺, near the present-day city of Quang-chau. 2. Emperor WU-VƯƠNG ENFEOFFED BY THE HAN DYNASTY. While Emperor Triệu was establishing his state in Nam-việt, the Han Dynasty was about to establish its rule in the south. At that time, Emperor Han Wen was fighting the Qin Dynasty 秦, and the Han Dynasty was about to establish its rule. The social system and political system of the Han Dynasty were changing. Emperor Triệu was a Han Dynasty official, so when he conquered Âu-lạc, including the districts in the south, he established a state, he brought the political and legal system of the Han Dynasty to govern Nam-việt. Therefore, before discussing the Triệu state, we should examine the social system of the Han Dynasty at that time. 1. ENFEOFFMENT. In the early days of the Xia Dynasty 夏, the Han Dynasty divided the country into districts. Each district had a person in charge, forming a state, called the state of chư-hầu 諸 侯, which had to pay tribute to the emperor. 36 The number of these chư-hầu states varied from dynasty to dynasty. According to the history, when Emperor Taizu 大 禹 of the Xia Dynasty held a meeting of chư-hầu states at Mount Diao-sun, there were more than ten thousand chư-hầu states. When Emperor Wu-vương of the Chu Dynasty 周 went to fight the state of Zhu-vương of the Yin 殷 紂 王, there were 800 chư-hầu states. After defeating the Yin state, Emperor Wu-vương 武 王 enfeoffed more than 70 people as chư-hầu states, dividing them into five ranks: công, hầu, bá, tử, nam. "
+     }
+    ],
+    "citations": []
+   },
+   {
+    "pair": [
+     "c142-blind",
+     "c186-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.07142857142857142,
+    "reference_recall": 0.25,
+    "answer": "[1] Cậu của Trần thị, người được phong Thái úy Thuận lưu bá là Toa Đô. [2] Toa Đô mất mạng khi bị quân đội nhà Trần bao vây tấn công, sau khi đã trốn vào Thanh-hóa và lẻn xuống chiếc thuyền con chạy ra bể, trốn về Tàu.",
+    "seconds": 16.667105400003493,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "cậu của Trần thị người được phong Thái úy Thuận lưu bá, Toa Đô mất mạng ra sao khi bị quân đội nhà Trần bao vây tấn công"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lý (tiếp theo), p. 149",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I, p. 192"
+    ]
+   },
+   {
+    "pair": [
+     "c241-blind",
+     "c13-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 3,
+    "marker_valid": true,
+    "token_f1": 0.18867924528301888,
+    "reference_recall": 0.5,
+    "answer": "[1] Lê Quý Ly lên ngôi thay nhà Trần vào năm [4]. [5] Người Trung Quốc gọi người Việt là Giao Chỉ do ngón chân cái của họ có đặc điểm đặc biệt, giống như người Giao Chỉ có ngón chân cái dài hơn người khác.",
+    "seconds": 16.35988659999566,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Lê Quý Ly lên ngôi thay nhà Trần và người Trung Quốc gọi người Việt là Giao Chỉ"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba), p. 228",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba), p. 241",
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai, p. 61"
+    ]
+   },
+   {
+    "pair": [
+     "c236-blind",
+     "c53-blind"
+    ],
+    "seen": 9,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "answer": "Sĩ Nhiếp quê ở Giao-châu. Theo các đoạn trích [6] và [7], Sĩ Nhiếp đã sống và làm quan ở Giao-châu trong khoảng thời gian từ 203 đến 226. Ông đã giữ chức Thái-thú ở quận Giao-chỉ và sau đó được phong làm An-viễn tướng quân. Ông cũng từng làm Thái-thú ở các quận khác như Nhật-nam và Hợp-phố. Ông sống và làm quan trong thời kỳ nhà Hán cai trị đất Giao-châu. Về phần câu hỏi đầu, không có thông tin trực tiếp trong các đoạn trích được cung cấp. Chúng ta cần tìm kiếm thông tin từ các đoạn trích khác để trả lời câu hỏi này.",
+    "seconds": 28.35475040000165,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "Hồ Quý Ly, ai nói với Hồ Quý Ly, vì là người trong họ nên nhờ lo việc nước, giờ đất nước yếu và vua đã già, mai sau con vua có đáng giúp thì giúp, không thì tự làm, Sĩ Nhiếp quê ở nước nào"
+     },
+     {
+      "chunk_id": "user_answer"
+     },
+     {
+      "query": "Sĩ Nhiếp quê ở nước nào"
+     },
+     {
+      "chunk_id": "user_answer"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai, p. 60",
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai, p. 59"
+    ]
+   },
+   {
+    "pair": [
+     "c290-blind",
+     "c35-blind"
+    ],
+    "seen": 10,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 3,
+    "marker_valid": true,
+    "token_f1": 0.48888888888888893,
+    "reference_recall": 1.0,
+    "answer": "[1] Vương Thông và Mã Anh mang [2] 5 vạn quân đến giải vây Đông Quan. [6] Thời Tam Đại ở Trung Quốc thờ cúng thiên, địa, nhật, nguyệt, sơn, xuyên, lâm, trạch trong các nghi lễ.",
+    "seconds": 23.870684999987134,
+    "error": null,
+    "tool_calls": 2,
+    "steps": 2,
+    "capped": false,
+    "model_calls": 3,
+    "queries": [
+     {
+      "query": "vương thông mã anh đông quan tam đại"
+     },
+     {
+      "query": "tam đại thờ cúng gì trong các nghi lễ"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu, p. 279",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Mười năm đánh quân Tàu, p. 283",
+     "Vi?t Nam s? lu?c, THƯỢNG-CỔ THỜI ĐẠI > Xã-hội nước Tàu, p. 40"
+    ]
+   },
+   {
+    "pair": [
+     "c33-blind",
+     "c131-blind"
+    ],
+    "seen": 10,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 1,
+    "marker_valid": true,
+    "token_f1": 0.03278688524590164,
+    "reference_recall": 0.2,
+    "answer": "The passage [1] states that in the time of the house of Ân, the land was divided into nine districts (井) and each province was given eight households, each household receiving 70 mu of land. Therefore, in the time of the house of Ân, each province had 630 mu of land, with each household receiving 70 mu.",
+    "seconds": 26.94091409999237,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "Trung Quốc thời nhà Ân mẫu ruộng luật số lượng"
+     },
+     {
+      "query": "Lý Thường Kiệt phục kích quân Tống năm 1076"
+     },
+     {
+      "query": "Trung Quốc thời nhà Ân, mỗi tỉnh có bao nhiêu mẫu ruộng theo luật?",
+      "k": 1
+     },
+     {
+      "chunk_id": "url_38",
+      "context": 1
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, THƯỢNG-CỔ THỜI ĐẠI > Xã-hội nước Tàu, p. 38"
+    ]
+   },
+   {
+    "pair": [
+     "c240-blind",
+     "c318-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.5454545454545455,
+    "reference_recall": 0.7058823529411765,
+    "answer": "Hồ Quý Ly xây thành Tây Đô ở động Yên-tôn (nay còn di-tích ở xã Yên-tôn, huyện Vĩnh-lộc, tục gọi là Tây-giai). ",
+    "seconds": 17.747225200000685,
+    "error": null,
+    "tool_calls": 2,
+    "steps": 2,
+    "capped": false,
+    "model_calls": 3,
+    "queries": [
+     {
+      "query": "Hồ Quý Ly Tây Đô Lê Thái Tổ đạo"
+     },
+     {
+      "chunk_id": "][1]"
+     }
+    ],
+    "citations": []
+   },
+   {
+    "pair": [
+     "c57-blind",
+     "c196-blind"
+    ],
+    "seen": 7,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.23529411764705882,
+    "reference_recall": 0.6666666666666666,
+    "answer": "[B3] Bà Triệu mặc áo giáp vàng là Nhụy-kiều tướng quân khi ra trận. Về phần thất bại ở Vân Đồn, quân Nguyên gặp vấn đề về lương thực. Quân Nguyên đã cạn lương và không có lương thực để cung cấp cho quân đội, nên đã phải tìm cách lấy lương từ bên ngoài.",
+    "seconds": 26.472824800002854,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "Bà Triệu chiến đấu, đồ mặc, thất bại Vân Đồn lương thực"
+     },
+     {
+      "chunk_id": "url_to_passage"
+     },
+     {
+      "query": "Bà Triệu đồ gì khi chiến đấu, thất bại Vân Đồn gặp vấn đề gì về lương thực"
+     },
+     {
+      "chunk_id": "3"
+     }
+    ],
+    "citations": []
+   },
+   {
+    "pair": [
+     "c28-blind",
+     "c275-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 4,
+    "marker_valid": true,
+    "token_f1": 0.24000000000000002,
+    "reference_recall": 0.2857142857142857,
+    "answer": "[1] Trọng Thủy tự vẫn ở chỗ [1]. [2] Những người Việt theo phe nhà Minh, làm quan lớn và càng ỷ thế giặc mà tàn ác hơn người Trung Quốc là [5].",
+    "seconds": 15.599575100000948,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Trọng Thủy tự vẫn Mị Châu nhà Minh quan lớn"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, THƯỢNG-CỔ THỜI ĐẠI > Nhà Thục, p. 33",
+     "Vi?t Nam s? lu?c, THƯỢNG-CỔ THỜI ĐẠI > Nhà Thục, p. 32",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lý, p. 126"
+    ]
+   },
+   {
+    "pair": [
+     "c304-blind",
+     "c332-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 3,
+    "marker_valid": true,
+    "token_f1": 0.08,
+    "reference_recall": 0.16666666666666666,
+    "answer": "[3] nói về việc Lê Lợi cử người đi sứ nhà Minh mang biểu và đồ cống, còn [4] nói về việc Nguyễn Trãi làm bài bia để ghi công nhà Minh. [5] không liên quan đến hai câu hỏi này.",
+    "seconds": 16.26033849999658,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Lê Lợi cử ai đi sứ nhà Minh mang biểu và đồ cống? Ai lo việc dựng bia cấm nam nữ tắm chung bến theo luật nhà Lê?"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lê, p. 311",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ hai), p. 220",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lê, p. 310"
+    ]
+   },
+   {
+    "pair": [
+     "c201-blind",
+     "c65-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.07575757575757576,
+    "reference_recall": 0.5555555555555556,
+    "answer": "(1) [3] Hưng-đạo-vương tiến quân lên đánh giặc, sực nghe tin báo rằng Ô mã Nhi đã kéo quân về đến Bạch-đằng, Hưng-đạo-vương mới hô quân sĩ, trỏ sông Hóa-giang (6) mà thề rằng: « Trận này không phá xong giặc Nguyên, thì không về đến sông này nữa! » Quân-sĩ ai nấy đều xin quyết chiến, kéo một mạch đến sông Bạch-đằng. Những chiến-thuyền của Ô mã Nhi, Phàn Tiếp theo giòng sông Bạch-đằng, bỗng chốc thấy tướng nhà Trần là Nguyễn Khoái dẫn chiến thuyền đến khiêu-chiến. (2) [4] Lại sai Vạn-hộ Trương văn Hổ 張 文 虎 theo đường bể tải hơn 17 (2) vạn thạch lương sang cấp cho quân-sĩ.",
+    "seconds": 17.249723300003097,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "hiến kế xử tử Ô Mã Nhi Lý Nam Đế chỉ huy quân đội"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — II, p. 198",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Phiên âm bài Bình Ngô đại-cáo, p. 332"
+    ]
+   },
+   {
+    "pair": [
+     "c327-blind",
+     "c81-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.23529411764705882,
+    "reference_recall": 1.0,
+    "answer": "[1] Lê Thánh Tông chia nước ta thành 12 đạo. [3] Thời Bắc-thuộc lần thứ ba, khi Trung Quốc có nội chiến, Giao Châu tự chủ từ 87 đến 105 năm.",
+    "seconds": 15.71940220000397,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Lê Thánh Tông chia nước ta thành mấy đạo Thời Bắc thuộc lần 3, khi Trung Quốc có nội chiến, Giao Châu tự chủ bao lâu"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, Tựa, p. 11",
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba, p. 86"
+    ]
+   },
+   {
+    "pair": [
+     "c244-blind",
+     "c335-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": true,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.30769230769230765,
+    "reference_recall": 0.75,
+    "answer": "[1] Hồ Quý Ly quy định người từ 2 tuổi trở lên phải đăng ký vào sổ hộ tịch. [2] Lê Thánh Tông sai hơn 20 vạn lính đánh Chiêm Thành năm 1470.",
+    "seconds": 16.052309899998363,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Hồ Quý Ly quy định ai từ bao nhiêu tuổi trở lên phải đăng ký vào sổ hộ tịch Lê Thánh Tông sai bao nhiêu lính đánh Chiêm Thành năm 1470"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Hồ, p. 245",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lê, p. 320"
+    ]
+   },
+   {
+    "pair": [
+     "c207-blind",
+     "c313-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.26666666666666666,
+    "reference_recall": 0.75,
+    "answer": "[1] Trần Hưng Đạo mất ngày 20 tháng tám năm canh-tí (1300). [4] Hưng-đạo-vương Trần quốc Tuấn quyết xin đem quân đi phòng-giữ các nơi hiểm-yếu, không cho quân Mông-cổ sang nước Nam.",
+    "seconds": 15.851550000006682,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Trần Hưng Đạo ngày tháng mất năm"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ hai), p. 212",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Giặc nhà Nguyên — I, p. 178"
+    ]
+   },
+   {
+    "pair": [
+     "c334-blind",
+     "c52-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.026666666666666665,
+    "reference_recall": 0.3333333333333333,
+    "answer": "[3] Tao đàn nguyên súy là vai trò mà người giữ vai trò chính là một người gọi là tác giả. Ông ta đã gọi mình là Tao đàn nguyên súy và đã mời các quan triều thần như Thân nhân Trung và Đỗ Nhuận cùng làm thơ. Ông ta cũng viết một quyển sách gọi là \"Thân\u0002chinh ký-sự\" để ghi lại các cuộc chiến của ông ta với các dân tộc như Cham, Lao và các mường. Về phần Thứ sử Giao Chỉ đầu thời Đông Hán, [4] Lý Cầm là người đầu tiên được bổ nhiệm làm Thứ sử Giao Chỉ. Ông ta làm việc này sau khi nhà vua Linh-đế nhà Đông-Hán cho một người Giao-chỉ đỗ mậu-tài đi làm quan-lệnh ở Hạ-dương và một người đỗ hiếu-liêm làm quan-lệnh ở Lục-hợp.",
+    "seconds": 25.236823100000038,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "Tao đàn nguyên súy và các quan trong triều làm thơ Thứ sử Giao Chỉ đầu thời Đông Hán"
+     },
+     {
+      "chunk_id": "That's the Tao-đàn nguyên súy, and the other officials in the court composed poems together. The leader of this group was the author, who called himself the Tao-đàn nguyên súy. He also invited officials like Shen Ren Zhong and Du Nhuận to compose a collection of poems about the Southern Seas. The author wrote a book called 'Personal Campaign Record' to record his military campaigns against the Cham, Lao, and other tribes. ",
+      "context": 1
+     },
+     {
+      "chunk_id": "That's the Tao-đàn nguyên súy, and the other officials in the court composed poems together. The leader of this group was the author, who called himself the Tao-đàn nguyên súy. He also invited officials like Shen Ren Zhong and Du Nhuận to compose a collection of poems about the Southern Seas. The author wrote a book called 'Personal Campaign Record' to record his military campaigns against the Cham, Lao, and other tribes.",
+      "context": 1
+     },
+     {
+      "chunk_id": "That's the Tao-đàn nguyên súy, and the other officials in the court composed poems together. The leader of this group was the author, who called himself the Tao-đàn nguyên súy. He also invited officials like Shen Ren Zhong and Du Nhuận to compose a collection of poems about the Southern Seas. The author wrote a book called 'Personal Campaign Record' to record his military campaigns against the Cham, Lao, and other tribes.",
+      "context": 1
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ nhất, p. 52",
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ hai, p. 59"
+    ]
+   },
+   {
+    "pair": [
+     "c123-blind",
+     "c80-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.05128205128205128,
+    "reference_recall": 0.16666666666666666,
+    "answer": "[1] Ai xây Văn Miếu đầu tiên thờ Khổng Tử ở Việt Nam là Cao Biền. [3] Cao Biền giao cho Vi Trọng Tể làm Tiết độ sứ Giao Châu khi ông đi Tây Xuyên.",
+    "seconds": 16.24757750000572,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Ai xây Văn Miếu đầu tiên thờ Khổng Tử ở Việt Nam và Cao Biền giao cho ai làm Tiết độ sứ Giao Châu khi ông đi Tây Xuyên"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba, p. 86",
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba, p. 84"
+    ]
+   },
+   {
+    "pair": [
+     "c305-blind",
+     "c8-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 5,
+    "marker_valid": true,
+    "token_f1": 0.17142857142857143,
+    "reference_recall": 0.16666666666666666,
+    "answer": "[3] Trương Phụ xin biến đất Việt thành [4]. [5] Sách Việt Nam sử lược dựa trên tài liệu [4] và [5].",
+    "seconds": 14.731046300003072,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Trương Phụ biến đất Việt thành gì và Việt Nam sử lược dựa trên tài liệu gì"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Hậu-Trần, p. 254",
+     "Vi?t Nam s? lu?c, Tựa, p. 10",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Hậu-Trần, p. 252"
+    ]
+   },
+   {
+    "pair": [
+     "c234-blind",
+     "c348-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     true,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.2564102564102564,
+    "reference_recall": 0.47619047619047616,
+    "answer": "[2] cho thấy Chế Bồng Nga đã chỉ điểm thuyền của Trần Khát Chân cho Mạc Đăng Dung. Về phần câu hỏi thứ hai, [4] cho biết sau khi vua Chiêu Tông giao quyền chỉ huy quân đội cho Mạc Đăng Dung để đối phó với Hoàng Duy Nhạc, Mạc Đăng Dung đã đưa vua về ở Bồ-đề.",
+    "seconds": 25.436113699994166,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "Chế Bồng Nga Trần Khát Chân Mạc Đăng Dung Hoàng Duy Nhạc"
+     },
+     {
+      "chunk_id": "user",
+      "context": 1
+     },
+     {
+      "query": "Chế Bồng Nga Trần Khát Chân Mạc Đăng Dung"
+     },
+     {
+      "chunk_id": "user",
+      "context": 2
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Trần (Thời-kỳ thứ ba), p. 236",
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Lê, p. 326"
+    ]
+   },
+   {
+    "pair": [
+     "c139-blind",
+     "c266-blind"
+    ],
+    "seen": 7,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 5,
+    "marker_valid": true,
+    "token_f1": 0.05925925925925926,
+    "reference_recall": 0.5,
+    "answer": "Tô Hiến Thành mất lúc [1]. Ông mất vào [1] khi quân nhà Trần ít lắm và bị quân nhà Trương Phụ đánh bại. Ông tự tử sau khi bị bắt và bị giải về Yên-kinh. [1] cho biết Trần quí Khoách, Nguyễn cảnh Dị, Đặng Dung, Nguyễn Súy đều bị bắt và phải giải về Yên-kinh. Ông Trần quí Khoách tự tử khi đi trên đường. Đặng Dung và các con ông đều tử tiết. [1] cũng cho biết sau khi bị bắt, họ phải đi đến giữa đường thì Trần quí Khoách tự tử, Đặng Dung và các con ông cũng tự tử. [1] không cung cấp thông tin về chuyện gì đã xảy ra với Đặng Dung sau khi ông bị bắt và giải về Yên-kinh.",
+    "seconds": 31.378848299995298,
+    "error": null,
+    "tool_calls": 4,
+    "steps": 4,
+    "capped": true,
+    "model_calls": 5,
+    "queries": [
+     {
+      "query": "Tô Hiến Thành Đặng Dung Yên Kinh"
+     },
+     {
+      "chunk_id": "><?=1?></chunk_id} Tô Hiến Thành mất lúc nào? { "
+     },
+     {
+      "chunk_id": "1",
+      "context": 1
+     },
+     {
+      "chunk_id": "1",
+      "context": 1
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, TỰ-CHỦ THỜI-ĐẠI > Nhà Hậu-Trần, p. 255"
+    ]
+   },
+   {
+    "pair": [
+     "c149-blind",
+     "c85-blind"
+    ],
+    "seen": 5,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     true
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 2,
+    "marker_valid": true,
+    "token_f1": 0.32989690721649484,
+    "reference_recall": 0.8,
+    "answer": "[1] Trần Thủ Độ đã hại hết cả dòng dõi họ Lý, lại muốn cho hậu thế không ai nhớ đến họ Lý nữa, mới nhân vì tổ nhà Trần tên là Lý, bắt trong nước ai là họ Lý đều phải cải là họ Nguyễn. [3] Kiều Công Tiễn cho sang cầu cứu ở bên Nam-Hán, Hán-chủ nhân dịp cho thái-tử là Hoằng Tháo đưa quân đi trước, mình tự dẫn quân đi tiếp ứng.",
+    "seconds": 16.1133012999926,
+    "error": null,
+    "tool_calls": 1,
+    "steps": 1,
+    "capped": false,
+    "model_calls": 2,
+    "queries": [
+     {
+      "query": "Trần Thủ Độ con cháu nhà Lý xử lý như thế nào Kiều Công Tiễn cầu cứu ai khi bị Ngô Quyền kéo quân đánh"
+     }
+    ],
+    "citations": [
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba, p. 90",
+     "Vi?t Nam s? lu?c, BẮC-THUỘC THỜI-ĐẠI > Bắc-thuộc lần thứ ba, p. 90"
+    ]
+   }
+  ],
+  "control": [
+   {
+    "pair": [
+     "c303-blind",
+     "c183-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.2509977999870898,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c121-blind",
+     "c326-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 2.1586651999969035,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c105-blind",
+     "c243-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.23336709999421146,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c111-blind",
+     "c220-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 2.190636600003927,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c221-blind",
+     "c108-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 2.180466999998316,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c182-blind",
+     "c339-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.20968709999579005,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c86-blind",
+     "c169-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.2593489999999292,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c193-blind",
+     "c232-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.2726083000015933,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c317-blind",
+     "c338-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.25364949999493547,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c284-blind",
+     "c278-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.22335780000139493,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c344-blind",
+     "c280-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.247438799997326,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c260-blind",
+     "c321-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.2418974000029266,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c170-blind",
+     "c62-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.24911180000344757,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c215-blind",
+     "c100-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.21641119998821523,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c93-blind",
+     "c20-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.22232120000990108,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c254-blind",
+     "c230-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.2578332999983104,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c173-blind",
+     "c66-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 2.1209826999984216,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c2-blind",
+     "c113-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.27318459999514744,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c289-blind",
+     "c208-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.22543010000663344,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c134-blind",
+     "c148-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.22818130000086967,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c36-blind",
+     "c164-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.2280038000026252,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c142-blind",
+     "c186-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.25188579999667127,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c241-blind",
+     "c13-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.24473599999328144,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c236-blind",
+     "c53-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.24838849999650847,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c290-blind",
+     "c35-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.24372159999620635,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c33-blind",
+     "c131-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.24403560000064317,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c240-blind",
+     "c318-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.23089770000660792,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c57-blind",
+     "c196-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.23245239999960177,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c28-blind",
+     "c275-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.23317810001026373,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c304-blind",
+     "c332-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.21753670000180136,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c201-blind",
+     "c65-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     false,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.24684069999784697,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c327-blind",
+     "c81-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.2436701999977231,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c244-blind",
+     "c335-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.27961499999219086,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c207-blind",
+     "c313-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.23365080000075977,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c334-blind",
+     "c52-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.22719220000726636,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c123-blind",
+     "c80-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.25187480000022333,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c305-blind",
+     "c8-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     false,
+     false
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": false,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.24655139999231324,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c234-blind",
+     "c348-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.2325045999896247,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c139-blind",
+     "c266-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.23750619999191258,
+    "tool_calls": 1
+   },
+   {
+    "pair": [
+     "c149-blind",
+     "c85-blind"
+    ],
+    "seen": 12,
+    "seen_hits": [
+     true,
+     true
+    ],
+    "cited_hits": [
+     false,
+     false
+    ],
+    "both_seen": true,
+    "both_cited": false,
+    "markers": 0,
+    "marker_valid": true,
+    "token_f1": 0.0,
+    "reference_recall": 0.0,
+    "seconds": 0.24365440000838134,
+    "tool_calls": 1
+   }
+  ]
+ }
+}
