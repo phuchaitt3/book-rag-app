@@ -106,15 +106,18 @@ async def test_stop_mid_job_returns_the_job_to_the_queue(url: str, tmp_path: Pat
     assert queue_status == "todo"  # the queue will hand it to the next worker
 
 
-async def test_stop_lets_a_job_that_finishes_in_time_complete(url: str, tmp_path: Path) -> None:
+async def test_stop_lets_a_job_that_finishes_in_time_complete(
+    url: str, tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    caplog.set_level("INFO")
     embedder = BlockingEmbedder(seconds=0.3)
     worker, job_id = await start_job(url, tmp_path, embedder, grace=30)
     task = await stop_after_embedding_starts(worker, embedder)
     await asyncio.wait_for(task, 60)
 
-    status, _, queue_status = await read_state(url, job_id)
-    assert status == "succeeded"
-    assert queue_status == "succeeded"
+    status, error, queue_status = await read_state(url, job_id)
+    logs = " | ".join(f"{r.name}: {r.getMessage()}" for r in caplog.records)
+    assert (status, queue_status) == ("succeeded", "succeeded"), (error, logs)
 
 
 async def test_the_interrupted_job_runs_again_and_succeeds(url: str, tmp_path: Path) -> None:
