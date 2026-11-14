@@ -22,6 +22,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.providers import LLM
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
+from book_rag_api.auth import Owner
 from book_rag_api.config import Settings
 from book_rag_api.metrics import Metrics
 from book_rag_api.models import Book, IngestionJob
@@ -164,7 +165,9 @@ async def answer_events(
 
 
 @router.post("/{book_id}/chat")
-async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> StreamingResponse:
+async def chat(
+    book_id: uuid.UUID, body: ChatRequest, request: Request, owner: Owner
+) -> StreamingResponse:
     engine: AsyncEngine = request.app.state.engine
     retriever: HybridRetriever = request.app.state.retriever
     llm: LLM = request.app.state.llm
@@ -178,7 +181,7 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
             headers={"Retry-After": str(math.ceil(wait))},
         )
     async with AsyncSession(engine, expire_on_commit=False) as session:
-        book = await session.get(Book, book_id)
+        book = await session.scalar(select(Book).where(Book.id == book_id, Book.owner_id == owner))
         latest_job = await session.scalar(
             select(IngestionJob.status)
             .where(IngestionJob.book_id == book_id)
@@ -195,7 +198,9 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
         )
     try:
         async with asyncio.timeout(settings.retrieval_timeout):
-            chunks = await retriever.retrieve(book_id, body.question, top_k=body.top_k)
+            chunks = await retriever.retrieve(
+                book_id, body.question, owner_id=owner, top_k=body.top_k
+            )
     except Exception:
         # The embedder (Ollama) or the search failed before any byte was sent, so a status
         # code can still say so; once the stream starts only an `error` event can.

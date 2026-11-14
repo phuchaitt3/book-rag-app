@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from book_rag.retrieval import RetrievedChunk
 from book_rag_api.lexical import BM25_SEARCH, K1, RARE_SHARE, B, has_stats
-from book_rag_api.models import Chunk
+from book_rag_api.models import Book, Chunk
 
 log = logging.getLogger(__name__)
 
@@ -41,11 +41,14 @@ class SqlChunkSearcher:
         self._warned_missing = False
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int
+        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         stmt = (
             select(Chunk)
-            .where(Chunk.book_id == book_id, Chunk.embedding.is_not(None))
+            .join(Book, Book.id == Chunk.book_id)
+            .where(
+                Chunk.book_id == book_id, Book.owner_id == owner_id, Chunk.embedding.is_not(None)
+            )
             .order_by(Chunk.embedding.cosine_distance(list(embedding)))
             .limit(limit)
         )
@@ -58,7 +61,9 @@ class SqlChunkSearcher:
             setup.append("SET LOCAL hnsw.iterative_scan = strict_order")
         return await self._fetch(stmt, setup)
 
-    async def text_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
+    async def text_search(
+        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+    ) -> list[RetrievedChunk]:
         """BM25 over the book's stored statistics (ADR 0011).
 
         A book with no statistics (ingested before they existed and not backfilled) falls back
@@ -67,11 +72,12 @@ class SqlChunkSearcher:
         if not or_query(query):
             return []
         async with self._sessions() as session:
-            if await has_stats(session, book_id):
+            if await has_stats(session, book_id, owner_id):
                 rows = await session.execute(
                     BM25_SEARCH,
                     {
                         "book_id": book_id,
+                        "owner_id": owner_id,
                         "query": query,
                         "share": RARE_SHARE,
                         "k1": K1,
@@ -83,13 +89,16 @@ class SqlChunkSearcher:
                     RetrievedChunk(id=r.id, text=r.text, page=r.page, section_path=r.section_path)
                     for r in rows
                 ]
-        return await self._ts_rank_search(book_id, query, limit)
+        return await self._ts_rank_search(book_id, query, limit, owner_id)
 
-    async def _ts_rank_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
+    async def _ts_rank_search(
+        self, book_id: UUID, query: str, limit: int, owner_id: str
+    ) -> list[RetrievedChunk]:
         tsquery = func.to_tsquery("simple", or_query(query))
         stmt = (
             select(Chunk)
-            .where(Chunk.book_id == book_id, Chunk.tsv.op("@@")(tsquery))
+            .join(Book, Book.id == Chunk.book_id)
+            .where(Chunk.book_id == book_id, Book.owner_id == owner_id, Chunk.tsv.op("@@")(tsquery))
             .order_by(func.ts_rank_cd(Chunk.tsv, tsquery).desc())
             .limit(limit)
         )

@@ -19,6 +19,7 @@ from test_chat import database_url, event_loop_policy  # noqa: F401
 
 from book_rag.providers import FakeEmbedder, FakeReranker
 from book_rag.retrieval import HybridRetriever
+from book_rag_api.auth import DEV_OWNER
 from book_rag_api.mcp_server import BookIndex, create_server, format_citation
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob
 from book_rag_api.retrieval import SqlChunkSearcher
@@ -34,7 +35,7 @@ async def book(database_url: str) -> AsyncIterator[tuple[UUID, list[UUID]]]:  # 
     engine = create_async_engine(database_url)
     chunks = FIXTURE["chunks"]
     vectors = await FakeEmbedder(EMBEDDING_DIM).embed([c["text"] for c in chunks])
-    book = Book(id=uuid4(), title=FIXTURE["book_title"])
+    book = Book(id=uuid4(), title=FIXTURE["book_title"], owner_id=DEV_OWNER)
     async with AsyncSession(engine, expire_on_commit=False) as session, session.begin():
         session.add(book)
         await session.flush()
@@ -72,7 +73,7 @@ async def mcp(database_url: str) -> AsyncIterator[MCPServer]:  # noqa: F811
     retriever = HybridRetriever(
         SqlChunkSearcher(sessions), FakeEmbedder(EMBEDDING_DIM), FakeReranker()
     )
-    index = BookIndex(sessions, retriever, retrieval_timeout=10)
+    index = BookIndex(sessions, retriever, owner_id=DEV_OWNER, retrieval_timeout=10)
     yield create_server(index)
     await engine.dispose()
 
@@ -136,7 +137,7 @@ async def test_search_book_with_two_books_needs_a_book_id(
     database_url: str,  # noqa: F811
 ) -> None:
     engine = create_async_engine(database_url)
-    extra = Book(id=uuid4(), title="Another")
+    extra = Book(id=uuid4(), title="Another", owner_id=DEV_OWNER)
     async with AsyncSession(engine, expire_on_commit=False) as session, session.begin():
         session.add(extra)
     try:

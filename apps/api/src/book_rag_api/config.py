@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+asyncpg://bookrag:bookrag@localhost:5432/bookrag"
     # Direct (non-pooler) connection for migrations; falls back to `database_url`.
     database_url_unpooled: str | None = None
+    # Whose library the MCP server (a local stdio process, no login) reads: its fixed owner id.
+    # The default is the dev owner, which owns the books uploaded before owners existed.
+    mcp_owner_id: str = "dev-user"
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
     # S3-compatible object storage: SeaweedFS locally, Cloudflare R2 in production.
     s3_endpoint_url: str = "http://localhost:8333"

@@ -96,6 +96,7 @@ def create_app(
             await app.state.engine.dispose()
 
     app = FastAPI(title="book-rag-app API", version="0.1.0", lifespan=lifespan)
+    app.state.settings = settings  # also set before startup: the identity dependency reads it
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,

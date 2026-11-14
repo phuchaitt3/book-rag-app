@@ -18,6 +18,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from test_chat import database_url, event_loop_policy, make_client  # noqa: F401
 
 from book_rag.providers import FakeEmbedder, Message
+from book_rag_api.auth import DEV_OWNER
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -73,7 +74,7 @@ async def book(database_url: str) -> tuple[UUID, dict[str, str]]:  # noqa: F811
     engine = create_async_engine(database_url)
     chunks = FIXTURE["chunks"]
     vectors = await FakeEmbedder(EMBEDDING_DIM).embed([c["text"] for c in chunks])
-    book = Book(id=uuid4(), title=FIXTURE["book_title"])
+    book = Book(id=uuid4(), title=FIXTURE["book_title"], owner_id=DEV_OWNER)
     async with AsyncSession(engine, expire_on_commit=False) as session, session.begin():
         session.add(book)
         await session.flush()

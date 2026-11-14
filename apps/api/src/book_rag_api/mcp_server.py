@@ -8,6 +8,9 @@ Search goes through the same `HybridRetriever` the chat endpoint uses (`build_re
 an agent sees the ranking a chat answer is built from. The tools return typed JSON (each
 return type is a pydantic model, so the client gets an output schema); a bad request (an empty
 query, an unknown id) is an error result with a message, not a crash.
+
+There is no login over stdio, so the server serves one fixed owner's books (`MCP_OWNER_ID`,
+default the dev owner) and every query is filtered by it (#230).
 """
 
 from __future__ import annotations
@@ -121,10 +124,12 @@ class BookIndex:
         sessions: async_sessionmaker[AsyncSession],
         retriever: HybridRetriever,
         *,
+        owner_id: str,
         retrieval_timeout: float = 30.0,
     ) -> None:
         self._sessions = sessions
         self._retriever = retriever
+        self._owner = owner_id  # every query below is filtered by it
         self._timeout = retrieval_timeout
 
     async def search_book(self, query: str, book_id: str | None, k: int) -> SearchResult:
@@ -138,7 +143,9 @@ class BookIndex:
         book = await self._book(book_id)
         try:
             async with asyncio.timeout(self._timeout):
-                chunks = await self._retriever.retrieve(book.id, query, top_k=k)
+                chunks = await self._retriever.retrieve(
+                    book.id, query, owner_id=self._owner, top_k=k
+                )
         except Exception:
             log.exception("retrieval failed")
             raise ToolError("search is unavailable; try again") from None
@@ -154,7 +161,11 @@ class BookIndex:
             raise ToolError(f"context must be between 0 and {MAX_CONTEXT}")
         wanted = _parse_id(chunk_id, "chunk_id")
         async with self._sessions() as session:
-            chunk = await session.get(Chunk, wanted)
+            chunk = await session.scalar(
+                select(Chunk)
+                .join(Book, Book.id == Chunk.book_id)
+                .where(Chunk.id == wanted, Book.owner_id == self._owner)
+            )
             if chunk is None:
                 raise ToolError(f"no passage with chunk_id {chunk_id}")
             before: list[Chunk] = []
@@ -190,7 +201,7 @@ class BookIndex:
                 await session.execute(
                     select(Chunk.id, Chunk.section_path, Chunk.page, Book.title)
                     .join(Book, Book.id == Chunk.book_id)
-                    .where(Chunk.id.in_(wanted))
+                    .where(Chunk.id.in_(wanted), Book.owner_id == self._owner)
                 )
             ).all()
         found = {r.id: r for r in rows}
@@ -215,14 +226,25 @@ class BookIndex:
         (the chat endpoint's rule, ADR 0004)."""
         async with self._sessions() as session:
             if book_id is None:
-                books = list(await session.scalars(select(Book).order_by(Book.created_at).limit(2)))
+                books = list(
+                    await session.scalars(
+                        select(Book)
+                        .where(Book.owner_id == self._owner)
+                        .order_by(Book.created_at)
+                        .limit(2)
+                    )
+                )
                 if not books:
                     raise ToolError("there are no books in the index")
                 if len(books) > 1:
                     raise ToolError("book_id is required: the index holds more than one book")
                 book = books[0]
             else:
-                found = await session.get(Book, _parse_id(book_id, "book_id"))
+                found = await session.scalar(
+                    select(Book).where(
+                        Book.id == _parse_id(book_id, "book_id"), Book.owner_id == self._owner
+                    )
+                )
                 if found is None:
                     raise ToolError(f"no book with book_id {book_id}")
                 book = found
@@ -284,7 +306,12 @@ async def serve(settings: Settings | None = None) -> None:
     sessions = async_sessionmaker(engine, expire_on_commit=False)
     retriever, vector_index = build_retriever(settings, sessions)
     try:
-        index = BookIndex(sessions, retriever, retrieval_timeout=settings.retrieval_timeout)
+        index = BookIndex(
+            sessions,
+            retriever,
+            owner_id=settings.mcp_owner_id,
+            retrieval_timeout=settings.retrieval_timeout,
+        )
         await create_server(index).run_stdio_async()
     finally:
         if vector_index is not None:

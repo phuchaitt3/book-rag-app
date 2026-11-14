@@ -90,7 +90,7 @@ async def main(data: str, questions_path: str, out: str, seconds: float, qps: fl
     ids = [uuid.uuid4() for _ in chunks]
     started = time.perf_counter()
     async with sessions.begin() as s:
-        s.add(Book(id=book_id, title=chunks[0]["book_title"]))
+        s.add(Book(id=book_id, title=chunks[0]["book_title"], owner_id="dev-user"))
         await s.flush()
         await s.execute(
             insert(Chunk),
@@ -137,8 +137,8 @@ async def main(data: str, questions_path: str, out: str, seconds: float, qps: fl
     overlaps: list[float] = []
     for v in query_vectors:
         exact = await exact_top(sessions, book_id, v)
-        pg_ids = [c.id for c in await sql.vector_search(book_id, v, LIMIT)]
-        qd_ids = [c.id for c in await qdrant.vector_search(book_id, v, LIMIT)]
+        pg_ids = [c.id for c in await sql.vector_search(book_id, v, LIMIT, owner_id="dev-user")]
+        qd_ids = [c.id for c in await qdrant.vector_search(book_id, v, LIMIT, owner_id="dev-user")]
         for name, found in (("exact", exact), ("pgvector", pg_ids), ("qdrant", qd_ids)):
             ranked[name].append([ordinal_of[i] for i in found])
         recalls["pgvector"].append(len(set(exact) & set(pg_ids)) / len(exact))

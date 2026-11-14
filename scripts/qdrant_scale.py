@@ -256,7 +256,12 @@ async def pgvector_stage(
     searcher = SqlChunkSearcher(async_sessionmaker(engine, expire_on_commit=False))
 
     async def search(book: int, q: np.ndarray) -> list[uuid.UUID]:
-        return [c.id for c in await searcher.vector_search(book_uuid(book), q.tolist(), LIMIT)]
+        return [
+            c.id
+            for c in await searcher.vector_search(
+                book_uuid(book), q.tolist(), LIMIT, owner_id="dev-user"
+            )
+        ]
 
     qvecs = queries(real, books)[1]
     _, found = await run_rate(search, t["target_books"], qvecs, 1, 1000)  # warm-up, recall pass

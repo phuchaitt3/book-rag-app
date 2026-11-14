@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { API_URL, type Book, routes } from "@/api/client";
+import { API_URL, type Book, apiHeaders, routes } from "@/api/client";
 
 import { Chat } from "./chat";
 import { UploadForm } from "./upload-form";
@@ -14,7 +14,7 @@ export function Library() {
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}${routes.books}`);
+      const res = await fetch(`${API_URL}${routes.books}`, { headers: apiHeaders() });
       if (!res.ok) throw new Error(`could not list books (${res.status})`);
       const list: Book[] = await res.json();
       setBooks(list);

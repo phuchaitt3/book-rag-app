@@ -26,13 +26,19 @@ class RetrievedChunk:
 
 
 class ChunkSearcher(Protocol):
-    """The two search paths over one book's chunks; each returns best match first."""
+    """The two search paths over one book's chunks; each returns best match first.
+
+    `owner_id` is required: a searcher returns only chunks of a book that owner owns, so a
+    caller cannot search unscoped by leaving it out.
+    """
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int
+        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]: ...
 
-    async def text_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]: ...
+    async def text_search(
+        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+    ) -> list[RetrievedChunk]: ...
 
 
 class RetrievalObserver(Protocol):
@@ -79,13 +85,15 @@ class HybridRetriever:
         self._rerank_depth = rerank_depth
         self._observer = observer
 
-    async def retrieve(self, book_id: UUID, query: str, top_k: int = 8) -> list[RetrievedChunk]:
+    async def retrieve(
+        self, book_id: UUID, query: str, *, owner_id: str, top_k: int = 8
+    ) -> list[RetrievedChunk]:
         started = time.perf_counter()
         [embedding] = await self._embedder.embed([query])
         embedded = time.perf_counter()
         by_vector, by_text = await asyncio.gather(
-            self._searcher.vector_search(book_id, embedding, self._candidates),
-            self._searcher.text_search(book_id, query, self._candidates),
+            self._searcher.vector_search(book_id, embedding, self._candidates, owner_id=owner_id),
+            self._searcher.text_search(book_id, query, self._candidates, owner_id=owner_id),
         )
         searched = time.perf_counter()
         chunks = {c.id: c for c in (*by_text, *by_vector)}
