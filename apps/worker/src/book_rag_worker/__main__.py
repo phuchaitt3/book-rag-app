@@ -4,6 +4,7 @@ import asyncio
 import logging
 import sys
 
+from book_rag_api.observability import configure_logging
 from book_rag_worker.config import get_worker_settings
 from book_rag_worker.worker import Worker, build_worker
 
@@ -29,7 +30,7 @@ async def run(worker: Worker) -> None:
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO)
+    configure_logging(level=logging.INFO)
     if sys.platform == "win32":  # psycopg's async mode needs a selector loop
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     command = sys.argv[1] if len(sys.argv) > 1 else "run"

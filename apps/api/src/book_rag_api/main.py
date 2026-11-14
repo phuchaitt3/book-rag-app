@@ -31,6 +31,11 @@ from book_rag_api.jobs import create_queue
 from book_rag_api.jobs import router as jobs_router
 from book_rag_api.metrics import Metrics, MetricsMiddleware
 from book_rag_api.models import EMBEDDING_DIM
+from book_rag_api.observability import (
+    RequestIdMiddleware,
+    configure_logging,
+    install_problem_handlers,
+)
 from book_rag_api.openapi import add_stream_events
 from book_rag_api.qdrant_index import (
     QdrantChunkSearcher,
@@ -99,6 +104,8 @@ def create_app(
     )
 
     app.add_middleware(MetricsMiddleware, metrics=metrics)
+    app.add_middleware(RequestIdMiddleware)  # outermost: the ID is bound for all the others
+    install_problem_handlers(app)
 
     app.include_router(jobs_router)
     app.include_router(books_router)
@@ -215,4 +222,5 @@ def get_engine(request: Request) -> AsyncEngine:
     return engine
 
 
+configure_logging()
 app = create_app()
