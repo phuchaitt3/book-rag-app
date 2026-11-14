@@ -55,7 +55,6 @@ def test_admin_always_refused(command: str) -> None:
         "apps/api/Dockerfile",
         ".env",
         "certs/server.pem",
-        "apps/api/src/book_rag_api/auth/session.py",
         ".claude/settings.json",
     ],
 )
@@ -94,6 +93,9 @@ def test_every_codeowners_path_is_refused_by_the_hook() -> None:
     "path",
     [
         "apps/api/src/book_rag_api/author.py",
+        # Authentication is drawn by what the code does (CLAUDE.md), so the reviewer decides.
+        "apps/api/src/book_rag_api/auth.py",
+        "apps/api/src/book_rag_api/auth/session.py",
         "packages/rag/src/x.py",
         "README.md",
         "apps/web/README.md",
