@@ -46,3 +46,30 @@ Findings:
 - Peak Qdrant memory at 200k was 3.1 GiB for 0.8 GB of raw vectors, so about 4x raw size during load. If that ratio holds, 500k needs about 8 GB and 1M about 16 GB, more than this laptop has free (extrapolated from one point, not measured).
 
 What this adds: at 200,000 chunks both stores found every true neighbour and stayed under 60 ms at p99. The question the scale-up arm exists to answer, whether pgvector's recall or latency degrades at 1M or more chunks, is **still open**, and on this laptop it cannot be answered. A machine with 32 GB or more, or a short cloud run (needs the owner's yes and a spending limit), is the way to get it.
+
+## Real embeddings (#115)
+
+Measured 2026-11-14 by `scripts/qdrant_real.py` (raw numbers: `experiments/qdrant-real/results.json`, log `run.log`). The data is the book test set ([experiments/book-testset](../../experiments/book-testset/README.md)): *Việt Nam sử lược*, Quyển I, 359 chunks at the app's chunking defaults, embedded with real bge-m3 through Ollama at `127.0.0.1` (1024 dimensions, cosine distance in both stores). The questions are the checked set `questions.jsonl`: 208 `seen` and 208 `blind` (416 scored; the 25 unanswerable ones are left out), embedded with the same model. The same vectors went into pgvector (`pgvector/pgvector:pg17`, HNSW m=16, ef_construction=64, `ANALYZE` after the load) and Qdrant (`qdrant/qdrant:v1.20.0`, cosine, `book_id` tenant index), one fresh container each, named `bra115real-pg` and `bra115real-qdrant`, on one Windows laptop. All numbers are **measured**. Latency is `vector_search` at the call site (the Qdrant path includes its Postgres fetch of the chunk text), each path run alone at 5 qps for 300 s, the same 416 vectors in the same order, 0 errors.
+
+| Criterion | pgvector | Qdrant |
+|---|---|---|
+| 1. Recall@30 against the exact scan (mean, min over 416 questions) | 1.00, 1.00 | 1.00, 1.00 |
+| Overlap@30 between the stores (mean, min, share of questions with identical sets) | 1.00, 1.00, 100% | |
+| 2. p50 / p95 / p99 ms, 1,502 and 1,501 calls | 21.8 / 45.4 / 69.4 | 29.9 / 52.3 / 112.0 |
+| 3. Qdrant resident memory | | 145 MiB after the load, 115 MiB after the 300 s test (Postgres container: 76 MiB) |
+| 4. Count drift after the ingest | 359 | 359 (zero drift; retry and deletion were not re-run, see the 2026-11-01 table) |
+| Index build / load | HNSW build 0.1 s, bulk insert 0.5 s | upsert 0.35 s |
+| Embedding (Ollama, shared by both) | chunks 156.9 s, questions 26.0 s | |
+
+Hit@k against the book test set's gold chunks (a hit is any gold chunk in the top k; the exact scan is included to show the ceiling):
+
+| Set (questions) | Store | Hit@1 | Hit@5 | Hit@10 | Hit@30 |
+|---|---|---|---|---|---|
+| seen (208) | pgvector, Qdrant, exact | 0.625 | 0.875 | 0.928 | 0.976 |
+| blind (208) | pgvector, Qdrant, exact | 0.601 | 0.856 | 0.918 | 0.966 |
+
+The three rows of each set are identical to every digit, because the three result lists are the same lists.
+
+Against the exit criteria: criterion 2 (Qdrant p95 no worse than pgvector at the same rate) is **not met** (52.3 against 45.4 ms, 15% slower at p95, and 61.6% slower at p99); criterion 3 is met (145 MiB, local container); the count check of criterion 4 shows no drift after the ingest. Criterion 1 reads 1.00 for both, but it still cannot tell the stores apart (see the limits).
+
+Limits: one book, 359 chunks (a `book_id`-filtered search covers all of them, so both stores very likely scan the whole book and a recall of 1.00 and an overlap of 1.00 say little about the approximate indexes at scale; this was not checked inside either store); the build and load times are for 359 vectors and say nothing about 1M; the questions were written by a model from the book, not by users; p99 comes from 1,500 calls per store and a single run per store, taken in sequence, not interleaved; the Qdrant path includes a Postgres fetch by design. The first 26 calls of the earlier 5 s smoke run (not used here) were slower for pgvector (p95 365 ms), which suggests cold connections or caches, so a short run misleads; the 300 s run dilutes this but was not preceded by a warm-up. This section states numbers only; the keep-or-remove decision is the ADR review (#117).

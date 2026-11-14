@@ -1,0 +1,97 @@
+{
+  "chunks": 359,
+  "queries_total": 416,
+  "embed_chunks_seconds": 156.9,
+  "embed_queries_seconds": 26.0,
+  "pgvector_load_seconds": 0.5,
+  "pgvector_hnsw_build_seconds": 0.1,
+  "qdrant_load_seconds": 0.35,
+  "qdrant_memory": "bra115real-qdrant 145.1MiB / 7.692GiB",
+  "postgres_memory": "bra115real-pg 75.5MiB / 7.692GiB",
+  "count_drift": {
+    "postgres": 359,
+    "qdrant": 359
+  },
+  "recall_at_30_vs_exact": {
+    "pgvector": {
+      "mean": 1.0,
+      "min": 1.0
+    },
+    "qdrant": {
+      "mean": 1.0,
+      "min": 1.0
+    }
+  },
+  "overlap_at_30_pgvector_vs_qdrant": {
+    "mean": 1.0,
+    "min": 1.0,
+    "share_identical": 1.0
+  },
+  "hit_rates": {
+    "seen": {
+      "queries": 208,
+      "pgvector": {
+        "hit@1": 0.625,
+        "hit@5": 0.875,
+        "hit@10": 0.9279,
+        "hit@30": 0.976
+      },
+      "qdrant": {
+        "hit@1": 0.625,
+        "hit@5": 0.875,
+        "hit@10": 0.9279,
+        "hit@30": 0.976
+      },
+      "exact": {
+        "hit@1": 0.625,
+        "hit@5": 0.875,
+        "hit@10": 0.9279,
+        "hit@30": 0.976
+      }
+    },
+    "blind": {
+      "queries": 208,
+      "pgvector": {
+        "hit@1": 0.601,
+        "hit@5": 0.8558,
+        "hit@10": 0.9183,
+        "hit@30": 0.9663
+      },
+      "qdrant": {
+        "hit@1": 0.601,
+        "hit@5": 0.8558,
+        "hit@10": 0.9183,
+        "hit@30": 0.9663
+      },
+      "exact": {
+        "hit@1": 0.601,
+        "hit@5": 0.8558,
+        "hit@10": 0.9183,
+        "hit@30": 0.9663
+      }
+    }
+  },
+  "latency": {
+    "pgvector": {
+      "calls": 1502,
+      "achieved_qps": 5.0,
+      "p50_ms": 21.75,
+      "p95_ms": 45.44,
+      "p99_ms": 69.38,
+      "mean_ms": 25.34,
+      "errors": 0,
+      "target_qps": 5
+    },
+    "qdrant": {
+      "calls": 1501,
+      "achieved_qps": 5.0,
+      "p50_ms": 29.89,
+      "p95_ms": 52.3,
+      "p99_ms": 111.96,
+      "mean_ms": 34.4,
+      "errors": 0,
+      "target_qps": 5
+    }
+  },
+  "qdrant_memory_after_load_test": "bra115real-qdrant 115MiB / 7.692GiB"
+}
