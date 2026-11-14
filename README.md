@@ -102,7 +102,7 @@ pnpm lint:web && pnpm typecheck:web && pnpm build:web
 
 - **codeql**: CodeQL static analysis (default queries) for Python and JavaScript/TypeScript, reported to code scanning.
 - **images**: builds the API, worker and web images without pushing them, scans each with Trivy (full report as SARIF to code scanning; the job fails only on a fixable CRITICAL vulnerability), and uploads a CycloneDX SBOM per image as a workflow artifact (`sbom-api`, `sbom-worker`, `sbom-web`).
-- **dependency-review**: on pull requests, flags newly added dependencies with known vulnerabilities.
+- **dependency-review**: on pull requests, flags newly added dependencies with known vulnerabilities. It runs only once the repository variable `DEPENDENCY_GRAPH` is `true`, which needs the owner to enable Settings > Security > Code security > Dependency graph first.
 
 Every job has least-privilege `permissions:` and every action is pinned by commit SHA.
 
