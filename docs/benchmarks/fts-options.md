@@ -78,7 +78,7 @@ The data is synthetic: each chunk is a random draw of words from the real book's
 
 ## Accent-insensitive keyword search (#95)
 
-[fts_unaccent.py](../../experiments/e2e/fts_unaccent.py) asks whether an `unaccent` step in the keyword leg changes what it finds ([fts-unaccent-95.json](../../experiments/e2e/results/fts-unaccent-95.json)). Arm A is today's `simple` configuration. Arm B indexes `to_tsvector('simple', unaccent(text))` in a second column and runs `unaccent` over the query too. The book's 359 chunks sit in a throwaway Postgres 17 (pgvector image, `unaccent` extension, which handles Vietnamese: `Việt Đức học` becomes `Viet Duc hoc`). 416 answerable questions (208 `seen`, 208 `blind`); a hit is a top-k chunk containing the question's evidence sentence. Two query sets: the questions as written, and the same questions with every accent removed. Keyword leg only: the fused result needs chunk embeddings and was not computed. Hit@5 in percent, 95% bootstrap interval for Hit@5 in brackets:
+[fts_unaccent.py](../../experiments/e2e/fts_unaccent.py) asks whether an `unaccent` step in the keyword leg changes what it finds ([fts-unaccent-95.json](../../experiments/e2e/results/fts-unaccent-95.json)). Arm A is today's `simple` configuration. Arm B indexes `to_tsvector('simple', unaccent(text))` in a second column and runs `unaccent` over the query too. The book's 359 chunks sit in a throwaway Postgres 17 (pgvector image, `unaccent` extension, which handles Vietnamese: `Việt Đức học` becomes `Viet Duc hoc`). 416 answerable questions (208 `seen`, 208 `blind`); a hit is a top-k chunk containing the question's evidence sentence. Two query sets: the questions as written, and the same questions with every accent removed. Keyword leg only here; the fused result is in the next subsection. Hit@5 in percent, 95% bootstrap interval for Hit@5 in brackets:
 
 | Query set | Leg | A (today) Hit@5 | B (unaccent) Hit@5 | A Hit@1 | B Hit@1 |
 |---|---|---|---|---|---|
@@ -92,6 +92,27 @@ By question kind (BM25 Hit@5, `seen` / `blind`): accented A 91.8 / 86.1, B 86.5 
 **What it shows.** On queries typed with accents, which is how these questions were written, unaccent makes retrieval worse: BM25 Hit@5 drops 9.3 points (88.9 to 79.6, intervals just touching), and per question 29 hits are lost against 9 gained for `ts_rank_cd`. Vietnamese accents separate words (`sử` history, `sự` fact; `ma`, `má`, `mà`, `mả`, `mạ`), so removing them adds false matches and the right chunk ranks lower. On queries typed without accents the effect reverses: today's leg finds the right chunk in only 16 to 25% of questions (it cannot match `hoc` to `học`), and B recovers 58 to 80%, close to its own accented result because stripped and accented queries become the same string. 180 questions gain a hit and 4 lose one for `ts_rank_cd`.
 
 **What it does not show.** One book, 359 chunks, questions written by an LLM in accented Vietnamese and then stripped by a script: real users who drop accents also make other typing changes, and the share of users who do is unknown. The fused result with the dense leg was not measured; dense search already handles missing accents to some degree, so the gain in the fused system is probably smaller than the keyword-leg gain here, and the loss on accented queries is probably also smaller. The measured trade is therefore: unaccent only (B) trades about 9 points on accented queries for about 55 points on stripped ones. A middle option not measured here is to keep both columns and fuse them (or use the unaccented leg only when the query has no accents); that needs its own measurement. Word segmentation (the second part of #95, pyvi or underthesea) was not tried: it would add a dependency, which this measurement step does not do.
+
+### Fused with the dense leg (#95)
+
+[fts_unaccent_fused.py](../../experiments/e2e/fts_unaccent_fused.py) adds the dense leg to the same measurement ([fts-unaccent-fused-95.json](../../experiments/e2e/results/fts-unaccent-fused-95.json)): Ollama bge-m3 embeddings of the 359 chunks and of each question (exact cosine in numpy, which gives the order of the app's HNSW search with `strict_order`), 30 candidates per leg, RRF with k 60 as in `book_rag.retrieval.fusion`. The dense leg is the same in both arms (a stripped question is embedded as stripped); only the keyword column differs. Same 416 questions and the same two query sets. Hit@5 in percent with the 95% interval, and Hit@1:
+
+| Query set | Result | Hit@1 | Hit@5 |
+|---|---|---|---|
+| accented | dense only | 61.3 | 86.5 [83.2, 89.7] |
+| accented | A BM25 + dense (`simple`) | 67.3 | 90.6 [87.7, 93.3] |
+| accented | B BM25 + dense (`unaccent`) | 66.3 | 88.9 [85.8, 91.8] |
+| accented | A `ts_rank_cd` + dense | 50.7 | 79.3 [75.5, 83.2] |
+| accented | B `ts_rank_cd` + dense | 49.8 | 75.7 [71.4, 79.8] |
+| stripped | dense only | 15.6 | 36.1 [31.5, 40.9] |
+| stripped | A BM25 + dense (`simple`) | 19.5 | 39.9 [35.1, 44.7] |
+| stripped | B BM25 + dense (`unaccent`) | 33.9 | 69.7 [65.4, 74.0] |
+| stripped | A `ts_rank_cd` + dense | 13.7 | 33.9 [29.3, 38.5] |
+| stripped | B `ts_rank_cd` + dense | 28.4 | 56.5 [51.9, 61.3] |
+
+BM25 here is the in-memory BM25 over Postgres lexemes (the ranking ceiling of the shipped leg, as above); `ts_rank_cd` is the SQL leg before ADR 0011. By kind (BM25 + dense, Hit@5, `seen` / `blind`): accented A 91.8 / 89.4, B 91.3 / 86.5; stripped A 41.8 / 38.0, B 72.1 / 67.3. The json also holds each leg alone and the per-question gain and loss counts.
+
+**Reading.** Fused, unaccent costs 1.7 points of Hit@5 on accented questions (90.6 to 88.9, intervals overlap; 3.6 points for `ts_rank_cd`), against 9.3 for the keyword leg alone, because the dense leg covers most of what the accent-stripped column loses. On stripped questions it still adds 29.8 points (39.9 to 69.7; 22.6 for `ts_rank_cd`): the dense leg alone finds only 36%, so it does not make up for a keyword leg that cannot match `hoc` to `học`. Stripped questions are LLM-written accented questions with a script removing accents, the same limit as above. On accented questions, dense alone (86.5) is below A BM25 + dense (90.6) and close to B (88.9), so the keyword leg adds 2.4 to 4.1 points over dense alone at this book size. Cost of the `unaccent` column: unchanged from the keyword-only section (14.9 against 13.8 ms median for `ts_rank_cd`, a GIN index 24% smaller, a second column to store). Not measured: both columns fused as separate legs, which this run did not include.
 
 ## What follows
 
