@@ -1,5 +1,6 @@
 """Wires the Procrastinate app, the ingestion task and the providers together."""
 
+import asyncio
 import uuid
 from dataclasses import dataclass
 from datetime import timedelta
@@ -53,11 +54,26 @@ def create_index(settings: WorkerSettings) -> QdrantVectorIndex | None:
     return QdrantVectorIndex(client, settings.qdrant_collection)
 
 
+class RetryStrategy(procrastinate.RetryStrategy):
+    """Transient errors are retried with backoff (a bad PDF is not). A job cut off by a worker
+    shutdown is also retried, at once and without using up an attempt's backoff: it did
+    nothing wrong (#228)."""
+
+    def get_retry_decision(
+        self, *, exception: BaseException, job: procrastinate.jobs.Job
+    ) -> procrastinate.RetryDecision | None:
+        if isinstance(exception, asyncio.CancelledError | procrastinate.exceptions.JobAborted):
+            return procrastinate.RetryDecision()
+        return super().get_retry_decision(exception=exception, job=job)
+
+
 @dataclass(frozen=True, slots=True)
 class Worker:
     app: procrastinate.App
     engine: AsyncEngine
     index: QdrantVectorIndex | None = None
+    # Seconds the running job may take to finish after a stop request.
+    shutdown_timeout: float = 20.0
 
 
 def build_worker(
@@ -74,7 +90,7 @@ def build_worker(
     index = create_index(settings)
 
     # Only transient errors are retried; a bad PDF fails at once (run_ingestion records it).
-    retry = procrastinate.RetryStrategy(
+    retry = RetryStrategy(
         max_attempts=MAX_RETRIES, exponential_wait=3, retry_exceptions=[TransientIngestionError]
     )
 
@@ -95,4 +111,4 @@ def build_worker(
     async def sweep_stuck_jobs(timestamp: int) -> None:
         await fail_stuck_jobs(engine, timedelta(minutes=settings.stuck_job_minutes))
 
-    return Worker(app, engine, index)
+    return Worker(app, engine, index, settings.shutdown_timeout)

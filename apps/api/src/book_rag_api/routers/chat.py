@@ -23,6 +23,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 from book_rag.providers import LLM
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
 from book_rag_api.config import Settings
+from book_rag_api.draining import StreamTracker
 from book_rag_api.metrics import Metrics
 from book_rag_api.models import Book, IngestionJob
 from book_rag_api.prompts import NO_PASSAGES_REPLY, NOT_FOUND_REPLY, build_messages
@@ -152,6 +153,14 @@ async def answer_events(
         stream = llm.stream(build_messages(question, book.title, chunks))
         async for piece in with_timeouts(stream, idle=idle_timeout, total=total_timeout):
             yield sse("token", TokenEvent(text=piece).model_dump())
+    except asyncio.CancelledError:
+        # The server cancels the response when the client disconnects. Leaving the `async for`
+        # closed the model stream (with_timeouts' finally), which stops the call and the
+        # tokens it bills for.
+        log.info("client disconnected; model call cancelled")
+        if metrics is not None:
+            metrics.client_disconnected()
+        raise
     except TimeoutError:
         log.warning("model stream timed out")
         yield sse("error", ErrorEvent(message="the model took too long; try again").model_dump())
@@ -203,17 +212,19 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
         raise HTTPException(
             status.HTTP_503_SERVICE_UNAVAILABLE, "search is unavailable; try again"
         ) from None
+    events = answer_events(
+        llm,
+        book,
+        body.question,
+        chunks,
+        idle_timeout=settings.llm_idle_timeout,
+        total_timeout=settings.llm_total_timeout,
+        abstain=abstain_reason(chunks, settings),
+        metrics=request.app.state.metrics,
+    )
+    tracker: StreamTracker = request.app.state.streams
     return StreamingResponse(
-        answer_events(
-            llm,
-            book,
-            body.question,
-            chunks,
-            idle_timeout=settings.llm_idle_timeout,
-            total_timeout=settings.llm_total_timeout,
-            abstain=abstain_reason(chunks, settings),
-            metrics=request.app.state.metrics,
-        ),
+        tracker.wrap(events),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )

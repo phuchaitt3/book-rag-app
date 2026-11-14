@@ -59,6 +59,15 @@ class Metrics:
             registry=self.registry,
         )
 
+        self.client_disconnects = Counter(
+            "chat_client_disconnects",
+            "Answers cut short because the client went away; the model call was cancelled.",
+            registry=self.registry,
+        )
+
+    def client_disconnected(self) -> None:
+        self.client_disconnects.inc()
+
     def abstained(self, reason: str) -> None:
         self.abstentions.labels(reason).inc()
 

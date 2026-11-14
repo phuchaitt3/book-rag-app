@@ -2,6 +2,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -30,6 +31,10 @@ class WorkerSettings(BaseSettings):
     vector_store: Literal["pgvector", "qdrant", "shadow"] = "pgvector"
     qdrant_url: str = "http://localhost:6333"
     qdrant_collection: str = "chunks"
+    # On SIGTERM the worker takes no new job and lets the running one finish for this many
+    # seconds; after that the job goes back to the queue (#228). Keep it under the platform's
+    # termination grace period (Kubernetes: 30 s by default).
+    shutdown_timeout: float = Field(default=20.0, ge=0)
     # A job queued or running longer than this is failed by the periodic sweep.
     stuck_job_minutes: int = 60
 
