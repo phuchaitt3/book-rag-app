@@ -1,0 +1,31 @@
+name: Eval
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eval-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  answer-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - run: uv sync --frozen
+      # Fake providers (no model download, no paid API). The test starts Postgres through
+      # testcontainers on the runner's Docker, as the python job of ci.yml does.
+      - name: Run the answer eval with fake providers
+        run: uv run pytest apps/api/tests/test_answer_eval.py
+        env:
+          EVAL_SCORES_OUT: ${{ runner.temp }}/eval-scores.json
+      - name: Compare with the stored baseline
+        run: uv run python evals/ci_eval.py "$RUNNER_TEMP/eval-scores.json"

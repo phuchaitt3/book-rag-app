@@ -6,6 +6,7 @@ so CI does not need the git-ignored data folder.
 
 import importlib.util
 import json
+import os
 import sys
 from collections.abc import AsyncIterator, Sequence
 from pathlib import Path
@@ -111,6 +112,9 @@ async def test_fake_run_scores_every_metric(
         results = await ae.run_eval(client, str(book_id), rows, texts, top_k=3)
     summary = ae.summarise(results, label="fake", top_k=3)
     ae.write_report(tmp_path, "fake", summary, results)
+    if scores_out := os.environ.get("EVAL_SCORES_OUT"):  # the CI eval job compares this file
+        with open(scores_out, "w", encoding="utf-8") as fh:  # noqa: ASYNC230
+            json.dump(summary, fh, indent=1)
 
     assert summary["questions"] == 7  # six answerable, one unanswerable
     assert summary["format_errors"] == 0

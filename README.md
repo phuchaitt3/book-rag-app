@@ -67,7 +67,7 @@ An answer is built from hybrid retrieval (vector search plus Postgres full-text 
 | Abstain on questions the book does not answer (fixed reply, no model call, `abstained` flag, metric) | done; with the reranker, a 0.2557 score threshold abstains on 100% of 19 blind unanswerable questions at a 5.3% false-abstain rate ([results](docs/benchmarks/abstain.md)) |
 | LLM-as-judge for answer quality (local model, rubric, repeat consistency) | built; **unvalidated** until the 40-row human labelling sheet is filled in and compared ([note](docs/benchmarks/judge.md)) |
 | Web: upload with progress, streaming chat with citation chips | done; not yet checked against the running stack |
-| Evaluation set and CI eval job | planned |
+| Evaluation set and CI eval job | CI job done (`.github/workflows/eval.yml`); **eval in CI:** deterministic harness with fake providers, no model, no paid API; plumbing/regression scores, not model quality; baseline (n=6 answerable, 7 questions): citation hit 100.0%, cited-answer hit 50.0%, citation validity 85.7% (n=7), token F1 0.8333 (n=6); the job fails when a score drops below `evals/baseline.json` ([note](docs/benchmarks/answer-eval.md)) |
 | Authentication, per-user libraries, hosted demo | planned |
 
 The milestone plan and open work are tracked in this repository's pull requests and issues.

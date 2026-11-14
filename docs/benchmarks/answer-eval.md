@@ -1,6 +1,6 @@
 # Answer-quality eval without a judge model (#221)
 
-A harness that scores the chat endpoint's answers with deterministic metrics, so no judge model or paid API is needed. It unblocks the CI eval job (#22), which was skipped because RAGAS needs a judge.
+A harness that scores the chat endpoint's answers with deterministic metrics, so no judge model or paid API is needed. It unblocks the CI eval job (#22), which was skipped because RAGAS needs a judge; #22 became a deterministic regression gate (see "CI gate").
 
 **Result.** The harness runs in pytest with the fake providers in about 35 s (most of it the Postgres container start). A local run with a real chat model was **not done**: Ollama on this machine held only `bge-m3` (no chat model) on 2026-11-14 and no model was pulled. So no answer-quality number for a real model exists yet.
 
@@ -45,6 +45,14 @@ BOOK_ID=<uuid> LABEL=ollama uv run python evals/answer_eval.py
 
 Environment variables are listed in the script's docstring (`KINDS`, `TOP_K`, `LIMIT`, `OUT_DIR`, ...). A live run writes `evals/results/answer-eval-<label>.json` (summary and per-question rows) and `.md` (summary table). The set's gold chunk numbers belong to the HTML chunking, so evidence-sentence matching is used, as in the e2e note ([e2e-real-model.md](e2e-real-model.md)). The live run reads chunk text from Postgres.
 
-## Left for #22
+## CI gate (#22)
 
-A judge model for faithfulness and relevance; a baseline file and a regression gate in CI; a recorded run with a real local chat model.
+[.github/workflows/eval.yml](../../.github/workflows/eval.yml) runs on pull requests and pushes to `main` with `contents: read` only. It runs `test_answer_eval.py` with `EVAL_SCORES_OUT` set (the fake providers, Postgres through testcontainers as in `ci.yml`; no secret, no model download, no paid API), then [evals/ci_eval.py](../../evals/ci_eval.py) compares the summary with [evals/baseline.json](../../evals/baseline.json), prints a table (also to the job summary) and exits 1 when a metric is worse than its baseline by more than its tolerance, when a sample size changed, or when a metric is missing. Tolerances: 0 for error counts, 0.5 percentage points for rates, 0.01 for token overlap.
+
+These are **plumbing and regression scores, not model quality**: the scripted answers fix them, so a drop means the harness, retrieval or the chat stream broke. The abstain rate on unanswerable questions is 0% in the baseline because the scripted model never abstains (n=1); it guards the code path only. Sample sizes are stored per metric in the baseline (n=7 questions, 6 with evidence or a reference, 1 unanswerable).
+
+Re-record the baseline on purpose (fixture or script changed) with `EVAL_SCORES_OUT=scores.json uv run pytest apps/api/tests/test_answer_eval.py` then `uv run python evals/ci_eval.py scores.json --record`, and commit the result.
+
+## Left for later
+
+A judge model for faithfulness and relevance (RAGAS context recall, faithfulness and answer correctness need one); a recorded run with a real local chat model; real-model scores in CI.

@@ -1,0 +1,68 @@
+{
+  "note": "Plumbing and regression scores from the fake providers (FakeEmbedder, scripted LLM) on evals/fixtures/mini-book.json, not model quality. The scripted answers fix most values; a drop means the harness, retrieval or the chat stream broke. Re-record on purpose with: EVAL_SCORES_OUT=scores.json uv run pytest apps/api/tests/test_answer_eval.py; uv run python evals/ci_eval.py scores.json --record",
+  "metrics": {
+    "format_errors": {
+      "direction": "lower",
+      "tolerance": 0,
+      "value": 0,
+      "n_key": "questions",
+      "n": 7
+    },
+    "stream_errors": {
+      "direction": "lower",
+      "tolerance": 0,
+      "value": 1,
+      "n_key": "questions",
+      "n": 7
+    },
+    "citation_hit_pct": {
+      "direction": "higher",
+      "tolerance": 0.5,
+      "value": 100.0,
+      "n_key": "scored_for_hit",
+      "n": 6
+    },
+    "cited_answer_hit_pct": {
+      "direction": "higher",
+      "tolerance": 0.5,
+      "value": 50.0,
+      "n_key": "scored_for_hit",
+      "n": 6
+    },
+    "citation_valid_pct": {
+      "direction": "higher",
+      "tolerance": 0.5,
+      "value": 85.7,
+      "n_key": "questions",
+      "n": 7
+    },
+    "token_f1_mean": {
+      "direction": "higher",
+      "tolerance": 0.01,
+      "value": 0.8333,
+      "n_key": "scored_for_overlap",
+      "n": 6
+    },
+    "reference_recall_mean": {
+      "direction": "higher",
+      "tolerance": 0.01,
+      "value": 0.8333,
+      "n_key": "scored_for_overlap",
+      "n": 6
+    },
+    "abstain_rate_unanswerable_pct": {
+      "direction": "higher",
+      "tolerance": 0.5,
+      "value": 0.0,
+      "n_key": "unanswerable_questions",
+      "n": 1
+    },
+    "false_abstain_rate_answerable_pct": {
+      "direction": "lower",
+      "tolerance": 0.5,
+      "value": 0.0,
+      "n_key": "answerable_questions",
+      "n": 6
+    }
+  }
+}
