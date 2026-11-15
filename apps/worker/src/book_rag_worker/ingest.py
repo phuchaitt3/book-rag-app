@@ -180,8 +180,16 @@ async def _run(
     with _tracer.span("ingest.parse", book_id=str(book_id)) as span:
         parsed = await asyncio.to_thread(lambda: parse_pdf(read_pdf(storage_key), title=title))
         span.set_attribute("pages", parsed.page_count)
+        span.set_attribute("pages_flagged", len(parsed.flagged_pages))
 
     await _set_stage(engine, job_id, "chunk")
+    async with AsyncSession(engine) as session:
+        await session.execute(
+            update(IngestionJob)
+            .where(IngestionJob.id == job_id)
+            .values(pages_flagged=len(parsed.flagged_pages))
+        )
+        await session.commit()
     with _tracer.span("ingest.chunk", book_id=str(book_id)) as span:
         chunks = await asyncio.to_thread(chunk_book, parsed)
         span.set_attribute("chunks", len(chunks))

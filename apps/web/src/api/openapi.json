@@ -278,6 +278,10 @@
             "title": "Id",
             "type": "string"
           },
+          "pages_flagged": {
+            "title": "Pages Flagged",
+            "type": "integer"
+          },
           "stage": {
             "anyOf": [
               {
@@ -312,6 +316,7 @@
           "status",
           "stage",
           "error",
+          "pages_flagged",
           "created_at",
           "started_at",
           "finished_at",

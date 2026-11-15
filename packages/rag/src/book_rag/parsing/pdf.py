@@ -1,7 +1,9 @@
 """Text PDF parsing with pypdfium2 (BSD/Apache). Sections come from the PDF outline (bookmarks).
 
-A PDF without an outline becomes one section. Scanned PDFs have no text layer and are out of
-scope here (OCR is a later experiment): they raise `NoTextError`.
+A PDF without an outline becomes one section. A page with a thin text layer that is mostly
+covered by an image (a scan) is flagged in `ParsedBook.flagged_pages`; no model runs to decide
+that. Reading those pages is a later step (docs/design/brief-image-pages.md). A PDF whose every
+page is flagged, or that has no text at all, raises `NoTextError`.
 """
 
 from __future__ import annotations
@@ -10,10 +12,15 @@ import re
 from pathlib import Path
 
 import pypdfium2 as pdfium
+import pypdfium2.raw as pdfium_raw
 
 from book_rag.parsing.models import PageText, ParsedBook, Section
 
 FRONT_MATTER = "(front matter)"
+
+# Detector thresholds (proposal of the brief; tuning on labelled pages is #273).
+THIN_TEXT_CHARS = 50  # fewer normalised text-layer characters than this is thin
+IMAGE_COVERAGE = 0.5  # image objects covering more than this share of the page area
 
 
 class NoTextError(ValueError):
@@ -61,17 +68,42 @@ def _heading_offset(
     return first if first >= 0 else after
 
 
+def _image_coverage(page: pdfium.PdfPage) -> float:
+    """Share (0..1) of the page area covered by image objects, overlaps counted once per image
+    and the total capped at 1."""
+    width, height = page.get_size()
+    area = width * height
+    if area <= 0:
+        return 0.0
+    covered = 0.0
+    for obj in page.get_objects(filter=[pdfium_raw.FPDF_PAGEOBJ_IMAGE]):
+        left, bottom, right, top = obj.get_bounds()
+        w = min(right, width) - max(left, 0.0)
+        h = min(top, height) - max(bottom, 0.0)
+        if w > 0 and h > 0:
+            covered += w * h
+    return float(min(covered / area, 1.0))
+
+
+def needs_reading(text: str, coverage: float) -> bool:
+    """A page is flagged when its text layer is thin and an image covers most of it."""
+    return len(text) < THIN_TEXT_CHARS and coverage > IMAGE_COVERAGE
+
+
 def parse_pdf(source: Path | bytes, title: str | None = None) -> ParsedBook:
     """Parse a text PDF into sections of page-tagged text."""
     doc = pdfium.PdfDocument(source)
     try:
         pages = []
+        flagged: list[int] = []
         line_starts: list[frozenset[int]] = []
         for page in doc:
             textpage = page.get_textpage()
             text, heads = _norm_lines(textpage.get_text_bounded())
             pages.append(text)
             line_starts.append(heads)
+            if needs_reading(text, _image_coverage(page)):
+                flagged.append(len(pages))  # 1-based number of the page just added
             textpage.close()
             page.close()
         outline = [
@@ -84,8 +116,8 @@ def parse_pdf(source: Path | bytes, title: str | None = None) -> ParsedBook:
         meta_title = doc.get_metadata_value("Title")
     finally:
         doc.close()
-    if not any(pages):
-        raise NoTextError("no text layer found; scanned PDFs need OCR")
+    if not any(pages) or len(flagged) == len(pages):
+        raise NoTextError("no usable text layer found; scanned PDFs need OCR")
     fallback = source.stem if isinstance(source, Path) else "Untitled"
     book_title = title or meta_title.strip() or fallback
 
@@ -118,7 +150,7 @@ def parse_pdf(source: Path | bytes, title: str | None = None) -> ParsedBook:
         if segments:
             path = " > ".join(t for _, t in stack)
             sections.append(Section(name.strip(), path, level, segments))
-    return ParsedBook(book_title, len(pages), tuple(sections))
+    return ParsedBook(book_title, len(pages), tuple(sections), tuple(flagged))
 
 
 def _slice(pages: list[str], begin: tuple[int, int], end: tuple[int, int]) -> tuple[PageText, ...]:
