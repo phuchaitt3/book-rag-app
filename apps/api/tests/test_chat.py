@@ -16,6 +16,7 @@ from testcontainers.community.postgres import PostgresContainer
 
 from book_rag.providers import FakeEmbedder, FakeLLM, Message
 from book_rag.retrieval import RetrievedChunk
+from book_rag_api.auth import DEV_OWNER, DEV_USER_HEADER
 from book_rag_api.config import Settings
 from book_rag_api.main import create_app
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob
@@ -87,7 +88,7 @@ async def book_id(database_url: str) -> UUID:
     engine = create_async_engine(database_url)
     embedder = FakeEmbedder(EMBEDDING_DIM)
     vectors = await embedder.embed([t for t, _, _ in TEXTS])
-    book = Book(id=uuid4(), title="Địa lý Việt Nam")
+    book = Book(id=uuid4(), title="Địa lý Việt Nam", owner_id=DEV_OWNER)
     async with AsyncSession(engine, expire_on_commit=False) as session, session.begin():
         session.add(book)
         await session.flush()
@@ -103,6 +104,7 @@ async def make_client(
     database_url: str,
     llm: object,
     embedder: object | None = None,
+    owner: str = DEV_OWNER,
     **settings: float,
 ) -> AsyncIterator[AsyncClient]:
     app = create_app(
@@ -114,7 +116,11 @@ async def make_client(
     )
     async with (
         app.router.lifespan_context(app),
-        AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c,
+        AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url="http://test",
+            headers={DEV_USER_HEADER: owner},
+        ) as c,
     ):
         yield c
 
@@ -206,7 +212,7 @@ async def test_book_without_chunks_replies_without_calling_the_model(
     database_url: str,
 ) -> None:
     engine = create_async_engine(database_url)
-    empty = Book(id=uuid4(), title="Empty")
+    empty = Book(id=uuid4(), title="Empty", owner_id=DEV_OWNER)
     async with AsyncSession(engine, expire_on_commit=False) as session, session.begin():
         session.add(empty)
     await engine.dispose()

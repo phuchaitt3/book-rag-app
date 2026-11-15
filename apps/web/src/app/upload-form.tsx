@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import {
   API_URL,
+  apiHeaders,
   type IngestionProgress,
   type UploadedBook,
   ingestionJobPath,
@@ -28,7 +29,11 @@ export function UploadForm({ onUploaded }: { onUploaded: () => void }) {
     setProgress(null);
     setSending(true);
     try {
-      const res = await fetch(`${API_URL}${routes.books}`, { method: "POST", body: form });
+      const res = await fetch(`${API_URL}${routes.books}`, {
+        method: "POST",
+        headers: apiHeaders(),
+        body: form,
+      });
       if (!res.ok) throw new Error(await errorText(res));
       const uploaded: UploadedBook = await res.json();
       setJobId(uploaded.job_id);
@@ -46,7 +51,9 @@ export function UploadForm({ onUploaded }: { onUploaded: () => void }) {
     let timer: ReturnType<typeof setTimeout>;
     const poll = async () => {
       try {
-        const res = await fetch(`${API_URL}${ingestionJobPath(jobId)}`);
+        const res = await fetch(`${API_URL}${ingestionJobPath(jobId)}`, {
+          headers: apiHeaders(),
+        });
         if (!res.ok) throw new Error(await errorText(res));
         const job: IngestionProgress = await res.json();
         if (stopped) return;

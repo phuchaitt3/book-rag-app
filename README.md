@@ -67,7 +67,7 @@ An answer is built from hybrid retrieval (vector search plus Postgres full-text 
 | Abstain on questions the book does not answer (fixed reply, no model call, `abstained` flag, metric) | done; with the reranker, a 0.2557 score threshold abstains on 100% of 19 blind unanswerable questions at a 5.3% false-abstain rate ([results](docs/benchmarks/abstain.md)) |
 | LLM-as-judge for answer quality (local model, rubric, repeat consistency) | built; **unvalidated** until the 40-row human labelling sheet is filled in and compared ([note](docs/benchmarks/judge.md)) |
 | Web: upload with progress, streaming chat with citation chips | done; not yet checked against the running stack |
-| Evaluation set and CI eval job | planned |
+| Evaluation set and CI eval job | CI job done (`.github/workflows/eval.yml`); **eval in CI:** deterministic harness with fake providers, no model, no paid API; plumbing/regression scores, not model quality; baseline (n=6 answerable, 7 questions): citation hit 100.0%, cited-answer hit 50.0%, citation validity 85.7% (n=7), token F1 0.8333 (n=6); the job fails when a score drops below `evals/baseline.json` ([note](docs/benchmarks/answer-eval.md)) |
 | Authentication, per-user libraries, hosted demo | planned |
 
 The milestone plan and open work are tracked in this repository's pull requests and issues.
@@ -87,6 +87,8 @@ A one-shot `migrate` service creates the database tables before the API and work
 For a large HNSW index build (100k+ chunks), raise `maintenance_work_mem` in the session that runs `CREATE INDEX` (for example `SET maintenance_work_mem = '2GB'`); the db service has `shm_size: 3g` in `compose.yaml` so the parallel workers get enough shared memory (Docker's default `/dev/shm` is 64 MB).
 
 The home page shows whether the API is reachable. `GET /healthz` is liveness; `GET /readyz` also checks the database.
+
+**Tracing.** To see where one slow answer spent its time, start Jaeger (`docker compose -f compose.observability.yaml up -d jaeger`), run the API with `OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318`, ask a question, and open http://127.0.0.1:16686. The span tree and an exported example trace are in [docs/operations/tracing.md](docs/operations/tracing.md).
 
 ## Checks
 
@@ -122,11 +124,14 @@ Settings are read from environment variables. Copy [.env.example](.env.example) 
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `ENVIRONMENT` | `development` | Runtime environment name |
-| `LOG_FORMAT` | `text` | Log format of the API and the worker: `text` (plain, for local work) or `json` (one JSON object per line with `timestamp`, `level`, `logger`, `message` and, where known, `request_id`, `book_id`, `job_id`). Every API response carries `X-Request-ID` (the caller's, or a generated one); errors the API raises are `application/problem+json` (RFC 9457) with the same `request_id` |
+| `ENVIRONMENT` | `development` | Runtime environment name. It also decides identity (#230): in `development` and `test` the API reads the caller's id from the `X-Dev-User` request header (a request without it is 401); in any other value the header is ignored and every data route answers 401, because no login is wired in yet (ADR 0006). Each book has one owner and a caller sees only their own books: another user's book is 404, not 403 |
+| `MCP_OWNER_ID` | `dev-user` | Whose books the MCP server reads (it has no login; every query is filtered by this id) |
+| `LOG_FORMAT` | `text` | Log format of the API and the worker: `text` (plain, for local work) or `json` (one JSON object per line with `timestamp`, `level`, `logger`, `message` and, where known, `request_id`, `book_id`, `job_id`). Every API response carries `X-Request-ID` (the caller's, or a generated one); errors the API raises are `application/problem+json` (RFC 9457) with the same `request_id`. With tracing on, JSON log lines also carry `trace_id` |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | unset (tracing off) | OTLP/HTTP collector for traces, for example `http://127.0.0.1:4318` (Jaeger from `compose.observability.yaml`). Unset: no tracer provider or exporter is created. API and worker; see [docs/operations/tracing.md](docs/operations/tracing.md) |
 | `DATABASE_URL` | local Compose Postgres (`postgresql+asyncpg://...`) | Async SQLAlchemy connection URL |
 | `CORS_ORIGINS` | `["http://localhost:3000"]` | Origins allowed to call the API (JSON list) |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | API address the web app calls (set in `apps/web/.env.local`) |
+| `NEXT_PUBLIC_DEV_USER` | `dev-user` | User id the web app sends as `X-Dev-User` (honoured only when the API runs in `development` or `test`; `dev-user` owns the books uploaded before owners existed) |
 
 Never commit `.env` files or keys.
 

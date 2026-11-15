@@ -35,18 +35,23 @@ async def refresh_book_stats(session: AsyncSession, book_id: UUID) -> None:
         await session.execute(text(statement), {"book_id": book_id})
 
 
-async def has_stats(session: AsyncSession, book_id: UUID) -> bool:
+async def has_stats(session: AsyncSession, book_id: UUID, owner_id: str) -> bool:
     """Whether the book's statistics exist (a book ingested before they were written has none)."""
     found = await session.scalar(
-        text("SELECT EXISTS (SELECT 1 FROM book_terms WHERE book_id = :book_id)"),
-        {"book_id": book_id},
+        text(
+            "SELECT EXISTS (SELECT 1 FROM book_terms t JOIN books b ON b.id = t.book_id"
+            " WHERE t.book_id = :book_id AND b.owner_id = :owner_id)"
+        ),
+        {"book_id": book_id, "owner_id": owner_id},
     )
     return bool(found)
 
 
-# Candidates are the chunks the GIN index finds for the query's rare words (all words when none
-# is rare); each is scored over every query word that the book contains. A term is quoted for
-# `to_tsquery`, so punctuation inside a lexeme (a URL, an e-mail) cannot be read as syntax.
+# Both `s` and `cands` check that the book belongs to :owner_id, so another owner's book gives
+# no rows. Candidates are the chunks the GIN index finds for the query's rare words (all words
+# when none is rare); each is scored over every query word that the book contains. A term is
+# quoted for `to_tsquery`, so punctuation inside a lexeme (a URL, an e-mail) cannot be read as
+# syntax.
 BM25_SEARCH = text(
     r"""
 WITH q AS (
@@ -55,6 +60,7 @@ WITH q AS (
 ), s AS (
   SELECT count(*)::float AS n, nullif(avg(token_count), 0)::float AS avgdl
   FROM chunks WHERE book_id = :book_id
+    AND EXISTS (SELECT 1 FROM books WHERE id = :book_id AND owner_id = :owner_id)
 ), qt AS (
   SELECT q.term, q.qtf, t.df::float AS df,
          '''' || replace(replace(q.term, '\', '\\'), '''', '''''') || '''' AS quoted
@@ -63,6 +69,7 @@ WITH q AS (
   SELECT c.id, c.text, c.page, c.section_path, c.tsv, c.token_count
   FROM chunks c
   WHERE c.book_id = :book_id
+    AND EXISTS (SELECT 1 FROM books b WHERE b.id = c.book_id AND b.owner_id = :owner_id)
     AND c.tsv @@ to_tsquery('simple', coalesce(
       (SELECT string_agg(quoted, ' | ') FROM qt WHERE df <= :share * (SELECT n FROM s)),
       (SELECT string_agg(quoted, ' | ') FROM qt)))

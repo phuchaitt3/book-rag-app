@@ -5,6 +5,18 @@ import type { components, paths } from "./schema";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+// Who the API thinks is calling (#230). Until a real login exists (ADR 0006) the API reads this
+// header, and only when it runs with ENVIRONMENT=development or test; elsewhere it answers 401.
+// The default is the owner of every book that existed before owners did.
+export const DEV_USER = process.env.NEXT_PUBLIC_DEV_USER ?? "dev-user";
+export const DEV_USER_HEADER = "X-Dev-User";
+
+/** Headers every API call carries; pass extra ones (a Content-Type) in `extra`. */
+export const apiHeaders = (extra: Record<string, string> = {}): Record<string, string> => ({
+  [DEV_USER_HEADER]: DEV_USER,
+  ...extra,
+});
+
 // Route paths as the API declares them. `satisfies keyof paths` makes a route the API no longer
 // has fail to compile; the two with a parameter are filled in by the helpers below.
 export const routes = {

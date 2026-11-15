@@ -39,10 +39,6 @@ USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"(^|/)\.env(?!\.example$)(\..*)?$", "secrets (.env)"),
     (r"\.(pem|key)$", "secrets (key file)"),
     (r"(^|/)credentials[^/]*\.json$", "secrets (credentials)"),
-    (
-        r"(^|/)(auth|authn|authz|permissions?|sessions?)(/|\.[a-z]+$)",
-        "authentication/authorization",
-    ),
     (r"^(LICENSE|SECURITY\.md)$", "licensing and security policy"),
 )
 

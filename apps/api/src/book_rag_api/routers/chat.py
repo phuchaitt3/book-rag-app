@@ -23,6 +23,8 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.providers import LLM
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
+from book_rag.tracing import NoopTracer, Tracer
+from book_rag_api.auth import Owner
 from book_rag_api.config import Settings
 from book_rag_api.metrics import Metrics
 from book_rag_api.models import Book, IngestionJob
@@ -138,9 +140,12 @@ async def answer_events(
     abstain: str | None = None,
     metrics: Metrics | None = None,
     started: float | None = None,
+    tracer: Tracer | None = None,
 ) -> AsyncIterator[str]:
     """`started` is `time.perf_counter()` at the request's start; with `metrics` it times the
-    first token of a model answer."""
+    first token of a model answer. `tracer` opens the `llm.stream` span (its child `llm.first_token`
+    ends at the first piece)."""
+    tracer = tracer or NoopTracer()
     if abstain is not None:
         if metrics is not None:
             metrics.abstained(abstain)
@@ -153,13 +158,21 @@ async def answer_events(
     citations = citations_for(book, chunks)
     yield sse("citations", [c.model_dump(mode="json") for c in citations])
     try:
-        stream = llm.stream(build_messages(question, book.title, chunks))
-        first = True
-        async for piece in with_timeouts(stream, idle=idle_timeout, total=total_timeout):
-            if first and metrics is not None and started is not None:
-                metrics.first_token(time.perf_counter() - started)
-            first = False
-            yield sse("token", TokenEvent(text=piece).model_dump())
+        with tracer.span("llm.stream", book_id=str(book.id), citations=len(citations)) as span:
+            stream = llm.stream(build_messages(question, book.title, chunks))
+            pieces = with_timeouts(stream, idle=idle_timeout, total=total_timeout)
+            with tracer.span("llm.first_token", book_id=str(book.id)):
+                first = await anext(pieces, None)
+            count = 0
+            if first is not None:
+                if metrics is not None and started is not None:
+                    metrics.first_token(time.perf_counter() - started)
+                count = 1
+                yield sse("token", TokenEvent(text=first).model_dump())
+                async for piece in pieces:
+                    count += 1
+                    yield sse("token", TokenEvent(text=piece).model_dump())
+            span.set_attribute("pieces", count)
     except TimeoutError:
         log.warning("model stream timed out")
         yield sse("error", ErrorEvent(message="the model took too long; try again").model_dump())
@@ -172,7 +185,9 @@ async def answer_events(
 
 
 @router.post("/{book_id}/chat")
-async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> StreamingResponse:
+async def chat(
+    book_id: uuid.UUID, body: ChatRequest, request: Request, owner: Owner
+) -> StreamingResponse:
     started = time.perf_counter()
     engine: AsyncEngine = request.app.state.engine
     retriever: HybridRetriever = request.app.state.retriever
@@ -187,7 +202,7 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
             headers={"Retry-After": str(math.ceil(wait))},
         )
     async with AsyncSession(engine, expire_on_commit=False) as session:
-        book = await session.get(Book, book_id)
+        book = await session.scalar(select(Book).where(Book.id == book_id, Book.owner_id == owner))
         latest_job = await session.scalar(
             select(IngestionJob.status)
             .where(IngestionJob.book_id == book_id)
@@ -204,7 +219,9 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
         )
     try:
         async with asyncio.timeout(settings.retrieval_timeout):
-            chunks = await retriever.retrieve(book_id, body.question, top_k=body.top_k)
+            chunks = await retriever.retrieve(
+                book_id, body.question, owner_id=owner, top_k=body.top_k
+            )
     except Exception:
         # The embedder (Ollama) or the search failed before any byte was sent, so a status
         # code can still say so; once the stream starts only an `error` event can.
@@ -223,6 +240,7 @@ async def chat(book_id: uuid.UUID, body: ChatRequest, request: Request) -> Strea
             abstain=abstain_reason(chunks, settings),
             metrics=request.app.state.metrics,
             started=started,
+            tracer=request.app.state.tracer,
         ),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},

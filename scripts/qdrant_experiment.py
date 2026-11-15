@@ -67,7 +67,7 @@ async def ingest(pdf: str, out: str) -> None:
     index = make_index()
     data = await asyncio.to_thread(Path(pdf).read_bytes)
     async with sessions.begin() as s:
-        book = Book(title="Tat den (experiment)", storage_key="book.pdf")
+        book = Book(title="Tat den (experiment)", storage_key="book.pdf", owner_id="dev-user")
         s.add(book)
         await s.flush()
         book_id = book.id
@@ -126,7 +126,7 @@ async def run_rate(searcher, book_id, vectors, seconds: float, qps: float) -> di
         nonlocal errors
         started = time.perf_counter()
         try:
-            await searcher.vector_search(book_id, vector, LIMIT)
+            await searcher.vector_search(book_id, vector, LIMIT, owner_id="dev-user")
         except Exception:
             errors += 1
             return
@@ -171,7 +171,9 @@ async def measure_book(out: str, seconds: float, qps: float, book_key: str, labe
     for v in vectors:
         exact = set(await exact_top(sessions, book_id, v))
         for name, searcher in (("pgvector", sql), ("qdrant", qdrant)):
-            found: list[RetrievedChunk] = await searcher.vector_search(book_id, v, LIMIT)
+            found: list[RetrievedChunk] = await searcher.vector_search(
+                book_id, v, LIMIT, owner_id="dev-user"
+            )
             recalls[name].append(len(exact & {c.id for c in found}) / max(1, len(exact)))
     result = {
         "label": label,
@@ -228,7 +230,7 @@ async def copies(out: str, books: int, seconds: float, qps: float) -> None:
     for n in range(books - 1):
         new_id = uuid.uuid4()
         async with sessions.begin() as s:
-            s.add(Book(id=new_id, title=f"copy {n}"))
+            s.add(Book(id=new_id, title=f"copy {n}", owner_id="dev-user"))
             await s.flush()
             ids = [uuid.uuid4() for _ in rows]
             await s.execute(

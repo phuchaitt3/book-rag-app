@@ -60,13 +60,15 @@ class MemorySearcher:
         self.idf = {t: math.log(1 + (n - d + 0.5) / (d + 0.5)) for t, d in df.items()}
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int
+        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         sims = [sum(a * b for a, b in zip(v, embedding, strict=True)) for v in self.vectors]
         order = sorted(range(len(sims)), key=lambda i: sims[i], reverse=True)
         return [self.chunks[i] for i in order[:limit]]
 
-    async def text_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
+    async def text_search(
+        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+    ) -> list[RetrievedChunk]:
         k1, b = 1.2, 0.75
         q = Counter(tokens(query))
         scores = []
@@ -97,11 +99,11 @@ async def run(
     ordinal: dict[UUID, int],
 ) -> None:
     for q in questions[:WARMUP]:
-        await retriever.retrieve(uuid4(), q["question"], top_k=6)
+        await retriever.retrieve(uuid4(), q["question"], owner_id="dev-user", top_k=6)
     times, hit1, hit5 = [], 0, 0
     for q in questions:
         start = time.perf_counter()
-        result = await retriever.retrieve(uuid4(), q["question"], top_k=6)
+        result = await retriever.retrieve(uuid4(), q["question"], owner_id="dev-user", top_k=6)
         times.append((time.perf_counter() - start) * 1000)
         ranked = [ordinal[c.id] for c in result]
         hit1 += any(r in q["gold_chunks"] for r in ranked[:1])
