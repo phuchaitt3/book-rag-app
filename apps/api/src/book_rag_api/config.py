@@ -36,13 +36,16 @@ class Settings(BaseSettings):
     s3_region: str = "auto"
     max_upload_bytes: int = 50 * 1024 * 1024
     max_upload_pages: int = 1000
-    # Chat: "ollama" or "fake" (no model, for tests and load tests). The embedding model must
+    # Chat: "ollama", "openai" (an OpenAI-compatible server such as llama.cpp, see llm_base_url) or
+    # "fake" (no model, for tests and load tests). The embedding model must
     # match the one the worker used to embed the chunks.
     llm_provider: str = "ollama"
     llm_model: str = "qwen2.5:7b-instruct"
     embedding_provider: str = "ollama"
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://127.0.0.1:11434"
+    llm_base_url: str = "http://127.0.0.1:8080"
+    llm_api_key: str = ""
     # Chat limits (#191). Retrieval (embedding the question plus the search) gets
     # `retrieval_timeout` seconds. The model stream may pause at most `llm_idle_timeout` seconds
     # between pieces and run at most `llm_total_timeout` seconds in all. Each client address may

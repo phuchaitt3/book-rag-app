@@ -20,6 +20,7 @@ from book_rag.providers import (
     FakeReranker,
     OllamaEmbedder,
     OllamaLLM,
+    OpenAICompatLLM,
     Reranker,
     TeiReranker,
 )
@@ -209,6 +210,8 @@ def _llm(settings: Settings) -> LLM:
         return FakeLLM()
     if settings.llm_provider == "ollama":
         return OllamaLLM(settings.llm_model, settings.ollama_url)
+    if settings.llm_provider == "openai":
+        return OpenAICompatLLM(settings.llm_model, settings.llm_base_url, settings.llm_api_key)
     raise ValueError(f"unknown llm provider {settings.llm_provider!r}")
 
 
