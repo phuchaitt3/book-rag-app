@@ -52,6 +52,7 @@ class IngestionProgress(BaseModel):
     status: str
     stage: str | None
     error: str | None
+    pages_flagged: int
     created_at: datetime
     started_at: datetime | None
     finished_at: datetime | None
@@ -94,6 +95,7 @@ async def get_ingestion_job(
         status=job.status,
         stage=job.stage,
         error=job.error,
+        pages_flagged=job.pages_flagged,
         created_at=job.created_at,
         started_at=job.started_at,
         finished_at=job.finished_at,

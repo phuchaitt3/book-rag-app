@@ -256,6 +256,8 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Pages Flagged */
+            pages_flagged: number;
             /** Stage */
             stage: string | null;
             /** Started At */

@@ -140,6 +140,8 @@ class IngestionJob(Base):
     # Current step while running: "parse", "chunk" or "embed".
     stage: Mapped[str | None] = mapped_column(String(16))
     error: Mapped[str | None] = mapped_column(Text)
+    # Pages the parser flagged as needing reading (thin text under an image); 0 until parsed.
+    pages_flagged: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

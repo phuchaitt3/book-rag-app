@@ -26,3 +26,4 @@ class ParsedBook:
     title: str
     page_count: int
     sections: tuple[Section, ...]
+    flagged_pages: tuple[int, ...] = ()  # 1-based pages with a thin text layer under an image

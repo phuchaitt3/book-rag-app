@@ -162,6 +162,96 @@ def test_scanned_pdf_without_text_is_rejected() -> None:
         parse_pdf(build_pdf([[]]))
 
 
+def _scan_page(canvas: Canvas, *, full: bool = True, caption: str = "") -> None:
+    from reportlab.lib.utils import ImageReader
+
+    image = ImageReader(io.BytesIO(_PNG))
+    if full:
+        canvas.drawImage(image, 0, 0, width=595, height=842)
+    else:
+        canvas.drawImage(image, 40, 40, width=60, height=60)  # a small logo
+    if caption:
+        canvas.setFont(FONT, 11)
+        canvas.drawString(40, 800, caption)
+    canvas.showPage()
+
+
+def _mixed_pdf(kinds: list[str]) -> bytes:
+    """'text' = a full text page, 'scan' = a full-page image, 'scan+ocr' = image with text behind,
+    'logo' = a thin page with a small image, 'blank' = nothing."""
+    buffer = io.BytesIO()
+    canvas = Canvas(buffer, pageSize=A4)
+    for kind in kinds:
+        if kind == "text":
+            canvas.setFont(FONT, 11)
+            for i, line in enumerate(simpleSplit(_paragraph("t"), FONT, 11, 515)):
+                canvas.drawString(40, 800 - 15 * i, line)
+            canvas.showPage()
+        elif kind == "scan":
+            _scan_page(canvas)
+        elif kind == "scan+ocr":
+            canvas.setFont(FONT, 11)
+            for i, line in enumerate(simpleSplit(_paragraph("o"), FONT, 11, 515)):
+                canvas.drawString(40, 800 - 15 * i, line)
+            _scan_page(canvas)
+        elif kind == "logo":
+            _scan_page(canvas, full=False, caption="Chương 2")
+        else:
+            canvas.showPage()
+    canvas.save()
+    return buffer.getvalue()
+
+
+def _png() -> bytes:
+    import struct
+    import zlib
+
+    def chunk(tag: bytes, data: bytes) -> bytes:
+        body = tag + data
+        return struct.pack(">I", len(data)) + body + struct.pack(">I", zlib.crc32(body))
+
+    row = bytes([0]) + bytes([200, 200, 200]) * 8
+    ihdr = struct.pack(">IIBBBBB", 8, 8, 8, 2, 0, 0, 0)
+    return (
+        bytes([137])
+        + b"PNG"
+        + bytes([13, 10, 26, 10])
+        + chunk(b"IHDR", ihdr)
+        + chunk(b"IDAT", zlib.compress(row * 8))
+        + chunk(b"IEND", b"")
+    )
+
+
+_PNG = _png()
+
+
+def test_text_book_has_no_flagged_pages() -> None:
+    assert parse_pdf(_mixed_pdf(["text", "text"])).flagged_pages == ()
+
+
+def test_scanned_pages_are_flagged_and_text_pages_still_ingest() -> None:
+    book = parse_pdf(_mixed_pdf(["text", "scan", "text", "scan"]))
+    assert book.flagged_pages == (2, 4)
+    assert book.page_count == 4
+    pages = {seg.page for sec in book.sections for seg in sec.segments}
+    assert pages == {1, 3}
+
+
+def test_thin_page_with_a_small_image_is_not_flagged() -> None:
+    book = parse_pdf(_mixed_pdf(["text", "logo", "blank"]))
+    assert book.flagged_pages == ()
+
+
+def test_scan_with_a_text_layer_is_not_flagged() -> None:
+    """The known limit of the first version: an already-OCR'd scan has characters."""
+    assert parse_pdf(_mixed_pdf(["text", "scan+ocr"])).flagged_pages == ()
+
+
+def test_every_page_flagged_is_rejected() -> None:
+    with pytest.raises(NoTextError):
+        parse_pdf(_mixed_pdf(["scan", "scan"]))
+
+
 def test_long_sentence_is_cut_to_fit() -> None:
     pdf = make_pdf([("Dài", 1, "từ " * 400)])
     chunks = chunk_book(parse_pdf(pdf), max_chars=200, overlap=0)
