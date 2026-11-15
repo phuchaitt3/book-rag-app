@@ -95,7 +95,11 @@ class Chunk(Base):
     tsv: Mapped[Any] = mapped_column(
         TSVECTOR, Computed("to_tsvector('simple', text)", persisted=True)
     )
-    # Words in the chunk (the sum of the term frequencies in `tsv`), for BM25's length
+    # `tsv` plus adjacent-word pairs ("hoc sinh"), the terms of the BM25 leg (#95).
+    tsv_bi: Mapped[Any] = mapped_column(
+        TSVECTOR, Computed("to_tsvector('simple', text) || bigram_tsvector(text)", persisted=True)
+    )
+    # Terms in the chunk (the sum of the term frequencies in `tsv_bi`), for BM25's length
     # normalisation. Filled by `refresh_book_stats` when a book's chunks are written (ADR 0011).
     token_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
 
@@ -111,6 +115,7 @@ class Chunk(Base):
             postgresql_ops={"embedding": "vector_cosine_ops"},
         ),
         Index("ix_chunks_tsv", "tsv", postgresql_using="gin"),
+        Index("ix_chunks_tsv_bi", "tsv_bi", postgresql_using="gin"),
     )
 
 

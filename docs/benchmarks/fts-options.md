@@ -114,6 +114,38 @@ BM25 here is the in-memory BM25 over Postgres lexemes (the ranking ceiling of th
 
 **Reading.** Fused, unaccent costs 1.7 points of Hit@5 on accented questions (90.6 to 88.9, intervals overlap; 3.6 points for `ts_rank_cd`), against 9.3 for the keyword leg alone, because the dense leg covers most of what the accent-stripped column loses. On stripped questions it still adds 29.8 points (39.9 to 69.7; 22.6 for `ts_rank_cd`): the dense leg alone finds only 36%, so it does not make up for a keyword leg that cannot match `hoc` to `học`. Stripped questions are LLM-written accented questions with a script removing accents, the same limit as above. On accented questions, dense alone (86.5) is below A BM25 + dense (90.6) and close to B (88.9), so the keyword leg adds 2.4 to 4.1 points over dense alone at this book size. Cost of the `unaccent` column: unchanged from the keyword-only section (14.9 against 13.8 ms median for `ts_rank_cd`, a GIN index 24% smaller, a second column to store). Not measured: both columns fused as separate legs, which this run did not include.
 
+## Decision on #95: unaccent loses, syllable pairs win (#95)
+
+The two subsections above measured unaccent against `ts_rank_cd` and an in-memory BM25 on a different question set (416 questions, one chunking). This one decides #95 on the harness of this note: the same 208 blind questions, the PDF (392 chunks) and HTML (359 chunks) corpora, the same scoring, RRF k=60 and 30 candidates per leg, the dense leg fused with each keyword arm ([fts_accent.py](../../experiments/e2e/fts_accent.py); [fts-accent-95.json](../../experiments/e2e/results/fts-accent-95.json)). The exit rule was written before any result: adopt B or C only if fused Hit@5 does not fall on either corpus and rises by at least 1.0 point on at least one; otherwise ship no app change.
+
+Arms: **A** BM25 over the `simple` lexemes (the shipped leg's quality; reproduces the 86.5 and 89.4 above). **B** the same with `unaccent` applied to chunk text and query. **C** the same over syllable unigrams plus adjacent-syllable bigrams ("hoc sinh" becomes a term of its own). C stands in for a word segmenter: pyvi and underthesea are not installed, and adding one is a new Python dependency and a lockfile change, which this task did not do, so a real segmenter was skipped, not measured.
+
+| Fused with the app's dense leg | PDF Hit@5 [95% CI] | PDF Hit@1 | HTML Hit@5 [95% CI] | HTML Hit@1 | Questions gained / lost vs A (PDF, HTML) |
+|---|---|---|---|---|---|
+| dense alone | 79.3 [73.6, 84.6] | 52.4 | 86.1 [81.2, 90.4] | 60.1 | |
+| **A** BM25 | 86.5 [81.7, 90.9] | 63.0 | 89.4 [85.1, 93.3] | 63.5 | |
+| **B** BM25, unaccent | 82.2 [76.9, 87.5] | 58.7 | 86.1 [81.2, 90.4] | 61.5 | 3 / 12, 3 / 10 |
+| **C** BM25, syllable bigrams | **90.4** [86.1, 94.2] | 62.0 | **89.9** [85.6, 93.8] | 64.9 | 9 / 1, 6 / 5 |
+
+(The dense-alone HTML figure is 86.1 here and 85.6 in the table at the top because that table's dense leg came from the app's pgvector search and this one from exact cosine over the stored vectors; the two orders can differ on ties.)
+
+**Result by the pre-set rule.** B fails: fused Hit@5 falls 4.3 points on the PDF and 3.3 on the HTML, as the keyword-only measurement above predicted for accented questions (accents separate Vietnamese words). C passes: Hit@5 rises 3.9 points on the PDF, 0.5 on the HTML, and falls on neither, so the rule says adopt C. The intervals overlap heavily (PDF 9 questions gained and 1 lost; HTML 6 and 5), so on the HTML the change is indistinguishable from none, and on the PDF it is a gain of a handful of questions out of 208. C is adopted because the rule said so, not because the evidence is strong. Accent-insensitive search (B) is closed: do not build it for accented questions. Stripped-accent questions, where B helped in the sections above, were not part of this decision (the rule named the 208 questions as written) and remain unserved.
+
+**Not a held-out result.** These 208 questions were used to tune earlier legs (RRF candidates, BM25 over `ts_rank_cd`, the 20% bound), so C's gain is measured on data the pipeline has already been fitted to. One book, two chunkings, one run. The bigram stand-in is not word segmentation: it adds adjacency evidence and does not decide word boundaries. A real segmenter might do better or worse; not measured.
+
+**The shipped SQL leg, with C** ([fts_accent_sql.py](../../experiments/e2e/fts_accent_sql.py); [fts-accent-sql-95.json](../../experiments/e2e/results/fts-accent-sql-95.json)). The app's own `BM25_SEARCH` (bounded to rare terms, stored statistics, ADR 0011), built by the app's migrations on a throwaway Postgres 17, before (`chunks.tsv`) and after (`chunks.tsv_bi`, migration 0007), fused with the same dense leg: fused Hit@5 86.5 to **90.4** (PDF) and 89.4 to **89.9** (HTML), the same as the in-memory numbers, so the 20% bound and Postgres tokenisation do not remove the gain. The leg alone: 84.1 to 86.5 (PDF), 87.0 to 88.0 (HTML).
+
+Cost, measured in that run, which is a throwaway 1 GB container on a busy 16 GB laptop (the timing is rough; read it as an order of magnitude):
+
+| | PDF, 392 chunks | HTML, 359 chunks |
+|---|---|---|
+| GIN index on the tsvector | 5.3 MB (`tsv`) to 8.9 MB (`tsv_bi`, a second index) | 6.2 to 10.5 MB |
+| tsvector column bytes | 1.0 MB to 2.7 MB | 0.9 to 2.4 MB |
+| `book_terms` rows | 8,022 to 53,742 | 6,237 to 45,654 |
+| Leg median / p95 per query, warm (second pass of 208) | 55 / 88 ms with bigrams; the unigram leg measured 243 / 1,008 ms in the same run, which is a cold-start artefact of the first leg run in a fresh container and not its true cost | 47 / 69 ms with bigrams against 25 / 42 ms unigram |
+
+The trustworthy comparison is the HTML column: about 2 times the median (25 to 47 ms) and 1.6 times the index size, with the term table about 7 times larger. `tsv` and its index stay for the `ts_rank_cd` fallback of books without statistics, so storage is added, not replaced. The term table's growth is the scalability cost the ADR 0011 follow-ups already named ("partition or cap `book_terms`"); an earlier run of the same script measured the same Hit@5 and noisier times (the unigram leg 184 to 328 ms on the PDF, 243 to 263 ms on the HTML; the bigram leg 48 to 102 ms), so latency here supports "same order, up to about 2 times" and no more.
+
 ## What follows
 
 - Adopting any of these changes the search design, so it needs an ADR, and the choice is a latency-against-quality trade that is the user's to weigh: BM25 in Postgres restores the 11 points but multiplies the leg's time by about 5 on this book. Follow-up issue: bound the candidate set (for example, take the GIN matches on only the query's rarest words) and re-time.
