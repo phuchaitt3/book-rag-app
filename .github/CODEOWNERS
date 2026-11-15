@@ -3,6 +3,7 @@
 # GitHub enforces it, using the copy on the base branch. Until then .claude/hooks/merge_gate.py
 # and the review rule enforce it: the hook refuses agent merges of the same paths, and
 # test_merge_gate.py fails when a path here is not refused there.
+# infra/ and deploy config (Dockerfiles, neon.ts, vercel.json) are not listed (ordinary files since 2026-11-15).
 # CLAUDE.md and .github/ are not listed (ordinary files since 2026-11-01). Lockfiles are not listed: CLAUDE.md lets the reviewer merge them by risk.
 # Under .claude/ only the settings files are listed (allow rules, hook registration); hook code is
 # drawn by risk in CLAUDE.md, so the reviewer decides.
@@ -10,10 +11,5 @@
 # guidance (vendor sources), checked 2026-11-01; departs from standard: the code-owner review
 # setting is off for solo-fast speed, see #135.)
 /.claude/settings*.json  @phuchaitt3
-/infra/             @phuchaitt3
 /LICENSE            @phuchaitt3
 /SECURITY.md        @phuchaitt3
-**/Dockerfile*      @phuchaitt3
-**/.dockerignore    @phuchaitt3
-**/neon.ts          @phuchaitt3
-**/vercel.json      @phuchaitt3

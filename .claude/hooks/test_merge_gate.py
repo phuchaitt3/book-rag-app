@@ -51,8 +51,8 @@ def test_admin_always_refused(command: str) -> None:
 @pytest.mark.parametrize(
     "path",
     [
-        "infra/main.tf",
-        "apps/api/Dockerfile",
+        "LICENSE",
+        "SECURITY.md",
         ".env",
         "certs/server.pem",
         ".claude/settings.json",
@@ -84,7 +84,9 @@ def _codeowners_sample_paths() -> list[str]:
 
 def test_every_codeowners_path_is_refused_by_the_hook() -> None:
     paths = _codeowners_sample_paths()
-    assert len(paths) >= 8
+    assert (
+        len(paths) >= 3
+    )  # settings, LICENSE, SECURITY.md (infra and deploy left the list 2026-11-15)
     for path in paths:
         assert merge_gate.check("gh pr merge 5 --squash", files(path)), path
 
@@ -106,6 +108,11 @@ def test_every_codeowners_path_is_refused_by_the_hook() -> None:
         "docker-compose.yml",
         "CLAUDE.md",
         ".github/workflows/ci.yml",
+        "infra/main.tf",
+        "apps/api/Dockerfile",
+        "apps/api/.dockerignore",
+        "neon.ts",
+        "apps/web/vercel.json",
     ],
 )
 def test_ordinary_paths_pass(path: str) -> None:
@@ -113,7 +120,7 @@ def test_ordinary_paths_pass(path: str) -> None:
 
 
 def test_chained_command_is_still_checked() -> None:
-    assert merge_gate.check("cd repo && gh pr merge 9 --squash", files("infra/main.tf"))
+    assert merge_gate.check("cd repo && gh pr merge 9 --squash", files(".env"))
 
 
 def test_non_merge_commands_pass_without_calling_gh() -> None:
@@ -163,7 +170,7 @@ def test_pr_selector_and_repo_are_passed_on() -> None:
     ],
 )
 def test_wrapped_merge_forms_are_checked(command: str) -> None:
-    assert merge_gate.check(command, files("infra/main.tf"))
+    assert merge_gate.check(command, files(".env"))
 
 
 @pytest.mark.parametrize(
