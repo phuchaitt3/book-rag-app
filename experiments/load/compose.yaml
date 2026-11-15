@@ -1,0 +1,62 @@
+# Load-test stack (#227): the repo's own images, fake providers, memory and CPU limits on every
+# service. Run: docker compose -p bookrag-load -f experiments/load/compose.yaml up -d --build
+# Stop:        docker compose -p bookrag-load -f experiments/load/compose.yaml down   (never -v here)
+name: bookrag-load
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    shm_size: 256m
+    environment: {POSTGRES_USER: bookrag, POSTGRES_PASSWORD: bookrag, POSTGRES_DB: bookrag}
+    volumes:
+      - ../../infra/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bookrag -d bookrag"]
+      interval: 3s
+      retries: 20
+    cpus: 2
+    mem_limit: 1g
+  s3:
+    image: chrislusf/seaweedfs:latest
+    command: server -s3 -dir=/data
+    cpus: 1
+    mem_limit: 512m
+  migrate:
+    build: {context: ../.., dockerfile: apps/api/Dockerfile}
+    working_dir: /app/apps/api
+    command: ["alembic", "upgrade", "head"]
+    environment: {DATABASE_URL: "postgresql+asyncpg://bookrag:bookrag@db:5432/bookrag"}
+    depends_on: {db: {condition: service_healthy}}
+  api:
+    build: {context: ../.., dockerfile: apps/api/Dockerfile}
+    # Same app as production, built with fake providers that have latency (loadapp.py).
+    command: ["sh", "-c", "exec uvicorn loadapp:app --host 0.0.0.0 --port 8080"]
+    environment:
+      PYTHONPATH: /load
+      DATABASE_URL: "postgresql+asyncpg://bookrag:bookrag@db:5432/bookrag"
+      S3_ENDPOINT_URL: http://s3:8333
+      CHAT_RATE_LIMIT: "0"
+      FAKE_FIRST_TOKEN_DELAY: ${FAKE_FIRST_TOKEN_DELAY:-0.8}
+      FAKE_TOKEN_DELAY: ${FAKE_TOKEN_DELAY:-0.03}
+      FAKE_QUESTION_EMBED_DELAY: ${FAKE_QUESTION_EMBED_DELAY:-0.05}
+    volumes: ["./:/load:ro"]
+    ports: ["18000:8080"]
+    depends_on:
+      db: {condition: service_healthy}
+      s3: {condition: service_started}
+      migrate: {condition: service_completed_successfully}
+    cpus: 1
+    mem_limit: 768m
+  worker:
+    build: {context: ../.., dockerfile: apps/worker/Dockerfile}
+    command: ["sh", "-c", "python -m book_rag_worker init && exec python /load/loadworker.py"]
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://bookrag:bookrag@db:5432/bookrag"
+      S3_ENDPOINT_URL: http://s3:8333
+      FAKE_BATCH_DELAY: ${FAKE_BATCH_DELAY:-0.3}
+    volumes: ["./:/load:ro"]
+    depends_on:
+      db: {condition: service_healthy}
+      s3: {condition: service_started}
+      migrate: {condition: service_completed_successfully}
+    cpus: 1
+    mem_limit: 768m
