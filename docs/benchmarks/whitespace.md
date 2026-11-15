@@ -1,6 +1,6 @@
 # Does collapsed whitespace hurt retrieval? (issue #152)
 
-Status: **pre-registered, not yet run** (this section was committed before any result existed; the results section below is added after the run and the commit history shows the order).
+Status: **pre-registered, not yet run** (wip: `experiments/book-testset/whitespace.py` is written and lint-clean but unrun; the first run was stopped by memory pressure, the second queued 2 h behind another chat's GPU job and was cancelled. Remaining: run it under the RAM then GPU lock, add a Results section, open the PR) (this section was committed before any result existed; the results section below is added after the run and the commit history shows the order).
 
 Question: the PDF parser (`book_rag.parsing.pdf._norm`) and the page cleaner in this experiment fold every run of whitespace into one space, so paragraph breaks are lost, and a word hyphenated at a line end would be glued or split. Does keeping them change retrieval on the book test set ([book-retrieval.md](book-retrieval.md))?
 
