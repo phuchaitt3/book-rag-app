@@ -324,10 +324,13 @@ async def test_refresh_book_stats_counts_tokens_and_document_frequency(
                 await session.execute(select(BookTerm).where(BookTerm.book_id == book_id))
             ).scalars()
         }
-    assert lengths[0].token_count == 12
+    # 12 words and 11 adjacent pairs (#95).
+    assert lengths[0].token_count == 23
     assert df["huế"] == 3
     assert df["của"] == 3
     assert df["sông"] == 1
+    assert df["thành phố"] == 1  # a syllable pair is a term
+    assert df["huế là"] == 1
     # A second refresh replaces, never doubles.
     async with sessions.begin() as session:
         await refresh_book_stats(session, book_id)
@@ -377,3 +380,34 @@ async def test_a_book_without_statistics_falls_back_to_ts_rank(
         book_id, "Hà Nội thủ đô?", 10, owner_id=DEV_OWNER
     )
     assert found[0].text == TEXTS[2]
+
+
+async def test_bigram_tsvector_pairs_adjacent_words_with_positions(
+    bm25_book: tuple[async_sessionmaker[AsyncSession], UUID],
+) -> None:
+    sessions, _ = bm25_book
+    async with sessions() as session:
+        got = await session.scalar(text("SELECT bigram_tsvector('Học sinh học, học sinh')::text"))
+        empty = await session.scalar(text("SELECT bigram_tsvector('một')::text"))
+    assert got == "'học học':3 'học sinh':1,4 'sinh học':2"
+    assert empty == ""
+
+
+async def test_bm25_finds_the_adjacent_pair_before_the_scattered_words(
+    bm25_book: tuple[async_sessionmaker[AsyncSession], UUID],
+) -> None:
+    sessions, book_id = bm25_book
+    async with sessions.begin() as session:
+        session.add_all(
+            [
+                Chunk(book_id=book_id, ordinal=10, text="Gia đình nhà Nguyễn ở Long An"),
+                Chunk(book_id=book_id, ordinal=11, text="Vua Gia Long lập ra triều"),
+            ]
+        )
+        await session.flush()
+        await refresh_book_stats(session, book_id)
+    found = await SqlChunkSearcher(sessions).text_search(book_id, "Gia Long", 5, owner_id=DEV_OWNER)
+    texts = [c.text for c in found]
+    scattered = "Gia đình nhà Nguyễn ở Long An"
+    assert {"Vua Gia Long lập ra triều", BM25_TEXTS[1]} == set(texts[:2])
+    assert texts[2] == scattered
