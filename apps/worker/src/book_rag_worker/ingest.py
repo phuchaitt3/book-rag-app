@@ -7,17 +7,18 @@ from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from urllib.error import HTTPError, URLError
 
-from sqlalchemy import delete, or_, update
+from sqlalchemy import delete, or_, select, update
 from sqlalchemy.exc import InterfaceError, OperationalError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.chunking import Chunk as ParsedChunk
 from book_rag.chunking import chunk_book
-from book_rag.parsing import ParsedBook, parse_pdf
+from book_rag.parsing import NoTextError, ParsedBook, parse_pdf
 from book_rag.providers import Embedder
+from book_rag.reading import PageReader, PageReadError, render_pages
 from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.lexical import refresh_book_stats
-from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, Section
+from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, PageRead, Section
 from book_rag_api.observability import bind_log_context, book_id_var
 from book_rag_api.qdrant_index import QdrantVectorIndex
 
@@ -99,6 +100,69 @@ def _chunk_rows(
     ]
 
 
+async def _set_pages_read(engine: AsyncEngine, job_id: uuid.UUID, count: int) -> None:
+    async with AsyncSession(engine) as session:
+        await session.execute(
+            update(IngestionJob).where(IngestionJob.id == job_id).values(pages_read=count)
+        )
+        await session.commit()
+
+
+async def read_flagged_pages(
+    engine: AsyncEngine,
+    job_id: uuid.UUID,
+    book_id: uuid.UUID,
+    pdf: bytes,
+    flagged: tuple[int, ...],
+    reader: PageReader,
+) -> dict[int, str]:
+    """Text of every flagged page, reading only the pages not stored yet for this reader.
+
+    Each page is stored as soon as it is read (key: book, page, reader, reader version), so a
+    retry or a re-run continues where the last attempt stopped and never duplicates a row. A
+    page that fails to render or read is logged and left out; the book goes on without it, and
+    a later run tries it again. A page that reads as empty is stored and is not an error.
+    """
+    async with AsyncSession(engine) as session:
+        rows = await session.execute(
+            select(PageRead.page, PageRead.text).where(
+                PageRead.book_id == book_id,
+                PageRead.reader == reader.name,
+                PageRead.reader_version == reader.version,
+                PageRead.page.in_(flagged),
+            )
+        )
+        texts = {page: text for page, text in rows}
+    await _set_pages_read(engine, job_id, len(texts))
+    todo = [page for page in flagged if page not in texts]
+    pages = iter(render_pages(pdf, todo))
+    while (rendered := await asyncio.to_thread(next, pages, None)) is not None:
+        if rendered.image is None:
+            log.warning(
+                "page %s of book %s not rendered: %s", rendered.page, book_id, rendered.error
+            )
+            continue
+        try:
+            text = await asyncio.to_thread(reader.read, rendered.image)
+        except PageReadError as exc:
+            log.warning("page %s of book %s not read: %s", rendered.page, book_id, exc)
+            continue
+        async with AsyncSession(engine) as session:
+            await session.merge(
+                PageRead(
+                    book_id=book_id,
+                    page=rendered.page,
+                    reader=reader.name,
+                    reader_version=reader.version,
+                    text=text,
+                )
+            )
+            await session.commit()
+        texts[rendered.page] = text
+        await _set_pages_read(engine, job_id, len(texts))
+    return texts
+
+
 async def _set_stage(engine: AsyncEngine, job_id: uuid.UUID, stage: str) -> None:
     async with AsyncSession(engine) as session:
         await session.execute(
@@ -160,6 +224,7 @@ async def _run(
     embedder: Embedder,
     batch_size: int,
     index: QdrantVectorIndex | None = None,
+    page_reader: PageReader | None = None,
 ) -> None:
     if embedder.dimension != EMBEDDING_DIM:
         raise ValueError(f"embedder dimension {embedder.dimension} != column {EMBEDDING_DIM}")
@@ -178,18 +243,40 @@ async def _run(
         await session.commit()
 
     with _tracer.span("ingest.parse", book_id=str(book_id)) as span:
-        parsed = await asyncio.to_thread(lambda: parse_pdf(read_pdf(storage_key), title=title))
+        pdf = await asyncio.to_thread(read_pdf, storage_key)
+        # With a reader, an all-flagged book is not an error yet: its pages are read below.
+        parsed = await asyncio.to_thread(
+            lambda: parse_pdf(pdf, title=title, check_text=page_reader is None)
+        )
         span.set_attribute("pages", parsed.page_count)
         span.set_attribute("pages_flagged", len(parsed.flagged_pages))
 
-    await _set_stage(engine, job_id, "chunk")
     async with AsyncSession(engine) as session:
         await session.execute(
             update(IngestionJob)
             .where(IngestionJob.id == job_id)
-            .values(pages_flagged=len(parsed.flagged_pages))
+            .values(pages_flagged=len(parsed.flagged_pages), pages_read=0)
         )
         await session.commit()
+
+    if page_reader is not None:
+        if parsed.flagged_pages:
+            await _set_stage(engine, job_id, "read")
+            with _tracer.span(
+                "ingest.read", book_id=str(book_id), pages=len(parsed.flagged_pages)
+            ) as span:
+                read_text = await read_flagged_pages(
+                    engine, job_id, book_id, pdf, parsed.flagged_pages, page_reader
+                )
+                span.set_attribute("pages_read", len(read_text))
+            # Parse again with the read text in place of the thin text layer of those pages.
+            parsed = await asyncio.to_thread(
+                lambda: parse_pdf(pdf, title=title, read_text=read_text)
+            )
+        elif not parsed.sections:
+            raise NoTextError("no usable text layer found; scanned PDFs need OCR")
+
+    await _set_stage(engine, job_id, "chunk")
     with _tracer.span("ingest.chunk", book_id=str(book_id)) as span:
         chunks = await asyncio.to_thread(chunk_book, parsed)
         span.set_attribute("chunks", len(chunks))
@@ -255,17 +342,21 @@ async def run_ingestion(
     batch_size: int = 32,
     attempts: int = MAX_RETRIES,
     index: QdrantVectorIndex | None = None,
+    page_reader: PageReader | None = None,
 ) -> None:
     """Run one job to the end. A failure is recorded on the job (status `failed`), not raised.
 
     `attempts` is how many times the job has run before. A transient failure with retries left
     puts the job back to `queued` and raises `TransientIngestionError` for the queue to retry;
-    the default means no retries are left.
+    the default means no retries are left. With a `page_reader`, flagged image-only pages are
+    read in a `read` stage; without one they are skipped (and an all-flagged book fails).
     """
     book_token = book_id_var.set(None)
     try:
         with bind_log_context(job_id=job_id):
-            await _run_and_record(engine, job_id, read_pdf, embedder, batch_size, attempts, index)
+            await _run_and_record(
+                engine, job_id, read_pdf, embedder, batch_size, attempts, index, page_reader
+            )
     finally:
         book_id_var.reset(book_token)
 
@@ -278,10 +369,11 @@ async def _run_and_record(
     batch_size: int,
     attempts: int,
     index: QdrantVectorIndex | None,
+    page_reader: PageReader | None,
 ) -> None:
     try:
         with _tracer.span("ingest.job", job_id=str(job_id), attempts=attempts):
-            await _run(engine, job_id, read_pdf, embedder, batch_size, index)
+            await _run(engine, job_id, read_pdf, embedder, batch_size, index, page_reader)
     except Exception as exc:
         message = f"{type(exc).__name__}: {exc}"
         if is_transient(exc) and attempts < MAX_RETRIES:

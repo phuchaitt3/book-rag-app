@@ -129,6 +129,23 @@ class BookTerm(Base):
     df: Mapped[int] = mapped_column(Integer)
 
 
+class PageRead(Base):
+    """Text a reader found on one image-only page (brief-image-pages.md). The key lets a retry
+    skip pages already read and a re-run replace rather than duplicate; a new reader or reader
+    version is a new row, not a schema change."""
+
+    __tablename__ = "page_reads"
+
+    book_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("books.id", ondelete="CASCADE"), primary_key=True
+    )
+    page: Mapped[int] = mapped_column(Integer, primary_key=True)  # 1-based
+    reader: Mapped[str] = mapped_column(String(32), primary_key=True)
+    reader_version: Mapped[str] = mapped_column(String(64), primary_key=True)
+    text: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class IngestionJob(Base):
     __tablename__ = "ingestion_jobs"
 
@@ -137,11 +154,13 @@ class IngestionJob(Base):
         ForeignKey("books.id", ondelete="CASCADE"), index=True
     )
     status: Mapped[str] = mapped_column(String(16), default="queued", server_default="queued")
-    # Current step while running: "parse", "chunk" or "embed".
+    # Current step while running: "parse", "read", "chunk" or "embed".
     stage: Mapped[str | None] = mapped_column(String(16))
     error: Mapped[str | None] = mapped_column(Text)
     # Pages the parser flagged as needing reading (thin text under an image); 0 until parsed.
     pages_flagged: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    # Flagged pages whose text a reader has stored (stage "read"); never above pages_flagged.
+    pages_read: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

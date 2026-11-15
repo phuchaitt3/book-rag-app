@@ -2,13 +2,16 @@
 
 A PDF without an outline becomes one section. A page with a thin text layer that is mostly
 covered by an image (a scan) is flagged in `ParsedBook.flagged_pages`; no model runs to decide
-that. Reading those pages is a later step (docs/design/brief-image-pages.md). A PDF whose every
-page is flagged, or that has no text at all, raises `NoTextError`.
+that. Reading those pages is a later step (docs/design/brief-image-pages.md): the caller passes
+the text a reader produced as `read_text` and it replaces the thin text layer of those pages.
+Without `read_text` (no reader configured), a PDF whose every page is flagged, or that has no
+text at all, raises `NoTextError`.
 """
 
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from pathlib import Path
 
 import pypdfium2 as pdfium
@@ -90,20 +93,34 @@ def needs_reading(text: str, coverage: float) -> bool:
     return len(text) < THIN_TEXT_CHARS and coverage > IMAGE_COVERAGE
 
 
-def parse_pdf(source: Path | bytes, title: str | None = None) -> ParsedBook:
-    """Parse a text PDF into sections of page-tagged text."""
+def parse_pdf(
+    source: Path | bytes,
+    title: str | None = None,
+    read_text: Mapping[int, str] | None = None,
+    *,
+    check_text: bool = True,
+) -> ParsedBook:
+    """Parse a PDF into sections of page-tagged text.
+
+    `read_text` maps a 1-based flagged page to the text a reader found on it; None means no
+    reader is configured. `check_text=False` skips the "no text" check, for the first pass that
+    only finds the flagged pages.
+    """
     doc = pdfium.PdfDocument(source)
     try:
-        pages = []
+        pages: list[str] = []
         flagged: list[int] = []
         line_starts: list[frozenset[int]] = []
         for page in doc:
             textpage = page.get_textpage()
             text, heads = _norm_lines(textpage.get_text_bounded())
+            number = len(pages) + 1  # 1-based number of the page being added
+            if needs_reading(text, _image_coverage(page)):
+                flagged.append(number)
+                if read_text is not None and number in read_text:
+                    text, heads = _norm_lines(read_text[number])
             pages.append(text)
             line_starts.append(heads)
-            if needs_reading(text, _image_coverage(page)):
-                flagged.append(len(pages))  # 1-based number of the page just added
             textpage.close()
             page.close()
         outline = [
@@ -116,7 +133,9 @@ def parse_pdf(source: Path | bytes, title: str | None = None) -> ParsedBook:
         meta_title = doc.get_metadata_value("Title")
     finally:
         doc.close()
-    if not any(pages) or len(flagged) == len(pages):
+    if not pages:
+        raise NoTextError("the PDF has no pages")
+    if check_text and (not any(pages) or (read_text is None and len(flagged) == len(pages))):
         raise NoTextError("no usable text layer found; scanned PDFs need OCR")
     fallback = source.stem if isinstance(source, Path) else "Untitled"
     book_title = title or meta_title.strip() or fallback

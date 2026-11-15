@@ -9,6 +9,7 @@ from qdrant_client import AsyncQdrantClient
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from book_rag.providers import Embedder, FakeEmbedder, OllamaEmbedder
+from book_rag.reading import PageReader, TesseractReader
 from book_rag_api.db import create_engine
 from book_rag_api.jobs import INGEST_TASK, create_queue
 from book_rag_api.models import EMBEDDING_DIM
@@ -45,6 +46,12 @@ def create_embedder(settings: WorkerSettings) -> Embedder:
     raise ValueError(f"unknown embedding provider {settings.embedding_provider!r}")
 
 
+def create_page_reader(settings: WorkerSettings) -> PageReader | None:
+    if settings.page_reader == "tesseract":
+        return TesseractReader(settings.tesseract_languages, settings.tesseract_command)
+    return None
+
+
 def create_index(settings: WorkerSettings) -> QdrantVectorIndex | None:
     """The Qdrant copy of the vectors, only when the experiment is switched on (ADR 0008)."""
     if settings.vector_store == "pgvector":
@@ -65,12 +72,14 @@ def build_worker(
     *,
     embedder: Embedder | None = None,
     read_pdf: ReadPdf | None = None,
+    page_reader: PageReader | None = None,
 ) -> Worker:
     """Providers default to the ones in `settings`; tests pass fakes."""
     app = create_queue(settings.database_url)
     engine = create_engine(settings.database_url)
     embedder = embedder or create_embedder(settings)
     read_pdf = read_pdf or create_reader(settings)
+    page_reader = page_reader or create_page_reader(settings)
     index = create_index(settings)
 
     # Only transient errors are retried; a bad PDF fails at once (run_ingestion records it).
@@ -88,6 +97,7 @@ def build_worker(
             settings.embed_batch_size,
             attempts=context.job.attempts,
             index=index,
+            page_reader=page_reader,
         )
 
     @app.periodic(cron="*/5 * * * *")
