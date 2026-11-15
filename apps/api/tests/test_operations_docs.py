@@ -32,6 +32,8 @@ def exported_series() -> set[str]:
             names |= {f"{name}_bucket", f"{name}_count", f"{name}_sum"}
         else:
             names.add(f"{name}_total")
+    # Gauges filled at scrape time are exported by a custom collector.
+    names |= set(re.findall(r"\bGaugeMetricFamily\(\s*\"([a-z_]+)\"", text))
     return names
 
 
@@ -40,6 +42,10 @@ def referenced_series(expr: str) -> set[str]:
     without_strings = re.sub(r'"[^"]*"', '""', expr)
     # Label selectors `{...}` hold no metric names; drop them but keep the name before them.
     names = re.findall(r"\b([a-zA-Z_:][a-zA-Z0-9_:]*)\s*(?=\{|\[)", without_strings)
+    # A bare gauge inside an aggregation, such as `max(metric)`.
+    names += re.findall(
+        r"\b(?:max|min|sum|avg)\(\s*([a-zA-Z_:][a-zA-Z0-9_:]*)\s*\)", without_strings
+    )
     return {n for n in names if n not in PROMQL_WORDS}
 
 
@@ -90,6 +96,7 @@ def test_every_alert_has_a_runbook_entry() -> None:
 def test_every_referenced_metric_is_exported() -> None:
     exported = exported_series()
     assert "http_request_duration_seconds_count" in exported  # the parser found the definitions
+    assert {"chat_first_token_duration_seconds_bucket", "ingestion_jobs"} <= exported
     for name, expr in alert_blocks():
         unknown = referenced_series(expr) - exported - STANDARD_METRICS
         assert unknown == set(), f"alert {name} uses metrics the API does not export: {unknown}"
@@ -99,6 +106,8 @@ def test_dashboard_is_valid_json_and_uses_exported_metrics() -> None:
     dashboard = json.loads((OPS / "grafana" / "book-rag.json").read_text(encoding="utf-8"))
     assert dashboard["uid"] == "book-rag"
     assert len(dashboard["panels"]) >= 5
+    titles = {panel["title"] for panel in dashboard["panels"]}
+    assert {"Ingestion queue depth", "First token latency"} <= titles
     exported = exported_series()
     for panel in dashboard["panels"]:
         for target in panel["targets"]:
@@ -110,6 +119,13 @@ def test_slo_doc_cites_the_benchmark_and_the_benchmark_exists() -> None:
     slo = (OPS / "slo.md").read_text(encoding="utf-8")
     assert "serving-latency.md" in slo
     assert (ROOT / "docs" / "benchmarks" / "serving-latency.md").is_file()
+
+
+def test_slo_doc_has_a_first_token_slo_and_no_proxy_note() -> None:
+    slo = (OPS / "slo.md").read_text(encoding="utf-8")
+    assert "chat_first_token_duration_seconds_bucket" in slo
+    assert "What the metrics cannot show yet" not in slo
+    assert "closest server-side view" not in slo
 
 
 def test_observability_compose_binds_ports_to_loopback() -> None:

@@ -145,7 +145,9 @@ async def ensure_html_book(conn: Any, chunks: list[dict[str, Any]]) -> str:
         await conn.execute("DELETE FROM books WHERE id=$1::uuid", book_id)
     book_id = str(
         await conn.fetchval(
-            "INSERT INTO books (id, title) VALUES (gen_random_uuid(), $1) RETURNING id", HTML_TITLE
+            "INSERT INTO books (id, title, owner_id)"
+            " VALUES (gen_random_uuid(), $1, 'dev-user') RETURNING id",
+            HTML_TITLE,
         )
     )
     vectors = ollama_embed([c["text"] for c in chunks])

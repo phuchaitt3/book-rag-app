@@ -8,6 +8,8 @@ from collections.abc import Callable
 from typing import Any
 
 from book_rag_api.observability import configure_logging
+from book_rag_api.tracing import OtelTracer, build_tracing, instrument_engine
+from book_rag_worker import ingest
 from book_rag_worker.config import get_worker_settings
 from book_rag_worker.worker import Worker, build_worker
 
@@ -94,11 +96,21 @@ def main() -> None:
     if sys.platform == "win32":  # psycopg's async mode needs a selector loop
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     command = sys.argv[1] if len(sys.argv) > 1 else "run"
-    worker = build_worker(get_worker_settings())
+    settings = get_worker_settings()
+    provider = build_tracing(settings.otel_exporter_otlp_endpoint, service_name="book-rag-worker")
+    if provider is not None:
+        ingest.set_tracer(OtelTracer.from_provider(provider))
+    worker = build_worker(settings)
+    if provider is not None:
+        instrument_engine(worker.engine, provider)
     if command == "init":
         asyncio.run(init_schema(worker))
     elif command == "run":
-        asyncio.run(run(worker))
+        try:
+            asyncio.run(run(worker))
+        finally:
+            if provider is not None:
+                provider.shutdown()  # flushes spans still queued for the collector
     else:
         sys.exit("usage: python -m book_rag_worker [init|run]")
 

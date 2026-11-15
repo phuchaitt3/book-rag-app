@@ -1,0 +1,170 @@
+{
+ "corpora": {
+  "P": {
+   "chunks": 392,
+   "arms": {
+    "dense only": {
+     "hit@1": 52.4,
+     "hit@1_ci95": [
+      45.7,
+      59.1
+     ],
+     "hit@5": 79.3,
+     "hit@5_ci95": [
+      73.6,
+      84.6
+     ]
+    },
+    "tsv (merged leg) alone": {
+     "hit@1": 62.5,
+     "hit@1_ci95": [
+      55.8,
+      69.2
+     ],
+     "hit@5": 84.1,
+     "hit@5_ci95": [
+      79.3,
+      88.9
+     ]
+    },
+    "tsv (merged leg) + dense": {
+     "hit@1": 64.9,
+     "hit@1_ci95": [
+      58.2,
+      71.2
+     ],
+     "hit@5": 86.5,
+     "hit@5_ci95": [
+      81.7,
+      90.9
+     ]
+    },
+    "tsv_bi (after 0007) alone": {
+     "hit@1": 63.5,
+     "hit@1_ci95": [
+      56.7,
+      70.2
+     ],
+     "hit@5": 86.5,
+     "hit@5_ci95": [
+      81.7,
+      90.9
+     ]
+    },
+    "tsv_bi (after 0007) + dense": {
+     "hit@1": 63.0,
+     "hit@1_ci95": [
+      56.2,
+      69.2
+     ],
+     "hit@5": 90.4,
+     "hit@5_ci95": [
+      86.1,
+      94.2
+     ]
+    }
+   },
+   "latency": {
+    "tsv (merged leg)": {
+     "median_ms": 242.57,
+     "p95_ms": 1008.31,
+     "terms_rows": 8022
+    },
+    "tsv_bi (after 0007)": {
+     "median_ms": 54.73,
+     "p95_ms": 88.22,
+     "terms_rows": 53742
+    }
+   },
+   "sizes": {
+    "ix_chunks_tsv_bytes": 5308416,
+    "ix_chunks_tsv_bi_bytes": 8888320,
+    "tsv_column_bytes": 1036600,
+    "tsv_bi_column_bytes": 2702168
+   }
+  },
+  "H": {
+   "chunks": 359,
+   "arms": {
+    "dense only": {
+     "hit@1": 60.1,
+     "hit@1_ci95": [
+      53.4,
+      66.8
+     ],
+     "hit@5": 86.1,
+     "hit@5_ci95": [
+      81.2,
+      90.4
+     ]
+    },
+    "tsv (merged leg) alone": {
+     "hit@1": 63.0,
+     "hit@1_ci95": [
+      56.7,
+      69.7
+     ],
+     "hit@5": 87.0,
+     "hit@5_ci95": [
+      82.7,
+      91.3
+     ]
+    },
+    "tsv (merged leg) + dense": {
+     "hit@1": 63.9,
+     "hit@1_ci95": [
+      57.7,
+      70.2
+     ],
+     "hit@5": 89.4,
+     "hit@5_ci95": [
+      85.1,
+      93.3
+     ]
+    },
+    "tsv_bi (after 0007) alone": {
+     "hit@1": 63.9,
+     "hit@1_ci95": [
+      57.2,
+      70.2
+     ],
+     "hit@5": 88.0,
+     "hit@5_ci95": [
+      83.2,
+      92.3
+     ]
+    },
+    "tsv_bi (after 0007) + dense": {
+     "hit@1": 65.4,
+     "hit@1_ci95": [
+      58.7,
+      72.1
+     ],
+     "hit@5": 89.9,
+     "hit@5_ci95": [
+      85.6,
+      93.8
+     ]
+    }
+   },
+   "latency": {
+    "tsv (merged leg)": {
+     "median_ms": 25.36,
+     "p95_ms": 42.2,
+     "terms_rows": 6237
+    },
+    "tsv_bi (after 0007)": {
+     "median_ms": 47.4,
+     "p95_ms": 68.75,
+     "terms_rows": 45654
+    }
+   },
+   "sizes": {
+    "ix_chunks_tsv_bytes": 6152192,
+    "ix_chunks_tsv_bi_bytes": 10543104,
+    "tsv_column_bytes": 933206,
+    "tsv_bi_column_bytes": 2425756
+   }
+  }
+ }
+}

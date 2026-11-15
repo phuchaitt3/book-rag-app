@@ -6,6 +6,7 @@ so CI does not need the git-ignored data folder.
 
 import importlib.util
 import json
+import os
 import sys
 from collections.abc import AsyncIterator, Sequence
 from pathlib import Path
@@ -18,6 +19,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from test_chat import database_url, event_loop_policy, make_client  # noqa: F401
 
 from book_rag.providers import FakeEmbedder, Message
+from book_rag_api.auth import DEV_OWNER
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -73,7 +75,7 @@ async def book(database_url: str) -> tuple[UUID, dict[str, str]]:  # noqa: F811
     engine = create_async_engine(database_url)
     chunks = FIXTURE["chunks"]
     vectors = await FakeEmbedder(EMBEDDING_DIM).embed([c["text"] for c in chunks])
-    book = Book(id=uuid4(), title=FIXTURE["book_title"])
+    book = Book(id=uuid4(), title=FIXTURE["book_title"], owner_id=DEV_OWNER)
     async with AsyncSession(engine, expire_on_commit=False) as session, session.begin():
         session.add(book)
         await session.flush()
@@ -110,6 +112,9 @@ async def test_fake_run_scores_every_metric(
         results = await ae.run_eval(client, str(book_id), rows, texts, top_k=3)
     summary = ae.summarise(results, label="fake", top_k=3)
     ae.write_report(tmp_path, "fake", summary, results)
+    if scores_out := os.environ.get("EVAL_SCORES_OUT"):  # the CI eval job compares this file
+        with open(scores_out, "w", encoding="utf-8") as fh:  # noqa: ASYNC230
+            json.dump(summary, fh, indent=1)
 
     assert summary["questions"] == 7  # six answerable, one unanswerable
     assert summary["format_errors"] == 0

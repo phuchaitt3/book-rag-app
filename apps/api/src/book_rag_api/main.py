@@ -1,7 +1,7 @@
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 
 import procrastinate
 from fastapi import Depends, FastAPI, Request, status
@@ -20,17 +20,19 @@ from book_rag.providers import (
     FakeReranker,
     OllamaEmbedder,
     OllamaLLM,
+    OpenAICompatLLM,
     Reranker,
     TeiReranker,
 )
 from book_rag.retrieval import ChunkSearcher, HybridRetriever, RetrievalObserver
+from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.books import router as books_router
 from book_rag_api.config import Settings, get_settings
 from book_rag_api.db import create_engine, ping
 from book_rag_api.draining import StreamTracker
 from book_rag_api.jobs import create_queue
 from book_rag_api.jobs import router as jobs_router
-from book_rag_api.metrics import Metrics, MetricsMiddleware
+from book_rag_api.metrics import Metrics, MetricsMiddleware, read_job_rows
 from book_rag_api.models import EMBEDDING_DIM
 from book_rag_api.observability import (
     RequestIdMiddleware,
@@ -47,6 +49,15 @@ from book_rag_api.rate_limit import RateLimiter
 from book_rag_api.retrieval import SqlChunkSearcher
 from book_rag_api.routers.chat import router as chat_router
 from book_rag_api.storage import ObjectStorage, S3Storage
+from book_rag_api.tracing import (
+    OtelTracer,
+    build_tracing,
+    instrument_app,
+    instrument_engine,
+)
+
+if TYPE_CHECKING:
+    from opentelemetry.sdk.trace.export import SpanExporter
 
 
 class HealthStatus(BaseModel):
@@ -66,17 +77,24 @@ def create_app(
     llm: LLM | None = None,
     embedder: Embedder | None = None,
     reranker: Reranker | None = None,
+    span_exporter: "SpanExporter | None" = None,
 ) -> FastAPI:
     """Tests pass a fake `storage`, an in-memory `queue`, and fake `llm`, `embedder` and
-    `reranker`."""
+    `reranker`, and may pass a `span_exporter` to turn tracing on without a collector (#225)."""
     settings = settings or get_settings()
     metrics = Metrics()
+    provider = build_tracing(settings.otel_exporter_otlp_endpoint, exporter=span_exporter)
+    tracer: Tracer = OtelTracer.from_provider(provider) if provider is not None else NoopTracer()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.settings = settings
         app.state.metrics = metrics
+        app.state.tracer = tracer
+        app.state.tracer_provider = provider
         app.state.engine = create_engine(settings.database_url)
+        if provider is not None:
+            instrument_engine(app.state.engine, provider)
         app.state.storage = storage or _s3_storage(settings)
         app.state.queue = queue or create_queue(settings.database_url)
         app.state.llm = llm or _llm(settings)
@@ -87,6 +105,7 @@ def create_app(
             embedder=embedder,
             reranker=reranker,
             observer=metrics,
+            tracer=tracer,
         )
         try:
             async with app.state.queue.open_async():
@@ -104,9 +123,12 @@ def create_app(
             if index is not None:
                 await index.close()
             await app.state.engine.dispose()
+            if provider is not None:
+                provider.shutdown()  # flushes spans still queued for the collector
 
     app = FastAPI(title="book-rag-app API", version="0.1.0", lifespan=lifespan)
     app.state.streams = StreamTracker()
+    app.state.settings = settings  # also set before startup: the identity dependency reads it
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
@@ -122,6 +144,8 @@ def create_app(
     app.include_router(books_router)
     app.include_router(chat_router)
     add_stream_events(app)
+    if provider is not None:
+        instrument_app(app, provider)  # last: its middleware wraps all the others
 
     @app.get("/healthz", tags=["health"])
     async def healthz() -> HealthStatus:
@@ -129,8 +153,9 @@ def create_app(
         return HealthStatus(status="ok")
 
     @app.get("/metrics", include_in_schema=False)
-    async def metrics_endpoint() -> Response:
+    async def metrics_endpoint(request: Request) -> Response:
         """Prometheus text format (ADR 0010). Unauthenticated: only the scraper may reach it."""
+        await metrics.refresh_jobs(lambda: read_job_rows(request.app.state.engine))
         return Response(metrics.render(), media_type=metrics.content_type)
 
     @app.get(
@@ -166,6 +191,7 @@ def build_retriever(
     embedder: Embedder | None = None,
     reranker: Reranker | None = None,
     observer: RetrievalObserver | None = None,
+    tracer: Tracer | None = None,
 ) -> tuple[HybridRetriever, QdrantVectorIndex | None]:
     """The retriever the chat endpoint uses, and the Qdrant index to close at shutdown when
     there is one. The MCP server (`book_rag_api.mcp_server`) builds the same one."""
@@ -176,6 +202,7 @@ def build_retriever(
         reranker or _reranker(settings),
         rerank_depth=settings.rerank_depth,
         observer=observer,
+        tracer=tracer,
     )
     return retriever, index
 
@@ -200,6 +227,8 @@ def _llm(settings: Settings) -> LLM:
         return FakeLLM()
     if settings.llm_provider == "ollama":
         return OllamaLLM(settings.llm_model, settings.ollama_url)
+    if settings.llm_provider == "openai":
+        return OpenAICompatLLM(settings.llm_model, settings.llm_base_url, settings.llm_api_key)
     raise ValueError(f"unknown llm provider {settings.llm_provider!r}")
 
 

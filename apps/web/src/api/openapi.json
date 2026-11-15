@@ -278,6 +278,14 @@
             "title": "Id",
             "type": "string"
           },
+          "pages_flagged": {
+            "title": "Pages Flagged",
+            "type": "integer"
+          },
+          "pages_read": {
+            "title": "Pages Read",
+            "type": "integer"
+          },
           "stage": {
             "anyOf": [
               {
@@ -312,6 +320,8 @@
           "status",
           "stage",
           "error",
+          "pages_flagged",
+          "pages_read",
           "created_at",
           "started_at",
           "finished_at",
@@ -421,7 +431,7 @@
   "paths": {
     "/books": {
       "get": {
-        "description": "All books, newest first.",
+        "description": "The caller's books, newest first.",
         "operationId": "list_books_books_get",
         "responses": {
           "200": {
@@ -480,6 +490,85 @@
           }
         },
         "summary": "Upload Book",
+        "tags": [
+          "books"
+        ]
+      }
+    },
+    "/books/{book_id}": {
+      "delete": {
+        "description": "Delete one of the caller's books with its sections, chunks and jobs, and its PDF.",
+        "operationId": "delete_book_books__book_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "book_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Book Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Book",
+        "tags": [
+          "books"
+        ]
+      },
+      "get": {
+        "description": "One of the caller's books. Another owner's book is 404, the same as a missing one.",
+        "operationId": "get_book_books__book_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "book_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Book Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Book",
         "tags": [
           "books"
         ]
@@ -560,7 +649,7 @@
     },
     "/ingestion-jobs/{job_id}": {
       "get": {
-        "description": "Status, current stage and, while embedding, how many chunks are done.",
+        "description": "Status, current stage and, while embedding, how many chunks are done. A job of another\nowner's book is 404, the same as a missing job.",
         "operationId": "get_ingestion_job_ingestion_jobs__job_id__get",
         "parameters": [
           {

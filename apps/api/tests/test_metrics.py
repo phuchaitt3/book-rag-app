@@ -1,15 +1,19 @@
 import re
+import time
 from collections.abc import AsyncIterator, Sequence
+from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from book_rag.providers import FakeEmbedder
+from book_rag.providers import FakeEmbedder, FakeLLM
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
 from book_rag_api.config import Settings
 from book_rag_api.main import create_app
-from book_rag_api.metrics import Metrics
+from book_rag_api.metrics import JobRow, Metrics
+from book_rag_api.models import Book
+from book_rag_api.routers.chat import answer_events
 
 UNREACHABLE_DB = "postgresql+asyncpg://x:x@127.0.0.1:1/x"
 
@@ -70,11 +74,13 @@ async def test_two_apps_do_not_share_counters() -> None:
 
 class OneChunkSearcher:
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int
+        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         return [RetrievedChunk(id=uuid4(), text="x", page=1, section_path=None)]
 
-    async def text_search(self, book_id: UUID, query: str, limit: int) -> list[RetrievedChunk]:
+    async def text_search(
+        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+    ) -> list[RetrievedChunk]:
         return []
 
 
@@ -88,9 +94,71 @@ async def test_retrieval_reports_stages_and_a_fallback_into_the_registry() -> No
     retriever = HybridRetriever(
         OneChunkSearcher(), FakeEmbedder(), DownReranker(), observer=metrics
     )
-    await retriever.retrieve(uuid4(), "q")
+    await retriever.retrieve(uuid4(), "q", owner_id="u")
     text = metrics.render().decode()
     assert sample(text, 'rerank_fallbacks_total{reason="timeout"}') == 1.0
     assert sample(text, "retrieval_duration_seconds_count") == 1.0
     for stage in ("embed", "search", "rerank"):
         assert sample(text, f'retrieval_stage_duration_seconds_count{{stage="{stage}"}}') == 1.0
+
+
+async def test_first_token_is_timed_for_a_model_answer_only() -> None:
+    metrics = Metrics()
+    book = Book(id=uuid4(), title="Sach")
+    chunk = RetrievedChunk(id=uuid4(), text="x", page=1, section_path=None)
+    started = time.perf_counter() - 3.0
+    _ = [
+        p
+        async for p in answer_events(
+            FakeLLM("a b c"), book, "q", [chunk], metrics=metrics, started=started
+        )
+    ]
+    _ = [
+        p
+        async for p in answer_events(
+            FakeLLM("a"), book, "q", [], abstain="no_passages", metrics=metrics, started=started
+        )
+    ]
+    text = metrics.render().decode()
+    assert sample(text, "chat_first_token_duration_seconds_count") == 1.0
+    assert sample(text, "chat_first_token_duration_seconds_sum") >= 3.0
+
+
+async def test_job_gauges_are_computed_from_the_rows_at_scrape_time() -> None:
+    now = datetime.now(UTC)
+    rows = [
+        JobRow("queued", 2, now - timedelta(seconds=120), None),
+        JobRow("running", 1, now - timedelta(seconds=300), now - timedelta(seconds=90)),
+        JobRow("failed", 4, now - timedelta(days=1), now - timedelta(days=1)),
+    ]
+
+    async def read() -> list[JobRow]:
+        return rows
+
+    metrics = Metrics()
+    await metrics.refresh_jobs(read)
+    text = metrics.render().decode()
+    assert sample(text, 'ingestion_jobs{status="queued"}') == 2.0
+    assert sample(text, 'ingestion_jobs{status="running"}') == 1.0
+    assert sample(text, 'ingestion_jobs{status="failed"}') == 4.0
+    assert sample(text, 'ingestion_jobs{status="succeeded"}') == 0.0
+    assert 120 <= sample(text, "ingestion_oldest_queued_age_seconds") < 130
+    assert 90 <= sample(text, "ingestion_oldest_running_age_seconds") < 100
+
+
+async def test_a_failing_job_read_drops_the_gauges_but_not_the_endpoint() -> None:
+    async def broken() -> list[JobRow]:
+        raise OSError("database down")
+
+    metrics = Metrics()
+    await metrics.refresh_jobs(broken)
+    text = metrics.render().decode()
+    assert "ingestion_jobs" not in text
+    assert "# TYPE http_request_duration_seconds histogram" in text
+
+
+async def test_metrics_endpoint_survives_an_unreachable_database(client: AsyncClient) -> None:
+    response = await client.get("/metrics")
+    assert response.status_code == 200
+    assert "ingestion_jobs" not in response.text
+    assert "# TYPE chat_first_token_duration_seconds histogram" in response.text

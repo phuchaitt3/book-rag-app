@@ -5,6 +5,7 @@ from uuid import uuid4
 
 from book_rag.providers import FakeLLM
 from book_rag.retrieval import RetrievedChunk
+from book_rag_api.auth import DEV_OWNER
 from book_rag_api.config import Settings
 from book_rag_api.metrics import Metrics
 from book_rag_api.models import Book
@@ -49,7 +50,7 @@ async def test_abstain_stream_has_no_citations_and_never_reaches_the_model() -> 
             raise AssertionError("the model must not be called")
 
     metrics = Metrics()
-    book = Book(id=uuid4(), title="Sach")
+    book = Book(id=uuid4(), title="Sach", owner_id=DEV_OWNER)
     text = "".join(
         [
             piece
@@ -72,7 +73,7 @@ async def test_abstain_stream_has_no_citations_and_never_reaches_the_model() -> 
 
 
 async def test_a_normal_stream_is_not_abstained() -> None:
-    book = Book(id=uuid4(), title="Sach")
+    book = Book(id=uuid4(), title="Sach", owner_id=DEV_OWNER)
     text = "".join(
         [p async for p in answer_events(FakeLLM("a [1]"), book, "q", [chunk(0.9, reranked=True)])]
     )

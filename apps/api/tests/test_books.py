@@ -15,6 +15,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from testcontainers.community.postgres import PostgresContainer
 
+from book_rag_api.auth import DEV_OWNER, DEV_USER_HEADER
 from book_rag_api.config import Settings
 from book_rag_api.main import create_app
 from book_rag_api.models import Book, IngestionJob
@@ -31,6 +32,9 @@ class FakeStorage:
 
     async def read(self, key: str) -> bytes:
         return self.objects[key]
+
+    async def delete(self, key: str) -> None:
+        self.objects.pop(key, None)
 
 
 def make_pdf(pages: int) -> bytes:
@@ -73,7 +77,9 @@ async def client(database_url: str, storage: FakeStorage) -> AsyncIterator[Async
     app = create_app(settings, storage=storage, queue=queue)
     async with app.router.lifespan_context(app):
         transport = ASGITransport(app=app)
-        async with AsyncClient(transport=transport, base_url="http://test") as c:
+        async with AsyncClient(
+            transport=transport, base_url="http://test", headers={DEV_USER_HEADER: DEV_OWNER}
+        ) as c:
             yield c
 
 

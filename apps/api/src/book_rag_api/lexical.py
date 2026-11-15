@@ -1,8 +1,9 @@
 """BM25 over Postgres full-text data, from stored per-book statistics (ADR 0011).
 
 `refresh_book_stats` writes the statistics when a book's chunks are written; `BM25_SEARCH`
-ranks with them. Terms are the lexemes of the `simple` text search configuration, the same as
-`chunks.tsv`, so query and chunks tokenise alike.
+ranks with them. Terms are the lexemes of the `simple` text search configuration plus
+adjacent-word pairs (`chunks.tsv_bi`, #95: a stand-in for word segmentation that needs no
+dependency), so query and chunks tokenise alike.
 """
 
 from uuid import UUID
@@ -18,10 +19,11 @@ RARE_SHARE = 0.2
 
 _REFRESH = (
     "UPDATE chunks SET token_count = "
-    "(SELECT coalesce(sum(cardinality(positions)), 0) FROM unnest(tsv)) WHERE book_id = :book_id",
+    "(SELECT coalesce(sum(cardinality(positions)), 0) FROM unnest(tsv_bi)) "
+    "WHERE book_id = :book_id",
     "DELETE FROM book_terms WHERE book_id = :book_id",
     "INSERT INTO book_terms (book_id, term, df) "
-    "SELECT c.book_id, u.lexeme, count(*) FROM chunks c, unnest(c.tsv) u "
+    "SELECT c.book_id, u.lexeme, count(*) FROM chunks c, unnest(c.tsv_bi) u "
     "WHERE c.book_id = :book_id GROUP BY 1, 2",
 )
 
@@ -35,40 +37,47 @@ async def refresh_book_stats(session: AsyncSession, book_id: UUID) -> None:
         await session.execute(text(statement), {"book_id": book_id})
 
 
-async def has_stats(session: AsyncSession, book_id: UUID) -> bool:
+async def has_stats(session: AsyncSession, book_id: UUID, owner_id: str) -> bool:
     """Whether the book's statistics exist (a book ingested before they were written has none)."""
     found = await session.scalar(
-        text("SELECT EXISTS (SELECT 1 FROM book_terms WHERE book_id = :book_id)"),
-        {"book_id": book_id},
+        text(
+            "SELECT EXISTS (SELECT 1 FROM book_terms t JOIN books b ON b.id = t.book_id"
+            " WHERE t.book_id = :book_id AND b.owner_id = :owner_id)"
+        ),
+        {"book_id": book_id, "owner_id": owner_id},
     )
     return bool(found)
 
 
-# Candidates are the chunks the GIN index finds for the query's rare words (all words when none
-# is rare); each is scored over every query word that the book contains. A term is quoted for
-# `to_tsquery`, so punctuation inside a lexeme (a URL, an e-mail) cannot be read as syntax.
+# Both `s` and `cands` check that the book belongs to :owner_id, so another owner's book gives
+# no rows. Candidates are the chunks the GIN index finds for the query's rare words (all words
+# when none is rare); each is scored over every query word that the book contains. A term is
+# quoted and cast to `tsquery`, which takes a quoted lexeme as it is (a pair 'hoc sinh' stays one
+# lexeme, and punctuation inside a lexeme cannot be read as syntax).
 BM25_SEARCH = text(
     r"""
 WITH q AS (
   SELECT lexeme AS term, cardinality(positions) AS qtf
-  FROM unnest(to_tsvector('simple', :query))
+  FROM unnest(to_tsvector('simple', :query) || bigram_tsvector(:query))
 ), s AS (
   SELECT count(*)::float AS n, nullif(avg(token_count), 0)::float AS avgdl
   FROM chunks WHERE book_id = :book_id
+    AND EXISTS (SELECT 1 FROM books WHERE id = :book_id AND owner_id = :owner_id)
 ), qt AS (
   SELECT q.term, q.qtf, t.df::float AS df,
          '''' || replace(replace(q.term, '\', '\\'), '''', '''''') || '''' AS quoted
   FROM q JOIN book_terms t ON t.term = q.term AND t.book_id = :book_id
 ), cands AS (
-  SELECT c.id, c.text, c.page, c.section_path, c.tsv, c.token_count
+  SELECT c.id, c.text, c.page, c.section_path, c.tsv_bi, c.token_count
   FROM chunks c
   WHERE c.book_id = :book_id
-    AND c.tsv @@ to_tsquery('simple', coalesce(
+    AND EXISTS (SELECT 1 FROM books b WHERE b.id = c.book_id AND b.owner_id = :owner_id)
+    AND c.tsv_bi @@ CAST(coalesce(
       (SELECT string_agg(quoted, ' | ') FROM qt WHERE df <= :share * (SELECT n FROM s)),
-      (SELECT string_agg(quoted, ' | ') FROM qt)))
+      (SELECT string_agg(quoted, ' | ') FROM qt)) AS tsquery)
 )
 SELECT d.id, d.text, d.page, d.section_path
-FROM cands d, unnest(d.tsv) u JOIN qt ON qt.term = u.lexeme, s
+FROM cands d, unnest(d.tsv_bi) u JOIN qt ON qt.term = u.lexeme, s
 GROUP BY d.id, d.text, d.page, d.section_path, d.token_count, s.avgdl, s.n
 ORDER BY sum(qt.qtf * ln(1 + (s.n - qt.df + 0.5) / (qt.df + 0.5))
              * cardinality(u.positions) * (:k1 + 1)

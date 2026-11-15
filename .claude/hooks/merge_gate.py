@@ -30,19 +30,13 @@ from collections.abc import Callable, Sequence
 # it adds no secret value or unauthenticated port. Under `.claude/` only the settings files are
 # listed: they hold the allow rules and the hook registrations. Whether a hook's code change
 # makes it refuse less is a judgment call, so the reviewer carries that check (CLAUDE.md).
+# `infra/` and deploy config (Dockerfiles, `neon.ts`, `vercel.json`) were listed until 2026-11-15
+# and are ordinary files now (user's decision): the reviewer reads the diff, says what it checked.
 USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"^\.claude/settings[^/]*\.json$", "agent permissions and hook registration (.claude/)"),
-    (r"^infra/", "infra/"),
-    (r"(^|/)Dockerfile[^/]*$", "deploy config (Dockerfile)"),
-    (r"(^|/)\.dockerignore$", "deploy config (.dockerignore)"),
-    (r"(^|/)(neon\.ts|vercel\.json)$", "deploy config"),
     (r"(^|/)\.env(?!\.example$)(\..*)?$", "secrets (.env)"),
     (r"\.(pem|key)$", "secrets (key file)"),
     (r"(^|/)credentials[^/]*\.json$", "secrets (credentials)"),
-    (
-        r"(^|/)(auth|authn|authz|permissions?|sessions?)(/|\.[a-z]+$)",
-        "authentication/authorization",
-    ),
     (r"^(LICENSE|SECURITY\.md)$", "licensing and security policy"),
 )
 

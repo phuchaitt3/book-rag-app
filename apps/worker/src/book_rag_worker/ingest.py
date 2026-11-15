@@ -7,22 +7,34 @@ from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from urllib.error import HTTPError, URLError
 
-from sqlalchemy import delete, or_, update
+from sqlalchemy import delete, or_, select, update
 from sqlalchemy.exc import InterfaceError, OperationalError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.chunking import Chunk as ParsedChunk
 from book_rag.chunking import chunk_book
-from book_rag.parsing import ParsedBook, parse_pdf
+from book_rag.parsing import NoTextError, ParsedBook, parse_pdf
 from book_rag.providers import Embedder
+from book_rag.reading import PageReader, PageReadError, render_pages
+from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.lexical import refresh_book_stats
-from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, Section
+from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, PageRead, Section
 from book_rag_api.observability import bind_log_context, book_id_var
 from book_rag_api.qdrant_index import QdrantVectorIndex
 
 log = logging.getLogger(__name__)
 
 ReadPdf = Callable[[str], bytes]
+
+# Spans per ingestion stage (#225). `__main__` installs a real tracer when
+# OTEL_EXPORTER_OTLP_ENDPOINT is set; until then every span is a no-op.
+_tracer: Tracer = NoopTracer()
+
+
+def set_tracer(tracer: Tracer | None) -> None:
+    global _tracer
+    _tracer = tracer or NoopTracer()
+
 
 _MAX_ERROR_CHARS = 2000
 
@@ -88,6 +100,69 @@ def _chunk_rows(
     ]
 
 
+async def _set_pages_read(engine: AsyncEngine, job_id: uuid.UUID, count: int) -> None:
+    async with AsyncSession(engine) as session:
+        await session.execute(
+            update(IngestionJob).where(IngestionJob.id == job_id).values(pages_read=count)
+        )
+        await session.commit()
+
+
+async def read_flagged_pages(
+    engine: AsyncEngine,
+    job_id: uuid.UUID,
+    book_id: uuid.UUID,
+    pdf: bytes,
+    flagged: tuple[int, ...],
+    reader: PageReader,
+) -> dict[int, str]:
+    """Text of every flagged page, reading only the pages not stored yet for this reader.
+
+    Each page is stored as soon as it is read (key: book, page, reader, reader version), so a
+    retry or a re-run continues where the last attempt stopped and never duplicates a row. A
+    page that fails to render or read is logged and left out; the book goes on without it, and
+    a later run tries it again. A page that reads as empty is stored and is not an error.
+    """
+    async with AsyncSession(engine) as session:
+        rows = await session.execute(
+            select(PageRead.page, PageRead.text).where(
+                PageRead.book_id == book_id,
+                PageRead.reader == reader.name,
+                PageRead.reader_version == reader.version,
+                PageRead.page.in_(flagged),
+            )
+        )
+        texts = {page: text for page, text in rows}
+    await _set_pages_read(engine, job_id, len(texts))
+    todo = [page for page in flagged if page not in texts]
+    pages = iter(render_pages(pdf, todo))
+    while (rendered := await asyncio.to_thread(next, pages, None)) is not None:
+        if rendered.image is None:
+            log.warning(
+                "page %s of book %s not rendered: %s", rendered.page, book_id, rendered.error
+            )
+            continue
+        try:
+            text = await asyncio.to_thread(reader.read, rendered.image)
+        except PageReadError as exc:
+            log.warning("page %s of book %s not read: %s", rendered.page, book_id, exc)
+            continue
+        async with AsyncSession(engine) as session:
+            await session.merge(
+                PageRead(
+                    book_id=book_id,
+                    page=rendered.page,
+                    reader=reader.name,
+                    reader_version=reader.version,
+                    text=text,
+                )
+            )
+            await session.commit()
+        texts[rendered.page] = text
+        await _set_pages_read(engine, job_id, len(texts))
+    return texts
+
+
 async def _set_stage(engine: AsyncEngine, job_id: uuid.UUID, stage: str) -> None:
     async with AsyncSession(engine) as session:
         await session.execute(
@@ -149,6 +224,7 @@ async def _run(
     embedder: Embedder,
     batch_size: int,
     index: QdrantVectorIndex | None = None,
+    page_reader: PageReader | None = None,
 ) -> None:
     if embedder.dimension != EMBEDDING_DIM:
         raise ValueError(f"embedder dimension {embedder.dimension} != column {EMBEDDING_DIM}")
@@ -166,45 +242,88 @@ async def _run(
         job.started_at, job.finished_at = _now(), None
         await session.commit()
 
-    parsed = await asyncio.to_thread(lambda: parse_pdf(read_pdf(storage_key), title=title))
+    with _tracer.span("ingest.parse", book_id=str(book_id)) as span:
+        pdf = await asyncio.to_thread(read_pdf, storage_key)
+        # With a reader, an all-flagged book is not an error yet: its pages are read below.
+        parsed = await asyncio.to_thread(
+            lambda: parse_pdf(pdf, title=title, check_text=page_reader is None)
+        )
+        span.set_attribute("pages", parsed.page_count)
+        span.set_attribute("pages_flagged", len(parsed.flagged_pages))
+
+    async with AsyncSession(engine) as session:
+        await session.execute(
+            update(IngestionJob)
+            .where(IngestionJob.id == job_id)
+            .values(pages_flagged=len(parsed.flagged_pages), pages_read=0)
+        )
+        await session.commit()
+
+    if page_reader is not None:
+        if parsed.flagged_pages:
+            await _set_stage(engine, job_id, "read")
+            with _tracer.span(
+                "ingest.read", book_id=str(book_id), pages=len(parsed.flagged_pages)
+            ) as span:
+                read_text = await read_flagged_pages(
+                    engine, job_id, book_id, pdf, parsed.flagged_pages, page_reader
+                )
+                span.set_attribute("pages_read", len(read_text))
+            # Parse again with the read text in place of the thin text layer of those pages.
+            parsed = await asyncio.to_thread(
+                lambda: parse_pdf(pdf, title=title, read_text=read_text)
+            )
+        elif not parsed.sections:
+            raise NoTextError("no usable text layer found; scanned PDFs need OCR")
 
     await _set_stage(engine, job_id, "chunk")
-    chunks = await asyncio.to_thread(chunk_book, parsed)
+    with _tracer.span("ingest.chunk", book_id=str(book_id)) as span:
+        chunks = await asyncio.to_thread(chunk_book, parsed)
+        span.set_attribute("chunks", len(chunks))
     sections = _section_rows(book_id, parsed)
     chunk_rows = _chunk_rows(book_id, sections, chunks)
     to_embed = [(c.id, c.text) for c in chunk_rows]  # plain values: the ORM rows expire on commit
     # Replace what an earlier attempt stored, so a re-run never duplicates ordinals.
-    async with AsyncSession(engine) as session:
-        await session.execute(delete(Chunk).where(Chunk.book_id == book_id))
-        await session.execute(delete(Section).where(Section.book_id == book_id))
-        await session.execute(
-            update(Book).where(Book.id == book_id).values(page_count=parsed.page_count)
-        )
-        session.add_all(sections)
-        await session.flush()  # sections first: chunks reference them
-        session.add_all(chunk_rows)
-        await session.flush()
-        await refresh_book_stats(session, book_id)  # BM25 statistics (ADR 0011)
-        await session.commit()
+    with _tracer.span("ingest.store", book_id=str(book_id), chunks=len(chunk_rows)):
+        async with AsyncSession(engine) as session:
+            await session.execute(delete(Chunk).where(Chunk.book_id == book_id))
+            await session.execute(delete(Section).where(Section.book_id == book_id))
+            await session.execute(
+                update(Book).where(Book.id == book_id).values(page_count=parsed.page_count)
+            )
+            session.add_all(sections)
+            await session.flush()  # sections first: chunks reference them
+            session.add_all(chunk_rows)
+            await session.flush()
+            await refresh_book_stats(session, book_id)  # BM25 statistics (ADR 0011)
+            await session.commit()
 
     await _set_stage(engine, job_id, "embed")
-    if index is not None:
-        await index.delete_book(book_id)  # a re-run replaced the chunk ids, so drop the old points
-    for start in range(0, len(to_embed), batch_size):
-        batch = to_embed[start : start + batch_size]
-        vectors = await embedder.embed([text for _, text in batch])
-        async with AsyncSession(engine) as session:
-            await session.execute(
-                update(Chunk),
-                [{"id": id_, "embedding": v} for (id_, _), v in zip(batch, vectors, strict=True)],
-            )
-            await session.commit()  # commit per batch so the API shows progress
+    with _tracer.span("ingest.embed", book_id=str(book_id), chunks=len(to_embed)) as span:
         if index is not None:
-            # After the commit, so Qdrant never holds a vector Postgres lost. An upsert is
-            # idempotent, so a retried batch is harmless.
-            await index.upsert(
-                book_id, [(id_, v) for (id_, _), v in zip(batch, vectors, strict=True)]
-            )
+            # A re-run replaced the chunk ids, so drop the old points.
+            await index.delete_book(book_id)
+        batches = 0
+        for start in range(0, len(to_embed), batch_size):
+            batch = to_embed[start : start + batch_size]
+            vectors = await embedder.embed([text for _, text in batch])
+            async with AsyncSession(engine) as session:
+                await session.execute(
+                    update(Chunk),
+                    [
+                        {"id": id_, "embedding": v}
+                        for (id_, _), v in zip(batch, vectors, strict=True)
+                    ],
+                )
+                await session.commit()  # commit per batch so the API shows progress
+            if index is not None:
+                # After the commit, so Qdrant never holds a vector Postgres lost. An upsert is
+                # idempotent, so a retried batch is harmless.
+                await index.upsert(
+                    book_id, [(id_, v) for (id_, _), v in zip(batch, vectors, strict=True)]
+                )
+            batches += 1
+        span.set_attribute("batches", batches)
 
     async with AsyncSession(engine) as session:
         await session.execute(
@@ -223,17 +342,21 @@ async def run_ingestion(
     batch_size: int = 32,
     attempts: int = MAX_RETRIES,
     index: QdrantVectorIndex | None = None,
+    page_reader: PageReader | None = None,
 ) -> None:
     """Run one job to the end. A failure is recorded on the job (status `failed`), not raised.
 
     `attempts` is how many times the job has run before. A transient failure with retries left
     puts the job back to `queued` and raises `TransientIngestionError` for the queue to retry;
-    the default means no retries are left.
+    the default means no retries are left. With a `page_reader`, flagged image-only pages are
+    read in a `read` stage; without one they are skipped (and an all-flagged book fails).
     """
     book_token = book_id_var.set(None)
     try:
         with bind_log_context(job_id=job_id):
-            await _run_and_record(engine, job_id, read_pdf, embedder, batch_size, attempts, index)
+            await _run_and_record(
+                engine, job_id, read_pdf, embedder, batch_size, attempts, index, page_reader
+            )
     finally:
         book_id_var.reset(book_token)
 
@@ -246,9 +369,11 @@ async def _run_and_record(
     batch_size: int,
     attempts: int,
     index: QdrantVectorIndex | None,
+    page_reader: PageReader | None,
 ) -> None:
     try:
-        await _run(engine, job_id, read_pdf, embedder, batch_size, index)
+        with _tracer.span("ingest.job", job_id=str(job_id), attempts=attempts):
+            await _run(engine, job_id, read_pdf, embedder, batch_size, index, page_reader)
     except asyncio.CancelledError:
         # The worker is shutting down and its grace period ran out (#228). Put the job back to
         # `queued` so it is runnable, not left `running` for the stuck-job sweep to fail. The

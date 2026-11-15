@@ -35,6 +35,13 @@ class WorkerSettings(BaseSettings):
     # seconds; after that the job goes back to the queue (#228). Keep it under the platform's
     # termination grace period (Kubernetes: 30 s by default).
     shutdown_timeout: float = Field(default=20.0, ge=0)
+    # Reading image-only pages (brief-image-pages.md): "none" skips them, "tesseract" runs the
+    # tesseract binary (a system package) on each flagged page.
+    page_reader: Literal["none", "tesseract"] = "none"
+    tesseract_languages: str = "vie+eng"
+    tesseract_command: str = "tesseract"
+    # Tracing (#225): off unless set, for example http://localhost:4318.
+    otel_exporter_otlp_endpoint: str | None = None
     # A job queued or running longer than this is failed by the periodic sweep.
     stuck_job_minutes: int = 60
 

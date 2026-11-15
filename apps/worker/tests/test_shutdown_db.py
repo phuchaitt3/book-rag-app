@@ -10,11 +10,11 @@ from collections.abc import Sequence
 from pathlib import Path
 
 import pytest
+from conftest import make_pdf
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
-from test_ingestion import database_url as _database_url  # noqa: F401
-from test_ingestion import make_pdf
 
+from book_rag_api.auth import DEV_OWNER
 from book_rag_api.jobs import enqueue_ingestion
 from book_rag_api.models import EMBEDDING_DIM, Book, IngestionJob
 from book_rag_worker.__main__ import init_schema, run
@@ -38,8 +38,8 @@ class BlockingEmbedder:
 
 
 @pytest.fixture
-def url(_database_url: str) -> str:  # noqa: F811
-    return _database_url
+def url(database_url: str) -> str:
+    return database_url
 
 
 async def start_job(
@@ -54,8 +54,13 @@ async def start_job(
     )
     worker = build_worker(settings, embedder=embedder)  # type: ignore[arg-type]
     await init_schema(worker)
+    # The database is shared by the whole module, and a test that interrupts a job leaves it in
+    # the queue as `todo`. The next test's worker would pick that older job first and leave its
+    # own untouched, so each test starts from an empty queue.
+    async with worker.engine.begin() as conn:
+        await conn.execute(text("TRUNCATE procrastinate_jobs RESTART IDENTITY CASCADE"))
     async with AsyncSession(worker.engine) as session:
-        book = Book(title="Sách thử", storage_key="book.pdf")
+        book = Book(title="Sách thử", storage_key="book.pdf", owner_id=DEV_OWNER)
         session.add(book)
         await session.flush()
         book_id = book.id

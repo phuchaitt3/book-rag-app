@@ -15,7 +15,32 @@ Seconds, 30 counted questions per arm, no errors in either arm. Nearest-rank med
 
 Raw records and summaries, with the conditions the script captured: [experiments/serving/results/](../../experiments/serving/results/) (`qwen3b-rerank-off*`, `qwen3b-rerank-on*`).
 
-## Conditions
+## Larger run: 208 questions per arm (#259)
+
+The first run (30 questions per arm, above) had no confidence interval. This run repeats it with 208 counted questions per arm ([questions-208.json](../../experiments/serving/questions-208.json); the first 3 are warm-up), the same answer model, book, GPU and one-request-at-a-time method. The metric was fixed before the run: median, p90, p95 and p99 of time to first token and of whole-answer time. The 95% intervals are percentile bootstraps (10,000 resamples, seed 259) of the median and the p90; p95 and p99 have no interval, because 208 values hold only 10 values at or above the p95 rank, and 3 at or above p99.
+
+Seconds, 208 counted questions per arm, no errors in either arm. Brackets are 95% intervals.
+
+| Arm | Timing | Median | p90 | p95 | p99 |
+|---|---|---|---|---|---|
+| Reranker off | Citations | 0.15 [0.14, 0.15] | 0.19 [0.18, 0.22] | 0.23 | 0.65 |
+| Reranker off | First token | 8.24 [8.06, 8.32] | 9.09 [8.89, 9.32] | 9.42 | 9.83 |
+| Reranker off | Whole answer | 8.74 [8.50, 8.90] | 10.18 [9.86, 10.56] | 10.63 | 13.02 |
+| Reranker on | Citations | 2.86 [2.84, 2.89] | 3.10 [3.05, 3.15] | 3.30 | 5.18 |
+| Reranker on | First token | 11.06 [10.87, 11.22] | 12.22 [11.99, 12.43] | 12.50 | 14.35 |
+| Reranker on | Whole answer | 11.60 [11.49, 11.77] | 13.26 [12.97, 13.84] | 14.53 | 19.24 |
+
+The reranker adds about 2.8 s to the median first token (8.24 to 11.06 s) and about 2.9 s to the median whole answer; the intervals of the two arms do not overlap for any median or p90. The 208-question medians agree with the 30-question run within 0.3 s. The p99 of the whole answer (19.2 s with the reranker) rests on 3 values and is the least stable figure.
+
+Raw records and summaries: [experiments/serving/results/](../../experiments/serving/results/) (`qwen3b-208-rerank-on*`, `qwen3b-208-rerank-off*`).
+
+Differences from the first run and between the two arms of this one:
+
+- The arms were run hours apart, not interleaved. Arm "on" ran at API commit `bbdb38b`, arm "off" at `dbc8e2b` (after the merge of `main`, which adds tracing and other changes outside the chat path); the book was ingested again for arm "off", with the same file and the same chunking.
+- Free RAM was 0.64 GB at arm "on" and 0.82 GB at arm "off" ("free_ram_gb" in the summaries); the reranker container stayed up in arm "off", as in the first run.
+- The arms are therefore not a controlled pair; a difference under a few tenths of a second would not be a safe reading.
+
+## Conditions (first run)
 
 | Item | Value |
 |---|---|
@@ -61,7 +86,7 @@ BOOK_ID=<id> LABEL=qwen3b-rerank-on LLM_MODEL=qwen2.5:3b-instruct \
 
 ## Limits
 
-- **Small sample:** 30 questions per arm, one run each, no repeats and no confidence interval.
+- **One run per arm:** 30 questions per arm in the first run and 208 in the larger one (#259), one run each, no repeats; the larger run has bootstrap intervals for the median and p90 only, and the arms ran at different times and commits.
 - **One laptop:** a 6 GB consumer GPU shared by the answer model, the embedder and the reranker, with little free RAM. Other hardware will differ.
 - **Local, not production:** production would call hosted models (ADR 0003), and this says nothing about them.
 - **One user:** sequential requests; nothing here shows behaviour under concurrent load.

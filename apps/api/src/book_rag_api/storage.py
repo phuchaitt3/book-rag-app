@@ -13,6 +13,8 @@ class ObjectStorage(Protocol):
 
     async def read(self, key: str) -> bytes: ...
 
+    async def delete(self, key: str) -> None: ...
+
 
 class S3Storage:
     """boto3 is blocking, so each call runs in a thread."""
@@ -54,3 +56,6 @@ class S3Storage:
 
     async def read(self, key: str) -> bytes:
         return await asyncio.to_thread(self.read_blocking, key)
+
+    async def delete(self, key: str) -> None:
+        await asyncio.to_thread(self._client.delete_object, Bucket=self._bucket, Key=key)

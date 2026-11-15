@@ -27,10 +27,11 @@ It recovers the 11 points the full-text leg costs, keeps one database (ADR 0002)
 ## Consequences
 
 - A migration adds `chunks.token_count` and `book_terms`, with a backfill for existing books; the term table is about 8,000 rows for a 392-chunk book (measured).
-- Tokenisation stays Postgres's `simple` configuration, so accents are not folded ([#95](https://github.com/phuchaitt3/book-rag-app/issues/95)).
+- Tokenisation stays Postgres's `simple` configuration, so accents are not folded: unaccent was measured and lowers fused Hit@5 on accented questions. Terms also include adjacent-word pairs (`chunks.tsv_bi`, migration 0007), which raised fused Hit@5 to 90.4% (PDF) and 89.9% (HTML) at about 1.6 times the index size and 7 times the term rows ([#95](https://github.com/phuchaitt3/book-rag-app/issues/95), [fts-options.md](../benchmarks/fts-options.md); not a held-out result).
 - One book and two chunkings were measured; growth with book size and with several books is argued, not measured ([#208](https://github.com/phuchaitt3/book-rag-app/issues/208)).
 - Next step as load grows: partition or cap `book_terms`, then an engine.
 
 ## Change log
 
 - 2026-11-14: proposed, with the measurements above ([#208](https://github.com/phuchaitt3/book-rag-app/issues/208)).
+- 2026-11-15: terms now include adjacent-word pairs (`tsv_bi`), by the exit rule set before the measurement ([#95](https://github.com/phuchaitt3/book-rag-app/issues/95)).

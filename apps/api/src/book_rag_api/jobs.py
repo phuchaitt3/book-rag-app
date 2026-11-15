@@ -10,8 +10,9 @@ from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
+from book_rag_api.auth import Owner
 from book_rag_api.db import to_asyncpg_url
-from book_rag_api.models import Chunk, IngestionJob
+from book_rag_api.models import Book, Chunk, IngestionJob
 
 # The task the worker registers under this name; the API defers it without importing the worker.
 INGEST_TASK = "ingest_book"
@@ -51,6 +52,8 @@ class IngestionProgress(BaseModel):
     status: str
     stage: str | None
     error: str | None
+    pages_flagged: int
+    pages_read: int
     created_at: datetime
     started_at: datetime | None
     finished_at: datetime | None
@@ -68,11 +71,16 @@ def _engine(request: Request) -> AsyncEngine:
 
 @router.get("/ingestion-jobs/{job_id}")
 async def get_ingestion_job(
-    job_id: uuid.UUID, engine: Annotated[AsyncEngine, Depends(_engine)]
+    job_id: uuid.UUID, owner: Owner, engine: Annotated[AsyncEngine, Depends(_engine)]
 ) -> IngestionProgress:
-    """Status, current stage and, while embedding, how many chunks are done."""
+    """Status, current stage and, while embedding, how many chunks are done. A job of another
+    owner's book is 404, the same as a missing job."""
     async with AsyncSession(engine) as session:
-        job = await session.get(IngestionJob, job_id)
+        job = await session.scalar(
+            select(IngestionJob)
+            .join(Book, Book.id == IngestionJob.book_id)
+            .where(IngestionJob.id == job_id, Book.owner_id == owner)
+        )
         if job is None:
             raise HTTPException(status_code=404, detail="ingestion job not found")
         total, embedded = (
@@ -88,6 +96,8 @@ async def get_ingestion_job(
         status=job.status,
         stage=job.stage,
         error=job.error,
+        pages_flagged=job.pages_flagged,
+        pages_read=job.pages_read,
         created_at=job.created_at,
         started_at=job.started_at,
         finished_at=job.finished_at,

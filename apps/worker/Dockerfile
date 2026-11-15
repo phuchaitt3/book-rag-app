@@ -17,6 +17,8 @@ COPY packages/rag/src packages/rag/src
 RUN uv sync --frozen --no-dev --package book-rag-worker
 
 FROM python:3.12-slim
+# OCR for image-only pages (PAGE_READER=tesseract); Vietnamese and English language packs.
+RUN apt-get update && apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng && rm -rf /var/lib/apt/lists/*
 RUN useradd --create-home app
 WORKDIR /app
 COPY --from=base --chown=app:app /app /app

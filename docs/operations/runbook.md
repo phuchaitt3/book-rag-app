@@ -30,6 +30,13 @@ One entry per alert in [alerts.yml](alerts.yml). Targets: [slo.md](slo.md). The 
 **Checks.** Does slowness follow idle gaps? Compare the stage histograms with the benchmark.
 **Fix.** Longer keep-alive. If the target no longer fits the hardware, change it in slo.md with a new measurement, not by silencing the alert.
 
+## ChatFirstTokenSlow
+
+**Symptom.** Ticket. Over 30% of model answers need more than 20 s before the first token (SLO 5; benchmark p90: 11.88 s with the reranker, 8.93 s without). Abstained replies are not counted.
+**Likely causes.** The model is loading after an idle spell or a GPU swap (cold start 22 s for the 3B model, 127 s for the 7B); retrieval is slow (`RetrievalSlow` fires too); the model reads very long passages.
+**Checks.** Dashboard panels "First token latency" and "Retrieval latency by stage": retrieval time plus about 8 s of model reading is the normal floor. `ollama ps`; `nvidia-smi`.
+**Fix.** As `ChatLatencyFastBurn`: smaller model, reranker off on a 6 GB card, longer `OLLAMA_KEEP_ALIVE`, warm the model after a restart.
+
 ## RetrievalSlow
 
 **Symptom.** Ticket. Over 30% of questions need more than 5 s before the citations (benchmark p90: 2.97 s with the reranker, 0.16 s without).
@@ -60,7 +67,14 @@ One entry per alert in [alerts.yml](alerts.yml). Targets: [slo.md](slo.md). The 
 
 ## IngestionUploadErrors
 
-**Symptom.** Ticket. More than 20% of `POST /books` uploads answer 5xx. There is no metric for a stuck job (slo.md, "What the metrics cannot show yet"), so this is the proxy.
+**Symptom.** Ticket. More than 20% of `POST /books` uploads answer 5xx. Jobs stuck after the upload are `IngestionStuck`.
 **Likely causes.** Object storage (S3) or the database is unavailable; the file store is full.
 **Checks.** API logs for the 5xx. For stuck jobs, ask the database: select the rows of `ingestion_jobs` whose status is not a final one (status names in `apps/api/src/book_rag_api/models.py`), oldest first, and call `GET /ingestion-jobs/{job_id}` on them.
 **Fix.** Restore the dependency; re-upload the failed books. Jobs that stay unfinished after the cause is gone need re-queuing by hand.
+
+## IngestionStuck
+
+**Symptom.** Ticket. The oldest queued job has waited over 15 minutes (`ingestion_oldest_queued_age_seconds`), or a job has been running over an hour (`ingestion_oldest_running_age_seconds`). Dashboard panel "Ingestion queue depth" shows the counts by status.
+**Likely causes.** The procrastinate worker is not running or cannot reach the database; it crashed mid-job and left the row `running`; the embedding model is down so every job stalls; a very large book.
+**Checks.** `docker compose ps` and the worker logs; select the non-final rows of `ingestion_jobs` (status names in `apps/api/src/book_rag_api/models.py`) oldest first, or call `GET /ingestion-jobs/{job_id}`. If the gauges are missing from `/metrics`, the API could not read the table (see `ReadinessFailing`).
+**Fix.** Start the worker; restore the embedder. A job left `running` by a crash needs re-queuing by hand. A large book that is still progressing is not stuck: check its `stage` before acting.

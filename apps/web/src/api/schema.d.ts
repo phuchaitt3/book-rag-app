@@ -13,7 +13,7 @@ export interface paths {
         };
         /**
          * List Books
-         * @description All books, newest first.
+         * @description The caller's books, newest first.
          */
         get: operations["list_books_books_get"];
         put?: never;
@@ -23,6 +23,30 @@ export interface paths {
          */
         post: operations["upload_book_books_post"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/books/{book_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Book
+         * @description One of the caller's books. Another owner's book is 404, the same as a missing one.
+         */
+        get: operations["get_book_books__book_id__get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Book
+         * @description Delete one of the caller's books with its sections, chunks and jobs, and its PDF.
+         */
+        delete: operations["delete_book_books__book_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -74,7 +98,8 @@ export interface paths {
         };
         /**
          * Get Ingestion Job
-         * @description Status, current stage and, while embedding, how many chunks are done.
+         * @description Status, current stage and, while embedding, how many chunks are done. A job of another
+         *     owner's book is 404, the same as a missing job.
          */
         get: operations["get_ingestion_job_ingestion_jobs__job_id__get"];
         put?: never;
@@ -231,6 +256,10 @@ export interface components {
              * Format: uuid
              */
             id: string;
+            /** Pages Flagged */
+            pages_flagged: number;
+            /** Pages Read */
+            pages_read: number;
             /** Stage */
             stage: string | null;
             /** Started At */
@@ -325,6 +354,66 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["UploadedBook"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_book_books__book_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                book_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_book_books__book_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                book_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
