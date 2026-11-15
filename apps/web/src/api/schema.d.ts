@@ -258,6 +258,8 @@ export interface components {
             id: string;
             /** Pages Flagged */
             pages_flagged: number;
+            /** Pages Read */
+            pages_read: number;
             /** Stage */
             stage: string | null;
             /** Started At */

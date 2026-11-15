@@ -109,11 +109,13 @@ function JobProgress({ job }: { job: IngestionProgress }) {
   const percent =
     job.chunks_total > 0 ? Math.round((100 * job.chunks_embedded) / job.chunks_total) : 0;
   const label =
-    job.status === "running"
-      ? `${job.stage ?? "working"}: ${job.chunks_embedded}/${job.chunks_total} chunks embedded`
-      : job.status === "failed"
-        ? `failed: ${job.error ?? "unknown error"}`
-        : job.status;
+    job.status === "running" && job.stage === "read"
+      ? `read: ${job.pages_read}/${job.pages_flagged} image pages read`
+      : job.status === "running"
+        ? `${job.stage ?? "working"}: ${job.chunks_embedded}/${job.chunks_total} chunks embedded`
+        : job.status === "failed"
+          ? `failed: ${job.error ?? "unknown error"}`
+          : job.status;
   return (
     <div className="flex flex-col gap-1 text-sm" role="status">
       <span>Ingestion {label}</span>

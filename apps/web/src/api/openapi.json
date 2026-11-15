@@ -282,6 +282,10 @@
             "title": "Pages Flagged",
             "type": "integer"
           },
+          "pages_read": {
+            "title": "Pages Read",
+            "type": "integer"
+          },
           "stage": {
             "anyOf": [
               {
@@ -317,6 +321,7 @@
           "stage",
           "error",
           "pages_flagged",
+          "pages_read",
           "created_at",
           "started_at",
           "finished_at",
