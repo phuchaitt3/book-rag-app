@@ -1,0 +1,511 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: /load/k6/chat_reads.js
+        output: -
+
+     scenarios: (100.00%) 2 scenarios, 320 max VUs, 1m45s max duration (incl. graceful stop):
+              * chat: Up to 160 looping VUs for 1m15s over 2 stages (gracefulRampDown: 30s, exec: chat, gracefulStop: 30s)
+              * reads: Up to 160 looping VUs for 1m15s over 2 stages (gracefulRampDown: 30s, exec: reads, gracefulStop: 30s)
+
+
+running (0m00.9s), 018/320 VUs, 0 complete and 0 interrupted iterations
+chat    [   1% ] 009/160 VUs  0m00.9s/1m15.0s
+reads   [   1% ] 009/160 VUs  0m00.9s/1m15.0s
+
+running (0m01.9s), 040/320 VUs, 0 complete and 0 interrupted iterations
+chat    [   3% ] 020/160 VUs  0m01.9s/1m15.0s
+reads   [   3% ] 020/160 VUs  0m01.9s/1m15.0s
+
+running (0m02.9s), 060/320 VUs, 0 complete and 0 interrupted iterations
+chat    [   4% ] 030/160 VUs  0m02.9s/1m15.0s
+reads   [   4% ] 030/160 VUs  0m02.9s/1m15.0s
+
+running (0m03.9s), 082/320 VUs, 8 complete and 0 interrupted iterations
+chat    [   5% ] 041/160 VUs  0m03.9s/1m15.0s
+reads   [   5% ] 041/160 VUs  0m03.9s/1m15.0s
+
+running (0m04.9s), 104/320 VUs, 17 complete and 0 interrupted iterations
+chat    [   7% ] 052/160 VUs  0m04.9s/1m15.0s
+reads   [   7% ] 052/160 VUs  0m04.9s/1m15.0s
+
+running (0m05.9s), 124/320 VUs, 21 complete and 0 interrupted iterations
+chat    [   8% ] 062/160 VUs  0m05.9s/1m15.0s
+reads   [   8% ] 062/160 VUs  0m05.9s/1m15.0s
+
+running (0m06.9s), 146/320 VUs, 24 complete and 0 interrupted iterations
+chat    [   9% ] 073/160 VUs  0m06.9s/1m15.0s
+reads   [   9% ] 073/160 VUs  0m06.9s/1m15.0s
+
+running (0m07.9s), 168/320 VUs, 35 complete and 0 interrupted iterations
+chat    [  11% ] 084/160 VUs  0m07.9s/1m15.0s
+reads   [  11% ] 084/160 VUs  0m07.9s/1m15.0s
+
+running (0m08.9s), 188/320 VUs, 57 complete and 0 interrupted iterations
+chat    [  12% ] 094/160 VUs  0m08.9s/1m15.0s
+reads   [  12% ] 094/160 VUs  0m08.9s/1m15.0s
+
+running (0m09.9s), 210/320 VUs, 83 complete and 0 interrupted iterations
+chat    [  13% ] 105/160 VUs  0m09.9s/1m15.0s
+reads   [  13% ] 105/160 VUs  0m09.9s/1m15.0s
+
+running (0m10.9s), 232/320 VUs, 102 complete and 0 interrupted iterations
+chat    [  15% ] 116/160 VUs  0m10.9s/1m15.0s
+reads   [  15% ] 116/160 VUs  0m10.9s/1m15.0s
+
+running (0m11.9s), 252/320 VUs, 115 complete and 0 interrupted iterations
+chat    [  16% ] 126/160 VUs  0m11.9s/1m15.0s
+reads   [  16% ] 126/160 VUs  0m11.9s/1m15.0s
+
+running (0m12.9s), 274/320 VUs, 123 complete and 0 interrupted iterations
+chat    [  17% ] 137/160 VUs  0m12.9s/1m15.0s
+reads   [  17% ] 137/160 VUs  0m12.9s/1m15.0s
+
+running (0m13.9s), 296/320 VUs, 130 complete and 0 interrupted iterations
+chat    [  19% ] 148/160 VUs  0m13.9s/1m15.0s
+reads   [  19% ] 148/160 VUs  0m13.9s/1m15.0s
+
+running (0m14.9s), 316/320 VUs, 141 complete and 0 interrupted iterations
+chat    [  20% ] 158/160 VUs  0m14.9s/1m15.0s
+reads   [  20% ] 158/160 VUs  0m14.9s/1m15.0s
+
+running (0m15.9s), 320/320 VUs, 153 complete and 0 interrupted iterations
+chat    [  21% ] 160/160 VUs  0m15.9s/1m15.0s
+reads   [  21% ] 160/160 VUs  0m15.9s/1m15.0s
+
+running (0m16.9s), 320/320 VUs, 174 complete and 0 interrupted iterations
+chat    [  23% ] 160/160 VUs  0m16.9s/1m15.0s
+reads   [  23% ] 160/160 VUs  0m16.9s/1m15.0s
+time="2026-11-15T06:07:52Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9/chat\": read tcp 172.20.0.6:59092->172.20.0.5:8080: read: connection reset by peer"
+time="2026-11-15T06:07:52Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc/chat\": read tcp 172.20.0.6:59096->172.20.0.5:8080: read: connection reset by peer"
+time="2026-11-15T06:07:52Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:52Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728/chat\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+
+running (0m17.9s), 320/320 VUs, 186 complete and 0 interrupted iterations
+chat    [  24% ] 160/160 VUs  0m17.9s/1m15.0s
+reads   [  24% ] 160/160 VUs  0m17.9s/1m15.0s
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f/chat\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3/chat\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9/chat\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:53Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9/chat\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+
+running (0m18.9s), 320/320 VUs, 205 complete and 0 interrupted iterations
+chat    [  25% ] 160/160 VUs  0m18.9s/1m15.0s
+reads   [  25% ] 160/160 VUs  0m18.9s/1m15.0s
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:54Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": dial tcp 172.20.0.5:8080: connect: connection refused"
+
+running (0m19.9s), 320/320 VUs, 233 complete and 0 interrupted iterations
+chat    [  27% ] 160/160 VUs  0m19.9s/1m15.0s
+reads   [  27% ] 160/160 VUs  0m19.9s/1m15.0s
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:55Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="unexpected EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Post \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79/chat\": EOF"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/9d82a5df-713b-4755-9476-5addaf64d8fc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/aa25f924-10e1-44d1-9631-fdf0ca1676a9\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/fa46c03b-7d68-411f-ae13-7366c1f099d1\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/8ed9b462-e42a-46ac-8d8a-87fb2905fe90\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/6cd24bd8-4019-4a26-8a9e-68c782e5ae79\": dial tcp 172.20.0.5:8080: connect: connection refused"
+
+running (0m20.9s), 320/320 VUs, 249 complete and 0 interrupted iterations
+chat    [  28% ] 160/160 VUs  0m20.9s/1m15.0s
+reads   [  28% ] 160/160 VUs  0m20.9s/1m15.0s
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/f2b35b01-c67b-4b54-8ad0-9f4b4e689f8f\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/63edb679-98f5-4d34-acf6-033d580386bd\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/d9d2982d-72c3-4ce0-87ff-aed0d9a2b8cc\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/494cabe4-5ad9-49fe-9c55-7f7ef82d9728\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books/65e02c95-ba5a-4929-a97c-a350345ec6f3\": dial tcp 172.20.0.5:8080: connect: connection refused"
+time="2026-11-15T06:07:56Z" level=warning msg="Request Failed" error="Get \"http://api:8080/books\": dial tcp 172.20.0.5:8080: connect: connection refused"
+
+running (0m21.9s), 320/320 VUs, 284 complete and 0 interrupted iterations
+chat    [  29% ] 160/160 VUs  0m21.9s/1m15.0s
+reads   [  29% ] 160/160 VUs  0m21.9s/1m15.0s
+
+running (0m22.9s), 320/320 VUs, 331 complete and 0 interrupted iterations
+chat    [  31% ] 160/160 VUs  0m22.9s/1m15.0s
+reads   [  31% ] 160/160 VUs  0m22.9s/1m15.0s
+
+running (0m23.9s), 320/320 VUs, 444 complete and 0 interrupted iterations
+chat    [  32% ] 160/160 VUs  0m23.9s/1m15.0s
+reads   [  32% ] 160/160 VUs  0m23.9s/1m15.0s
+
+running (0m24.9s), 320/320 VUs, 460 complete and 0 interrupted iterations
+chat    [  33% ] 160/160 VUs  0m24.9s/1m15.0s
+reads   [  33% ] 160/160 VUs  0m24.9s/1m15.0s
+
+running (0m25.9s), 320/320 VUs, 461 complete and 0 interrupted iterations
+chat    [  35% ] 160/160 VUs  0m25.9s/1m15.0s
+reads   [  35% ] 160/160 VUs  0m25.9s/1m15.0s
+
+running (0m26.9s), 320/320 VUs, 463 complete and 0 interrupted iterations
+chat    [  36% ] 160/160 VUs  0m26.9s/1m15.0s
+reads   [  36% ] 160/160 VUs  0m26.9s/1m15.0s
+
+running (0m27.9s), 320/320 VUs, 466 complete and 0 interrupted iterations
+chat    [  37% ] 160/160 VUs  0m27.9s/1m15.0s
+reads   [  37% ] 160/160 VUs  0m27.9s/1m15.0s
+
+running (0m28.9s), 320/320 VUs, 472 complete and 0 interrupted iterations
+chat    [  39% ] 160/160 VUs  0m28.9s/1m15.0s
+reads   [  39% ] 160/160 VUs  0m28.9s/1m15.0s
+k6 exit=99
