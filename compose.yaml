@@ -62,6 +62,9 @@ services:
       # The answer model; on a 6 GB GPU with the reranker, qwen2.5:3b-instruct stays loaded next to
       # bge-m3 while the 7B default is swapped in and out (docs/benchmarks/serving-latency.md).
       LLM_MODEL: ${LLM_MODEL:-qwen2.5:7b-instruct}
+      # "openai" sends the answer to an OpenAI-compatible server (llama.cpp) at LLM_BASE_URL (#245).
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://host.docker.internal:8081}
       VECTOR_STORE: ${VECTOR_STORE:-pgvector}
       QDRANT_URL: http://qdrant:6333
       # Off here; compose.reranker.yaml adds the reranker service and turns it on (ADR 0009).
