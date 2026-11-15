@@ -129,6 +129,8 @@ Settings are read from environment variables. Copy [.env.example](.env.example) 
 | `LOG_FORMAT` | `text` | Log format of the API and the worker: `text` (plain, for local work) or `json` (one JSON object per line with `timestamp`, `level`, `logger`, `message` and, where known, `request_id`, `book_id`, `job_id`). Every API response carries `X-Request-ID` (the caller's, or a generated one); errors the API raises are `application/problem+json` (RFC 9457) with the same `request_id`. With tracing on, JSON log lines also carry `trace_id` |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | unset (tracing off) | OTLP/HTTP collector for traces, for example `http://127.0.0.1:4318` (Jaeger from `compose.observability.yaml`). Unset: no tracer provider or exporter is created. API and worker; see [docs/operations/tracing.md](docs/operations/tracing.md) |
 | `DATABASE_URL` | local Compose Postgres (`postgresql+asyncpg://...`) | Async SQLAlchemy connection URL |
+| `SHUTDOWN_DRAIN_TIMEOUT` | `20` | Seconds the API waits at shutdown for answers still streaming before it closes its pools; see [docs/operations/shutdown.md](docs/operations/shutdown.md) |
+| `SHUTDOWN_TIMEOUT` | `20` | Worker only: seconds the running ingestion job may take to finish after SIGTERM before it is returned to the queue |
 | `CORS_ORIGINS` | `["http://localhost:3000"]` | Origins allowed to call the API (JSON list) |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | API address the web app calls (set in `apps/web/.env.local`) |
 | `NEXT_PUBLIC_DEV_USER` | `dev-user` | User id the web app sends as `X-Dev-User` (honoured only when the API runs in `development` or `test`; `dev-user` owns the books uploaded before owners existed) |

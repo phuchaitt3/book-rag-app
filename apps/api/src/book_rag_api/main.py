@@ -29,6 +29,7 @@ from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.books import router as books_router
 from book_rag_api.config import Settings, get_settings
 from book_rag_api.db import create_engine, ping
+from book_rag_api.draining import StreamTracker
 from book_rag_api.jobs import create_queue
 from book_rag_api.jobs import router as jobs_router
 from book_rag_api.metrics import Metrics, MetricsMiddleware, read_job_rows
@@ -110,6 +111,15 @@ def create_app(
             async with app.state.queue.open_async():
                 yield
         finally:
+            # The server has stopped taking connections. Let answers still streaming finish
+            # (up to the drain timeout) before the pools they use are closed.
+            left = await app.state.streams.drain(settings.shutdown_drain_timeout)
+            if left:
+                logging.getLogger(__name__).warning(
+                    "shutdown: %d answer(s) still streaming after %ss; cutting them off",
+                    left,
+                    settings.shutdown_drain_timeout,
+                )
             if index is not None:
                 await index.close()
             await app.state.engine.dispose()
@@ -117,6 +127,7 @@ def create_app(
                 provider.shutdown()  # flushes spans still queued for the collector
 
     app = FastAPI(title="book-rag-app API", version="0.1.0", lifespan=lifespan)
+    app.state.streams = StreamTracker()
     app.state.settings = settings  # also set before startup: the identity dependency reads it
     app.add_middleware(
         CORSMiddleware,
@@ -155,6 +166,12 @@ def create_app(
     )
     async def readyz(engine: Annotated[AsyncEngine, Depends(get_engine)]) -> JSONResponse:
         """Readiness: the database answers."""
+        # While draining at shutdown (#228) it answers 503, so a balancer stops sending work.
+        if app.state.streams.draining:
+            return JSONResponse(
+                {"status": "draining", "database": "up"},
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
         try:
             await ping(engine)
         except (OSError, TimeoutError, SQLAlchemyError):

@@ -15,7 +15,7 @@ from urllib.error import HTTPError
 
 import pytest
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy import func, select
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from book_rag.providers import FakeEmbedder
@@ -154,8 +154,9 @@ async def kill_mid_embedding(
 ) -> None:
     """Run the job until `good_batches` batches are committed, then cancel the task.
 
-    Cancelling raises CancelledError, which `run_ingestion` does not catch, so (like a SIGKILL)
-    the job row stays `running` and the chunks stay half embedded.
+    Cancelling raises CancelledError. Since #228 `run_ingestion` catches it and puts the job back
+    to `queued` (a shutdown that ran out of grace), which a SIGKILL never does; so the row is set
+    back to what a SIGKILL leaves: `running`, stage `embed`, no error, chunks half embedded.
     """
     dying = DyingEmbedder(good_batches)
     task = asyncio.create_task(
@@ -165,6 +166,13 @@ async def kill_mid_embedding(
     task.cancel()
     with pytest.raises(asyncio.CancelledError):
         await task
+    async with AsyncSession(w.engine) as session:
+        await session.execute(
+            update(IngestionJob)
+            .where(IngestionJob.id == job_id)
+            .values(status="running", stage="embed", error=None)
+        )
+        await session.commit()
 
 
 async def test_a_killed_worker_leaves_partial_chunks_and_a_new_run_completes_them(

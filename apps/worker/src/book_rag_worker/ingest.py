@@ -374,6 +374,13 @@ async def _run_and_record(
     try:
         with _tracer.span("ingest.job", job_id=str(job_id), attempts=attempts):
             await _run(engine, job_id, read_pdf, embedder, batch_size, index, page_reader)
+    except asyncio.CancelledError:
+        # The worker is shutting down and its grace period ran out (#228). Put the job back to
+        # `queued` so it is runnable, not left `running` for the stuck-job sweep to fail. The
+        # queue retries the task; the next run replaces what this one stored.
+        log.warning("ingestion job %s interrupted by shutdown; returned to the queue", job_id)
+        await _requeue(engine, job_id, "interrupted by worker shutdown; will run again")
+        raise
     except Exception as exc:
         message = f"{type(exc).__name__}: {exc}"
         if is_transient(exc) and attempts < MAX_RETRIES:
