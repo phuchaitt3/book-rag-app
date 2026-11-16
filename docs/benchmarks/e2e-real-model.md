@@ -88,3 +88,16 @@ Every interval excludes zero. Post-fix, reranker on minus off: Hit@1 +19.2 (+13.
 - Same machine, embedder (bge-m3 through Ollama), reranker image and depth as the first run. The API used the fake LLM, since the check stops after the `citations` event; the answer model was not run, so this run does not say whether the stack answers end to end after the fix (the optional part of #241 was not done).
 
 **Limits.** One book, one machine, one run per arm, no repeats; the two arms share one ingested book. The two PDF exports differ slightly, so the paired difference mixes the code change with a small change in the text; #199 bounds the text effect at 1 to 3 points. The questions were written from the HTML chunks of the same book.
+
+## Real LLM through the app (#285)
+
+The re-measurement above ran the API with the fake LLM, so it measured retrieval through the chat endpoint and no answer. This section runs the same questions through the same endpoint with the real local answer model.
+
+### Fixed before the run (written 2026-11-16, before any result was seen; not changed afterwards)
+
+- **Questions:** the 208 `blind` questions of `experiments/book-testset/questions.jsonl`, the same 208 as the re-measurement, on the same book (the Wikisource PDF, 392 chunks), all scored; `KINDS=blind`, `TOP_K=6`, one request at a time, no warm-up exclusion (the first question may pay the model load; it is still counted).
+- **Arm:** reranker on (depth 20), the arm of the 94.2% figure. One arm only: a second arm would double a run of about 40 minutes of GPU time and the reranker effect is already measured. Answer model `qwen2.5:3b-instruct` (the model of #259; the 7B default does not stay resident beside the reranker on this 6 GB GPU, see [serving-latency.md](serving-latency.md)).
+- **Metrics**, from [evals/answer_eval.py](../../evals/answer_eval.py) (#221), no judge model: Hit@1 and Hit@5 from the rank of the evidence sentence among the citations; cited-answer hit; citation validity; token F1 and reference recall against the reference answer; false-abstain rate; format errors; stream errors. 95% intervals: bootstrap, 10,000 resamples, seed 285, over the questions.
+- **Consistency rule (retrieval must not change):** the earlier run gave Hit@5 94.2% and Hit@1 84.1%. If the new Hit@5 or Hit@1 differs by more than 2.0 points (4 questions), the section says retrieval changed since that run (code or PDF export) and the answer-level numbers are reported with that caveat. The difference is reported either way.
+- **Exit rule:** the run ends when all 208 questions have been sent once. A question that errors is counted as an error, not retried and not dropped. If the model cannot be loaded or the stack cannot be brought up, the run is not made and the section says so. No pass or fail threshold is set on the answer metrics: they are reported with their intervals.
+- **Not planned:** a second dataset (the optional part of the issue). It needs another book ingested; it is left to a separate run.
