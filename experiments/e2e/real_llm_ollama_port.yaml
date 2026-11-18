@@ -1,0 +1,7 @@
+services:
+  api:
+    environment:
+      OLLAMA_URL: http://host.docker.internal:11435
+  worker:
+    environment:
+      OLLAMA_URL: http://host.docker.internal:11435

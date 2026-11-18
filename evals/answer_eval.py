@@ -328,7 +328,9 @@ async def main() -> None:
     texts = await chunk_texts(database_url, book_id)
     top_k = int(env.get("TOP_K", "6"))
     base_url = env.get("API_URL", "http://localhost:8000")
-    async with httpx.AsyncClient(base_url=base_url, timeout=300) as client:
+    async with httpx.AsyncClient(
+        base_url=base_url, timeout=300, headers={"X-Dev-User": env.get("DEV_USER", "dev-user")}
+    ) as client:
         results = await run_eval(client, book_id, rows, texts, top_k=top_k)
     summary = summarise(results, label=label, book_id=book_id, top_k=top_k)
     write_report(Path(env.get("OUT_DIR", HERE / "results")), label, summary, results)
