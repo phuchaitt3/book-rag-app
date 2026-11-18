@@ -23,3 +23,5 @@ Thumbs.db
 .idea/
 .neon
 experiments/book-testset/data/
+experiments/serving/data/
+build/
