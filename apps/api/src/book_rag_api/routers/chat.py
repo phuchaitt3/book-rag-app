@@ -264,7 +264,7 @@ async def chat(
     try:
         async with asyncio.timeout(settings.retrieval_timeout):
             chunks = await retriever.retrieve(
-                book_id,
+                [book_id],
                 search_query(body.question, body.history),
                 owner_id=owner,
                 top_k=body.top_k,
