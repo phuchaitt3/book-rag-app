@@ -13,7 +13,7 @@ import math
 import time
 import uuid
 from collections.abc import AsyncIterator
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
-from book_rag.providers import LLM
+from book_rag.providers import LLM, Message
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
 from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.auth import Owner
@@ -36,9 +36,42 @@ router = APIRouter(prefix="/books", tags=["chat"])
 log = logging.getLogger(__name__)
 
 
+class HistoryTurn(BaseModel):
+    """One earlier turn, held by the client. Untrusted: the client can write either role."""
+
+    role: Literal["user", "assistant"]
+    text: Annotated[str, Field(min_length=1)]
+
+
 class ChatRequest(BaseModel):
     question: Annotated[str, Field(min_length=1, max_length=2000)]
     top_k: Annotated[int, Field(ge=1, le=20)] = 6
+    # Earlier turns, oldest first (#53). The API keeps no conversation; the caps are settings
+    # (`chat_history_max_turns`, `chat_history_max_chars`) checked in `check_history`.
+    history: list[HistoryTurn] = Field(default_factory=list)
+
+
+def check_history(history: list[HistoryTurn], settings: Settings) -> None:
+    """Refuse (422) history over the configured caps, so the prompt stays bounded."""
+    if len(history) > settings.chat_history_max_turns:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT,
+            f"history has {len(history)} turns; at most {settings.chat_history_max_turns}",
+        )
+    for turn in history:
+        if len(turn.text) > settings.chat_history_max_chars:
+            raise HTTPException(
+                status.HTTP_422_UNPROCESSABLE_CONTENT,
+                f"a history turn is over {settings.chat_history_max_chars} characters",
+            )
+
+
+def search_query(question: str, history: list[HistoryTurn]) -> str:
+    """The string to search with: the last earlier user question joined to the new one (option
+    Q2 of the brief; no model call). Assistant text is left out so a long answer cannot swamp
+    the question. With no history it is the question itself."""
+    previous = next((t.text for t in reversed(history) if t.role == "user"), None)
+    return question if previous is None else f"{previous}\n{question}"
 
 
 class Citation(BaseModel):
@@ -136,6 +169,7 @@ async def answer_events(
     question: str,
     chunks: list[RetrievedChunk],
     *,
+    history: list[Message] | None = None,
     idle_timeout: float = 30.0,
     total_timeout: float = 180.0,
     abstain: str | None = None,
@@ -160,7 +194,7 @@ async def answer_events(
     yield sse("citations", [c.model_dump(mode="json") for c in citations])
     try:
         with tracer.span("llm.stream", book_id=str(book.id), citations=len(citations)) as span:
-            stream = llm.stream(build_messages(question, book.title, chunks))
+            stream = llm.stream(build_messages(question, book.title, chunks, history or ()))
             pieces = with_timeouts(stream, idle=idle_timeout, total=total_timeout)
             with tracer.span("llm.first_token", book_id=str(book.id)):
                 first = await anext(pieces, None)
@@ -203,6 +237,7 @@ async def chat(
     llm: LLM = request.app.state.llm
     settings: Settings = request.app.state.settings
     limiter: RateLimiter = request.app.state.chat_limiter
+    check_history(body.history, settings)
     wait = limiter.check(request.client.host if request.client else "unknown")
     if wait is not None:
         raise HTTPException(
@@ -229,7 +264,10 @@ async def chat(
     try:
         async with asyncio.timeout(settings.retrieval_timeout):
             chunks = await retriever.retrieve(
-                book_id, body.question, owner_id=owner, top_k=body.top_k
+                book_id,
+                search_query(body.question, body.history),
+                owner_id=owner,
+                top_k=body.top_k,
             )
     except Exception:
         # The embedder (Ollama) or the search failed before any byte was sent, so a status
@@ -243,6 +281,7 @@ async def chat(
         book,
         body.question,
         chunks,
+        history=[Message(t.role, t.text) for t in body.history],
         idle_timeout=settings.llm_idle_timeout,
         total_timeout=settings.llm_total_timeout,
         abstain=abstain_reason(chunks, settings),

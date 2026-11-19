@@ -171,6 +171,8 @@ export interface components {
         };
         /** ChatRequest */
         ChatRequest: {
+            /** History */
+            history?: components["schemas"]["HistoryTurn"][];
             /** Question */
             question: string;
             /**
@@ -230,6 +232,19 @@ export interface components {
         HealthStatus: {
             /** Status */
             status: string;
+        };
+        /**
+         * HistoryTurn
+         * @description One earlier turn, held by the client. Untrusted: the client can write either role.
+         */
+        HistoryTurn: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "assistant";
+            /** Text */
+            text: string;
         };
         /** IngestionProgress */
         IngestionProgress: {
