@@ -126,7 +126,7 @@ async def run_rate(searcher, book_id, vectors, seconds: float, qps: float) -> di
         nonlocal errors
         started = time.perf_counter()
         try:
-            await searcher.vector_search(book_id, vector, LIMIT, owner_id="dev-user")
+            await searcher.vector_search([book_id], vector, LIMIT, owner_id="dev-user")
         except Exception:
             errors += 1
             return
@@ -172,7 +172,7 @@ async def measure_book(out: str, seconds: float, qps: float, book_key: str, labe
         exact = set(await exact_top(sessions, book_id, v))
         for name, searcher in (("pgvector", sql), ("qdrant", qdrant)):
             found: list[RetrievedChunk] = await searcher.vector_search(
-                book_id, v, LIMIT, owner_id="dev-user"
+                [book_id], v, LIMIT, owner_id="dev-user"
             )
             recalls[name].append(len(exact & {c.id for c in found}) / max(1, len(exact)))
     result = {

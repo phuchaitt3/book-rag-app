@@ -102,7 +102,7 @@ async def main() -> None:
 
             arm_times: dict[str, list[float]] = {}
             for name, fn in (
-                ("bm25_bounded", searcher.text_search),
+                ("bm25_bounded", lambda b, q, n, **kw: searcher.text_search([b], q, n, **kw)),
                 ("ts_rank_cd", searcher._ts_rank_search),
             ):
                 for q in queries[:10]:  # warm-up, discarded

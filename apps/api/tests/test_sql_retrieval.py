@@ -78,7 +78,9 @@ async def test_missing_pgvector_warns_once_and_is_asked_again(
     with caplog.at_level("WARNING", logger="book_rag_api.retrieval"):
         for _ in range(3):
             assert (
-                await searcher.vector_search(uuid4(), [0.0] * EMBEDDING_DIM, 5, owner_id=DEV_OWNER)
+                await searcher.vector_search(
+                    [uuid4()], [0.0] * EMBEDDING_DIM, 5, owner_id=DEV_OWNER
+                )
                 == []
             )
     assert [r.message for r in caplog.records if "not installed" in r.message] == [
@@ -116,11 +118,13 @@ async def test_text_search_matches_any_word(
 ) -> None:
     sessions, book_id = seeded
     found = await SqlChunkSearcher(sessions).text_search(
-        book_id, "Hà Nội thủ đô?", 10, owner_id=DEV_OWNER
+        [book_id], "Hà Nội thủ đô?", 10, owner_id=DEV_OWNER
     )
     assert found[0].text == TEXTS[2]
     assert {c.text for c in found} == {TEXTS[0], TEXTS[2]}
-    assert await SqlChunkSearcher(sessions).text_search(book_id, "?!", 10, owner_id=DEV_OWNER) == []
+    assert (
+        await SqlChunkSearcher(sessions).text_search([book_id], "?!", 10, owner_id=DEV_OWNER) == []
+    )
 
 
 async def test_vector_search_finds_the_nearest_chunk(
@@ -128,7 +132,7 @@ async def test_vector_search_finds_the_nearest_chunk(
 ) -> None:
     sessions, book_id = seeded
     [vector] = await FakeEmbedder(EMBEDDING_DIM).embed([TEXTS[1]])
-    found = await SqlChunkSearcher(sessions).vector_search(book_id, vector, 2, owner_id=DEV_OWNER)
+    found = await SqlChunkSearcher(sessions).vector_search([book_id], vector, 2, owner_id=DEV_OWNER)
     assert found[0].text == TEXTS[1]
     assert found[0].page == 2
 
@@ -140,7 +144,7 @@ async def test_hybrid_retrieval_end_to_end(
     retriever = HybridRetriever(
         SqlChunkSearcher(sessions), FakeEmbedder(EMBEDDING_DIM), FakeReranker()
     )
-    result = await retriever.retrieve(book_id, "thủ đô Hà Nội", owner_id=DEV_OWNER, top_k=2)
+    result = await retriever.retrieve([book_id], "thủ đô Hà Nội", owner_id=DEV_OWNER, top_k=2)
     assert result[0].text == TEXTS[2]
     assert len(result) == 2
 
@@ -192,10 +196,53 @@ async def test_vector_search_returns_the_books_chunks_when_only_the_hnsw_index_a
         sessions = async_sessionmaker(engine, expire_on_commit=False)
         [query] = await embedder.embed(["other passage about mountains"])
         found = await SqlChunkSearcher(sessions).vector_search(
-            own_book.id, query, 30, owner_id=DEV_OWNER
+            [own_book.id], query, 30, owner_id=DEV_OWNER
         )
         await engine.dispose()
     assert {c.text for c in found} == set(own_texts)
+
+
+async def test_search_over_several_books_returns_only_the_chosen_ones() -> None:
+    """Three books hold the same passages; a search over two of them never returns the third's."""
+    with PostgresContainer("pgvector/pgvector:pg17", driver="asyncpg") as pg:
+        url = pg.get_connection_url()
+        config = Config(str(ALEMBIC_INI))
+        config.set_main_option("sqlalchemy.url", url)
+        await asyncio.to_thread(command.upgrade, config, "head")
+
+        engine = create_async_engine(url)
+        sessions = async_sessionmaker(engine, expire_on_commit=False)
+        embedder = FakeEmbedder(EMBEDDING_DIM)
+        vectors = await embedder.embed(TEXTS)
+        books = [Book(id=uuid4(), title=f"T{i}", owner_id=DEV_OWNER) for i in range(3)]
+        async with sessions.begin() as session:
+            session.add_all(books)
+            await session.flush()
+            session.add_all(
+                Chunk(book_id=book.id, ordinal=i, text=t, page=i + 1, embedding=v)
+                for book in books
+                for i, (t, v) in enumerate(zip(TEXTS, vectors, strict=True))
+            )
+            await session.flush()
+            for book in books:
+                await refresh_book_stats(session, book.id)
+        chosen = [books[0].id, books[2].id]
+        searcher = SqlChunkSearcher(sessions)
+
+        by_vector = await searcher.vector_search(chosen, vectors[2], 30, owner_id=DEV_OWNER)
+        by_text = await searcher.text_search(chosen, "Hà Nội thủ đô?", 30, owner_id=DEV_OWNER)
+        one = await searcher.vector_search([books[1].id], vectors[2], 30, owner_id=DEV_OWNER)
+        retriever = HybridRetriever(searcher, embedder, FakeReranker())
+        hybrid = await retriever.retrieve(chosen, "thủ đô Hà Nội", owner_id=DEV_OWNER, top_k=10)
+        await engine.dispose()
+
+    assert len(by_vector) == 2 * len(TEXTS)  # every chunk of both chosen books
+    assert {c.book_id for c in by_vector} == set(chosen)
+    assert by_text
+    assert {c.book_id for c in by_text} == set(chosen)
+    assert {c.book_id for c in one} == {books[1].id}
+    assert hybrid
+    assert {c.book_id for c in hybrid} == set(chosen)
 
 
 async def test_qdrant_searcher_reads_vectors_from_qdrant_and_text_from_postgres(
@@ -214,11 +261,11 @@ async def test_qdrant_searcher_reads_vectors_from_qdrant_and_text_from_postgres(
 
     searcher = QdrantChunkSearcher(index, sessions, SqlChunkSearcher(sessions))
     [vector] = await embedder.embed([TEXTS[1]])
-    found = await searcher.vector_search(book_id, vector, 2, owner_id=DEV_OWNER)
+    found = await searcher.vector_search([book_id], vector, 2, owner_id=DEV_OWNER)
     assert found[0].text == TEXTS[1]
     assert len(found) == 2
     assert found[0].page == 2
-    assert (await searcher.text_search(book_id, "Hà Nội thủ đô?", 10, owner_id=DEV_OWNER))[
+    assert (await searcher.text_search([book_id], "Hà Nội thủ đô?", 10, owner_id=DEV_OWNER))[
         0
     ].text == TEXTS[2]
 
@@ -242,10 +289,10 @@ async def test_shadow_mode_returns_postgres_and_logs_the_comparison(
     [vector] = await FakeEmbedder(EMBEDDING_DIM).embed([TEXTS[1]])
 
     with caplog.at_level("INFO", logger="book_rag_api.qdrant_index"):
-        found = await shadow.vector_search(book_id, vector, 3, owner_id=DEV_OWNER)
+        found = await shadow.vector_search([book_id], vector, 3, owner_id=DEV_OWNER)
         await asyncio.gather(*shadow._tasks)
     assert [c.text for c in found] == [
-        c.text for c in await sql.vector_search(book_id, vector, 3, owner_id=DEV_OWNER)
+        c.text for c in await sql.vector_search([book_id], vector, 3, owner_id=DEV_OWNER)
     ]
     [line] = [r.message for r in caplog.records if "shadow book=" in r.message]
     assert "overlap=3/3" in line
@@ -267,7 +314,7 @@ async def test_shadow_mode_hides_a_qdrant_failure(
     [vector] = await FakeEmbedder(EMBEDDING_DIM).embed([TEXTS[1]])
 
     with caplog.at_level("INFO", logger="book_rag_api.qdrant_index"):
-        found = await shadow.vector_search(book_id, vector, 3, owner_id=DEV_OWNER)
+        found = await shadow.vector_search([book_id], vector, 3, owner_id=DEV_OWNER)
         await asyncio.gather(*shadow._tasks)
     assert len(found) == 3
     assert any("the Qdrant search failed" in r.message for r in caplog.records)
@@ -344,7 +391,7 @@ async def test_bm25_ranks_the_rare_word_above_repeated_common_words(
     sessions, book_id = bm25_book
     searcher = SqlChunkSearcher(sessions)
     found = await searcher.text_search(
-        book_id, "Ai là vua đầu tiên của triều Nguyễn?", 5, owner_id=DEV_OWNER
+        [book_id], "Ai là vua đầu tiên của triều Nguyễn?", 5, owner_id=DEV_OWNER
     )
     assert found[0].text == BM25_TEXTS[1]
     assert BM25_TEXTS[0] not in [c.text for c in found[:2]]
@@ -355,7 +402,7 @@ async def test_bm25_with_only_common_words_still_returns_chunks(
     bm25_book: tuple[async_sessionmaker[AsyncSession], UUID],
 ) -> None:
     sessions, book_id = bm25_book
-    found = await SqlChunkSearcher(sessions).text_search(book_id, "của là", 5, owner_id=DEV_OWNER)
+    found = await SqlChunkSearcher(sessions).text_search([book_id], "của là", 5, owner_id=DEV_OWNER)
     assert found  # no word is rare: every query word selects candidates
 
 
@@ -364,10 +411,10 @@ async def test_bm25_ignores_words_the_book_lacks_and_punctuation(
 ) -> None:
     sessions, book_id = bm25_book
     searcher = SqlChunkSearcher(sessions)
-    assert await searcher.text_search(book_id, "zzzzqq", 5, owner_id=DEV_OWNER) == []
-    assert await searcher.text_search(book_id, "?!", 5, owner_id=DEV_OWNER) == []
+    assert await searcher.text_search([book_id], "zzzzqq", 5, owner_id=DEV_OWNER) == []
+    assert await searcher.text_search([book_id], "?!", 5, owner_id=DEV_OWNER) == []
     found = await searcher.text_search(
-        book_id, "Huế') | !x & 'a\b http://a.b/c:d", 5, owner_id=DEV_OWNER
+        [book_id], "Huế') | !x & 'a\b http://a.b/c:d", 5, owner_id=DEV_OWNER
     )
     assert {c.text for c in found} == {BM25_TEXTS[2], BM25_TEXTS[3], BM25_TEXTS[4]}
 
@@ -377,7 +424,7 @@ async def test_a_book_without_statistics_falls_back_to_ts_rank(
 ) -> None:
     sessions, book_id = seeded  # its chunks were inserted without refresh_book_stats
     found = await SqlChunkSearcher(sessions).text_search(
-        book_id, "Hà Nội thủ đô?", 10, owner_id=DEV_OWNER
+        [book_id], "Hà Nội thủ đô?", 10, owner_id=DEV_OWNER
     )
     assert found[0].text == TEXTS[2]
 
@@ -406,7 +453,9 @@ async def test_bm25_finds_the_adjacent_pair_before_the_scattered_words(
         )
         await session.flush()
         await refresh_book_stats(session, book_id)
-    found = await SqlChunkSearcher(sessions).text_search(book_id, "Gia Long", 5, owner_id=DEV_OWNER)
+    found = await SqlChunkSearcher(sessions).text_search(
+        [book_id], "Gia Long", 5, owner_id=DEV_OWNER
+    )
     texts = [c.text for c in found]
     scattered = "Gia đình nhà Nguyễn ở Long An"
     assert {"Vua Gia Long lập ra triều", BM25_TEXTS[1]} == set(texts[:2])
