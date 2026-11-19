@@ -326,3 +326,27 @@ async def test_the_sweep_fails_old_unfinished_jobs_only(worker: Worker) -> None:
         error = (await session.get(IngestionJob, ids[0])).error  # type: ignore[union-attr]
     assert statuses == ["failed", "failed", "queued", "running", "succeeded"]
     assert error and "stuck" in error
+
+
+async def test_the_sweep_follows_page_progress_of_running_jobs(worker: Worker) -> None:
+    book_id = await add_book(worker.engine, "book.pdf")
+    now = datetime.now(UTC)
+    old = now - timedelta(hours=3)
+    async with AsyncSession(worker.engine) as session:
+        reading = IngestionJob(book_id=book_id, status="running", started_at=old, progress_at=now)
+        stalled = IngestionJob(
+            book_id=book_id,
+            status="running",
+            started_at=old,
+            progress_at=now - timedelta(hours=2),
+        )
+        session.add_all([reading, stalled])
+        await session.flush()
+        reading_id, stalled_id = reading.id, stalled.id
+        await session.commit()
+
+    assert await fail_stuck_jobs(worker.engine, timedelta(hours=1)) == 1
+
+    async with AsyncSession(worker.engine) as session:
+        assert (await session.get(IngestionJob, reading_id)).status == "running"  # type: ignore[union-attr]
+        assert (await session.get(IngestionJob, stalled_id)).status == "failed"  # type: ignore[union-attr]

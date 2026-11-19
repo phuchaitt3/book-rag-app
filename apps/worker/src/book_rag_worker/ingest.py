@@ -7,7 +7,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from urllib.error import HTTPError, URLError
 
-from sqlalchemy import delete, or_, select, update
+from sqlalchemy import delete, func, or_, select, update
 from sqlalchemy.exc import InterfaceError, OperationalError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
@@ -103,7 +103,9 @@ def _chunk_rows(
 async def _set_pages_read(engine: AsyncEngine, job_id: uuid.UUID, count: int) -> None:
     async with AsyncSession(engine) as session:
         await session.execute(
-            update(IngestionJob).where(IngestionJob.id == job_id).values(pages_read=count)
+            update(IngestionJob)
+            .where(IngestionJob.id == job_id)
+            .values(pages_read=count, progress_at=_now())
         )
         await session.commit()
 
@@ -194,8 +196,11 @@ async def _requeue(engine: AsyncEngine, job_id: uuid.UUID, error: str) -> None:
 async def fail_stuck_jobs(engine: AsyncEngine, older_than: timedelta) -> int:
     """Fail jobs left `queued` since creation, or `running` since start, longer than `older_than`.
 
-    Covers a failed `defer_async` and a killed worker. If the worker still picks such a job up
-    later, `_run` sets it to `running` again, so the sweep never blocks a live job for good.
+    A running job counts from its last page read (`progress_at`) or its start, whichever is later,
+    so a long scan that is still reading pages is not failed and one that stopped reading is.
+    Other jobs count from `started_at`. Covers a failed `defer_async` and a killed worker. If the
+    worker still picks such a job up later, `_run` sets it to `running` again, so the sweep never
+    blocks a live job for good.
     """
     cutoff = _now() - older_than
     async with AsyncSession(engine) as session:
@@ -204,7 +209,8 @@ async def fail_stuck_jobs(engine: AsyncEngine, older_than: timedelta) -> int:
             .where(
                 or_(
                     (IngestionJob.status == "queued") & (IngestionJob.created_at < cutoff),
-                    (IngestionJob.status == "running") & (IngestionJob.started_at < cutoff),
+                    (IngestionJob.status == "running")
+                    & (func.greatest(IngestionJob.started_at, IngestionJob.progress_at) < cutoff),
                 )
             )
             .values(
