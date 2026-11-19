@@ -1,6 +1,6 @@
 # Qwen2.5 0.5B against 3B as the local answer model (#287)
 
-**Status: pre-registered, not yet run.** The section "Fixed before the run" was committed before any answer was generated for this comparison. Results are added below it and that section is not edited afterwards.
+**Status: pre-registered; the scripts work; the result run has not been made (stopped 2026-11-19 when the laptop ran low on memory).** The section "Fixed before the run" was committed before any answer was generated for this comparison. Results are added below it and that section is not edited afterwards.
 
 The app's default answer model is `qwen2.5:7b-instruct`, which does not stay loaded next to the embedder on the 6 GB laptop GPU ([serving-latency.md](serving-latency.md), "The 7B default"), so local runs use `qwen2.5:3b-instruct`. Nobody has measured whether `qwen2.5:0.5b-instruct` would be good enough, or what 3B buys over it. This note compares the two on the same questions, book and retrieval.
 
@@ -63,4 +63,4 @@ A 5-question smoke run (not a result, nothing from it is kept) showed that a col
 
 ## Results
 
-Not run yet.
+Not run yet. A first 5-question smoke run passed end to end (stack, ingest in 303 s, both arms, judge, report). A second smoke run, made to check the warm-up amendment, was killed by Claude Code for low memory (about 2.5 GB free RAM with other chats running); the stack and the run's Ollama were torn down. To finish: when the laptop has well over 6 GB free, run `python ~/claude-config/scripts/gpu_run.py run --wait -- "C:/Program Files/Git/bin/bash.exe" experiments/qwen_size/run.sh` (needs the PDF at `experiments/e2e/data/vsl.pdf`, about 70 minutes), then fill this section from `experiments/qwen_size/results/report.md`.
