@@ -57,6 +57,10 @@ A null or mixed result is a valid finish.
 
 **Not planned.** A second book or language, the 7B model, the reranker, a judge from another model family, and human labels (#251).
 
+### Amendment, 2026-11-19, after the smoke run and before any result run
+
+A 5-question smoke run (not a result, nothing from it is kept) showed that a cold start breaks the first questions of an arm: the first question got a 503 after about 21 s (the app's retrieval timeout while `bge-m3` loaded) and the second a stream error (the answer model was still loading). Counting these as the arm's errors would measure the harness, not the model. The rule "no warm-up exclusion" above is therefore replaced by: before each arm, both models (`bge-m3` and the arm's answer model) are loaded by one direct call to Ollama (4 tokens, not through the app), and every one of the 248 questions is then counted. The load times of that call are reported as a cost (they are model-load times, not serving times). Nothing else above changes.
+
 ## Results
 
 Not run yet.
