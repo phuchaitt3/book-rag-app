@@ -99,6 +99,13 @@
       },
       "ChatRequest": {
         "properties": {
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/HistoryTurn"
+            },
+            "title": "History",
+            "type": "array"
+          },
           "question": {
             "maxLength": 2000,
             "minLength": 1,
@@ -228,6 +235,30 @@
           "status"
         ],
         "title": "HealthStatus",
+        "type": "object"
+      },
+      "HistoryTurn": {
+        "description": "One earlier turn, held by the client. Untrusted: the client can write either role.",
+        "properties": {
+          "role": {
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "text"
+        ],
+        "title": "HistoryTurn",
         "type": "object"
       },
       "IngestionProgress": {
