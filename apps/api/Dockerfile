@@ -24,4 +24,6 @@ USER app
 ENV PATH="/app/.venv/bin:$PATH" PORT=8080
 EXPOSE 8080
 # Cloud Run injects PORT; compose maps 8000 -> 8080.
-CMD ["sh", "-c", "exec uvicorn book_rag_api.main:app --host 0.0.0.0 --port ${PORT}"]
+# uvicorn waits 5 s longer than the lifespan drain (SHUTDOWN_DRAIN_TIMEOUT, default 20 s,
+# may be fractional), so it never cuts a stream the drain is still waiting for.
+CMD ["sh", "-c", "T=${SHUTDOWN_DRAIN_TIMEOUT:-20}; exec uvicorn book_rag_api.main:app --host 0.0.0.0 --port ${PORT} --timeout-graceful-shutdown $((${T%.*} + 5))"]
