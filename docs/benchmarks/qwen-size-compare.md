@@ -67,4 +67,4 @@ The host has no Ollama install, so the run uses the pinned container of [README.
 
 ## Results
 
-Not run yet.
+Not run yet. 2026-11-24: the Ollama container came up with all three models, but the book PDF could not be fetched: `ws-export.wmcloud.org` answered HTTP 503 ("maintenance downtime or capacity problems") on 8 tries over about 35 minutes, and no copy of `vsl.pdf` exists on this machine. By the exit rule the comparison was not made. To finish: fetch `experiments/e2e/data/vsl.pdf` (or copy it from the laptop), start the container as in [README.md](README.md) with `-e OLLAMA_KEEP_ALIVE=30m -e OLLAMA_MAX_LOADED_MODELS=2`, smoke-test with `SMOKE=1 OUT_DIR=/tmp/smoke`, then run `experiments/qwen_size/run.sh` (about 70 minutes).
