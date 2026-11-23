@@ -44,3 +44,5 @@ QUESTIONS=experiments/book-testset/questions.jsonl uv run --with sentence-transf
 The result is 208 seen, 208 blind and 25 unanswerable questions. The unanswerable questions were not checked. On fixed rows, `closed_book_correct` is still the verdict for the original question. `data/questions.jsonl` (git-ignored) keeps the raw generated set.
 
 **Licence of the outputs.** The book is in the public domain in Vietnam (the author died in 1953), so the questions, which quote it, are committed.
+
+**v2 (#178, in progress).** [PREREG-178.md](PREREG-178.md) fixes the rules; [RESULTS-178.md](RESULTS-178.md) reports them; [questions.v2.jsonl](questions.v2.jsonl) holds stronger blind rewrites (54 pairs), a closed-book filter by Claude and 25 varied unanswerable questions, built by [testset_v2.py](testset_v2.py) with Claude instead of the DeepSeek API. It has had no human check and is not used by the published results.
