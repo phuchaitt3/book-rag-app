@@ -34,6 +34,8 @@ UNANS_OVERLAP_FLAG = 0.80
 # Pairs whose answers the author saw before the closed-book rule was written keep their v1
 # verdict.
 SEEN_ANSWER = {"c0-seen", "c2-seen", "c6-seen"}
+# Blind rewrites the self-review (Claude, not independent) flagged; see review-v2.md.
+FLAGGED = {"c3", "c8", "c122", "c26", "c27", "c33", "c74", "c84"}
 TOKEN = re.compile(r"\w+", re.UNICODE)
 
 
@@ -60,6 +62,7 @@ def dump(obj: Any) -> str:
 
 
 def main() -> None:
+    sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     cmd = sys.argv[1]
     chunks = [c["text"] for c in load(DATA / "chunks.jsonl")]
     rows = load(HERE / "questions.jsonl")
@@ -133,6 +136,53 @@ def main() -> None:
         (V2 / "unanswerable-checked.json").write_text(
             json.dumps(qs, ensure_ascii=False, indent=1), encoding="utf-8"
         )
+    elif cmd == "build":
+        closed = json.loads((V2 / "closed.json").read_text(encoding="utf-8"))
+        first = json.loads((V2 / "rewrite-rw1.json").read_text(encoding="utf-8"))
+        second = json.loads((V2 / "rewrite-rw2.json").read_text(encoding="utf-8"))
+        unans = json.loads((V2 / "unanswerable-checked.json").read_text(encoding="utf-8"))
+        out: list[dict[str, Any]] = []
+        for q in seen:
+            q = dict(q)
+            q["closed_book_v1"] = q["closed_book_correct"]
+            if q["id"] in closed:
+                q["closed_book_correct"] = closed[q["id"]]["correct"]
+            q["closed_book_by"] = "claude-sonnet-5-5" if q["id"] in closed else "v1"
+            out.append(q)
+            pick = first.get(q["id"]) if first[q["id"]]["kept"] else second.get(q["id"])
+            if pick and pick["kept"]:
+                b = dict(blind[q["id"]])
+                b["question_v1"] = b["question"]
+                b["question"] = pick["question"]
+                b["rewrite_overlap"] = pick["overlap"]
+                b["closed_book_correct"] = q["closed_book_correct"]
+                b["generator"] = "claude-sonnet-5-5"
+                b["review_flag"] = q["id"].removesuffix("-seen") in FLAGGED
+                out.append(b)
+        out += [r for r in rows if r.get("generator") == "hand-written"]
+        for i, u in enumerate(unans):
+            out.append(
+                {
+                    "id": f"uv2-{i}",
+                    "kind": "unanswerable",
+                    "question": u["question"],
+                    "source_id": f"uv2-{i}",
+                    "source_chunk": None,
+                    "gold_chunks": [],
+                    "section_path": None,
+                    "category": u["category"],
+                    "generator": "claude-sonnet-5-5",
+                    "answerable": False,
+                    "split": "seen" if i < 13 else "blind",
+                }
+            )
+        text = "\n".join(json.dumps(r, ensure_ascii=False) for r in out) + "\n"
+        (HERE / "questions.v2.jsonl").write_text(text, encoding="utf-8")
+        kinds: dict[str, int] = {}
+        for r in out:
+            kinds[r["kind"]] = kinds.get(r["kind"], 0) + 1
+        needed = sum(1 for r in out if r["kind"] == "blind" and not r["closed_book_correct"])
+        print(kinds, "blind retrieval-needed", needed)
     elif cmd == "control":
         ids = sorted(q["id"] for q in seen)
         print(random.Random(178).sample(ids, 10))
