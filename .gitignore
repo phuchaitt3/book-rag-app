@@ -23,3 +23,6 @@ Thumbs.db
 .idea/
 .neon
 experiments/book-testset/data/
+
+# Generated Kaggle kernels (experiments/serving/kaggle_run.py)
+build/
