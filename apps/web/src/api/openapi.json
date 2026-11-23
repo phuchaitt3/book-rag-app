@@ -362,6 +362,47 @@
         "title": "IngestionProgress",
         "type": "object"
       },
+      "MultiChatRequest": {
+        "description": "A question over a chosen set of 1 to 10 books; repeated ids count once.",
+        "properties": {
+          "book_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Book Ids",
+            "type": "array"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/HistoryTurn"
+            },
+            "title": "History",
+            "type": "array"
+          },
+          "question": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Question",
+            "type": "string"
+          },
+          "top_k": {
+            "default": 6,
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Top K",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "question",
+          "book_ids"
+        ],
+        "title": "MultiChatRequest",
+        "type": "object"
+      },
       "ReadyStatus": {
         "properties": {
           "database": {
@@ -651,6 +692,46 @@
           }
         },
         "summary": "Chat",
+        "tags": [
+          "chat"
+        ]
+      }
+    },
+    "/chat": {
+      "post": {
+        "description": "Ask one question over 1 to 10 books; each citation names its own book.",
+        "operationId": "chat_books_chat_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultiChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Chat Books",
         "tags": [
           "chat"
         ]
