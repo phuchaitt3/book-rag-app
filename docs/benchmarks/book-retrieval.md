@@ -81,3 +81,7 @@ Absolute Hit@1 at w = 0.5 is 63.9% (blind) and 70.7% (seen) for RRF alone, 85.1%
 - **One book, 359 chunks.** In a library of many books there are more near-misses per question, and absolute hit rates will fall.
 - **Unanswerable questions lack variety and were not checked:** all 25 ask about later archaeology, because the prompt's first example steered them there. They are not used here; a later answer-quality test needs a more varied set.
 - **BM25, not Postgres full-text,** as in the ViQuAD note. One run, one seed.
+
+## Multi-chunk questions (#183, partial)
+
+30 questions that each need 2 to 4 distinct chunks ([questions.multi.jsonl](../../experiments/book-testset/questions.multi.jsonl), rules in [PREREG-183.md](../../experiments/book-testset/PREREG-183.md), full figures in [RESULTS-183.md](../../experiments/book-testset/RESULTS-183.md)). Recall@k counts a required chunk as found if any of its overlap copies is in the top k. **Only BM25 alone has been run** (CPU); bge-m3, fusion and the reranker are not, so how the arms rank on this set is **not yet known**. BM25: Recall@5 **68.9%** (95% CI 58.9-78.6), Hit@5 96.7% (90.0-100), all required chunks in the top 5 for 36.7% (20.0-53.3). Hit@5 alone would have hidden most of that gap. The questions were written with the chunks in view and overlap their span's words by 0.90, so they favour keyword search; the set is small and has had no human check.
