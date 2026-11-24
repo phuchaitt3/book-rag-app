@@ -51,3 +51,7 @@ Per-pattern rates are reported for U with Wilson intervals; with about 15 to 20 
 ## 5. Out of scope
 
 The issue's step 4 (end-to-end abstention with the real local LLM) is not done: no real-LLM run exists at the time of writing. This task measures the retrieval-stage decision only, as #222 did.
+
+## Addendum 2026-11-24 (before any score exists)
+
+Drafting and review are done: 140 unanswerable and 41 partial drafts; the review kept 136 and 40 (the pre-registered minimums of 100 and 30 and the per-pattern bounds hold: 16 to 20 each, largest share 14.7%). The human sample is fixed (seed 291) in `human-sample-291.md`. If the scoring runs on a stand-in PDF or a reranker runtime other than TEI (see abstain.md), that is stated next to the numbers and does not change any rule above.
