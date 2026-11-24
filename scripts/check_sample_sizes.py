@@ -46,7 +46,7 @@ SAMPLE = re.compile(
     rf"|\b\d[\d,._]*\s*(?:x\s*)?(?:[\w-]+\s+){{0,3}}(?:{_UNITS})\b",
     re.IGNORECASE,
 )
-_COMMENT = re.compile(r"<!--.*?-->")
+_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
 
 
 def default_files(root: Path) -> list[Path]:
