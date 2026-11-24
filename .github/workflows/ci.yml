@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # diff-cover compares against origin/main
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.12"
@@ -21,7 +23,13 @@ jobs:
       - run: uv run ruff check .
       - run: uv run ruff format --check .
       - run: uv run mypy
-      - run: uv run pytest
+      - run: uv run pytest --cov --cov-report=xml
+      # Coverage of changed lines (#302). Warn-only until 2026-12-01: a miss shows as a
+      # warning, not a red check. To make it fail: delete the next line
+      # (continue-on-error) and the "Warn-only" word in the step name.
+      - name: Changed-line coverage floor (Warn-only)
+        continue-on-error: true
+        run: uv run diff-cover coverage.xml --compare-branch=origin/main --fail-under=80
       - run: python scripts/check_sample_sizes.py
 
   web:
