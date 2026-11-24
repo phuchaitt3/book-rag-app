@@ -22,6 +22,7 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run mypy
       - run: uv run pytest
+      - run: python scripts/check_sample_sizes.py
 
   web:
     runs-on: ubuntu-latest
