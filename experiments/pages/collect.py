@@ -7,6 +7,7 @@ manifest.jsonl. Pages must be proofread or validated (`pagequality` level 3 or 4
 600 to 2500 characters of prose after cleaning, so a question can be answered from one page.
 
     python collect.py OUT_DIR
+    python collect.py --retext OUT_DIR   # re-clean text/ from the revisions in manifest.jsonl
 
 OUT_DIR gets `images/<id>.jpg`, `text/<id>.txt` (the Wikisource text, cleaned of markup) and
 `manifest.jsonl`. Nothing here is committed: OUT_DIR is put under DVC (see README next to it).
@@ -44,6 +45,31 @@ MIN_CHARS, MAX_CHARS = 600, 2500
 IMAGE_WIDTH = 1500
 
 
+_TEMPLATE = re.compile(r"\{\{([^{}]*)\}\}")
+# Templates that carry no page text: rules, spacers, anchors, page-break marks.
+_NO_TEXT = re.compile(r"^(rule|hr|-|--|clear|nop|anchor|pb|page|đường kẻ|dấu)", re.I)
+
+
+def _template_text(inner: str) -> str:
+    """Visible text of one innermost template: its last positional argument, else nothing."""
+    parts = inner.split("|")
+    if len(parts) < 2 or _NO_TEXT.match(parts[0].strip()):
+        return ""
+    args = [a for a in parts[1:] if not re.match(r"\s*[\w-]+\s*=", a)]
+    return args[-1].strip() if args else ""
+
+
+def strip_templates(text: str) -> str:
+    """Replace `{{name|text}}` by its text, innermost first, so `{{g|{{xx-lớn|VI}}}}` gives `VI`."""
+    while True:
+        new = _TEMPLATE.sub(lambda m: _template_text(m.group(1)), text)
+        if new == text:
+            break
+        text = new
+    # Unbalanced remnants (a `{{` never closed, or a stray `}}`) are markup, not text.
+    return re.sub(r"\{\{[^\n]*|\}\}", "", text)
+
+
 def clean(wikitext: str) -> tuple[int | None, str]:
     """Return the page-quality level and the plain text of a Trang: page's wikitext."""
     m = re.search(r'<pagequality level="(\d)"', wikitext)
@@ -52,7 +78,7 @@ def clean(wikitext: str) -> tuple[int | None, str]:
     body = re.sub(r"<pagequality[^>]*/>", "", body)
     body = re.sub(r"<section[^>]*/>|</?poem>", "", body)
     body = re.sub(r"</?noinclude>|</?includeonly>|<references\s*/>", "", body)
-    body = re.sub(r"\{\{[^{}]*\}\}", "", body)  # simple templates (headers, rules)
+    body = strip_templates(body)
     body = re.sub(r"'''?", "", body)
     return level, re.sub(r"\n{3,}", "\n\n", body).strip()
 
@@ -124,7 +150,38 @@ def image_url(file: str, number: int) -> str:
     return page["imageinfo"][0]["thumburl"]  # type: ignore[no-any-return]
 
 
+def retext(out: Path) -> None:
+    """Re-clean `text/` from the Wikisource revisions pinned in manifest.jsonl (#299).
+
+    Fetches each page's wikitext by `oldid`, so the text is the same revision as before and
+    only the cleaner changes. Images and every manifest field but `text_chars` stay as they are.
+    """
+    path = out / "manifest.jsonl"
+    rows = [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
+    for row in rows:
+        res = api(
+            action="query",
+            prop="revisions",
+            rvprop="content|ids",
+            rvslots="main",
+            revids=row["wikisource_revision"],
+        )
+        rev = next(iter(res["query"]["pages"].values()))["revisions"][0]
+        level, text = clean(rev["slots"]["main"]["*"])
+        if level != row["proofread_level"]:
+            raise SystemExit(f"{row['id']}: level {level}, manifest says {row['proofread_level']}")
+        (out / "text" / f"{row['id']}.txt").write_text(text + "\n", encoding="utf-8")
+        row["text_chars"] = len(text)
+    with path.open("w", encoding="utf-8") as fh:
+        for r in rows:
+            fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+    print(f"re-cleaned {len(rows)} pages from their pinned revisions")
+
+
 def main() -> None:
+    if sys.argv[1] == "--retext":
+        retext(Path(sys.argv[2]))
+        return
     out = Path(sys.argv[1])
     (out / "images").mkdir(parents=True, exist_ok=True)
     (out / "text").mkdir(exist_ok=True)

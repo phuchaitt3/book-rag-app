@@ -14,8 +14,9 @@ DVC storage. This repository sets no DVC remote (a remote path is a local settin
 - `images/<id>.jpg`: the scan of one page, rendered at 1500 px width by Wikimedia from the
   Commons PDF (`iiurlparam=pageN-1500px`).
 - `text/<id>.txt`: the community-proofread text of that page from Vietnamese Wikisource, cleaned of
-  wiki markup (templates, `<poem>`, section marks); footnote `<ref>` tags and a few template
-  remnants can remain. It is the ground truth for CER **after** the spot-check.
+  wiki markup (`<poem>`, section marks, rules and spacers). A template keeps its visible text,
+  innermost first: `{{g|{{xx-lớn|VI}}}}` becomes `VI`, so chapter headings stay. No `{{` is
+  left (`check_questions.py` fails if one is); footnote `<ref>` tags can remain. It is the ground truth for CER **after** the spot-check.
 - `manifest.jsonl`: per page the source URL, Wikisource revision, proofread level (3 proofread,
   4 validated), image URL and sha256, and the licence basis read from the live Commons file page
   at collection time (licence short name and the `PD-old-*-expired` category).
@@ -43,6 +44,7 @@ will show how many are ambiguous, and the spot-check should flag any.
 
 ```
 python collect.py <out dir>            # needs network; about 5 minutes, polite rate limit
+python collect.py --retext <out dir>   # re-clean text/ from the pinned revisions (#299)
 python check_questions.py <out dir> questions.jsonl
 ```
 
