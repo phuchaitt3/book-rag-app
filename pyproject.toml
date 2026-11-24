@@ -51,6 +51,6 @@ module = ["pypdfium2.*", "reportlab.*", "font_roboto", "boto3.*", "botocore.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-testpaths = ["apps/api/tests", "apps/worker/tests", "packages/rag/tests", ".claude/hooks"]
+testpaths = ["apps/api/tests", "apps/worker/tests", "packages/rag/tests", ".claude/hooks", "scripts"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

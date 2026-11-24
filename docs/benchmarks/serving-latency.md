@@ -70,6 +70,8 @@ The first request after Ollama starts pays for loading the models. Measured with
 
 ## The 7B default
 
+<!-- numcheck: ok: n is given in the sections above; this is a memory observation -->
+
 The app's default answer model is `qwen2.5:7b-instruct`. On this GPU, with the reranker holding 2.2 GB, Ollama keeps only one model loaded: the 7B model (5.2 GB, 18% of it on the CPU) and `bge-m3` replace each other on every question. Ollama reported load times of about 47 s for the 7B model and 15 s for `bge-m3` on each switch. The serving run was not made with it: it would measure model loading, not the app, and it heats the laptop. Two things follow for a local setup on a 6 GB card: use the 3B model (set `LLM_MODEL`), or run without the reranker. Which answer model is good enough is a separate question: no evaluation of answer quality exists yet, so these figures say nothing about the answers (see #22, #168).
 
 ## Reproduce
