@@ -65,6 +65,12 @@ A 5-question smoke run (not a result, nothing from it is kept) showed that a col
 
 The host has no Ollama install, so the run uses the pinned container of [README.md](README.md) ("Local Ollama", Ollama 0.40.17, models in the volume `ollama-bench-models`), started under `gpu_run.py hold` with `OLLAMA_KEEP_ALIVE=30m` and `OLLAMA_MAX_LOADED_MODELS=2`. Two consequences, nothing else changes: (1) the temperature-0, seed-287, `num_ctx` 4096 aliases are made through Ollama's `/api/create`; (2) "a separate `ollama serve` per arm" becomes "one container, with every loaded model unloaded (`keep_alive` 0) before each arm and each phase", which keeps one arm's model out of the other's VRAM peak; the VRAM baseline after unloading is logged. Hardware is the desktop PC (GTX 1060 6 GB), not the laptop the issue names, so absolute times and VRAM are for this GPU. The PDF is fetched with `experiments/e2e/fetch_pdf.py`; its hash is recorded.
 
+### Amendment 3, 2026-11-27, back to the laptop, before any result run
+
+At the owner's request the run moves from the desktop PC to the laptop the issue names (GTX 1660 Ti 6 GB), which already holds the book PDF; the desktop PC attempt stopped before any answer was generated because the PDF could not be fetched. Hardware is therefore the laptop, replacing the last sentence of Amendment 2 on hardware. The pinned Ollama container and scripts of Amendment 2 are unchanged. The GPU clock and CPU settings in force during the run are recorded with the result. Questions, arms, metrics and the verdict and exit rules do not change.
+
 ## Results
 
 Not run yet. 2026-11-24: the Ollama container came up with all three models, but the book PDF could not be fetched: `ws-export.wmcloud.org` answered HTTP 503 ("maintenance downtime or capacity problems") on 8 tries over about 35 minutes, and no copy of `vsl.pdf` exists on this machine. By the exit rule the comparison was not made. To finish: fetch `experiments/e2e/data/vsl.pdf` (or copy it from the laptop), start the container as in [README.md](README.md) with `-e OLLAMA_KEEP_ALIVE=30m -e OLLAMA_MAX_LOADED_MODELS=2`, smoke-test with `SMOKE=1 OUT_DIR=/tmp/smoke`, then run `experiments/qwen_size/run.sh` (about 70 minutes).
+
+2026-11-27: moved to the laptop (Amendment 3). Still not run. The paragraphs above about the desktop PC describe the earlier attempt.
