@@ -4,6 +4,8 @@ Run `capture_stub.py` on the host and the app with `LLM_PROVIDER=openai` pointin
 
     BOOK_ID=<uuid> python experiments/serving/dump_prompts.py CAPTURED.jsonl OUT.jsonl
 
+LIMIT=n sends only the first n questions (smoke run).
+
 Questions are sent one at a time, so the i-th captured request belongs to the i-th question.
 OUT holds one line per question: id, question and the chat `messages` (system and user) the app
 sent, with the retrieved passages inside the user message. Standard library only.
@@ -45,7 +47,8 @@ def main() -> None:
     book_id = os.environ["BOOK_ID"]
     questions = json.loads((HERE / "questions-208.json").read_text(encoding="utf-8"))
     rows = []
-    for i, q in enumerate(questions):
+    limit = int(os.environ.get("LIMIT", "0"))
+    for i, q in enumerate(questions[:limit] if limit else questions):
         ask(api, book_id, q["question"])
         got = lines(captured)
         if len(got) != i + 1:
