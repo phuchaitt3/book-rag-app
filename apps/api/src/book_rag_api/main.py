@@ -8,7 +8,6 @@ from fastapi import Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
-from qdrant_client import AsyncQdrantClient
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 
@@ -24,7 +23,7 @@ from book_rag.providers import (
     Reranker,
     TeiReranker,
 )
-from book_rag.retrieval import ChunkSearcher, HybridRetriever, RetrievalObserver
+from book_rag.retrieval import HybridRetriever, RetrievalObserver
 from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.books import router as books_router
 from book_rag_api.config import Settings, get_settings
@@ -40,11 +39,6 @@ from book_rag_api.observability import (
     install_problem_handlers,
 )
 from book_rag_api.openapi import add_stream_events
-from book_rag_api.qdrant_index import (
-    QdrantChunkSearcher,
-    QdrantVectorIndex,
-    ShadowChunkSearcher,
-)
 from book_rag_api.rate_limit import RateLimiter
 from book_rag_api.retrieval import SqlChunkSearcher
 from book_rag_api.routers.chat import multi_router as multi_chat_router
@@ -100,7 +94,7 @@ def create_app(
         app.state.queue = queue or create_queue(settings.database_url)
         app.state.llm = llm or _llm(settings)
         app.state.chat_limiter = RateLimiter(settings.chat_rate_limit, window=60.0)
-        app.state.retriever, index = build_retriever(
+        app.state.retriever = build_retriever(
             settings,
             async_sessionmaker(app.state.engine),
             embedder=embedder,
@@ -121,8 +115,6 @@ def create_app(
                     left,
                     settings.shutdown_drain_timeout,
                 )
-            if index is not None:
-                await index.close()
             await app.state.engine.dispose()
             if provider is not None:
                 provider.shutdown()  # flushes spans still queued for the collector
@@ -194,34 +186,17 @@ def build_retriever(
     reranker: Reranker | None = None,
     observer: RetrievalObserver | None = None,
     tracer: Tracer | None = None,
-) -> tuple[HybridRetriever, QdrantVectorIndex | None]:
-    """The retriever the chat endpoint uses, and the Qdrant index to close at shutdown when
-    there is one. The MCP server (`book_rag_api.mcp_server`) builds the same one."""
-    searcher, index = _searcher(settings, sessions)
-    retriever = HybridRetriever(
-        searcher,
+) -> HybridRetriever:
+    """The retriever the chat endpoint uses. The MCP server (`book_rag_api.mcp_server`) builds
+    the same one."""
+    return HybridRetriever(
+        SqlChunkSearcher(sessions),
         embedder or _embedder(settings),
         reranker or _reranker(settings),
         rerank_depth=settings.rerank_depth,
         observer=observer,
         tracer=tracer,
     )
-    return retriever, index
-
-
-def _searcher(
-    settings: Settings, sessions: async_sessionmaker[AsyncSession]
-) -> tuple[ChunkSearcher, QdrantVectorIndex | None]:
-    """The searcher, and the Qdrant index to close at shutdown when there is one."""
-    sql = SqlChunkSearcher(sessions)
-    if settings.vector_store == "pgvector":
-        return sql, None
-    index = QdrantVectorIndex(
-        AsyncQdrantClient(url=settings.qdrant_url), settings.qdrant_collection
-    )
-    qdrant = QdrantChunkSearcher(index, sessions, sql)
-    searcher = qdrant if settings.vector_store == "qdrant" else ShadowChunkSearcher(sql, qdrant)
-    return searcher, index
 
 
 def _llm(settings: Settings) -> LLM:

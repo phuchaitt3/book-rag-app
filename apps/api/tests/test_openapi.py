@@ -36,7 +36,7 @@ def test_committed_document_matches_the_api() -> None:
 def test_document_ignores_the_environment(monkeypatch: pytest.MonkeyPatch) -> None:
     before = render(document_app())
     monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://other:other@db.example/other")
-    monkeypatch.setenv("VECTOR_STORE", "not-a-store")  # invalid: Settings() would raise
+    monkeypatch.setenv("LLM_PROVIDER", "not-a-provider")  # invalid: Settings() would raise
     assert render(document_app()) == before
 
 

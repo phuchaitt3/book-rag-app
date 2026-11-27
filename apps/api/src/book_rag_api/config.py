@@ -79,11 +79,6 @@ class Settings(BaseSettings):
     # Defaults: see docs/benchmarks/abstain.md.
     abstain_below_reranked: float | None = ABSTAIN_RERANKED
     abstain_below_fused: float | None = ABSTAIN_FUSED
-    # Experiment (ADR 0008): "pgvector" (default), "qdrant", or "shadow" (pgvector answers and
-    # Qdrant is compared in the log). EXPIRES 2026-12-15, see #120.
-    vector_store: Literal["pgvector", "qdrant", "shadow"] = "pgvector"
-    qdrant_url: str = "http://localhost:6333"
-    qdrant_collection: str = "chunks"
     # Tracing (#225): off unless this is set, for example http://localhost:4318 (Jaeger, see
     # docs/operations/tracing.md). Same name as the standard OpenTelemetry variable.
     otel_exporter_otlp_endpoint: str | None = None
