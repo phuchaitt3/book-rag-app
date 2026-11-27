@@ -12,16 +12,17 @@ import logging
 import math
 import time
 import uuid
-from collections.abc import AsyncIterator
-from typing import Annotated, Any
+from collections.abc import AsyncIterator, Mapping, Sequence
+from typing import Annotated, Any, Literal
 
 from fastapi import APIRouter, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import distinct_on
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
-from book_rag.providers import LLM
+from book_rag.providers import LLM, Message
 from book_rag.retrieval import HybridRetriever, RetrievedChunk
 from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.auth import Owner
@@ -33,12 +34,54 @@ from book_rag_api.prompts import NO_PASSAGES_REPLY, NOT_FOUND_REPLY, build_messa
 from book_rag_api.rate_limit import RateLimiter
 
 router = APIRouter(prefix="/books", tags=["chat"])
+# A question over a chosen set of books (#89, brief multi-book-chat.md, option A).
+multi_router = APIRouter(tags=["chat"])
+MAX_CHAT_BOOKS = 10
 log = logging.getLogger(__name__)
+
+
+class HistoryTurn(BaseModel):
+    """One earlier turn, held by the client. Untrusted: the client can write either role."""
+
+    role: Literal["user", "assistant"]
+    text: Annotated[str, Field(min_length=1)]
 
 
 class ChatRequest(BaseModel):
     question: Annotated[str, Field(min_length=1, max_length=2000)]
     top_k: Annotated[int, Field(ge=1, le=20)] = 6
+    # Earlier turns, oldest first (#53). The API keeps no conversation; the caps are settings
+    # (`chat_history_max_turns`, `chat_history_max_chars`) checked in `check_history`.
+    history: list[HistoryTurn] = Field(default_factory=list)
+
+
+class MultiChatRequest(ChatRequest):
+    """A question over a chosen set of 1 to 10 books; repeated ids count once."""
+
+    book_ids: Annotated[list[uuid.UUID], Field(min_length=1, max_length=MAX_CHAT_BOOKS)]
+
+
+def check_history(history: list[HistoryTurn], settings: Settings) -> None:
+    """Refuse (422) history over the configured caps, so the prompt stays bounded."""
+    if len(history) > settings.chat_history_max_turns:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT,
+            f"history has {len(history)} turns; at most {settings.chat_history_max_turns}",
+        )
+    for turn in history:
+        if len(turn.text) > settings.chat_history_max_chars:
+            raise HTTPException(
+                status.HTTP_422_UNPROCESSABLE_CONTENT,
+                f"a history turn is over {settings.chat_history_max_chars} characters",
+            )
+
+
+def search_query(question: str, history: list[HistoryTurn]) -> str:
+    """The string to search with: the last earlier user question joined to the new one (option
+    Q2 of the brief; no model call). Assistant text is left out so a long answer cannot swamp
+    the question. With no history it is the question itself."""
+    previous = next((t.text for t in reversed(history) if t.role == "user"), None)
+    return question if previous is None else f"{previous}\n{question}"
 
 
 class Citation(BaseModel):
@@ -80,13 +123,23 @@ def sse(event: str, data: Any) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
 
 
-def citations_for(book: Book, chunks: list[RetrievedChunk]) -> list[Citation]:
+def citations_for(
+    book: Book, chunks: list[RetrievedChunk], titles: Mapping[uuid.UUID, str] | None = None
+) -> list[Citation]:
+    """With `titles` (book id to title; a question over several books) each citation names the
+    book its own passage came from, otherwise every passage is from `book`."""
+
+    def owner_of(c: RetrievedChunk) -> tuple[uuid.UUID, str]:
+        if titles is not None and c.book_id is not None and c.book_id in titles:
+            return c.book_id, titles[c.book_id]
+        return book.id, book.title
+
     return [
         Citation(
             number=n,
             chunk_id=c.id,
-            book_id=book.id,
-            book_title=book.title,
+            book_id=owner_of(c)[0],
+            book_title=owner_of(c)[1],
             section=c.section_path,
             page=c.page,
             score=c.score,
@@ -136,14 +189,18 @@ async def answer_events(
     question: str,
     chunks: list[RetrievedChunk],
     *,
+    history: list[Message] | None = None,
     idle_timeout: float = 30.0,
     total_timeout: float = 180.0,
     abstain: str | None = None,
     metrics: Metrics | None = None,
     started: float | None = None,
     tracer: Tracer | None = None,
+    titles: Mapping[uuid.UUID, str] | None = None,
 ) -> AsyncIterator[str]:
-    """`started` is `time.perf_counter()` at the request's start; with `metrics` it times the
+    """`titles` (book id to title) marks a question over several books: citations and the prompt
+    then name each passage's own book, and `book` only stands in for a passage with no book id.
+    `started` is `time.perf_counter()` at the request's start; with `metrics` it times the
     first token of a model answer. `tracer` opens the `llm.stream` span (its child `llm.first_token`
     ends at the first piece)."""
     tracer = tracer or NoopTracer()
@@ -156,11 +213,13 @@ async def answer_events(
         yield sse("token", TokenEvent(text=reply).model_dump())
         yield sse("done", DoneEvent(abstained=True).model_dump())
         return
-    citations = citations_for(book, chunks)
+    citations = citations_for(book, chunks, titles)
     yield sse("citations", [c.model_dump(mode="json") for c in citations])
     try:
         with tracer.span("llm.stream", book_id=str(book.id), citations=len(citations)) as span:
-            stream = llm.stream(build_messages(question, book.title, chunks))
+            stream = llm.stream(
+                build_messages(question, book.title, chunks, history or (), book_titles=titles)
+            )
             pieces = with_timeouts(stream, idle=idle_timeout, total=total_timeout)
             with tracer.span("llm.first_token", book_id=str(book.id)):
                 first = await anext(pieces, None)
@@ -193,16 +252,36 @@ async def answer_events(
     yield sse("done", DoneEvent().model_dump())
 
 
-@router.post("/{book_id}/chat")
-async def chat(
-    book_id: uuid.UUID, body: ChatRequest, request: Request, owner: Owner
+async def latest_job_statuses(
+    session: AsyncSession, book_ids: Sequence[uuid.UUID]
+) -> dict[uuid.UUID, str]:
+    """The status of each book's latest ingestion job; a book with no job is left out."""
+    rows = await session.execute(
+        select(IngestionJob.book_id, IngestionJob.status)
+        .where(IngestionJob.book_id.in_(book_ids))
+        .ext(distinct_on(IngestionJob.book_id))
+        .order_by(IngestionJob.book_id, IngestionJob.created_at.desc())
+    )
+    return {book_id: job_status for book_id, job_status in rows}
+
+
+async def stream_answer(
+    request: Request,
+    owner: str,
+    book_ids: list[uuid.UUID],
+    body: ChatRequest,
+    *,
+    multi: bool,
 ) -> StreamingResponse:
+    """The shared chat path: limits, books and readiness, retrieval, then the event stream.
+    `multi` is the several-books route; the one-book route keeps its own wording and prompt."""
     started = time.perf_counter()
     engine: AsyncEngine = request.app.state.engine
     retriever: HybridRetriever = request.app.state.retriever
     llm: LLM = request.app.state.llm
     settings: Settings = request.app.state.settings
     limiter: RateLimiter = request.app.state.chat_limiter
+    check_history(body.history, settings)
     wait = limiter.check(request.client.host if request.client else "unknown")
     if wait is not None:
         raise HTTPException(
@@ -211,25 +290,36 @@ async def chat(
             headers={"Retry-After": str(math.ceil(wait))},
         )
     async with AsyncSession(engine, expire_on_commit=False) as session:
-        book = await session.scalar(select(Book).where(Book.id == book_id, Book.owner_id == owner))
-        latest_job = await session.scalar(
-            select(IngestionJob.status)
-            .where(IngestionJob.book_id == book_id)
-            .order_by(IngestionJob.created_at.desc())
-            .limit(1)
-        )
-    if book is None:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "book not found")
+        found = {
+            b.id: b
+            for b in await session.scalars(
+                select(Book).where(Book.id.in_(book_ids), Book.owner_id == owner)
+            )
+        }
+        jobs = await latest_job_statuses(session, book_ids)
+    missing = [i for i in book_ids if i not in found]
+    if missing:
+        # Someone else's book answers the same as an unknown one (no probing of ids).
+        detail = "books not found: " + ", ".join(str(i) for i in missing)
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail if multi else "book not found")
     # Chunks are committed before their embeddings, and a re-run replaces them, so until the
     # latest job succeeds the search would quietly use part of the book (ADR 0004).
-    if latest_job is not None and latest_job != "succeeded":
-        raise HTTPException(
-            status.HTTP_409_CONFLICT, f"the book is not ready yet: its ingestion is {latest_job}"
-        )
+    not_ready = [(i, jobs[i]) for i in book_ids if i in jobs and jobs[i] != "succeeded"]
+    if not_ready:
+        if multi:
+            detail = "books not ready yet: " + ", ".join(
+                f"{found[i].title} ({i}) is {job_status}" for i, job_status in not_ready
+            )
+        else:
+            detail = f"the book is not ready yet: its ingestion is {not_ready[0][1]}"
+        raise HTTPException(status.HTTP_409_CONFLICT, detail)
     try:
         async with asyncio.timeout(settings.retrieval_timeout):
             chunks = await retriever.retrieve(
-                book_id, body.question, owner_id=owner, top_k=body.top_k
+                book_ids,
+                search_query(body.question, body.history),
+                owner_id=owner,
+                top_k=body.top_k,
             )
     except Exception:
         # The embedder (Ollama) or the search failed before any byte was sent, so a status
@@ -240,15 +330,17 @@ async def chat(
         ) from None
     events = answer_events(
         llm,
-        book,
+        found[book_ids[0]],
         body.question,
         chunks,
+        history=[Message(t.role, t.text) for t in body.history],
         idle_timeout=settings.llm_idle_timeout,
         total_timeout=settings.llm_total_timeout,
         abstain=abstain_reason(chunks, settings),
         metrics=request.app.state.metrics,
         started=started,
         tracer=request.app.state.tracer,
+        titles={i: found[i].title for i in book_ids} if multi else None,
     )
     tracker: StreamTracker = request.app.state.streams
     return StreamingResponse(
@@ -256,3 +348,17 @@ async def chat(
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
+
+
+@router.post("/{book_id}/chat")
+async def chat(
+    book_id: uuid.UUID, body: ChatRequest, request: Request, owner: Owner
+) -> StreamingResponse:
+    return await stream_answer(request, owner, [book_id], body, multi=False)
+
+
+@multi_router.post("/chat")
+async def chat_books(body: MultiChatRequest, request: Request, owner: Owner) -> StreamingResponse:
+    """Ask one question over 1 to 10 books; each citation names its own book."""
+    book_ids = list(dict.fromkeys(body.book_ids))
+    return await stream_answer(request, owner, book_ids, body, multi=True)

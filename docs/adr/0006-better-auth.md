@@ -2,7 +2,7 @@
 
 **Status:** Planned   **Date:** 2026-10-30
 **Decided by:** agents   **Confidence:** medium
-**Review:** [#39](https://github.com/phuchaitt3/book-rag-app/issues/39), open   **Study note:** [docs/design/0006-better-auth.md](../design/0006-better-auth.md)
+**Review:** [#39](https://github.com/phuchaitt3/book-rag-app/issues/39)   **Study note:** [docs/design/0006-better-auth.md](../design/0006-better-auth.md)
 
 ## Context
 

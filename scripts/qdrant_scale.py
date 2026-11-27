@@ -190,7 +190,7 @@ async def qdrant_stage(
     result["memory"] = container_mem("qdrant")
 
     async def search(book: int, q: np.ndarray) -> list[uuid.UUID]:
-        return await index.search(book_uuid(book), q.tolist(), LIMIT)
+        return await index.search([book_uuid(book)], q.tolist(), LIMIT)
 
     qvecs = queries(real, books)[1]
     _, found = await run_rate(search, t["target_books"], qvecs, 1, 1000)  # warm-up, recall pass
@@ -259,7 +259,7 @@ async def pgvector_stage(
         return [
             c.id
             for c in await searcher.vector_search(
-                book_uuid(book), q.tolist(), LIMIT, owner_id="dev-user"
+                [book_uuid(book)], q.tolist(), LIMIT, owner_id="dev-user"
             )
         ]
 

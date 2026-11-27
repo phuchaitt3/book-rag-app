@@ -2,7 +2,7 @@
 
 **Status:** Accepted   **Date:** 2026-10-30
 **Decided by:** agents (before study-design mode)   **Confidence:** high
-**Review:** [#37](https://github.com/phuchaitt3/book-rag-app/issues/37), open   **Study note:** [docs/design/0004-ingestion-queue-in-postgres.md](../design/0004-ingestion-queue-in-postgres.md)
+**Review:** [#37](https://github.com/phuchaitt3/book-rag-app/issues/37)   **Study note:** [docs/design/0004-ingestion-queue-in-postgres.md](../design/0004-ingestion-queue-in-postgres.md)
 
 ## Context
 

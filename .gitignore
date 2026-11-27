@@ -24,4 +24,9 @@ Thumbs.db
 .neon
 experiments/book-testset/data/
 experiments/serving/data/
+
+# Generated Kaggle kernels (scripts/kaggle_run.py, experiments/serving/kaggle_run.py)
 build/
+
+coverage.xml
+.coverage

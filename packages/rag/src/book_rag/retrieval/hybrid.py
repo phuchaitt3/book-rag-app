@@ -19,6 +19,8 @@ class RetrievedChunk:
     text: str
     page: int | None
     section_path: str | None
+    # The book the chunk belongs to; None when a searcher does not say (a fake in a test).
+    book_id: UUID | None = None
     # Fusion score, replaced by the reranker's score when a reranker is used.
     score: float = 0.0
     # True when `score` came from the reranker, False for the fused (RRF) score. The two scales
@@ -27,18 +29,18 @@ class RetrievedChunk:
 
 
 class ChunkSearcher(Protocol):
-    """The two search paths over one book's chunks; each returns best match first.
+    """The two search paths over the chunks of one or more books; each returns best match first.
 
     `owner_id` is required: a searcher returns only chunks of a book that owner owns, so a
     caller cannot search unscoped by leaving it out.
     """
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]: ...
 
     async def text_search(
-        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], query: str, limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]: ...
 
 
@@ -54,6 +56,11 @@ class RetrievalObserver(Protocol):
     def retrieval_done(self, seconds: float) -> None: ...
 
     def rerank_fallback(self, reason: str) -> None: ...
+
+
+def _book_label(book_ids: Sequence[UUID]) -> str:
+    """The span attribute for the books searched: one id as before, several joined by commas."""
+    return ",".join(str(b) for b in book_ids)
 
 
 def _fallback_reason(error: Exception) -> str:
@@ -89,20 +96,21 @@ class HybridRetriever:
         self._tracer: Tracer = tracer or NoopTracer()
 
     async def retrieve(
-        self, book_id: UUID, query: str, *, owner_id: str, top_k: int = 8
+        self, book_ids: Sequence[UUID], query: str, *, owner_id: str, top_k: int = 8
     ) -> list[RetrievedChunk]:
         started = time.perf_counter()
-        with self._tracer.span("embed_query", book_id=str(book_id)):
+        book_label = _book_label(book_ids)
+        with self._tracer.span("embed_query", book_id=book_label):
             [embedding] = await self._embedder.embed([query])
         embedded = time.perf_counter()
         by_vector, by_text = await asyncio.gather(
-            self._vector_search(book_id, embedding, owner_id),
-            self._lexical_search(book_id, query, owner_id),
+            self._vector_search(book_ids, embedding, owner_id),
+            self._lexical_search(book_ids, query, owner_id),
         )
         searched = time.perf_counter()
         with self._tracer.span(
             "fuse",
-            book_id=str(book_id),
+            book_id=book_label,
             vector_candidates=len(by_vector),
             top_k=top_k,
             lexical_candidates=len(by_text),
@@ -113,7 +121,7 @@ class HybridRetriever:
             span.set_attribute("fused_candidates", len(merged))
 
         if self._reranker is not None and merged:
-            merged = await self._rerank(self._reranker, query, merged, book_id)
+            merged = await self._rerank(self._reranker, query, merged, book_label)
         if self._observer is not None:
             self._observer.stage_done("embed", embedded - started)
             self._observer.stage_done("search", searched - embedded)
@@ -121,29 +129,31 @@ class HybridRetriever:
         return merged[:top_k]
 
     async def _vector_search(
-        self, book_id: UUID, embedding: Sequence[float], owner_id: str
+        self, book_ids: Sequence[UUID], embedding: Sequence[float], owner_id: str
     ) -> list[RetrievedChunk]:
-        with self._tracer.span("vector_search", book_id=str(book_id), k=self._candidates) as span:
+        label = _book_label(book_ids)
+        with self._tracer.span("vector_search", book_id=label, k=self._candidates) as span:
             found = await self._searcher.vector_search(
-                book_id, embedding, self._candidates, owner_id=owner_id
+                book_ids, embedding, self._candidates, owner_id=owner_id
             )
             span.set_attribute("candidates", len(found))
             return found
 
     async def _lexical_search(
-        self, book_id: UUID, query: str, owner_id: str
+        self, book_ids: Sequence[UUID], query: str, owner_id: str
     ) -> list[RetrievedChunk]:
-        with self._tracer.span("lexical_search", book_id=str(book_id), k=self._candidates) as span:
+        label = _book_label(book_ids)
+        with self._tracer.span("lexical_search", book_id=label, k=self._candidates) as span:
             found = await self._searcher.text_search(
-                book_id, query, self._candidates, owner_id=owner_id
+                book_ids, query, self._candidates, owner_id=owner_id
             )
             span.set_attribute("candidates", len(found))
             return found
 
     async def _rerank(
-        self, reranker: Reranker, query: str, fused: list[RetrievedChunk], book_id: UUID
+        self, reranker: Reranker, query: str, fused: list[RetrievedChunk], book_label: str
     ) -> list[RetrievedChunk]:
-        with self._tracer.span("rerank", book_id=str(book_id)) as span:
+        with self._tracer.span("rerank", book_id=book_label) as span:
             return await self._rerank_traced(reranker, query, fused, span)
 
     async def _rerank_traced(

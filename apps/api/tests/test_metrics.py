@@ -74,12 +74,12 @@ async def test_two_apps_do_not_share_counters() -> None:
 
 class OneChunkSearcher:
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         return [RetrievedChunk(id=uuid4(), text="x", page=1, section_path=None)]
 
     async def text_search(
-        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], query: str, limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         return []
 
@@ -94,7 +94,7 @@ async def test_retrieval_reports_stages_and_a_fallback_into_the_registry() -> No
     retriever = HybridRetriever(
         OneChunkSearcher(), FakeEmbedder(), DownReranker(), observer=metrics
     )
-    await retriever.retrieve(uuid4(), "q", owner_id="u")
+    await retriever.retrieve([uuid4()], "q", owner_id="u")
     text = metrics.render().decode()
     assert sample(text, 'rerank_fallbacks_total{reason="timeout"}') == 1.0
     assert sample(text, "retrieval_duration_seconds_count") == 1.0

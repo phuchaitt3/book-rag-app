@@ -2,7 +2,7 @@
 
 **Status:** Accepted   **Date:** 2026-10-31
 **Decided by:** agents (answering [#46](https://github.com/phuchaitt3/book-rag-app/issues/46))   **Confidence:** high
-**Review:** [#74](https://github.com/phuchaitt3/book-rag-app/issues/74), open   **Study note:** [docs/design/0007-api-web-contract.md](../design/0007-api-web-contract.md)
+**Review:** [#74](https://github.com/phuchaitt3/book-rag-app/issues/74)   **Study note:** [docs/design/0007-api-web-contract.md](../design/0007-api-web-contract.md)
 
 ## Context
 

@@ -2,7 +2,7 @@
 
 **Status:** Accepted   **Date:** 2026-11-10
 **Decided by:** owner (local-only path, 2026-11-10, in [#184](https://github.com/phuchaitt3/book-rag-app/issues/184)); agents (server, image, depth, fallback)   **Confidence:** medium
-**Review:** [#186](https://github.com/phuchaitt3/book-rag-app/issues/186), open   **Study note:** [docs/design/0009-reranker-local-tei-service.md](../design/0009-reranker-local-tei-service.md)
+**Review:** [#186](https://github.com/phuchaitt3/book-rag-app/issues/186)   **Study note:** [docs/design/0009-reranker-local-tei-service.md](../design/0009-reranker-local-tei-service.md)
 
 ## Context
 

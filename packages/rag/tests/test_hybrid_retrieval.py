@@ -16,12 +16,12 @@ class StubSearcher:
         self.by_vector, self.by_text = by_vector, by_text
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         return self.by_vector[:limit]
 
     async def text_search(
-        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], query: str, limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         return self.by_text[:limit]
 
@@ -38,7 +38,7 @@ def test_rrf_of_nothing_is_empty() -> None:
 async def test_merges_both_paths_without_duplicates() -> None:
     a, b, c = chunk("alpha"), chunk("beta"), chunk("gamma")
     retriever = HybridRetriever(StubSearcher([a, b], [b, c]), FakeEmbedder())
-    result = await retriever.retrieve(uuid4(), "q", owner_id="u")
+    result = await retriever.retrieve([uuid4()], "q", owner_id="u")
     assert [r.id for r in result] == [b.id, a.id, c.id]
 
 
@@ -46,7 +46,7 @@ async def test_reranker_reorders_and_top_k_cuts() -> None:
     off = chunk("unrelated words here")
     on = chunk("sông Hồng chảy qua Hà Nội")
     retriever = HybridRetriever(StubSearcher([off, on], [off]), FakeEmbedder(), FakeReranker())
-    result = await retriever.retrieve(uuid4(), "sông Hồng", owner_id="u", top_k=1)
+    result = await retriever.retrieve([uuid4()], "sông Hồng", owner_id="u", top_k=1)
     assert [r.id for r in result] == [on.id]
     assert result[0].score == pytest.approx(1.0)
 
@@ -70,7 +70,7 @@ async def test_reranker_scores_only_the_top_depth_and_keeps_the_tail() -> None:
     chunks = [chunk(f"c{i}") for i in range(5)]
     reranker = RecordingReranker()
     retriever = HybridRetriever(StubSearcher(chunks, []), FakeEmbedder(), reranker, rerank_depth=3)
-    result = await retriever.retrieve(uuid4(), "q", owner_id="u", top_k=5)
+    result = await retriever.retrieve([uuid4()], "q", owner_id="u", top_k=5)
     assert reranker.seen == ["c0", "c1", "c2"]
     assert [r.text for r in result] == ["c2", "c1", "c0", "c3", "c4"]
 
@@ -80,7 +80,7 @@ async def test_reranker_failure_falls_back_to_the_fused_order(
 ) -> None:
     chunks = [chunk(f"c{i}") for i in range(3)]
     retriever = HybridRetriever(StubSearcher(chunks, []), FakeEmbedder(), BrokenReranker())
-    result = await retriever.retrieve(uuid4(), "q", owner_id="u")
+    result = await retriever.retrieve([uuid4()], "q", owner_id="u")
     assert [r.text for r in result] == ["c0", "c1", "c2"]
     assert "reranker failed" in caplog.text
 
@@ -118,7 +118,7 @@ async def test_observer_sees_every_stage_once_and_no_fallback() -> None:
     retriever = HybridRetriever(
         StubSearcher([chunk("a")], []), FakeEmbedder(), FakeReranker(), observer=observer
     )
-    await retriever.retrieve(uuid4(), "q", owner_id="u")
+    await retriever.retrieve([uuid4()], "q", owner_id="u")
     assert sorted(observer.stages) == ["embed", "rerank", "search"]
     assert observer.totals == 1
     assert observer.fallbacks == []
@@ -127,7 +127,7 @@ async def test_observer_sees_every_stage_once_and_no_fallback() -> None:
 async def test_observer_without_a_reranker_sees_no_rerank_stage() -> None:
     observer = RecordingObserver()
     retriever = HybridRetriever(StubSearcher([chunk("a")], []), FakeEmbedder(), observer=observer)
-    await retriever.retrieve(uuid4(), "q", owner_id="u")
+    await retriever.retrieve([uuid4()], "q", owner_id="u")
     assert sorted(observer.stages) == ["embed", "search"]
 
 
@@ -136,7 +136,7 @@ async def test_observer_counts_a_timeout_fallback() -> None:
     retriever = HybridRetriever(
         StubSearcher([chunk("a")], []), FakeEmbedder(), BrokenReranker(), observer=observer
     )
-    await retriever.retrieve(uuid4(), "q", owner_id="u")
+    await retriever.retrieve([uuid4()], "q", owner_id="u")
     assert observer.fallbacks == ["timeout"]
     assert "rerank" in observer.stages  # the failed attempt still took time
 
@@ -149,5 +149,5 @@ async def test_observer_counts_any_other_failure_as_error() -> None:
         ConnectionRefusedReranker(),
         observer=observer,
     )
-    await retriever.retrieve(uuid4(), "q", owner_id="u")
+    await retriever.retrieve([uuid4()], "q", owner_id="u")
     assert observer.fallbacks == ["error"]

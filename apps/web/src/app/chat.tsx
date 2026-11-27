@@ -2,12 +2,17 @@
 
 import { type FormEvent, useRef, useState } from "react";
 
-import { API_URL, type Book, type Citation, apiHeaders, chatPath } from "@/api/client";
+import { API_URL, type Book, type Citation, apiHeaders, routes } from "@/api/client";
 import { readEvents } from "@/api/stream";
+
+// Mirrors the API's caps (`chat_history_max_turns`, `chat_history_max_chars` in config.py): the API
+// refuses more with 422, so the client sends only the newest messages and cuts long ones.
+const HISTORY_MAX_MESSAGES = 6;
+const HISTORY_MAX_CHARS = 1500;
 
 type Turn = { question: string; answer: string; citations: Citation[]; error?: string };
 
-export function Chat({ book }: { book: Book }) {
+export function Chat({ books }: { books: Book[] }) {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
   const abort = useRef<AbortController | null>(null);
@@ -28,19 +33,31 @@ export function Chat({ book }: { book: Book }) {
     void ask(question);
   }
 
+  // Finished exchanges only: a turn with an error or no answer would send an empty assistant text.
+  function historyFor(previous: Turn[]): { role: "user" | "assistant"; text: string }[] {
+    const messages = previous
+      .filter((t) => t.answer && !t.error)
+      .flatMap((t) => [
+        { role: "user" as const, text: t.question.slice(0, HISTORY_MAX_CHARS) },
+        { role: "assistant" as const, text: t.answer.slice(0, HISTORY_MAX_CHARS) },
+      ]);
+    return messages.slice(-HISTORY_MAX_MESSAGES);
+  }
+
   async function ask(question: string) {
+    const history = historyFor(turns);
     setTurns((all) => [...all, { question, answer: "", citations: [] }]);
     setBusy(true);
     abort.current = new AbortController();
     try {
-      const res = await fetch(`${API_URL}${chatPath(book.id)}`, {
+      const res = await fetch(`${API_URL}${routes.chat}`, {
         method: "POST",
         headers: apiHeaders({ "Content-Type": "application/json" }),
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, book_ids: books.map((b) => b.id), history }),
         signal: abort.current.signal,
       });
       if (!res.ok || !res.body) {
-        // 409: the book's ingestion has not finished; the API says which state it is in.
+        // 409: a chosen book's ingestion has not finished; the API names each one.
         const body = await res.json().catch(() => null);
         throw new Error(
           typeof body?.detail === "string" ? body.detail : `request failed (${res.status})`,
@@ -62,7 +79,9 @@ export function Chat({ book }: { book: Book }) {
 
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-lg font-medium">Ask about “{book.title}”</h2>
+      <h2 className="text-lg font-medium">
+        Ask about {books.map((b) => `“${b.title}”`).join(", ")}
+      </h2>
       {turns.map((turn, i) => (
         <article key={i} className="flex flex-col gap-2">
           <p className="font-medium">{turn.question}</p>

@@ -69,6 +69,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/chat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Chat Books
+         * @description Ask one question over 1 to 10 books; each citation names its own book.
+         */
+        post: operations["chat_books_chat_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/healthz": {
         parameters: {
             query?: never;
@@ -171,6 +191,8 @@ export interface components {
         };
         /** ChatRequest */
         ChatRequest: {
+            /** History */
+            history?: components["schemas"]["HistoryTurn"][];
             /** Question */
             question: string;
             /**
@@ -231,6 +253,19 @@ export interface components {
             /** Status */
             status: string;
         };
+        /**
+         * HistoryTurn
+         * @description One earlier turn, held by the client. Untrusted: the client can write either role.
+         */
+        HistoryTurn: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "user" | "assistant";
+            /** Text */
+            text: string;
+        };
         /** IngestionProgress */
         IngestionProgress: {
             /**
@@ -266,6 +301,23 @@ export interface components {
             started_at: string | null;
             /** Status */
             status: string;
+        };
+        /**
+         * MultiChatRequest
+         * @description A question over a chosen set of 1 to 10 books; repeated ids count once.
+         */
+        MultiChatRequest: {
+            /** Book Ids */
+            book_ids: string[];
+            /** History */
+            history?: components["schemas"]["HistoryTurn"][];
+            /** Question */
+            question: string;
+            /**
+             * Top K
+             * @default 6
+             */
+            top_k: number;
         };
         /** ReadyStatus */
         ReadyStatus: {
@@ -438,6 +490,39 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ChatRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    chat_books_chat_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MultiChatRequest"];
             };
         };
         responses: {
