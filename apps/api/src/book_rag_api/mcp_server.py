@@ -144,7 +144,7 @@ class BookIndex:
         try:
             async with asyncio.timeout(self._timeout):
                 chunks = await self._retriever.retrieve(
-                    book.id, query, owner_id=self._owner, top_k=k
+                    [book.id], query, owner_id=self._owner, top_k=k
                 )
         except Exception:
             log.exception("retrieval failed")
@@ -304,7 +304,7 @@ async def serve(settings: Settings | None = None) -> None:
     settings = settings or get_settings()
     engine = create_engine(settings.database_url)
     sessions = async_sessionmaker(engine, expire_on_commit=False)
-    retriever, vector_index = build_retriever(settings, sessions)
+    retriever = build_retriever(settings, sessions)
     try:
         index = BookIndex(
             sessions,
@@ -314,8 +314,6 @@ async def serve(settings: Settings | None = None) -> None:
         )
         await create_server(index).run_stdio_async()
     finally:
-        if vector_index is not None:
-            await vector_index.close()
         await engine.dispose()
 
 

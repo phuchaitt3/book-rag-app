@@ -159,12 +159,12 @@ async def test_retrieval_sql_returns_nothing_for_another_owners_book(world: Worl
     [vector] = await FakeEmbedder(EMBEDDING_DIM).embed([TEXTS[0]])
     try:
         # The owner finds the passages, by BM25 and by vector.
-        assert await searcher.text_search(world.b_book, "Hà Nội", 5, owner_id=world.owner_b)
-        assert await searcher.vector_search(world.b_book, vector, 5, owner_id=world.owner_b)
+        assert await searcher.text_search([world.b_book], "Hà Nội", 5, owner_id=world.owner_b)
+        assert await searcher.vector_search([world.b_book], vector, 5, owner_id=world.owner_b)
         # Anyone else gets none, through the same SQL.
-        assert await searcher.text_search(world.b_book, "Hà Nội", 5, owner_id=world.owner_a) == []
-        assert await searcher.vector_search(world.b_book, vector, 5, owner_id=world.owner_a) == []
-        assert await searcher.text_search(world.b_book, "Hà Nội", 5, owner_id="nobody") == []
+        assert await searcher.text_search([world.b_book], "Hà Nội", 5, owner_id=world.owner_a) == []
+        assert await searcher.vector_search([world.b_book], vector, 5, owner_id=world.owner_a) == []
+        assert await searcher.text_search([world.b_book], "Hà Nội", 5, owner_id="nobody") == []
     finally:
         await engine.dispose()
 

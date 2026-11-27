@@ -41,13 +41,15 @@ class SqlChunkSearcher:
         self._warned_missing = False
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         stmt = (
             select(Chunk)
             .join(Book, Book.id == Chunk.book_id)
             .where(
-                Chunk.book_id == book_id, Book.owner_id == owner_id, Chunk.embedding.is_not(None)
+                Chunk.book_id.in_(book_ids),
+                Book.owner_id == owner_id,
+                Chunk.embedding.is_not(None),
             )
             .order_by(Chunk.embedding.cosine_distance(list(embedding)))
             .limit(limit)
@@ -62,15 +64,32 @@ class SqlChunkSearcher:
         return await self._fetch(stmt, setup)
 
     async def text_search(
-        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], query: str, limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
-        """BM25 over the book's stored statistics (ADR 0011).
+        """BM25 over each book's stored statistics (ADR 0011).
+
+        The statistics are per book, so each book is ranked on its own and the lists are
+        interleaved by rank (scores of different books are not comparable); with one book this
+        is that book's list.
+        """
+        if not or_query(query):
+            return []
+        per_book = [await self._text_search_book(b, query, limit, owner_id) for b in book_ids]
+        if len(per_book) == 1:
+            return per_book[0]
+        merged: list[RetrievedChunk] = []
+        for rank in range(limit):
+            merged.extend(found[rank] for found in per_book if rank < len(found))
+        return merged[:limit]
+
+    async def _text_search_book(
+        self, book_id: UUID, query: str, limit: int, owner_id: str
+    ) -> list[RetrievedChunk]:
+        """One book's BM25 ranking.
 
         A book with no statistics (ingested before they existed and not backfilled) falls back
         to `ts_rank_cd`, which ranks worse but never returns nothing for that reason.
         """
-        if not or_query(query):
-            return []
         async with self._sessions() as session:
             if await has_stats(session, book_id, owner_id):
                 rows = await session.execute(
@@ -86,7 +105,13 @@ class SqlChunkSearcher:
                     },
                 )
                 return [
-                    RetrievedChunk(id=r.id, text=r.text, page=r.page, section_path=r.section_path)
+                    RetrievedChunk(
+                        id=r.id,
+                        text=r.text,
+                        page=r.page,
+                        section_path=r.section_path,
+                        book_id=book_id,
+                    )
                     for r in rows
                 ]
         return await self._ts_rank_search(book_id, query, limit, owner_id)
@@ -111,7 +136,13 @@ class SqlChunkSearcher:
                 await session.execute(text(statement))
             rows = await session.scalars(stmt)
             return [
-                RetrievedChunk(id=c.id, text=c.text, page=c.page, section_path=c.section_path)
+                RetrievedChunk(
+                    id=c.id,
+                    text=c.text,
+                    page=c.page,
+                    section_path=c.section_path,
+                    book_id=c.book_id,
+                )
                 for c in rows
             ]
 

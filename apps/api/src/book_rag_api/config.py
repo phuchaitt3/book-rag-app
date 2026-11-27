@@ -54,6 +54,12 @@ class Settings(BaseSettings):
     llm_idle_timeout: float = Field(default=30.0, gt=0)
     llm_total_timeout: float = Field(default=180.0, gt=0)
     chat_rate_limit: int = Field(default=30, ge=0)
+    # Chat history (#53, docs/design/brief-chat-history.md): the client sends earlier turns; the
+    # API keeps none. A request with more than `chat_history_max_turns` turns, or a turn longer
+    # than `chat_history_max_chars` characters, is refused with 422. Values are a first guess,
+    # to be tuned by the follow-up measurement in the brief.
+    chat_history_max_turns: int = Field(default=6, ge=0)
+    chat_history_max_chars: int = Field(default=1500, ge=1)
     # Shutdown (#228): on SIGTERM the API stops taking connections, then waits up to this many
     # seconds for answers still streaming before it closes the pools. Keep it under the
     # platform's termination grace period; run uvicorn with `--timeout-graceful-shutdown`
@@ -73,11 +79,6 @@ class Settings(BaseSettings):
     # Defaults: see docs/benchmarks/abstain.md.
     abstain_below_reranked: float | None = ABSTAIN_RERANKED
     abstain_below_fused: float | None = ABSTAIN_FUSED
-    # Experiment (ADR 0008): "pgvector" (default), "qdrant", or "shadow" (pgvector answers and
-    # Qdrant is compared in the log). EXPIRES 2026-12-15, see #120.
-    vector_store: Literal["pgvector", "qdrant", "shadow"] = "pgvector"
-    qdrant_url: str = "http://localhost:6333"
-    qdrant_collection: str = "chunks"
     # Tracing (#225): off unless this is set, for example http://localhost:4318 (Jaeger, see
     # docs/operations/tracing.md). Same name as the standard OpenTelemetry variable.
     otel_exporter_otlp_endpoint: str | None = None

@@ -86,8 +86,6 @@ async def run(worker: Worker, stop: asyncio.Event | None = None) -> None:
     finally:
         if undo is not None:
             undo()
-        if worker.index is not None:
-            await worker.index.close()
         await worker.engine.dispose()
 
 

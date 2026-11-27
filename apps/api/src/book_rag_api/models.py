@@ -168,6 +168,8 @@ class IngestionJob(Base):
     pages_read: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Last time a page was read (stage "read"); the stuck-job sweep counts from here when set.
+    progress_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     book: Mapped[Book] = relationship(back_populates="jobs")

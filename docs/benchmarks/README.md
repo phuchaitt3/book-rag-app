@@ -12,6 +12,31 @@ Measured results for retrieval and answering. Each note links the script that pr
 - [judge.md](judge.md): an LLM-as-judge for answer quality on a local model (#244): repeatable (96% identical scores on rerun) but UNVALIDATED until a human fills in the 40-row labelling sheet.
 - [set-local-cost.md](set-local-cost.md): the extra `SET LOCAL` statement in vector search costs one round trip (#93).
 
+## Local Ollama (#304)
+
+Benchmarks #287, #152 and #291 use a local Ollama with `qwen2.5:3b-instruct`, `qwen2.5:0.5b-instruct` and `bge-m3`. No Ollama is installed on the host; use the official image, pinned by digest (Ollama 0.40.17 at the pin), with models in the named volume `ollama-bench-models`. Keep at least 20 GB free on C:.
+
+Start (holds the machine-wide GPU lock until the container stops; run it in the background):
+
+```
+python ~/claude-config/scripts/gpu_run.py hold --wait --purpose ollama -- docker run -d --gpus all --name ollama-bench -p 127.0.0.1:11434:11434 -v ollama-bench-models:/root/.ollama ollama/ollama@sha256:ccc42bcd3d5fcf7ab0d532b300382154e1a4da56fc666bdb313b78ebdd912754
+```
+
+Pull the models once (they stay in the volume), then check:
+
+```
+docker exec ollama-bench ollama pull qwen2.5:3b-instruct
+docker exec ollama-bench ollama pull qwen2.5:0.5b-instruct
+docker exec ollama-bench ollama pull bge-m3
+curl http://localhost:11434/api/tags
+```
+
+Stop when no task needs it (never `-v`; the volume keeps the models):
+
+```
+docker rm -f ollama-bench
+```
+
 ## Checklist for a test set
 
 Each item answers a failure seen here or a common one in RAG evaluation (standard: standards/rag-retrieval-eval-without-benchmark, checked 2026-11-09).

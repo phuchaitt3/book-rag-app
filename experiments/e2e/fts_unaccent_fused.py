@@ -10,7 +10,7 @@ is embedded as stripped); only the keyword leg differs: A `simple`, B `unaccent`
 Run from the repository root (needs Docker and Ollama at 127.0.0.1:11434):
   BOOK_DATA=<main checkout>/experiments/book-testset/data \
   python ~/claude-config/scripts/gpu_run.py run --wait -- \
-    uv run python experiments/e2e/fts_unaccent_fused.py
+    uv run --with numpy python experiments/e2e/fts_unaccent_fused.py
 Writes experiments/e2e/results/fts-unaccent-fused-95.json.
 """
 

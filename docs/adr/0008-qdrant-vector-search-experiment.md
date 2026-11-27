@@ -1,8 +1,10 @@
 # 0008: Qdrant vector-search experiment
 
-**Status:** Proposed
+**Status:** Rejected (2026-11-27, owner's decision, ahead of the 2026-12-15 date)
 
-**Decided by:** agents (exit criteria are defaults taken from the issue's examples; the owner may change them before the first run)   **Review:** [#113](https://github.com/phuchaitt3/book-rag-app/issues/113), open
+**Outcome:** pgvector stays the only vector store. On real bge-m3 embeddings (359 chunks of one book, 416 questions) both stores had recall@30 1.00 and identical result sets, and Qdrant's p95 was 52.3 ms against pgvector's 45.4 ms, so criterion 2 failed ([results](../design/qdrant-experiment-results.md)). Nothing here says how the two compare at 1 million chunks or more: the scale-up arm stopped at 200,000 synthetic chunks. The adapter, the `VECTOR_STORE` setting, shadow mode, the Compose service, the worker upsert and the experiment scripts are removed ([#120](https://github.com/phuchaitt3/book-rag-app/issues/120)); the code is in git history. The text below is the record as written before the decision.
+
+**Decided by:** agents (exit criteria are defaults taken from the issue's examples; the owner may change them before the first run)   **Review:** [#117](https://github.com/phuchaitt3/book-rag-app/issues/117)
 
 This ADR does not change [ADR 0002](0002-postgres-pgvector-hybrid-search.md), which stays Accepted. It sets up a bounded, dated experiment to find out whether the vector part of that decision should change. Follows the experiment procedure: criteria first, then code behind the existing interface and a setting, a shadow run, a decision on a fixed date.
 
@@ -74,3 +76,4 @@ This is what the scale-up arm is for. ADR 0002 expects the pgvector index to sto
 (The owner's questions and the answers, dated, newest last.)
 
 - 2026-11-01: results added by the agent that ran the measurements (see "Results"). The status stays Proposed until the decision date; no criterion was changed after the results.
+- 2026-11-27: status line names the decision date; the review link points to the review issue #117 ([#322](https://github.com/phuchaitt3/book-rag-app/issues/322)).

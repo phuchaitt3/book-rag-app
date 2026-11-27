@@ -2,6 +2,8 @@
 
 Measurement note for [ADR 0008](../adr/0008-qdrant-vector-search-experiment.md) (issue #115). Method and raw numbers live here; the ADR keeps the exit criteria and a one-line result. The script is `scripts/qdrant_experiment.py` (deleted with the toggle, #120).
 
+2026-11-27: ADR 0008 was rejected and the experiment code removed (#120). The scripts this note names (`scripts/qdrant_*.py`) are in git history, not in the tree.
+
 ## Results (measured 2026-11-01)
 
 Run by `scripts/qdrant_experiment.py` on one Windows laptop (Docker Desktop, 7.7 GB for containers, Ollama bge-m3 on the host), Postgres `pgvector/pgvector:pg17` and `qdrant/qdrant:v1.20.0` as in `compose.yaml`. The corpus is one real book: a 71-page Vietnamese PDF, 164 chunks, embedded with bge-m3 (1024 dimensions). The questions are 120 passages (the longest of the first three sentences of a random chunk, seed 0) embedded with the same model. Everything below was **measured**, not estimated, except where it says otherwise. Each path ran alone, one after the other, at 5 queries per second for 300 s (1 book) or 60 s (100 books), 0 errors. Latency is `vector_search` at the call site, so the Qdrant path includes its Postgres fetch of the chunk text (by design, see "The design under test").
