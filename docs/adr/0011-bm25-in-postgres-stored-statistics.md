@@ -2,7 +2,7 @@
 
 **Status:** Accepted   **Date:** 2026-11-14
 **Decided by:** agents   **Confidence:** medium
-**Review:** [#209](https://github.com/phuchaitt3/book-rag-app/issues/209), open   **Study note:** [docs/design/0011-bm25-in-postgres.md](../design/0011-bm25-in-postgres.md)
+**Review:** [#209](https://github.com/phuchaitt3/book-rag-app/issues/209)   **Study note:** [docs/design/0011-bm25-in-postgres.md](../design/0011-bm25-in-postgres.md)
 
 ## Context
 
