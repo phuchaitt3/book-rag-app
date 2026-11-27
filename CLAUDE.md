@@ -2,7 +2,7 @@
 
 Tier: **solo-fast** (confirmed by the user 2026-10-29; see the `workflow:new-project` skill).
 
-Mode: **study-design** (chosen by the user 2026-10-30; see the `workflow:new-project` skill). Design briefs go in `docs/design/`, decisions in `docs/adr/`; [docs/design/README.md](docs/design/README.md) describes the process.
+Mode: **build** (user's decision, 2026-11-27; was study-design). Decision records stay: write one in `docs/adr/` for a choice that changes the architecture or is costly to reverse; merging its PR accepts it. No study note or review issue is required; existing notes in `docs/design/` stay as history.
 
 Goals: this is a portfolio project, and **scalability and operability come before features** (the user's statement, 2026-10-31; full list in [README.md](README.md), "Goals and priorities"). Read that section before any design, ADR or dependency choice, and judge options by the design that scales and by measurement, not by today's load alone.
 
