@@ -5,12 +5,15 @@ qwen2.5:3b-instruct (Q4_K_M). Both run the same concurrency_bench.py over the sa
 Each arm is wrapped so a failure in one is recorded and the other still runs.
 Commit of the repository when built: __COMMIT__
 """
-import base64, io, json, os, pathlib, shutil, signal, subprocess, sys, time, traceback, urllib.request, zipfile
+import base64, hashlib, io, json, os, pathlib, shutil, signal, subprocess, sys, tarfile, time, traceback, urllib.request, zipfile
 
 BUNDLE = "__BUNDLE__"
 VLLM_VERSION = "0.10.2"
 VLLM_MODEL = "Qwen/Qwen2.5-3B-Instruct-AWQ"
 OLLAMA_MODEL = "qwen2.5:3b-instruct"
+# Same version as the laptop; the checksum is the release asset's digest.
+OLLAMA_URL = "https://github.com/ollama/ollama/releases/download/v0.40.13/ollama-linux-amd64.tar.zst"
+OLLAMA_SHA256 = "c9490e0f520be21271d969e6703f012268b1d39f8b70dd58854e5bfef7a75bb6"
 W = pathlib.Path("/kaggle/working")
 B, R = W / "bundle", W / "results"
 R.mkdir(parents=True, exist_ok=True)
@@ -81,10 +84,30 @@ def vllm_arm():
         time.sleep(15)
 
 
+def fetch_ollama():
+    # A pinned release, run only when its SHA-256 matches (owner's decision, 2026-11-27: Kaggle
+    # cannot run the Docker image and Ollama has no pip package).
+    archive = pathlib.Path("/tmp/ollama.tar.zst")
+    urllib.request.urlretrieve(OLLAMA_URL, archive)
+    digest = hashlib.sha256()
+    with archive.open("rb") as fh:
+        for block in iter(lambda: fh.read(1 << 20), b""):
+            digest.update(block)
+    if digest.hexdigest() != OLLAMA_SHA256:
+        raise RuntimeError(f"Ollama archive sha256 {digest.hexdigest()} does not match the pin")
+    sh("pip install -q zstandard", check=True)
+    import zstandard
+
+    with archive.open("rb") as fh:
+        with zstandard.ZstdDecompressor().stream_reader(fh) as raw:
+            with tarfile.open(fileobj=raw, mode="r|") as tar:
+                tar.extractall("/tmp/ollama", filter="tar")
+    ENV["PATH"] = "/tmp/ollama/bin:" + ENV["PATH"]
+
+
 def ollama_arm():
-    # Official install script (a Kaggle sandbox, not the user's machine); the version is recorded.
-    sh("curl -fsSL https://ollama.com/install.sh | sh", check=True)
-    ver = subprocess.run("ollama --version", shell=True, capture_output=True, text=True).stdout.strip()
+    fetch_ollama()
+    ver = subprocess.run("ollama --version", shell=True, capture_output=True, text=True, env=ENV).stdout.strip()
     env = {**ENV, "OLLAMA_HOST": "127.0.0.1:11434", "OLLAMA_NUM_PARALLEL": "16", "OLLAMA_CONTEXT_LENGTH": "8192",
            "OLLAMA_KEEP_ALIVE": "60m"}
     log = open(R / "ollama-server.log", "w")

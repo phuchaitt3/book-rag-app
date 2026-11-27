@@ -36,3 +36,17 @@ def test_build_embeds_bundle_and_writes_private_gpu_metadata(tmp_path: Path, mon
     names = zipfile.ZipFile(io.BytesIO(base64.b64decode(encoded))).namelist()
     assert sorted(names) == ["concurrency_bench.py", "measure.py", "prompts.jsonl"]
     compile(script, "script.py", "exec")  # the generated kernel is valid Python
+
+
+def test_limit_keeps_the_first_prompts(tmp_path: Path) -> None:
+    prompts = tmp_path / "prompts.jsonl"
+    prompts.write_text("".join(f'{{"id": "{x}"}}{chr(10)}' for x in "abc"))
+    encoded = kaggle_run.make_bundle({}, prompts, "prompts.jsonl", limit=2)
+    bundle = zipfile.ZipFile(io.BytesIO(base64.b64decode(encoded)))
+    assert bundle.read("prompts.jsonl").decode().splitlines() == ['{"id": "a"}', '{"id": "b"}']
+
+
+def test_kernel_runs_only_a_checksummed_ollama() -> None:
+    template = kaggle_run.KERNELS["serving"]["template"].read_text(encoding="utf-8")
+    assert "install.sh" not in template and "| sh" not in template
+    assert "OLLAMA_SHA256" in template and "does not match the pin" in template

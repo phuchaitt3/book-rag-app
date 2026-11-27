@@ -51,14 +51,20 @@ KERNELS: dict[str, dict] = {
 FINAL_STATES = ("complete", "error", "cancel")
 
 
-def make_bundle(files: dict[str, str], prompts: Path | None, prompts_as: str) -> str:
-    """Zip the named repository files (and the prompts file) and return them base64-encoded."""
+def make_bundle(
+    files: dict[str, str], prompts: Path | None, prompts_as: str, limit: int = 0
+) -> str:
+    """Zip the named repository files (and the prompts file) and return them base64-encoded.
+
+    `limit` keeps only the first n prompts, for a smoke kernel.
+    """
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
         for src, dest in files.items():
             zf.write(ROOT / src, dest)
         if prompts is not None:
-            zf.write(prompts, prompts_as)
+            rows = prompts.read_text(encoding="utf-8").splitlines(keepends=True)
+            zf.writestr(prompts_as, "".join(rows[:limit] if limit else rows))
     return base64.b64encode(buf.getvalue()).decode()
 
 
@@ -76,14 +82,14 @@ def owner() -> str:
     raise SystemExit("kaggle CLI is not logged in (no username in `kaggle config view`)")
 
 
-def build(name: str, prompts: Path | None, user: str) -> Path:
+def build(name: str, prompts: Path | None, user: str, limit: int = 0) -> Path:
     spec = KERNELS[name]
     out = BUILD / name
     out.mkdir(parents=True, exist_ok=True)
     script = (
         spec["template"]
         .read_text(encoding="utf-8")
-        .replace("__BUNDLE__", make_bundle(spec["files"], prompts, spec["prompts_as"]))
+        .replace("__BUNDLE__", make_bundle(spec["files"], prompts, spec["prompts_as"], limit))
         .replace("__COMMIT__", commit())
     )
     (out / "script.py").write_text(script, encoding="utf-8")
@@ -122,6 +128,7 @@ def main() -> None:
     p.add_argument("cmd", choices=["build", "push", "status", "wait", "output"])
     p.add_argument("kernel", choices=sorted(KERNELS))
     p.add_argument("--prompts", type=Path, help="prompts file to embed (build)")
+    p.add_argument("--limit", type=int, default=0, help="embed only the first n prompts (smoke)")
     p.add_argument("--timeout-s", type=int, default=3 * 3600, help="kernel run limit (push)")
     args = p.parse_args()
 
@@ -129,7 +136,7 @@ def main() -> None:
     ref = f"{user}/{KERNELS[args.kernel]['slug']}"
     folder = BUILD / args.kernel
     if args.cmd == "build":
-        print(build(args.kernel, args.prompts, user))
+        print(build(args.kernel, args.prompts, user, args.limit))
     elif args.cmd == "push":
         res = kaggle(
             "kernels",
