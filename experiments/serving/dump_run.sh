@@ -14,6 +14,9 @@ services:
     environment:
       OLLAMA_URL: http://host.docker.internal:11436
       CHAT_RATE_LIMIT: "0"
+      # Abstaining off, so every question builds a prompt (a refused one calls no model).
+      ABSTAIN_BELOW_RERANKED: "-1"
+      ABSTAIN_BELOW_FUSED: "-1"
   worker:
     environment:
       OLLAMA_URL: http://host.docker.internal:11436

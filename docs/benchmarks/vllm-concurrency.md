@@ -73,3 +73,11 @@ next to the embedder and reranker.
 
 `python scripts/kaggle_run.py build serving --prompts experiments/serving/data/prompts-208.jsonl`,
 then `push`, `wait`. Uses the free weekly Kaggle GPU quota; no paid API.
+
+## Notes after pre-registration
+
+- **2026-11-27, before any run:** since the pre-registration the app refuses a question whose best
+  passage scores under 0.2557 and calls no model (#222). To keep 208 prompts, the dump runs with
+  both abstain thresholds at -1. Each prompt is still the one the app builds from the retrieved
+  passages; the dump records each question's top score, so the number the shipped app would have
+  refused is reported with the results.
