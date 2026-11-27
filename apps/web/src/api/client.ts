@@ -18,26 +18,26 @@ export const apiHeaders = (extra: Record<string, string> = {}): Record<string, s
 });
 
 // Route paths as the API declares them. `satisfies keyof paths` makes a route the API no longer
-// has fail to compile; the two with a parameter are filled in by the helpers below.
+// has fail to compile; the one with a parameter is filled in by the helper below.
 export const routes = {
   healthz: "/healthz",
   readyz: "/readyz",
   books: "/books",
   ingestionJob: "/ingestion-jobs/{job_id}",
-  chat: "/books/{book_id}/chat",
+  chat: "/chat",
 } as const satisfies Record<string, keyof paths>;
 
 export const ingestionJobPath = (jobId: string) =>
   routes.ingestionJob.replace("{job_id}", encodeURIComponent(jobId));
-export const chatPath = (bookId: string) =>
-  routes.chat.replace("{book_id}", encodeURIComponent(bookId));
 
 type Schemas = components["schemas"];
 
 export type Book = Schemas["BookOut"];
 export type UploadedBook = Schemas["UploadedBook"];
 export type IngestionProgress = Schemas["IngestionProgress"];
-export type ChatRequest = Schemas["ChatRequest"];
+export type ChatRequest = Schemas["MultiChatRequest"];
+// POST /chat accepts 1 to 10 books (docs/design/multi-book-chat.md).
+export const MAX_CHAT_BOOKS = 10;
 export type Citation = Schemas["Citation"];
 
 // The chat answer is a stream of server-sent events: `citations` once, then many `token`,

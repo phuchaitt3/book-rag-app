@@ -19,13 +19,6 @@ services:
       timeout: 3s
       retries: 10
 
-  # Experiment (ADR 0008, expires 2026-12-15): vector store, used when VECTOR_STORE=qdrant.
-  # Reachable on the Compose network only (no published port): Qdrant starts without authentication.
-  qdrant:
-    image: qdrant/qdrant:v1.20.0
-    volumes:
-      - qdrant-data:/qdrant/storage
-
   # S3-compatible store for uploads. SeaweedFS, because MinIO no longer publishes free images.
   # No auth locally; production uses Cloudflare R2.
   s3:
@@ -65,8 +58,6 @@ services:
       # "openai" sends the answer to an OpenAI-compatible server (llama.cpp) at LLM_BASE_URL (#245).
       LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
       LLM_BASE_URL: ${LLM_BASE_URL:-http://host.docker.internal:8081}
-      VECTOR_STORE: ${VECTOR_STORE:-pgvector}
-      QDRANT_URL: http://qdrant:6333
       # Off here; compose.reranker.yaml adds the reranker service and turns it on (ADR 0009).
       RERANKER_PROVIDER: ${RERANKER_PROVIDER:-none}
     extra_hosts:
@@ -90,8 +81,6 @@ services:
       S3_ENDPOINT_URL: http://s3:8333
       # The host's Ollama; set EMBEDDING_PROVIDER=fake to run without a model.
       OLLAMA_URL: http://host.docker.internal:11434
-      VECTOR_STORE: ${VECTOR_STORE:-pgvector}
-      QDRANT_URL: http://qdrant:6333
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
@@ -125,5 +114,4 @@ services:
 
 volumes:
   db-data:
-  qdrant-data:
   s3-data:

@@ -1,8 +1,12 @@
 # Held-out and dev page sets for the image-page reader comparison (#271)
 
-Status: **collected by an agent 2026-11-19; not approved.** The owner's spot-check (about 10 pages
-against their images) and the licence approval are still to do. Until then every number computed
-on these pages is provisional (#273), and `licence_approved_by_owner` is `false` in the manifest.
+Status: **collected by an agent 2026-11-19; licence basis approved by the owner 2026-11-27**
+([comment on #288](https://github.com/phuchaitt3/book-rag-app/pull/288)), and
+`licence_approved_by_owner` is `true` in the manifest. The text is only partly checked: the owner
+compared b00p017, b01p040 and b04p016 with their images and found them correct (3 of 50 pages, not
+the planned 10). Of the 40 questions the owner checked a random 10 (seed 271; lines 5, 7, 12, 22,
+23, 24, 31, 34, 38 and 40 of `questions.jsonl`), all correct, against the page text rather than the
+image; the other 30 are not checked. Numbers computed on these pages (#273) say so.
 
 What is here (git): the scripts, the 40 drafted questions (`questions.jsonl`) and the DVC pointer
 `data/pages.dvc`. What is not in git: `data/pages/` (images, text, `manifest.jsonl`), which lives in

@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from datetime import timedelta
 
 import procrastinate
-from qdrant_client import AsyncQdrantClient
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from book_rag.providers import Embedder, FakeEmbedder, OllamaEmbedder
@@ -14,7 +13,6 @@ from book_rag.reading import PageReader, TesseractReader
 from book_rag_api.db import create_engine
 from book_rag_api.jobs import INGEST_TASK, create_queue
 from book_rag_api.models import EMBEDDING_DIM
-from book_rag_api.qdrant_index import QdrantVectorIndex
 from book_rag_api.storage import S3Storage
 from book_rag_worker.config import WorkerSettings
 from book_rag_worker.ingest import (
@@ -53,14 +51,6 @@ def create_page_reader(settings: WorkerSettings) -> PageReader | None:
     return None
 
 
-def create_index(settings: WorkerSettings) -> QdrantVectorIndex | None:
-    """The Qdrant copy of the vectors, only when the experiment is switched on (ADR 0008)."""
-    if settings.vector_store == "pgvector":
-        return None
-    client = AsyncQdrantClient(url=settings.qdrant_url)
-    return QdrantVectorIndex(client, settings.qdrant_collection)
-
-
 class RetryStrategy(procrastinate.RetryStrategy):
     """Transient errors are retried with backoff (a bad PDF is not). A job cut off by a worker
     shutdown is also retried, at once and without using up an attempt's backoff: it did
@@ -78,7 +68,6 @@ class RetryStrategy(procrastinate.RetryStrategy):
 class Worker:
     app: procrastinate.App
     engine: AsyncEngine
-    index: QdrantVectorIndex | None = None
     # Seconds the running job may take to finish after a stop request.
     shutdown_timeout: float = 20.0
 
@@ -96,7 +85,6 @@ def build_worker(
     embedder = embedder or create_embedder(settings)
     read_pdf = read_pdf or create_reader(settings)
     page_reader = page_reader or create_page_reader(settings)
-    index = create_index(settings)
 
     # Only transient errors are retried; a bad PDF fails at once (run_ingestion records it).
     retry = RetryStrategy(
@@ -112,7 +100,6 @@ def build_worker(
             embedder,
             settings.embed_batch_size,
             attempts=context.job.attempts,
-            index=index,
             page_reader=page_reader,
         )
 
@@ -121,4 +108,4 @@ def build_worker(
     async def sweep_stuck_jobs(timestamp: int) -> None:
         await fail_stuck_jobs(engine, timedelta(minutes=settings.stuck_job_minutes))
 
-    return Worker(app, engine, index, settings.shutdown_timeout)
+    return Worker(app, engine, settings.shutdown_timeout)

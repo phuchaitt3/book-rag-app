@@ -26,11 +26,6 @@ class WorkerSettings(BaseSettings):
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://127.0.0.1:11434"
     embed_batch_size: int = 32
-    # Experiment (ADR 0008): with "qdrant" or "shadow" the worker also copies each batch of
-    # vectors to Qdrant. EXPIRES 2026-12-15, see #120.
-    vector_store: Literal["pgvector", "qdrant", "shadow"] = "pgvector"
-    qdrant_url: str = "http://localhost:6333"
-    qdrant_collection: str = "chunks"
     # On SIGTERM the worker takes no new job and lets the running one finish for this many
     # seconds; after that the job goes back to the queue (#228). Keep it under the platform's
     # termination grace period (Kubernetes: 30 s by default).

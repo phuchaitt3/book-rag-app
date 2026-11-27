@@ -71,24 +71,50 @@ def test_claude_hook_code_is_left_to_the_reviewer(path: str) -> None:
 
 def _codeowners_sample_paths() -> list[str]:
     """One concrete file path for each pattern in .github/CODEOWNERS."""
-    text = (Path(__file__).parents[2] / ".github" / "CODEOWNERS").read_text(encoding="utf-8")
+    text = merge_gate.CODEOWNERS_PATH.read_text(encoding="utf-8")
     paths = []
     for line in text.splitlines():
         if not line.strip() or line.lstrip().startswith("#"):
             continue
-        pattern = line.split()[0]
+        pattern = line.split("#")[0].split()[0]
         pattern = pattern.replace("**/", "apps/api/").lstrip("/").replace("*", "")
         paths.append(pattern + "x" if pattern.endswith("/") else pattern)
     return paths
 
 
-def test_every_codeowners_path_is_refused_by_the_hook() -> None:
+def test_hook_refuses_each_path_codeowners_names() -> None:
     paths = _codeowners_sample_paths()
-    assert (
-        len(paths) >= 3
-    )  # settings, LICENSE, SECURITY.md (infra and deploy left the list 2026-11-15)
+    assert len(paths) >= 3  # settings, LICENSE, SECURITY.md
     for path in paths:
         assert merge_gate.check("gh pr merge 5 --squash", files(path)), path
+
+
+def test_reason_comes_from_codeowners() -> None:
+    reason = merge_gate.check("gh pr merge 5 --squash", files("LICENSE"))
+    assert reason and "licensing and security policy" in reason
+
+
+def test_new_codeowners_line_is_enforced_without_editing_the_hook(tmp_path: Path) -> None:
+    path = tmp_path / "CODEOWNERS"
+    path.write_text("/deploy/  @o  # deploy\n*.tf @o\n/a/*.md @o\n", encoding="utf-8")
+
+    def hit(name: str) -> bool:
+        return bool(merge_gate.user_merge_hits([name], path))
+
+    assert hit("deploy/x/y.yml") and hit("infra/main.tf") and hit("a/b.md")
+    assert not (hit("a/b/c.md") or hit("other/x.py") or hit("mydeploy/x"))
+
+
+@pytest.mark.parametrize("content", [None, "", "# only a comment\n", "/LICENSE\n"])
+def test_unusable_codeowners_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, content: str | None
+) -> None:
+    path = tmp_path / "CODEOWNERS"
+    if content is not None:
+        path.write_text(content, encoding="utf-8")
+    monkeypatch.setattr(merge_gate, "CODEOWNERS_PATH", path)
+    reason = merge_gate.check("gh pr merge 5 --squash", files("apps/api/x.py"))
+    assert reason and "fails closed" in reason
 
 
 @pytest.mark.parametrize(

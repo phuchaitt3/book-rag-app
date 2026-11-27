@@ -1,8 +1,8 @@
 # 0011: The full-text leg ranks with BM25 computed in Postgres from stored per-book statistics
 
-**Status:** Proposed   **Date:** 2026-11-14
+**Status:** Accepted   **Date:** 2026-11-14
 **Decided by:** agents   **Confidence:** medium
-**Review:** [#209](https://github.com/phuchaitt3/book-rag-app/issues/209), open   **Study note:** [docs/design/0011-bm25-in-postgres.md](../design/0011-bm25-in-postgres.md)
+**Review:** [#209](https://github.com/phuchaitt3/book-rag-app/issues/209)   **Study note:** [docs/design/0011-bm25-in-postgres.md](../design/0011-bm25-in-postgres.md)
 
 ## Context
 
@@ -35,3 +35,4 @@ It recovers the 11 points the full-text leg costs, keeps one database (ADR 0002)
 
 - 2026-11-14: proposed, with the measurements above ([#208](https://github.com/phuchaitt3/book-rag-app/issues/208)).
 - 2026-11-15: terms now include adjacent-word pairs (`tsv_bi`), by the exit rule set before the measurement ([#95](https://github.com/phuchaitt3/book-rag-app/issues/95)).
+- 2026-11-27: status set to Accepted. The record's PR (#210) merged on 2026-11-14, which accepts it ([process](../design/README.md)); the status line had not been updated.
