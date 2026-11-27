@@ -18,7 +18,8 @@ services:
     environment:
       OLLAMA_URL: http://host.docker.internal:11436
 Y
-F="-f compose.yaml -f compose.reranker.yaml -f $1.override.yaml"
+# EXTRA_COMPOSE=file adds a machine-local override (for example another model-cache volume).
+F="-f compose.yaml -f compose.reranker.yaml -f $1.override.yaml ${EXTRA_COMPOSE:+-f $EXTRA_COMPOSE}"
 mkdir -p experiments/serving/data
 cleanup() {
   echo "== teardown"; docker compose $F down 2>&1 | tail -3
