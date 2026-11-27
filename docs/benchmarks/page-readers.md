@@ -1,7 +1,9 @@
 # Image-page readers on the #271 page set (#273): PROVISIONAL
 
-Status: **UNCHECKED.** The page set (#271, PR #288) has not had the owner's spot-check or licence
-approval. Every number below may change or be discarded. Do not cite it elsewhere.
+Status: **partly checked.** The owner approved the page set's licence basis and checked 3 of the 50
+pages against their images and 10 of the 40 questions (2026-11-27, #288); no correction was needed.
+The other pages are as proofread on Wikisource and cleaned by the script. Say so wherever a number
+from this page set is cited.
 
 ## Tesseract (vie+eng, 300 dpi setting, tessdata_fast 4.1.0), CPU only
 
