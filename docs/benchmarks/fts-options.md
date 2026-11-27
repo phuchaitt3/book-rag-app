@@ -47,6 +47,8 @@ Storing the document frequencies and chunk lengths in tables ([fts_stats_latency
 
 ## Bounding the cost (#208)
 
+<!-- numcheck: ok: same 208 questions as the first section -->
+
 [fts_bounded.py](../../experiments/e2e/fts_bounded.py) stores the statistics and takes as candidates only the chunks the GIN index finds for the query's rare words (in at most SHARE of the chunks), then scores them with BM25 over every query word ([fts-bounded-208.json](../../experiments/e2e/results/fts-bounded-208.json)). Median per question, PDF, with fused Hit@5 on PDF / HTML:
 
 | SHARE | Median | p95 | Fused Hit@5 | Leg alone Hit@5 (PDF) |

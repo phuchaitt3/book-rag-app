@@ -32,6 +32,16 @@ def _book_filter(book_id: UUID) -> models.Filter:
     )
 
 
+def _books_filter(book_ids: Sequence[UUID]) -> models.Filter:
+    return models.Filter(
+        must=[
+            models.FieldCondition(
+                key=_BOOK_ID, match=models.MatchAny(any=[str(b) for b in book_ids])
+            )
+        ]
+    )
+
+
 class QdrantVectorIndex:
     def __init__(
         self, client: AsyncQdrantClient, collection: str, dimension: int = EMBEDDING_DIM
@@ -99,13 +109,15 @@ class QdrantVectorIndex:
         )
         return result.count
 
-    async def search(self, book_id: UUID, embedding: Sequence[float], limit: int) -> list[UUID]:
-        """Chunk ids of the nearest points in one book, best first."""
+    async def search(
+        self, book_ids: Sequence[UUID], embedding: Sequence[float], limit: int
+    ) -> list[UUID]:
+        """Chunk ids of the nearest points in the given books, best first."""
         await self._ensure_collection()
         response = await self._client.query_points(
             self._collection,
             query=list(embedding),
-            query_filter=_book_filter(book_id),
+            query_filter=_books_filter(book_ids),
             limit=limit,
         )
         return [UUID(str(point.id)) for point in response.points]
@@ -125,9 +137,9 @@ class QdrantChunkSearcher:
         self._text_searcher = text_searcher
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
-        ids = await self._index.search(book_id, embedding, limit)
+        ids = await self._index.search(book_ids, embedding, limit)
         if not ids:
             return []
         async with self._sessions() as session:
@@ -138,16 +150,22 @@ class QdrantChunkSearcher:
                 .where(Chunk.id.in_(ids), Book.owner_id == owner_id)
             )
             by_id = {
-                c.id: RetrievedChunk(id=c.id, text=c.text, page=c.page, section_path=c.section_path)
+                c.id: RetrievedChunk(
+                    id=c.id,
+                    text=c.text,
+                    page=c.page,
+                    section_path=c.section_path,
+                    book_id=c.book_id,
+                )
                 for c in rows
             }
         # Qdrant's order is the ranking; a point whose chunk is gone from Postgres is skipped.
         return [by_id[i] for i in ids if i in by_id]
 
     async def text_search(
-        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], query: str, limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
-        return await self._text_searcher.text_search(book_id, query, limit, owner_id=owner_id)
+        return await self._text_searcher.text_search(book_ids, query, limit, owner_id=owner_id)
 
 
 class ShadowChunkSearcher:
@@ -165,13 +183,13 @@ class ShadowChunkSearcher:
         self._tasks: set[asyncio.Task[None]] = set()  # keeps the tasks alive until they finish
 
     async def vector_search(
-        self, book_id: UUID, embedding: Sequence[float], limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], embedding: Sequence[float], limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
         started = time.perf_counter()
-        result = await self._primary.vector_search(book_id, embedding, limit, owner_id=owner_id)
+        result = await self._primary.vector_search(book_ids, embedding, limit, owner_id=owner_id)
         primary_ms = (time.perf_counter() - started) * 1000
         task = asyncio.create_task(
-            self._compare(book_id, embedding, limit, owner_id, result, primary_ms)
+            self._compare(book_ids, embedding, limit, owner_id, result, primary_ms)
         )
         self._tasks.add(task)
         task.add_done_callback(self._tasks.discard)
@@ -179,7 +197,7 @@ class ShadowChunkSearcher:
 
     async def _compare(
         self,
-        book_id: UUID,
+        book_ids: Sequence[UUID],
         embedding: Sequence[float],
         limit: int,
         owner_id: str,
@@ -188,15 +206,15 @@ class ShadowChunkSearcher:
     ) -> None:
         try:
             started = time.perf_counter()
-            found = await self._shadow.vector_search(book_id, embedding, limit, owner_id=owner_id)
+            found = await self._shadow.vector_search(book_ids, embedding, limit, owner_id=owner_id)
             shadow_ms = (time.perf_counter() - started) * 1000
         except Exception:
-            log.exception("vector_search shadow: the Qdrant search failed (book %s)", book_id)
+            log.exception("vector_search shadow: the Qdrant search failed (books %s)", book_ids)
             return
         overlap = len({c.id for c in expected} & {c.id for c in found})
         log.info(
             "vector_search shadow book=%s limit=%d overlap=%d/%d pgvector_ms=%.1f qdrant_ms=%.1f",
-            book_id,
+            ",".join(str(b) for b in book_ids),
             limit,
             overlap,
             len(expected),
@@ -205,9 +223,9 @@ class ShadowChunkSearcher:
         )
 
     async def text_search(
-        self, book_id: UUID, query: str, limit: int, *, owner_id: str
+        self, book_ids: Sequence[UUID], query: str, limit: int, *, owner_id: str
     ) -> list[RetrievedChunk]:
-        return await self._primary.text_search(book_id, query, limit, owner_id=owner_id)
+        return await self._primary.text_search(book_ids, query, limit, owner_id=owner_id)
 
 
 async def vector_counts(

@@ -2,7 +2,7 @@
 
 **Status:** Accepted   **Date:** 2026-11-13
 **Decided by:** agents   **Confidence:** medium
-**Review:** [#194](https://github.com/phuchaitt3/book-rag-app/issues/194), open   **Study note:** [docs/design/0010-metrics-endpoint.md](../design/0010-metrics-endpoint.md)
+**Review:** [#194](https://github.com/phuchaitt3/book-rag-app/issues/194)   **Study note:** [docs/design/0010-metrics-endpoint.md](../design/0010-metrics-endpoint.md)
 
 ## Context
 

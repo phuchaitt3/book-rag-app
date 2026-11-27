@@ -1,8 +1,8 @@
 # 0008: Qdrant vector-search experiment
 
-**Status:** Proposed
+**Status:** Proposed   **Open until:** 2026-12-15
 
-**Decided by:** agents (exit criteria are defaults taken from the issue's examples; the owner may change them before the first run)   **Review:** [#113](https://github.com/phuchaitt3/book-rag-app/issues/113), open
+**Decided by:** agents (exit criteria are defaults taken from the issue's examples; the owner may change them before the first run)   **Review:** [#117](https://github.com/phuchaitt3/book-rag-app/issues/117)
 
 This ADR does not change [ADR 0002](0002-postgres-pgvector-hybrid-search.md), which stays Accepted. It sets up a bounded, dated experiment to find out whether the vector part of that decision should change. Follows the experiment procedure: criteria first, then code behind the existing interface and a setting, a shadow run, a decision on a fixed date.
 
@@ -74,3 +74,4 @@ This is what the scale-up arm is for. ADR 0002 expects the pgvector index to sto
 (The owner's questions and the answers, dated, newest last.)
 
 - 2026-11-01: results added by the agent that ran the measurements (see "Results"). The status stays Proposed until the decision date; no criterion was changed after the results.
+- 2026-11-27: status line names the decision date; the review link points to the review issue #117 ([#322](https://github.com/phuchaitt3/book-rag-app/issues/322)).

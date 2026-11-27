@@ -2,7 +2,7 @@
 
 **Status:** Accepted   **Date:** 2026-10-30
 **Decided by:** agents (before study-design mode)   **Confidence:** medium
-**Review:** [#38](https://github.com/phuchaitt3/book-rag-app/issues/38), open   **Study note:** [docs/design/0005-application-first-then-evals.md](../design/0005-application-first-then-evals.md)
+**Review:** [#38](https://github.com/phuchaitt3/book-rag-app/issues/38)   **Study note:** [docs/design/0005-application-first-then-evals.md](../design/0005-application-first-then-evals.md)
 
 ## Context
 

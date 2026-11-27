@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { API_URL, type Book, apiHeaders, routes } from "@/api/client";
+import { API_URL, type Book, MAX_CHAT_BOOKS, apiHeaders, routes } from "@/api/client";
 
 import { Chat } from "./chat";
 import { UploadForm } from "./upload-form";
 
 export function Library() {
   const [books, setBooks] = useState<Book[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -29,13 +29,25 @@ export function Library() {
     void load();
   }, [load]);
 
-  const book = books.find((b) => b.id === selected);
+  const chosen = books.filter((b) => selected.includes(b.id));
+
+  const toggle = (id: string) =>
+    setSelected((ids) =>
+      ids.includes(id)
+        ? ids.filter((x) => x !== id)
+        : ids.length < MAX_CHAT_BOOKS
+          ? [...ids, id]
+          : ids,
+    );
 
   return (
     <div className="flex flex-col gap-8">
       <UploadForm onUploaded={load} />
       <section className="flex flex-col gap-2">
         <h2 className="text-lg font-medium">Books</h2>
+        <p className="text-sm text-zinc-500">
+          Pick one or more (up to {MAX_CHAT_BOOKS}) to ask a question across them.
+        </p>
         {error && (
           <p className="text-sm text-red-600" role="alert">
             {error}
@@ -49,8 +61,8 @@ export function Library() {
             <li key={b.id}>
               <button
                 type="button"
-                onClick={() => setSelected(b.id)}
-                aria-pressed={b.id === selected}
+                onClick={() => toggle(b.id)}
+                aria-pressed={selected.includes(b.id)}
                 className="w-full rounded px-2 py-1 text-left hover:bg-zinc-100 aria-pressed:bg-zinc-200 dark:hover:bg-zinc-800 dark:aria-pressed:bg-zinc-700"
               >
                 {b.title}
@@ -62,7 +74,7 @@ export function Library() {
           ))}
         </ul>
       </section>
-      {book && <Chat key={book.id} book={book} />}
+      {chosen.length > 0 && <Chat key={chosen.map((b) => b.id).join(",")} books={chosen} />}
     </div>
   );
 }

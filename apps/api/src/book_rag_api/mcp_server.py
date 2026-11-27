@@ -144,7 +144,7 @@ class BookIndex:
         try:
             async with asyncio.timeout(self._timeout):
                 chunks = await self._retriever.retrieve(
-                    book.id, query, owner_id=self._owner, top_k=k
+                    [book.id], query, owner_id=self._owner, top_k=k
                 )
         except Exception:
             log.exception("retrieval failed")

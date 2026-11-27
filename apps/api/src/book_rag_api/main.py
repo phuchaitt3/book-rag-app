@@ -47,6 +47,7 @@ from book_rag_api.qdrant_index import (
 )
 from book_rag_api.rate_limit import RateLimiter
 from book_rag_api.retrieval import SqlChunkSearcher
+from book_rag_api.routers.chat import multi_router as multi_chat_router
 from book_rag_api.routers.chat import router as chat_router
 from book_rag_api.storage import ObjectStorage, S3Storage
 from book_rag_api.tracing import (
@@ -143,6 +144,7 @@ def create_app(
     app.include_router(jobs_router)
     app.include_router(books_router)
     app.include_router(chat_router)
+    app.include_router(multi_chat_router)
     add_stream_events(app)
     if provider is not None:
         instrument_app(app, provider)  # last: its middleware wraps all the others

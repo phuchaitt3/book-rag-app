@@ -1,6 +1,6 @@
 # Study note: ranking keyword matches with BM25 inside Postgres
 
-**For:** ADR 0011   **Status:** proposed in ADR 0011
+**For:** ADR 0011   **Status:** decided in ADR 0011
 
 ## Problem
 

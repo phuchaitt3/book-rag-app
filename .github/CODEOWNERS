@@ -1,15 +1,16 @@
 # The paths the owner merges (see CLAUDE.md, "Pull requests"). This file is the list. Once
 # "Require review from Code Owners" is on in the protect-main ruleset (off today, see #135),
 # GitHub enforces it, using the copy on the base branch. Until then .claude/hooks/merge_gate.py
-# and the review rule enforce it: the hook refuses agent merges of the same paths, and
-# test_merge_gate.py fails when a path here is not refused there.
+# and the review rule enforce it: the hook reads this file, so it refuses agent merges of the
+# same paths. The text after # on a path line is the reason the hook shows. Secret files
+# (.env, *.pem, *.key, credentials*.json) are always refused by the hook itself, not listed here.
 # infra/ and deploy config (Dockerfiles, neon.ts, vercel.json) are not listed (ordinary files since 2026-11-15).
 # CLAUDE.md and .github/ are not listed (ordinary files since 2026-11-01). Lockfiles are not listed: CLAUDE.md lets the reviewer merge them by risk.
 # Under .claude/ only the settings files are listed (allow rules, hook registration); hook code is
 # drawn by risk in CLAUDE.md, so the reviewer decides.
-# (standard: one list that enforcement reads, with a test against drift, per policy-as-code
+# (standard: one list that enforcement reads, per policy-as-code
 # guidance (vendor sources), checked 2026-11-01; departs from standard: the code-owner review
 # setting is off for solo-fast speed, see #135.)
-/.claude/settings*.json  @phuchaitt3
-/LICENSE            @phuchaitt3
-/SECURITY.md        @phuchaitt3
+/.claude/settings*.json  @phuchaitt3  # agent permissions and hook registration (.claude/)
+/LICENSE            @phuchaitt3  # licensing and security policy
+/SECURITY.md        @phuchaitt3  # licensing and security policy

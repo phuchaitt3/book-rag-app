@@ -18,6 +18,8 @@ The chat endpoint used to answer every question. It now replies with a fixed "no
 
 ## Method
 
+<!-- numcheck: ok: n is given in "Test set" and "Trade-off tables" -->
+
 [abstain_scores.py](../../experiments/e2e/abstain_scores.py) posts every question to the running app, stops after the `citations` event (the model is not called) and records the top passage's score, with the abstain thresholds off. [abstain_threshold.py](../../experiments/e2e/abstain_threshold.py) then picks the threshold on the **seen** split only (the highest cut with at most 2% of the seen answerable questions under it) and reports both splits. Intervals are bootstrap 95% (10,000 resamples, seed 222, the answerable and unanswerable questions resampled separately). Raw output: [abstain-scores-rerank.json](../../experiments/e2e/results/abstain-scores-rerank.json), [abstain-scores-no-rerank.json](../../experiments/e2e/results/abstain-scores-no-rerank.json), [abstain-threshold-max2.json](../../experiments/e2e/results/abstain-threshold-max2.json), [abstain-threshold-max5.json](../../experiments/e2e/results/abstain-threshold-max5.json).
 
 ## Trade-off tables
@@ -45,6 +47,8 @@ Reranker off (fused RRF score, at most 0.0328):
 | 0.03202 | 57.1% (38.1-76.2) | 17.3% (12.0-22.6) | 73.7% (52.6-89.5) | 26.4% (20.7-32.7) |
 
 ## What the run showed
+
+<!-- numcheck: ok: n is given in "Test set" and the Result paragraph -->
 
 - **The reranker score separates the two sets; the fused score barely does.** The fused score is a rank-based sum, so a question with no good passage still gets about 0.0328 when both searches rank the same chunk first. The reranker scores relevance, so it gives a clear gap (median top score 0.97 for the blind answerable questions against 0.02 for the blind unanswerable ones; the highest blind unanswerable score is 0.172).
 - **The seen split is optimistic about false abstains.** The first rule (at most 5% false abstain on seen) gave 4.8% on seen but 17.8% on blind, because the blind questions are everyday rewrites and score lower. The shipped value uses the stricter 2% rule. That choice was made after seeing the blind numbers of the 5% rule, so the blind figures of the 2% row are not fully untouched; both rows are in the table.

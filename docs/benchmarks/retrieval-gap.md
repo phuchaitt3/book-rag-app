@@ -52,11 +52,15 @@ The whole gap (89.4 to 75.5, 13.9 points) is the text step (−2.9) plus the lex
 
 ## Why the full-text leg is weak
 
+<!-- numcheck: ok: same 208 questions as "Results" -->
+
 The app's leg ORs every word of the question and ranks with `ts_rank_cd`, which does not weight rare words more than common ones. Common words of a question probably match nearly every chunk, so a chunk that repeats them can outrank the one holding the rare name (the probe below is the evidence; no individual question was traced). Alone it finds the evidence in the top 5 for 57–58% of questions, against 84–86% for BM25.
 
 A probe supports this and shows it is not the whole story: with the question's words that occur in more than 20% of the chunks left out of the full-text query, the fused arm reaches 82.2% on P and 82.7% on H; at 5% it reaches 81.2% and 85.6%. That recovers between half and 70% of the gap to the benchmark's lexical leg (+6.7 and +5.7 points on P, +5.8 and +8.7 on H, of 11.1 and 12.5). The remainder is the ranking itself (no document-frequency weighting, no length normalisation). These two cut-offs are a diagnosis, not a tuned fix, and both are reported.
 
 ## What follows
+
+<!-- numcheck: ok: same 208 questions as "Results" -->
 
 - A fix belongs in the app's lexical leg, not in the text or the embedder. The options are to rank in the application (fetch candidate rows and score with BM25 over the book's token statistics), to filter common words from the query, or to use a Postgres BM25 extension; each changes the search design and needs its own measurement on this test set. They are follow-up work, not part of this note.
 - The reranker hides most of this: with it the app reaches 88.9% Hit@5 on the PDF (#189). The gap matters when the reranker is off or fails and the fused order is returned (ADR 0009), and for Hit@1 before reranking.

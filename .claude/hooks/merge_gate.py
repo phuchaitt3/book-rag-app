@@ -20,25 +20,78 @@ import shlex
 import subprocess
 import sys
 from collections.abc import Callable, Sequence
+from pathlib import Path
 
-# Paths the user merges (CLAUDE.md, "Pull requests"). `.github/` files are not listed: the
-# risk line there (secrets, deploy or release steps) needs a judgment call, so the reviewer
-# reading the diff decides. Lockfiles are not listed: CLAUDE.md lets the reviewer merge a
-# lockfile-only change after listing each changed package. README.md and other docs are
-# ordinary files: the reviewer checks their claims against the code (CLAUDE.md). Compose files
-# are not listed: the local dev stack is not deploy config (CLAUDE.md), and the reviewer checks
-# it adds no secret value or unauthenticated port. Under `.claude/` only the settings files are
-# listed: they hold the allow rules and the hook registrations. Whether a hook's code change
-# makes it refuse less is a judgment call, so the reviewer carries that check (CLAUDE.md).
-# `infra/` and deploy config (Dockerfiles, `neon.ts`, `vercel.json`) were listed until 2026-11-15
-# and are ordinary files now (user's decision): the reviewer reads the diff, says what it checked.
-USER_MERGE_PATTERNS: tuple[tuple[str, str], ...] = (
-    (r"^\.claude/settings[^/]*\.json$", "agent permissions and hook registration (.claude/)"),
+# The paths the user merges are the ones `.github/CODEOWNERS` names (CLAUDE.md, "Pull requests");
+# this hook holds no path list for them, so a change to the list is one edit there. The reason
+# shown for a path is the comment after its owner on the CODEOWNERS line. If CODEOWNERS is missing,
+# unreadable or names no path, every merge is refused (fails closed).
+CODEOWNERS_PATH = Path(__file__).resolve().parents[2] / ".github" / "CODEOWNERS"
+
+# Secret files are always the user's, whatever CODEOWNERS says: a floor that stays in the hook
+# so an edit of CODEOWNERS cannot drop it. `.env.example` is the template and stays ordinary.
+SECRET_PATTERNS: tuple[tuple[str, str], ...] = (
     (r"(^|/)\.env(?!\.example$)(\..*)?$", "secrets (.env)"),
     (r"\.(pem|key)$", "secrets (key file)"),
     (r"(^|/)credentials[^/]*\.json$", "secrets (credentials)"),
-    (r"^(LICENSE|SECURITY\.md)$", "licensing and security policy"),
 )
+
+
+class CodeownersError(RuntimeError):
+    """CODEOWNERS cannot be used as the user-merge list."""
+
+
+def _glob_to_regex(glob: str) -> str:
+    """A CODEOWNERS pattern as a regex over a repo-relative path (gitignore-style subset)."""
+    anchored = glob.startswith("/") or "/" in glob.rstrip("/")
+    is_dir = glob.endswith("/")
+    glob = glob.lstrip("/")
+    out = []
+    i = 0
+    while i < len(glob):
+        if glob.startswith("**/", i):
+            out.append("(?:.*/)?")
+            i += 3
+        elif glob.startswith("**", i):
+            out.append(".*")
+            i += 2
+        elif glob[i] == "*":
+            out.append("[^/]*")
+            i += 1
+        elif glob[i] == "?":
+            out.append("[^/]")
+            i += 1
+        else:
+            out.append(re.escape(glob[i]))
+            i += 1
+    body = "".join(out)
+    prefix = "^" if anchored else "(?:^|.*/)"
+    # A directory pattern matches everything below it; a file pattern also matches a directory
+    # of that name.
+    return f"{prefix}{body}.*$" if is_dir else f"{prefix}{body}(?:/.*)?$"
+
+
+def load_user_merge_patterns(path: Path) -> tuple[tuple[str, str], ...]:
+    """(regex, reason) for each path pattern in CODEOWNERS; raise CodeownersError if unusable."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise CodeownersError(f"cannot read {path.name}: {exc}") from exc
+    patterns: list[tuple[str, str]] = []
+    for raw in text.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        content, _, comment = line.partition("#")
+        fields = content.split()
+        if len(fields) < 2 or not all(f.startswith("@") for f in fields[1:]):
+            raise CodeownersError(f"cannot parse CODEOWNERS line: {raw!r}")
+        reason = comment.strip() or f"owner-merge path in .github/CODEOWNERS ({fields[0]})"
+        patterns.append((_glob_to_regex(fields[0]), reason))
+    if not patterns:
+        raise CodeownersError("CODEOWNERS names no path")
+    return tuple(patterns)
+
 
 _SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|&\n()`]")
 # A merge through the API: the REST `.../pulls/N/merge` endpoint, or the GraphQL mutations.
@@ -138,12 +191,16 @@ def _pr_args(merge_args: Sequence[str]) -> list[str]:
     return [*selector, *repo]
 
 
-def user_merge_hits(files: Sequence[str]) -> list[tuple[str, str]]:
-    """(file, reason) for every changed file on the user-merge list."""
+def user_merge_hits(files: Sequence[str], codeowners: Path | None = None) -> list[tuple[str, str]]:
+    """(file, reason) for every changed file on the user-merge list.
+
+    Raises CodeownersError when CODEOWNERS cannot be used.
+    """
+    patterns = (*load_user_merge_patterns(codeowners or CODEOWNERS_PATH), *SECRET_PATTERNS)
     hits: list[tuple[str, str]] = []
     for name in files:
         normalized = name.replace("\\", "/")
-        for pattern, reason in USER_MERGE_PATTERNS:
+        for pattern, reason in patterns:
             if re.search(pattern, normalized, flags=re.IGNORECASE):
                 hits.append((name, reason))
                 break
@@ -168,7 +225,12 @@ def check(command: str, files_fn: FilesFn = gh_changed_files) -> str | None:
             files = files_fn(pr_args)
         except RuntimeError as exc:
             return f"Could not list the PR's files, so the merge is refused (fails closed): {exc}"
-        hits = user_merge_hits(files)
+        try:
+            hits = user_merge_hits(files)
+        except CodeownersError as exc:
+            return (
+                f"Could not read the user-merge list, so the merge is refused (fails closed): {exc}"
+            )
         if hits:
             lines = "\n".join(f"  - {name}: {reason}" for name, reason in hits)
             return (

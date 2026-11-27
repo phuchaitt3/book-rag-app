@@ -1,6 +1,6 @@
 # Brief: chat history (follow-up questions)
 
-**Needed for:** the "Chat history" checkbox of [#53](https://github.com/phuchaitt3/book-rag-app/issues/53)   **Status:** draft, a proposal for the owner to decide
+**Needed for:** the "Chat history" checkbox of [#53](https://github.com/phuchaitt3/book-rag-app/issues/53)   **Status:** draft; the proposed default (option A, client-held history, with Q2 appended-query retrieval, no condense call) was implemented by the overnight run in the API (PR for #53), reversible by reverting that PR; the owner can still decide otherwise (B, Q3). The web chat now sends the last 6 messages as `history`; the follow-up eval set and the cap values' measurement are not done.
 
 ## Problem
 
