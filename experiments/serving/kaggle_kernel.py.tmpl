@@ -26,9 +26,11 @@ def sh(cmd, **kw):
     return subprocess.run(cmd, shell=True, env=kw.pop("env", ENV), **kw)
 
 
-def wait_http(url, seconds):
+def wait_http(url, seconds, proc=None):
     end = time.time() + seconds
     while time.time() < end:
+        if proc is not None and proc.poll() is not None:
+            return False
         try:
             urllib.request.urlopen(url, timeout=5).read()
             return True
@@ -63,7 +65,9 @@ def arm(name, fn):
 
 def vllm_arm():
     sh("pip install -q uv")
-    sh("uv venv /tmp/v && uv pip install -q --python /tmp/v/bin/python vllm==%s" % VLLM_VERSION, check=True)
+    # transformers 5 removed a tokenizer attribute that vLLM 0.10.2 reads at start-up.
+    sh("uv venv /tmp/v && uv pip install -q --python /tmp/v/bin/python vllm==%s 'transformers>=4.55.2,<5'"
+       % VLLM_VERSION, check=True)
     ver = subprocess.run("/tmp/v/bin/python -c 'import vllm,torch;print(vllm.__version__,torch.__version__)'",
                          shell=True, capture_output=True, text=True).stdout.strip()
     log = open(R / "vllm-server.log", "w")
@@ -74,8 +78,8 @@ def vllm_arm():
         f"--gpu-memory-utilization 0.85 --max-num-seqs 16 --port 8000 --served-model-name qwen",
         shell=True, env=env, stdout=log, stderr=subprocess.STDOUT, preexec_fn=os.setsid)
     try:
-        if not wait_http("http://127.0.0.1:8000/v1/models", 1200):
-            raise RuntimeError("vllm server did not come up in 20 minutes")
+        if not wait_http("http://127.0.0.1:8000/v1/models", 1200, proc):
+            raise RuntimeError("vllm server did not come up (see vllm-server.log)")
         bench("vllm-awq", "http://127.0.0.1:8000", "qwen",
               f"vLLM {ver}; {VLLM_MODEL}; --dtype half --quantization awq --max-model-len 8192 "
               "--gpu-memory-utilization 0.85 --max-num-seqs 16; XFORMERS attention; T4 15 GB")
@@ -114,7 +118,7 @@ def ollama_arm():
     proc = subprocess.Popen("ollama serve", shell=True, env=env, stdout=log, stderr=subprocess.STDOUT,
                             preexec_fn=os.setsid)
     try:
-        if not wait_http("http://127.0.0.1:11434/api/tags", 120):
+        if not wait_http("http://127.0.0.1:11434/api/tags", 120, proc):
             raise RuntimeError("ollama server did not come up")
         sh(f"ollama pull {OLLAMA_MODEL}", env=env, check=True)
         show = subprocess.run(f"ollama show {OLLAMA_MODEL}", shell=True, capture_output=True, text=True, env=env).stdout

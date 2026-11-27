@@ -81,3 +81,7 @@ then `push`, `wait`. Uses the free weekly Kaggle GPU quota; no paid API.
   both abstain thresholds at -1. Each prompt is still the one the app builds from the retrieved
   passages; the dump records each question's top score, so the number the shipped app would have
   refused is reported with the results.
+- **2026-11-27, smoke kernel (8 prompts, not a result):** the Ollama arm answered every request;
+  vLLM did not start because transformers 5 was installed. The kernel now pins transformers below
+  5. The Ollama arm runs v0.40.13 from a checksummed release instead of the install script. The
+  smoke has not been repeated since the pin.
