@@ -20,7 +20,6 @@ from book_rag.tracing import NoopTracer, Tracer
 from book_rag_api.lexical import refresh_book_stats
 from book_rag_api.models import EMBEDDING_DIM, Book, Chunk, IngestionJob, PageRead, Section
 from book_rag_api.observability import bind_log_context, book_id_var
-from book_rag_api.qdrant_index import QdrantVectorIndex
 
 log = logging.getLogger(__name__)
 
@@ -229,7 +228,6 @@ async def _run(
     read_pdf: ReadPdf,
     embedder: Embedder,
     batch_size: int,
-    index: QdrantVectorIndex | None = None,
     page_reader: PageReader | None = None,
 ) -> None:
     if embedder.dimension != EMBEDDING_DIM:
@@ -306,9 +304,6 @@ async def _run(
 
     await _set_stage(engine, job_id, "embed")
     with _tracer.span("ingest.embed", book_id=str(book_id), chunks=len(to_embed)) as span:
-        if index is not None:
-            # A re-run replaced the chunk ids, so drop the old points.
-            await index.delete_book(book_id)
         batches = 0
         for start in range(0, len(to_embed), batch_size):
             batch = to_embed[start : start + batch_size]
@@ -322,12 +317,6 @@ async def _run(
                     ],
                 )
                 await session.commit()  # commit per batch so the API shows progress
-            if index is not None:
-                # After the commit, so Qdrant never holds a vector Postgres lost. An upsert is
-                # idempotent, so a retried batch is harmless.
-                await index.upsert(
-                    book_id, [(id_, v) for (id_, _), v in zip(batch, vectors, strict=True)]
-                )
             batches += 1
         span.set_attribute("batches", batches)
 
@@ -347,7 +336,6 @@ async def run_ingestion(
     embedder: Embedder,
     batch_size: int = 32,
     attempts: int = MAX_RETRIES,
-    index: QdrantVectorIndex | None = None,
     page_reader: PageReader | None = None,
 ) -> None:
     """Run one job to the end. A failure is recorded on the job (status `failed`), not raised.
@@ -361,7 +349,7 @@ async def run_ingestion(
     try:
         with bind_log_context(job_id=job_id):
             await _run_and_record(
-                engine, job_id, read_pdf, embedder, batch_size, attempts, index, page_reader
+                engine, job_id, read_pdf, embedder, batch_size, attempts, page_reader
             )
     finally:
         book_id_var.reset(book_token)
@@ -374,12 +362,11 @@ async def _run_and_record(
     embedder: Embedder,
     batch_size: int,
     attempts: int,
-    index: QdrantVectorIndex | None,
     page_reader: PageReader | None,
 ) -> None:
     try:
         with _tracer.span("ingest.job", job_id=str(job_id), attempts=attempts):
-            await _run(engine, job_id, read_pdf, embedder, batch_size, index, page_reader)
+            await _run(engine, job_id, read_pdf, embedder, batch_size, page_reader)
     except asyncio.CancelledError:
         # The worker is shutting down and its grace period ran out (#228). Put the job back to
         # `queued` so it is runnable, not left `running` for the stuck-job sweep to fail. The
