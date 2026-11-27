@@ -20,6 +20,8 @@ held = {k for k, v in manifest.items() if v["set"] == "heldout"}
 ids = [q["page_id"] for q in questions]
 assert len(questions) == 40, len(questions)
 assert set(ids) == held and len(set(ids)) == 40, "questions must map 1:1 to held-out pages"
+remnants = sorted(f.name for f in (data / "text").glob("*.txt") if "{{" in f.read_text("utf-8"))
+assert not remnants, f"template remnants '{{{{' in {len(remnants)} text files: {remnants}"
 low = 0
 for q in questions:
     text = (data / "text" / f"{q['page_id']}.txt").read_text(encoding="utf-8").lower()
