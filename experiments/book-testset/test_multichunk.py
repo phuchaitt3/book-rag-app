@@ -1,6 +1,7 @@
 """Unit tests for the Recall@k scoring in multichunk.py (issue #183).
 
-Run one file: `uv run pytest experiments/book-testset/test_multichunk.py` (not in CI's testpaths).
+Run one file (not in CI's testpaths):
+`uv run --with numpy pytest experiments/book-testset/test_multichunk.py`.
 """
 
 from __future__ import annotations
