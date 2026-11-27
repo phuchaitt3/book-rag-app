@@ -10,7 +10,7 @@ When the client closes the connection mid-answer, the server cancels the respons
 
 1. The server stops accepting new connections.
 2. The lifespan shutdown marks the process as draining (`/readyz` answers 503) and waits up to `SHUTDOWN_DRAIN_TIMEOUT` seconds (default 20) for answers still streaming.
-3. It logs a warning with the number of streams still running if the time ran out, then closes the Qdrant client and the database pool.
+3. It logs a warning with the number of streams still running if the time ran out, then closes the database pool.
 
 Set uvicorn's `--timeout-graceful-shutdown` to the same value, or higher, so the server does not cut streams before the lifespan waits for them, and keep both under the platform's termination grace period (Kubernetes: 30 s by default). The API image's start command sets `--timeout-graceful-shutdown` to `SHUTDOWN_DRAIN_TIMEOUT` plus 5 s (25 s by default; a fractional value is rounded down first), so the two stay tied; if you raise the drain timeout, keep that sum under the platform's grace period.
 

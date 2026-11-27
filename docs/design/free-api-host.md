@@ -12,7 +12,7 @@
 - Runs `apps/api/Dockerfile` as it is: Python 3.12 slim, uvicorn, reads `PORT` (default 8080), no local model in the image (embeddings and chat go to a model server by URL, `config.py`). Memory use of the API process is not measured; this brief assumes a few hundred MB and the deploy task must measure it.
 - Keeps Vercel (web) and Neon (Postgres) unchanged: both are outside this question.
 - Cold start is acceptable if the web app shows a "waking up the server" state and retries `/readyz`.
-- Not covered here: the ingestion worker (`procrastinate`, a separate process in `compose.yaml`), the embedding and chat model server (Ollama today), Qdrant and S3 storage. None of the free web-service tiers below runs a worker, and a hosted model and storage need their own no-card answer. These are follow-up questions for the deploy task, not decided here.
+- Not covered here: the ingestion worker (`procrastinate`, a separate process in `compose.yaml`), the embedding and chat model server (Ollama today), S3 storage. None of the free web-service tiers below runs a worker, and a hosted model and storage need their own no-card answer. These are follow-up questions for the deploy task, not decided here.
 
 ## Options
 

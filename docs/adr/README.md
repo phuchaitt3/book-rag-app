@@ -13,7 +13,7 @@ Agents decide the architecture and record it here, following the `workflow:adr` 
 | [0005](0005-application-first-then-evals.md) | Build the application first, then improve the RAG logic against an eval set | Accepted | agents |
 | [0006](0006-better-auth.md) | Better Auth, with users in our own Postgres | Planned | agents |
 | [0007](0007-api-web-contract.md) | The web app learns the API's shape from a generated OpenAPI file | Accepted | agents |
-| [0008](0008-qdrant-vector-search-experiment.md) | Qdrant vector-search experiment, exit criteria fixed before any run | Proposed | agents |
+| [0008](0008-qdrant-vector-search-experiment.md) | Qdrant vector-search experiment, exit criteria fixed before any run | Rejected | agents |
 | [0009](0009-reranker-local-tei-service.md) | The reranker runs locally as a TEI service; production hosting is decided at deployment | Accepted | owner (local only), agents (details) |
 | [0010](0010-metrics-endpoint-prometheus.md) | The API serves Prometheus metrics at /metrics; retrieval reports through an observer | Accepted | agents |
 | [0011](0011-bm25-in-postgres-stored-statistics.md) | The full-text leg ranks with BM25 computed in Postgres from stored per-book statistics | Accepted | agents |
