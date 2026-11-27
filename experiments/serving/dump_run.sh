@@ -31,7 +31,7 @@ OPID=$!
 sleep 8
 docker info >/dev/null 2>&1 || { echo NO DOCKER; exit 5; }
 git rev-parse HEAD
-docker compose $F up -d --scale qdrant=0 --scale web=0 2>&1 | tail -12
+docker compose $F up -d --build --scale qdrant=0 --scale web=0 2>&1 | tail -12
 for i in $(seq 1 60); do curl -sf localhost:8000/health >/dev/null 2>&1 && break; sleep 5; done
 RESP=$(python - <<P
 import urllib.request, json, uuid, os
