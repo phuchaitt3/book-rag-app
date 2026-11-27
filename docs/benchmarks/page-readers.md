@@ -46,6 +46,8 @@ page texts. Missing from the dictionary: 13.0%, 12.6% and 12.6% of those charact
 vowels with two marks (ế, ờ, ấ, ạ, ớ, ả, ộ). PaddleOCR does accept `lang="vi"`
 (`paddleocr/_utils/langs.py`), which selects such a model.
 
+(standard: findings/ocr-vietnamese-character-coverage, checked 2026-11-27)
+
 So these readers have a CER of at least about 0.126 on this set before any other error, above the
 0.05 target and above Tesseract's 0.111. They are not run. Not covered: a PaddleOCR text detector
 with a Vietnamese recogniser from elsewhere (for example VietOCR), or a fine-tuned model.
