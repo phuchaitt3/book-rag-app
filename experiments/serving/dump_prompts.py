@@ -19,6 +19,7 @@ import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+WARMUP_ROWS = 3
 
 
 def lines(path: Path) -> list[dict]:
@@ -70,6 +71,10 @@ def main() -> None:
                 "messages": got[-1]["messages"],
             }
         )
+    # questions-208.json starts with 3 warm-up questions (make_questions.py), which appear again
+    # among the 208 counted ones. A smoke run keeps every row.
+    if not limit:
+        rows = rows[WARMUP_ROWS:]
     out.write_text(
         "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8"
     )
