@@ -36,3 +36,24 @@ def test_clean_full_page() -> None:
     level, text = clean(wt)
     assert level == 4
     assert text == "VI\n\nThân bài hai"
+
+
+def test_rule_widths_are_not_text() -> None:
+    assert strip_templates("a{{vạch|6em}}{{vạch tùy chỉnh|sp|40|el|15}}b") == "ab"
+
+
+def test_sic_keeps_the_printed_form() -> None:
+    assert strip_templates("Nam-{{SIC|tuớc|tước}}") == "Nam-tuớc"
+
+
+def test_page_end_hyphen_kept() -> None:
+    assert strip_templates("quành{{nct}}") == "quành-"
+
+
+def test_indent_marks_and_line_breaks() -> None:
+    assert clean("a<br/>b\n:::''Mình''")[1] == "a\nb\nMình"
+
+
+def test_footnotes_move_to_the_end() -> None:
+    wt = "Ô-lí<ref>Thuận-hóa.</ref>, Hoan<ref>Nghệ-an.</ref>.\n\nHết"
+    assert clean(wt)[1] == "Ô-lí, Hoan.\n\nHết\nThuận-hóa.\nNghệ-an."

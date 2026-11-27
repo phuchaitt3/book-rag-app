@@ -16,7 +16,11 @@ DVC storage. This repository sets no DVC remote (a remote path is a local settin
 - `text/<id>.txt`: the community-proofread text of that page from Vietnamese Wikisource, cleaned of
   wiki markup (`<poem>`, section marks, rules and spacers). A template keeps its visible text,
   innermost first: `{{g|{{xx-lớn|VI}}}}` becomes `VI`, so chapter headings stay. No `{{` is
-  left (`check_questions.py` fails if one is); footnote `<ref>` tags can remain. It is the ground truth for CER **after** the spot-check.
+  left (`check_questions.py` fails if one is). Rules and their widths are dropped,
+  `{{SIC|printed|correction}}` keeps the printed spelling, wiki indent marks are removed, and
+  footnote text is moved after the body, without the `(1)` markers, which the wikitext does not
+  hold. The running head and page number are not in the text. It is the ground truth for CER
+  **after** the spot-check.
 - `manifest.jsonl`: per page the source URL, Wikisource revision, proofread level (3 proofread,
   4 validated), image URL and sha256, and the licence basis read from the live Commons file page
   at collection time (licence short name and the `PD-old-*-expired` category).

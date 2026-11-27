@@ -51,12 +51,22 @@ _NO_TEXT = re.compile(r"^(rule|hr|-|--|clear|nop|anchor|pb|page|đường kẻ|d
 
 
 def _template_text(inner: str) -> str:
-    """Visible text of one innermost template: its last positional argument, else nothing."""
+    """Visible text of one innermost template: its last positional argument, else nothing.
+
+    Two exceptions: `{{SIC|printed|correction}}` keeps the printed form (the text must match the
+    scan), and `{{nct}}` is the hyphen of a word that continues on the next page.
+    """
     parts = inner.split("|")
-    if len(parts) < 2 or _NO_TEXT.match(parts[0].strip()):
+    name = parts[0].strip()
+    if name.lower() == "nct":
+        return "-"
+    # `vạch` is a drawn rule whose argument is its width.
+    if len(parts) < 2 or _NO_TEXT.match(name) or name.startswith("vạch"):
         return ""
     args = [a for a in parts[1:] if not re.match(r"\s*[\w-]+\s*=", a)]
-    return args[-1].strip() if args else ""
+    if not args:
+        return ""
+    return args[0 if name.upper() == "SIC" else -1].strip()
 
 
 def strip_templates(text: str) -> str:
@@ -80,6 +90,13 @@ def clean(wikitext: str) -> tuple[int | None, str]:
     body = re.sub(r"</?noinclude>|</?includeonly>|<references\s*/>", "", body)
     body = strip_templates(body)
     body = re.sub(r"'''?", "", body)
+    body = re.sub(r"<br\s*/?>", "\n", body)
+    body = re.sub(r"(?m)^:+[ \t]*", "", body)  # wiki indent marks, not printed
+    # Footnotes are printed at the foot of the page, so their text goes after the body.
+    ref = re.compile(r"<ref(?:\s[^>/]*)?>(.*?)</ref>", re.S)
+    notes = [n.strip() for n in ref.findall(body)]
+    body = ref.sub("", re.sub(r"<ref\s[^>]*/>", "", body))
+    body = "\n".join([body.rstrip(), *notes])
     return level, re.sub(r"\n{3,}", "\n\n", body).strip()
 
 
