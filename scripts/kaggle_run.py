@@ -3,6 +3,11 @@
 Four steps: build, push, wait, fetch. It uses the `kaggle` CLI you are already logged in with;
 this script never reads the credential files.
 
+Pushes go through the shared push guard, `~/claude-config/scripts/kaggle_slots.py` (#337): it
+waits while the kernel has a queued or running version or both GPU sessions are taken, and it
+refuses code identical to an active version. `status` and `wait` also ask it about older versions,
+which `kaggle kernels status` does not show. Without the guard, nothing is pushed.
+
 Kernels are *generated*: a bundle of repository files (zip, base64) is embedded in a script
 template, so a kernel needs no Kaggle dataset. Two kernels exist today:
 
@@ -12,10 +17,11 @@ template, so a kernel needs no Kaggle dataset. Two kernels exist today:
 Usage (from the repository root)::
 
     python scripts/kaggle_run.py build serving --prompts experiments/serving/data/prompts-208.jsonl
-    python scripts/kaggle_run.py push serving      # starts the run: uses the free weekly GPU quota
+    python scripts/kaggle_run.py push serving      # may wait for a session: run in background
     python scripts/kaggle_run.py status serving
     python scripts/kaggle_run.py wait serving      # polls every 60 s, then downloads the output
     python scripts/kaggle_run.py output serving    # downloads to build/kaggle/serving-output/
+    python scripts/kaggle_run.py output serving --version 2    # an older version
 
 `build/` is git-ignored. The kernel is private, GPU on, internet on (it downloads weights and
 installs vLLM). Internet in kernels needs a phone-verified Kaggle account.
@@ -35,6 +41,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BUILD = ROOT / "build" / "kaggle"
+GUARD = Path.home() / "claude-config" / "scripts" / "kaggle_slots.py"
 
 SERVING: dict = {
     "template": ROOT / "experiments" / "serving" / "kaggle_kernel.py.tmpl",
@@ -66,6 +73,7 @@ KERNELS: dict[str, dict] = {
     },
 }
 FINAL_STATES = ("complete", "error", "cancel")
+MAX_FAILURES = 5  # unreadable guard checks in a row before `wait` gives up
 
 
 def make_bundle(
@@ -142,6 +150,62 @@ def status(ref: str) -> str:
     return text.strip() or "unknown"
 
 
+def guard(*args: str, capture: bool = False) -> subprocess.CompletedProcess[str]:
+    """Run the shared push guard. It finds a Python with `kagglesdk` by itself."""
+    if not GUARD.is_file():
+        raise SystemExit(f"push guard not found at {GUARD}; nothing was pushed or checked")
+    return subprocess.run(
+        [sys.executable, str(GUARD), *args],
+        capture_output=capture,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+
+
+def push(folder: Path, timeout_s: int, extra: list[str]) -> int:
+    """Push through the guard; returns once Kaggle accepted the push or the guard gave up."""
+    command = ["push", "-p", str(folder), "--accelerator", "NvidiaTeslaT4"]
+    return guard(*command, "--run-timeout", str(timeout_s), *extra).returncode
+
+
+def active_versions(ref: str) -> list[str] | None:
+    """The guard's lines for every queued or running version of `ref`; None if it cannot tell."""
+    res = guard("status", capture=True)
+    if res.returncode:
+        return None
+    found = []
+    for line in res.stdout.splitlines():
+        parts = line.split()
+        if len(parts) > 1 and parts[1].rstrip(":").lower() == ref.lower():
+            if parts[0] == "UNKNOWN":
+                return None
+            found.append(" ".join(parts))
+    return found
+
+
+def wait(ref: str, older: bool = True, every: int = 60) -> str:
+    """Poll until the newest run is final and, if `older`, no other version is still active."""
+    failures = 0
+    while True:
+        state = status(ref)
+        note = state
+        if state in FINAL_STATES:
+            active = active_versions(ref) if older else []
+            if active == []:
+                return state
+            if active is None:
+                failures += 1
+                if failures >= MAX_FAILURES:
+                    raise SystemExit("could not check older versions; see kaggle_slots.py status")
+                note = f"newest is {state}; could not check older versions"
+            else:
+                failures = 0
+                note = f"newest is {state}; still active: {'; '.join(active)} (see --version)"
+        print(time.strftime("%H:%M:%S"), note, flush=True)
+        time.sleep(every)
+
+
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("cmd", choices=["build", "push", "status", "wait", "output"])
@@ -149,37 +213,34 @@ def main() -> None:
     p.add_argument("--prompts", type=Path, help="prompts file to embed (build)")
     p.add_argument("--limit", type=int, default=0, help="embed only the first n prompts (smoke)")
     p.add_argument("--timeout-s", type=int, default=3 * 3600, help="kernel run limit (push)")
+    p.add_argument("--version", type=int, help="an older version (status, wait, output)")
+    p.add_argument("--no-wait", action="store_true", help="push: give up instead of waiting")
+    p.add_argument("--allow-active", action="store_true", help="push: skip the guard's checks")
     args = p.parse_args()
 
     user = owner()
     ref = f"{user}/{KERNELS[args.kernel]['slug']}"
     folder = BUILD / args.kernel
+    target = f"{ref}/{args.version}" if args.version else ref
     if args.cmd == "build":
         print(build(args.kernel, args.prompts, user, args.limit))
     elif args.cmd == "push":
-        res = kaggle(
-            "kernels",
-            "push",
-            "-p",
-            str(folder),
-            "--accelerator",
-            "NvidiaTeslaT4",
-            "-t",
-            str(args.timeout_s),
-        )
-        print(res.stdout, res.stderr)
-        sys.exit(res.returncode)
+        flags = {"--no-wait": args.no_wait, "--allow-active": args.allow_active}
+        sys.exit(push(folder, args.timeout_s, [flag for flag, on in flags.items() if on]))
     elif args.cmd == "status":
-        print(status(ref))
+        print(status(target))
+        if not args.version:
+            active = active_versions(ref)
+            if active is None:
+                print("could not check older versions")
+            else:
+                print("\n".join(active) or "no version is queued or running")
     elif args.cmd in ("wait", "output"):
         if args.cmd == "wait":
-            while (s := status(ref)) not in FINAL_STATES:
-                print(time.strftime("%H:%M:%S"), s, flush=True)
-                time.sleep(60)
-            print("final state:", s)
+            print("final state:", wait(target, older=not args.version))
         dest = BUILD / f"{args.kernel}-output"
         dest.mkdir(parents=True, exist_ok=True)
-        res = kaggle("kernels", "output", ref, "-p", str(dest))
+        res = kaggle("kernels", "output", target, "-p", str(dest))
         print(res.stdout, res.stderr)
 
 
