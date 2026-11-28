@@ -4,7 +4,8 @@ Usage: python experiments/pages/reader_cer.py <pages_dir> <out_json> [--set held
 
 Reads each page image with `TesseractReader("vie+eng")` and compares with `text/<id>.txt` after NFC
 normalisation and whitespace collapsing. CER = Levenshtein distance / length of the reference.
-The page set is not yet approved by the owner (spot-check pending), so every number is UNCHECKED.
+The page set is only partly checked by the owner (3 of 50 pages, 2026-11-27, #288), so numbers are
+provisional. The committed `tesseract-vie-eng-UNCHECKED.json` predates that check.
 Set TESSDATA_PREFIX to a folder holding vie.traineddata and eng.traineddata.
 """
 
@@ -69,7 +70,7 @@ def main() -> None:
     tot_d = sum(r["distance"] for r in rows)
     tot_n = sum(r["ref_chars"] for r in rows)
     summary = {
-        "status": "UNCHECKED (owner spot-check and licence approval pending)",
+        "status": "PROVISIONAL (owner checked 3 of 50 pages, #288)",
         "reader": f"{reader.name} {reader.version}",
         "pages": len(rows),
         "micro_cer": tot_d / max(tot_n, 1),
