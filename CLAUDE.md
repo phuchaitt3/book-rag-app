@@ -10,6 +10,8 @@ Monorepo: `apps/api` (Python, FastAPI), `apps/web` (Next.js), `packages/rag`, `i
 
 This repository is **public**: everything committed or pushed is published.
 
+Answer model (user's decision, 2026-11-28): while building, run with `qwen2.5:0.5b-instruct` by setting `LLM_MODEL`; the app default does not change. Before reporting a number or calling a task done, run it on the model that ships (until a hosted vendor is chosen, the app's default model). The default itself is decided by #287. (inference: findings/model-size-during-development)
+
 ## Hard limits (handoff files cannot relax these)
 
 - Never read, copy or commit secrets: `.env`, `.env.*` (except `.env.example`), `*.pem`, `*.key`, `credentials*.json`.
