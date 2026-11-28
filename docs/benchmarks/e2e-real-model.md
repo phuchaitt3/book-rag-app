@@ -107,3 +107,13 @@ The re-measurement above ran the API with the fake LLM, so it measured retrieval
 ### Status, 2026-11-17: the run was not made
 
 No result exists for this section. The pre-registration above stands unchanged. Four launches failed to produce a result: two waited about 1 hour for the GPU lock and then ran under WSL `bash` (no Docker, no `uv`); the third was stopped by Claude Code when the laptop ran low on memory; the fourth (stack up, PDF ingested in 214 s, 392 chunks) reached the eval, where all 208 requests returned 401 because `evals/answer_eval.py` sent no `X-Dev-User` header (the API now requires it). That run is discarded: it measured nothing about the model. The header is now sent by `answer_eval.py` (`DEV_USER`, default `dev-user`); metrics and the exit rule are unchanged. The fifth launch (ingest done again, 223 s) was stopped by Claude Code for low memory during the eval, before any result was written. Stack and the Ollama process were torn down each time (no volumes created or removed). To finish: run [real_llm_run.sh](../../experiments/e2e/real_llm_run.sh) when the laptop has well over 6 GB free RAM (the other heavy jobs on it have to be idle), then fill in this section.
+
+### Amendment, 2026-11-28: a second arm on the shipped model
+
+Written while the `qwen2.5:3b-instruct` run was in progress, before any of its answer metrics was read and before any `qwen2.5:0.5b-instruct` run of this section.
+
+- **Why:** on 2026-11-28 the app's default answer model became `qwen2.5:0.5b-instruct` (#335), and a number is reported only after a run on the model that ships. The 3B run no longer describes the default.
+- **Second arm:** `qwen2.5:0.5b-instruct`, with the questions, book, endpoint, reranker (depth 20), metrics, intervals, consistency rule and exit rule above, unchanged. Only `LLM_MODEL` differs.
+- **Which figure answers #285:** the 0.5B arm. The 3B run is reported as it came out and labelled as not the shipped model.
+- **Added comparison:** the paired difference 0.5B minus 3B per question (same bootstrap, seed 285) for the cited-answer hit, token F1, reference recall, citation validity, no-marker share and false-abstain rate. No threshold.
+- **Code:** the commits between the two arms may change only the default model and the run scripts; the section names both commit ids.
