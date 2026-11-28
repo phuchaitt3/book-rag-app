@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     # "fake" (no model, for tests and load tests). The embedding model must
     # match the one the worker used to embed the chunks.
     llm_provider: str = "ollama"
-    llm_model: str = "qwen2.5:7b-instruct"
+    llm_model: str = "qwen2.5:0.5b-instruct"
     embedding_provider: str = "ollama"
     embedding_model: str = "bge-m3"
     ollama_url: str = "http://127.0.0.1:11434"
