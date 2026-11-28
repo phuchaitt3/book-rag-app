@@ -55,11 +55,13 @@ estimates differ by at least 20%**. Aggregate tokens/s has no interval (one run 
 difference there is reported as a ratio and called real only when the ratio is at least 1.5 and the
 request-level metrics at that level agree in direction. Everything else is reported as "no clear
 difference". A null or mixed result is a valid finish. Peak memory is descriptive only.
+<!-- numcheck: ok: thresholds of a decision rule fixed before the run, not measured figures -->
 
 ## Expectation (stated before the run, so it can be wrong)
 
 At C=1 the arms are close (within 20%); at C=16 vLLM's aggregate tokens/s is at least 2x Ollama's
 and its p95 total latency lower.
+<!-- numcheck: ok: an expectation stated before the run, not a measured figure -->
 
 ## What the numbers cannot show
 
