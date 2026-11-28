@@ -43,7 +43,7 @@ from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from types import ModuleType
-from typing import Any
+from typing import Any, TextIO
 
 import httpx
 
@@ -271,8 +271,12 @@ async def run_eval(
     *,
     top_k: int = 6,
     concurrency: int = 1,
+    on_result: Callable[[dict[str, Any]], None] | None = None,
 ) -> list[dict[str, Any]]:
-    """Ask every question once. A transport failure counts as a format error, not a crash."""
+    """Ask every question once. A transport failure counts as a format error, not a crash.
+
+    `on_result` gets each scored row as soon as it exists, so a killed run keeps what it measured.
+    """
     gate = asyncio.Semaphore(concurrency)
 
     async def one(row: Mapping[str, Any]) -> dict[str, Any]:
@@ -287,6 +291,8 @@ async def run_eval(
                 result = score_stream(0, "", row, texts)
                 result["format_error"] = f"transport: {type(exc).__name__}"
             result["total_s"] = round(time.perf_counter() - start, 3)
+            if on_result is not None:
+                on_result(result)
             return result
 
     return list(await asyncio.gather(*(one(r) for r in rows)))
@@ -301,6 +307,12 @@ def write_report(
         json.dumps(payload, indent=1, ensure_ascii=False), encoding="utf-8"
     )
     (out_dir / f"answer-eval-{label}.md").write_text(markdown(summary), encoding="utf-8")
+
+
+def open_partial(out_dir: Path, label: str) -> TextIO:
+    """The file that gets one JSON line per scored question while the run is going."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    return (out_dir / f"answer-eval-{label}.partial.jsonl").open("w", encoding="utf-8")
 
 
 async def chunk_texts(database_url: str, book_id: str) -> dict[str, str]:
@@ -324,14 +336,27 @@ async def main() -> None:
         env.get("KINDS", "blind,unanswerable").split(","),
         int(env.get("LIMIT", "0")),
     )
+    out_dir = Path(env.get("OUT_DIR", HERE / "results"))
     database_url = env.get("DATABASE_URL", "postgresql://bookrag:bookrag@localhost:5432/bookrag")
     texts = await chunk_texts(database_url, book_id)
     top_k = int(env.get("TOP_K", "6"))
     base_url = env.get("API_URL", "http://localhost:8000")
-    async with httpx.AsyncClient(base_url=base_url, timeout=300) as client:
-        results = await run_eval(client, book_id, rows, texts, top_k=top_k)
+    async with httpx.AsyncClient(
+        base_url=base_url, timeout=300, headers={"X-Dev-User": env.get("DEV_USER", "dev-user")}
+    ) as client:
+        with open_partial(out_dir, label) as partial:
+            done = 0
+
+            def keep(result: dict[str, Any]) -> None:
+                nonlocal done
+                done += 1
+                partial.write(json.dumps(result, ensure_ascii=False) + chr(10))
+                partial.flush()
+                print(f"asked {done}/{len(rows)}", flush=True)
+
+            results = await run_eval(client, book_id, rows, texts, top_k=top_k, on_result=keep)
     summary = summarise(results, label=label, book_id=book_id, top_k=top_k)
-    write_report(Path(env.get("OUT_DIR", HERE / "results")), label, summary, results)
+    write_report(out_dir, label, summary, results)
     print(markdown(summary))
 
 

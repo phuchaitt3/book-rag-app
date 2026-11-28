@@ -38,16 +38,33 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 BUILD = ROOT / "build" / "kaggle"
 
-# kernel name -> (slug, template, files copied into the bundle: path in repo -> path in bundle)
+SERVING: dict = {
+    "template": ROOT / "experiments" / "serving" / "kaggle_kernel.py.tmpl",
+    "files": {
+        "experiments/serving/measure.py": "measure.py",
+        "experiments/serving/concurrency_bench.py": "concurrency_bench.py",
+    },
+    "prompts_as": "prompts.jsonl",
+}
+# kernel name -> (slug, template, files copied into the bundle: path in repo -> path in bundle,
+# vars: more placeholders of the template)
 KERNELS: dict[str, dict] = {
     "serving": {
+        **SERVING,
         "slug": "book-rag-serving-bench",
-        "template": ROOT / "experiments" / "serving" / "kaggle_kernel.py.tmpl",
-        "files": {
-            "experiments/serving/measure.py": "measure.py",
-            "experiments/serving/concurrency_bench.py": "concurrency_bench.py",
+        "vars": {
+            "__VLLM_MODEL__": "Qwen/Qwen2.5-3B-Instruct-AWQ",
+            "__OLLAMA_MODEL__": "qwen2.5:3b-instruct",
         },
-        "prompts_as": "prompts.jsonl",
+    },
+    # The same comparison on the app's default model size (#245 amendment).
+    "serving-05b": {
+        **SERVING,
+        "slug": "book-rag-serving-bench-05b",
+        "vars": {
+            "__VLLM_MODEL__": "Qwen/Qwen2.5-0.5B-Instruct-AWQ",
+            "__OLLAMA_MODEL__": "qwen2.5:0.5b-instruct",
+        },
     },
     "reader": {
         "slug": "book-rag-page-reader",
@@ -100,6 +117,8 @@ def build(name: str, prompts: Path | None, user: str, limit: int = 0) -> Path:
         .replace("__BUNDLE__", make_bundle(spec["files"], prompts, spec["prompts_as"], limit))
         .replace("__COMMIT__", commit())
     )
+    for placeholder, value in spec.get("vars", {}).items():
+        script = script.replace(placeholder, value)
     (out / "script.py").write_text(script, encoding="utf-8")
     meta = {
         "id": f"{user}/{spec['slug']}",

@@ -90,3 +90,61 @@ Every interval excludes zero. Post-fix, reranker on minus off: Hit@1 +19.2 (+13.
 - Same machine, embedder (bge-m3 through Ollama), reranker image and depth as the first run. The API used the fake LLM, since the check stops after the `citations` event; the answer model was not run, so this run does not say whether the stack answers end to end after the fix (the optional part of #241 was not done).
 
 **Limits.** One book, one machine, one run per arm, no repeats; the two arms share one ingested book. The two PDF exports differ slightly, so the paired difference mixes the code change with a small change in the text; #199 bounds the text effect at 1 to 3 points. The questions were written from the HTML chunks of the same book.
+
+## Real LLM through the app (#285)
+
+The re-measurement above ran the API with the fake LLM, so it measured retrieval through the chat endpoint and no answer. This section runs the same questions through the same endpoint with the real local answer model.
+
+### Fixed before the run (written 2026-11-16, before any result was seen; not changed afterwards)
+
+- **Questions:** the 208 `blind` questions of `experiments/book-testset/questions.jsonl`, the same 208 as the re-measurement, on the same book (the Wikisource PDF, 392 chunks), all scored; `KINDS=blind`, `TOP_K=6`, one request at a time, no warm-up exclusion (the first question may pay the model load; it is still counted).
+- **Arm:** reranker on (depth 20), the arm of the 94.2% figure. One arm only: a second arm would double a run of about 40 minutes of GPU time and the reranker effect is already measured. Answer model `qwen2.5:3b-instruct` (the model of #259; the 7B default does not stay resident beside the reranker on this 6 GB GPU, see [serving-latency.md](serving-latency.md)).
+- **Metrics**, from [evals/answer_eval.py](../../evals/answer_eval.py) (#221), no judge model: Hit@1 and Hit@5 from the rank of the evidence sentence among the citations; cited-answer hit; citation validity; token F1 and reference recall against the reference answer; false-abstain rate; format errors; stream errors. 95% intervals: bootstrap, 10,000 resamples, seed 285, over the questions.
+- **Consistency rule (retrieval must not change):** the earlier run gave Hit@5 94.2% and Hit@1 84.1%. If the new Hit@5 or Hit@1 differs by more than 2.0 points (4 questions), the section says retrieval changed since that run (code or PDF export) and the answer-level numbers are reported with that caveat. The difference is reported either way.
+- **Exit rule:** the run ends when all 208 questions have been sent once. A question that errors is counted as an error, not retried and not dropped. If the model cannot be loaded or the stack cannot be brought up, the run is not made and the section says so. No pass or fail threshold is set on the answer metrics: they are reported with their intervals.
+- **Not planned:** a second dataset (the optional part of the issue). It needs another book ingested; it is left to a separate run.
+
+### Status, 2026-11-17: the run was not made
+
+No result exists for this section. The pre-registration above stands unchanged. Four launches failed to produce a result: two waited about 1 hour for the GPU lock and then ran under WSL `bash` (no Docker, no `uv`); the third was stopped by Claude Code when the laptop ran low on memory; the fourth (stack up, PDF ingested in 214 s, 392 chunks) reached the eval, where all 208 requests returned 401 because `evals/answer_eval.py` sent no `X-Dev-User` header (the API now requires it). That run is discarded: it measured nothing about the model. The header is now sent by `answer_eval.py` (`DEV_USER`, default `dev-user`); metrics and the exit rule are unchanged. The fifth launch (ingest done again, 223 s) was stopped by Claude Code for low memory during the eval, before any result was written. Stack and the Ollama process were torn down each time (no volumes created or removed). To finish: run [real_llm_run.sh](../../experiments/e2e/real_llm_run.sh) when the laptop has well over 6 GB free RAM (the other heavy jobs on it have to be idle), then fill in this section.
+
+### Amendment, 2026-11-28: a second arm on the shipped model
+
+Written while the `qwen2.5:3b-instruct` run was in progress, before any of its answer metrics was read and before any `qwen2.5:0.5b-instruct` run of this section.
+
+- **Why:** on 2026-11-28 the app's default answer model became `qwen2.5:0.5b-instruct` (#335), and a number is reported only after a run on the model that ships. The 3B run no longer describes the default.
+- **Second arm:** `qwen2.5:0.5b-instruct`, with the questions, book, endpoint, reranker (depth 20), metrics, intervals, consistency rule and exit rule above, unchanged. Only `LLM_MODEL` differs.
+- **Which figure answers #285:** the 0.5B arm. The 3B run is reported as it came out and labelled as not the shipped model.
+- **Added comparison:** the paired difference 0.5B minus 3B per question (same bootstrap, seed 285) for the cited-answer hit, token F1, reference recall, citation validity, no-marker share and false-abstain rate. No threshold.
+- **Code:** the commits between the two arms may change only the default model and the run scripts; the section names both commit ids.
+
+### Owner's decision, 2026-11-28: the 3B run answers #285
+
+Made **after** the 3B result below had been read, so it replaces the amendment's "which figure answers #285" line with knowledge of that result. The 0.5B arm is not run for #285 and #285 closes on the `qwen2.5:3b-instruct` run, the model the 2026-11-16 pre-registration named. This is a one-time exception to the project rule that a task is done only after a run on the shipped model. The figures below still describe a model the app no longer uses by default; the answer quality of `qwen2.5:0.5b-instruct` stays unmeasured (#287).
+
+### Result of the `qwen2.5:3b-instruct` run, 2026-11-28 (not the shipped model)
+
+All 208 questions were sent once through the running app with a real answer model. This is the first measurement of the app's answers; it describes the 3B model, which stopped being the default the same day. It does not describe what ships (see the amendment).
+
+| Metric (95% bootstrap interval, seed 285) | Value | Questions |
+|---|---|---|
+| Hit@1 | 81.2% (75.9–86.5) | 207 |
+| Hit@5 | 91.8% (87.9–95.2) | 207 |
+| MRR@6 | 85.5% (81.1–89.7) | 207 |
+| Cited-answer hit | **47.3%** (40.6–54.1) | 207 |
+| Citation validity | 99.5% (98.5–100) | 197 |
+| Answers with no `[n]` marker | 22.3% (16.8–27.9) | 197 |
+| False-abstain rate | 4.8% (1.9–7.7) | 208 |
+| Token F1 against the reference answer, mean | 0.189 (0.161–0.218) | 207 |
+| Reference recall, mean | 0.553 (0.492–0.614) | 207 |
+
+Errors, counted and not retried: 3 stream errors (the first question, 34 s, while the model loaded; two later ones after about 184 s) and 1 question answered HTTP 503 because retrieval passed its timeout (it is the one left out of the 207). 22 answers that carried a marker are 6 characters or shorter, such as `[1]` alone. Total time per question: median 15.2 s, 95th percentile 18.6 s (one request at a time).
+
+**Consistency rule: retrieval changed since the earlier run.** Hit@5 is 2.4 points below the 94.2% figure and Hit@1 2.9 below 84.1%, both past the 2.0-point limit, so the answer figures carry that caveat. Per question against [retrieval-postfix-rerank.json](../../experiments/e2e/results/retrieval-postfix-rerank.json): 6 questions that ranked first then now abstain and return no citations, so they score as misses; 1 question moved from not found to rank 3; 1 was the 503. The other 200 have the same rank. The PDF is byte-identical (same SHA-256). So the drop comes from abstentions and one timeout, not from a different ranking. All 10 abstentions of this run returned no citations.
+
+**Conditions.** Code at commit `3522996`; PDF SHA-256 `e343ad1e…`, 392 chunks, ingested in 285 s. Laptop GTX 1660 Ti (6 GB), GPU clock capped at 1350 MHz, CPU turbo off, WSL VM capped at 4 GB; Ollama 0.40.13 serving `qwen2.5:3b-instruct` (Q4_K_M, context 4,096) and `bge-m3`; reranker as above, with no reranker warning in the API log. Peak GPU temperature 63 °C, no thermal slowdown. Of the Ollama log's requests, 794 ended `truncated = 0` and 3 ended `truncated = 1`. Other chats were using the machine, and free memory fell under 1 GB during the run, so the timings are not clean latency figures.
+
+Raw results: [answers](../../experiments/e2e/results/answer-eval-qwen3b-rerank-on.json) and [intervals](../../experiments/e2e/results/answer-eval-qwen3b-rerank-on.ci.json).
+
+**Limits.** One book, one machine, one run. No judge model: token F1 and reference recall measure word overlap, and the cited-answer hit checks the cited chunk against the evidence sentence, so none of them says the answer is correct. The questions were written from the HTML chunks of the same book.
+
