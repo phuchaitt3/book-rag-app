@@ -44,6 +44,8 @@ The same 208 questions reach 89.4% Hit@5 in the in-memory benchmark (arm 4) and 
 
 ## Reproduce
 
+The export is regenerated and can fail, so the run's own PDF is also tracked with DVC. With a DVC remote set up, replace the first command below with `dvc pull data/vsl.pdf.dvc` and copy `data/vsl.pdf` to `experiments/e2e/data/`.
+
 ```sh
 uv run python experiments/e2e/fetch_pdf.py          # writes experiments/e2e/data/vsl.pdf (git-ignored)
 pnpm stack:up:rerank                                 # Compose: Postgres, S3, migrate, API, worker, TEI reranker
