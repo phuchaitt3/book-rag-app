@@ -4,7 +4,8 @@
 # Real-LLM through-the-app run (#285). Runs under the GPU lock. Always tears down at the end.
 cd "$(dirname "$0")/../.." || exit 6
 # LIMIT=n is the smoke run (first n questions, written under a -smoke label).
-export COMPOSE_PROJECT_NAME=real285 LLM_MODEL=qwen2.5:3b-instruct
+# LLM_MODEL picks the answer model (default: the app's shipped model); RUN_LABEL names the output.
+export COMPOSE_PROJECT_NAME=real285 LLM_MODEL=${LLM_MODEL:-qwen2.5:0.5b-instruct}
 export RERANKER_OWNER=285-real-llm
 # EXTRA_COMPOSE=file adds a machine-local override (for example another model-cache volume).
 F="-f compose.yaml -f compose.reranker.yaml -f experiments/e2e/real_llm_ollama_port.yaml ${EXTRA_COMPOSE:+-f $EXTRA_COMPOSE}"
@@ -42,7 +43,7 @@ done
 echo "ingest_s=$(( $(date +%s) - START )) book=$BOOK_ID"
 docker compose $F exec -T db psql -U bookrag -tAc "select count(*) from chunks where book_id='$BOOK_ID'"
 # warm both models nothing special: first question counted (pre-registered)
-LABEL=qwen3b-rerank-on
+LABEL=${RUN_LABEL:-qwen05b-rerank-on}
 [ -n "$LIMIT" ] && LABEL=$LABEL-smoke
 BOOK_ID=$BOOK_ID LABEL=$LABEL KINDS=blind LIMIT=${LIMIT:-0} TOP_K=6 OUT_DIR=experiments/e2e/results uv run python evals/answer_eval.py
 echo "== api log reranker warnings:"; docker compose $F logs api 2>&1 | grep -ci "rerank.*\(fail\|timeout\|error\)"

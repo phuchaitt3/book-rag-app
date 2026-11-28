@@ -117,3 +117,30 @@ Written while the `qwen2.5:3b-instruct` run was in progress, before any of its a
 - **Which figure answers #285:** the 0.5B arm. The 3B run is reported as it came out and labelled as not the shipped model.
 - **Added comparison:** the paired difference 0.5B minus 3B per question (same bootstrap, seed 285) for the cited-answer hit, token F1, reference recall, citation validity, no-marker share and false-abstain rate. No threshold.
 - **Code:** the commits between the two arms may change only the default model and the run scripts; the section names both commit ids.
+
+### Result of the `qwen2.5:3b-instruct` run, 2026-11-28 (not the shipped model)
+
+All 208 questions were sent once through the running app with a real answer model. This is the first measurement of the app's answers; it describes the 3B model, which stopped being the default the same day. It does not describe what ships (see the amendment).
+
+| Metric (95% bootstrap interval, seed 285) | Value | Questions |
+|---|---|---|
+| Hit@1 | 81.2% (75.9–86.5) | 207 |
+| Hit@5 | 91.8% (87.9–95.2) | 207 |
+| MRR@6 | 85.5% (81.1–89.7) | 207 |
+| Cited-answer hit | **47.3%** (40.6–54.1) | 207 |
+| Citation validity | 99.5% (98.5–100) | 197 |
+| Answers with no `[n]` marker | 22.3% (16.8–27.9) | 197 |
+| False-abstain rate | 4.8% (1.9–7.7) | 208 |
+| Token F1 against the reference answer, mean | 0.189 (0.161–0.218) | 207 |
+| Reference recall, mean | 0.553 (0.492–0.614) | 207 |
+
+Errors, counted and not retried: 3 stream errors (the first question, 34 s, while the model loaded; two later ones after about 184 s) and 1 question answered HTTP 503 because retrieval passed its timeout (it is the one left out of the 207). 22 answers that carried a marker are 6 characters or shorter, such as `[1]` alone. Total time per question: median 15.2 s, 95th percentile 18.6 s (one request at a time).
+
+**Consistency rule: retrieval changed since the earlier run.** Hit@5 is 2.4 points below the 94.2% figure and Hit@1 2.9 below 84.1%, both past the 2.0-point limit, so the answer figures carry that caveat. Per question against [retrieval-postfix-rerank.json](../../experiments/e2e/results/retrieval-postfix-rerank.json): 6 questions that ranked first then now abstain and return no citations, so they score as misses; 1 question moved from not found to rank 3; 1 was the 503. The other 200 have the same rank. The PDF is byte-identical (same SHA-256). So the drop comes from abstentions and one timeout, not from a different ranking. All 10 abstentions of this run returned no citations.
+
+**Conditions.** Code at commit `3522996`; PDF SHA-256 `e343ad1e…`, 392 chunks, ingested in 285 s. Laptop GTX 1660 Ti (6 GB), GPU clock capped at 1350 MHz, CPU turbo off, WSL VM capped at 4 GB; Ollama 0.40.13 serving `qwen2.5:3b-instruct` (Q4_K_M, context 4,096) and `bge-m3`; reranker as above, with no reranker warning in the API log. Peak GPU temperature 63 °C, no thermal slowdown. Of the Ollama log's requests, 794 ended `truncated = 0` and 3 ended `truncated = 1`. Other chats were using the machine, and free memory fell under 1 GB during the run, so the timings are not clean latency figures.
+
+Raw results: [answers](../../experiments/e2e/results/answer-eval-qwen3b-rerank-on.json) and [intervals](../../experiments/e2e/results/answer-eval-qwen3b-rerank-on.ci.json).
+
+**Limits.** One book, one machine, one run. No judge model: token F1 and reference recall measure word overlap, and the cited-answer hit checks the cited chunk against the evidence sentence, so none of them says the answer is correct. The questions were written from the HTML chunks of the same book.
+
