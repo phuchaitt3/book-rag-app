@@ -22,8 +22,9 @@ Without access to that shared folder, point the name at storage of your own.
 
 ## Contents of `data/pages/`
 
-- `images/<id>.jpg`: the scan of one page, rendered at 1500 px width by Wikimedia from the
-  Commons PDF (`iiurlparam=pageN-1500px`).
+- `images/<id>.jpg`: the scan of one page, rendered by Wikimedia from the
+  Commons PDF. A 1500 px width was requested (`iiurlparam=pageN-1500px`); the files are 1920 px
+  (25 pages), 1280 px (10) or 960 px (15) wide.
 - `text/<id>.txt`: the community-proofread text of that page from Vietnamese Wikisource, cleaned of
   wiki markup (`<poem>`, section marks, rules and spacers). A template keeps its visible text,
   innermost first: `{{g|{{xx-lớn|VI}}}}` becomes `VI`, so chapter headings stay. No `{{` is

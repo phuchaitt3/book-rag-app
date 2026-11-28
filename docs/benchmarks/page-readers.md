@@ -8,7 +8,8 @@ from this page set is cited.
 ## Tesseract (vie+eng, 300 dpi setting, tessdata_fast 4.1.0), CPU only
 
 Run on 2026-11-27: `experiments/pages/reader_cer.py` on the 50 pages (40 held-out, 10 dev), page
-images as the 1500 px JPEGs from the set. Tesseract 5.4.0.20240606 on Windows, this laptop (GPU
+images as the set's JPEGs (a 1500 px width was requested; Wikimedia served 25 pages at
+1920 px, 10 at 1280 px and 15 at 960 px, n = 50). Tesseract 5.4.0.20240606 on Windows, this laptop (GPU
 capped at 1350 MHz, CPU turbo off; no GPU used). Raw rows:
 `experiments/pages/results/tesseract-vie-eng-UNCHECKED.json`. CER is Levenshtein distance over
 NFC-normalised, whitespace-collapsed text against the proofread Wikisource text.
