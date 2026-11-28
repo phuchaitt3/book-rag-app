@@ -2,9 +2,12 @@ import base64
 import importlib.util
 import io
 import json
+import subprocess
 import zipfile
 from pathlib import Path
 from types import ModuleType
+
+import pytest
 
 PATH = Path(__file__).resolve().parents[3] / "scripts" / "kaggle_run.py"
 
@@ -50,3 +53,42 @@ def test_kernel_runs_only_a_checksummed_ollama() -> None:
     template = kaggle_run.KERNELS["serving"]["template"].read_text(encoding="utf-8")
     assert "install.sh" not in template and "| sh" not in template
     assert "OLLAMA_SHA256" in template and "does not match the pin" in template
+
+
+def _done(stdout: str = "", code: int = 0) -> subprocess.CompletedProcess[str]:
+    return subprocess.CompletedProcess([], code, stdout=stdout)
+
+
+def test_push_goes_through_the_guard(tmp_path: Path, monkeypatch) -> None:
+    calls: list[tuple[str, ...]] = []
+
+    def fake(*args: str, capture: bool = False) -> subprocess.CompletedProcess[str]:
+        calls.append(args)
+        return _done(code=3)
+
+    monkeypatch.setattr(kaggle_run, "guard", fake)
+    assert kaggle_run.push(tmp_path, 60, ["--no-wait"]) == 3
+    assert calls[0][:3] == ("push", "-p", str(tmp_path))
+    assert calls[0][-3:] == ("--run-timeout", "60", "--no-wait")
+
+
+def test_missing_guard_pushes_nothing(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(kaggle_run, "GUARD", tmp_path / "absent.py")
+    with pytest.raises(SystemExit, match="nothing was pushed"):
+        kaggle_run.push(tmp_path, 60, [])
+
+
+def test_active_versions_reads_this_kernel_only(monkeypatch) -> None:
+    out = "RUNNING  me/k version 2\nQUEUED   me/k-05b version 1\n2 active version(s)\n"
+    monkeypatch.setattr(kaggle_run, "guard", lambda *a, **k: _done(out))
+    assert kaggle_run.active_versions("me/k") == ["RUNNING me/k version 2"]
+    monkeypatch.setattr(kaggle_run, "guard", lambda *a, **k: _done("UNKNOWN  me/k: 500\n"))
+    assert kaggle_run.active_versions("me/k") is None
+
+
+def test_wait_goes_on_while_an_older_version_runs(monkeypatch) -> None:
+    checks = iter([["RUNNING me/k version 2"], []])
+    monkeypatch.setattr(kaggle_run, "status", lambda ref: "cancel")
+    monkeypatch.setattr(kaggle_run, "active_versions", lambda ref: next(checks))
+    assert kaggle_run.wait("me/k", every=0) == "cancel"
+    assert next(checks, None) is None
