@@ -88,7 +88,7 @@ then `push`, `wait`. Uses the free weekly Kaggle GPU quota; no paid API.
 
 ## Results: Qwen2.5 3B, 2026-11-28 (not the model the app ships)
 
-**Result.** Under load vLLM is ahead of Ollama on a few latency figures and on none of the throughput figures by the rule above. At 16 in flight vLLM's aggregate output rate is 1.15 times Ollama's, not the 2 times expected, and its p95 total latency is not clearly lower. At one request at a time Ollama decodes faster per request (68 against 49 tokens/s). Neither server returned an error in 624 requests.
+**Result.** Under load vLLM is ahead of Ollama on a few latency figures and on none of the throughput figures by the rule above. At 16 in flight vLLM's aggregate output rate is 1.15 times Ollama's, not the 2 times expected, and its p95 total latency is not clearly lower. At one request at a time Ollama decodes faster per request (68 against 49 tokens/s). Neither server returned an error in its 624 requests.
 
 | In flight | Metric (95% interval) | vLLM, AWQ | Ollama, Q4_K_M | Verdict by the rule |
 |---|---|---|---|---|
@@ -136,4 +136,13 @@ Raw data in [experiments/serving/results/](../../experiments/serving/results/): 
 - The same 208 prompts were sent at each level, after 4 warm-up prompts taken from them, and neither server's prompt caching was controlled.
 - The servers did not produce the same amount of text (10,463 to 11,396 output tokens per level), as their weights differ.
 - Peak memory is the whole card: vLLM reserves its key-value cache up front (`--gpu-memory-utilization 0.85`), so it is not what vLLM needs.
+
+## Amendment, 2026-11-28: the same comparison on the shipped model size
+
+Written after the 3B results above and before any 0.5B run.
+
+- **Why:** on 2026-11-28 the app's default answer model became `qwen2.5:0.5b-instruct`, and a number is reported for the model that ships. The 3B comparison no longer describes it.
+- **Change:** only the weights. vLLM serves `Qwen/Qwen2.5-0.5B-Instruct-AWQ`, Ollama serves `qwen2.5:0.5b-instruct`. Prompts file, server flags, levels, metrics, intervals, the rule for a real difference (including the reading of "20%" as against the higher value too) and every limit stay as above.
+- **Expectation, so it can be wrong:** the smaller model leaves more of the card for the key-value cache and spends less time per token, so the gaps at 16 in flight stay about the same size or shrink; vLLM's aggregate rate stays under 2 times Ollama's.
+- **Which figures answer #245:** both, each labelled with its model.
 
