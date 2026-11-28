@@ -1,0 +1,24 @@
+{
+  "configs": [
+    {
+      "name": "en-1280",
+      "prompt": "Transcribe all the text on this page in reading order. Output only the transcription, with nothing added.",
+      "max_pixels": 1003520
+    },
+    {
+      "name": "en-2560",
+      "prompt": "Transcribe all the text on this page in reading order. Output only the transcription, with nothing added.",
+      "max_pixels": 2007040
+    },
+    {
+      "name": "vi-1280",
+      "prompt": "Chép lại nguyên văn toàn bộ chữ trên trang này theo thứ tự đọc. Giữ đúng chính tả và dấu như trong ảnh. Chỉ in ra bản chép, không thêm gì.",
+      "max_pixels": 1003520
+    },
+    {
+      "name": "vi-2560",
+      "prompt": "Chép lại nguyên văn toàn bộ chữ trên trang này theo thứ tự đọc. Giữ đúng chính tả và dấu như trong ảnh. Chỉ in ra bản chép, không thêm gì.",
+      "max_pixels": 2007040
+    }
+  ]
+}

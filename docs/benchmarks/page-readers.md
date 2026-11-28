@@ -79,6 +79,22 @@ because pages of one book are not independent; the same interval for Tesseract; 
 difference. A diacritic-stripped CER is reported beside the full one, as the brief asks. The set
 holds only Vietnamese prints of 1910 to 1925, not the brief's mix of layouts and languages.
 
+### Settings of the screen (added 2026-11-28, before any VLM output existed)
+
+- Model `Qwen/Qwen2.5-VL-3B-Instruct` at revision `66285546d2b821cf421d4f5eb2576359d3770cd3`,
+  `transformers` 4.51.3, float16, greedy decoding, at most 3000 new tokens a page
+  (`experiments/pages/kaggle_reader.py.tmpl`).
+- Four configurations (`experiments/pages/reader_config.json`): an English or a Vietnamese prompt,
+  and `max_pixels` of 1280 or 2560 patches of 28 x 28. All four run on the 10 dev pages only.
+- Selection rule: the lowest dev micro CER; if others are within 0.002 of it, the smaller image
+  size, then the English prompt. A page the model fails on counts as an empty transcription.
+- Only the chosen configuration then runs on the 40 held-out pages, once. Scoring:
+  `experiments/pages/vlm_score.py`.
+- Kernel runs: `python scripts/kaggle_run.py build reader --prompts <manifest of one split>`, then
+  `push reader` and `wait reader`.
+
+The daytime-ask note in item 1 does not apply to a self-drive run (free quota).
+
 ## Not done
 
 VLM reader and Hit@5 on the 40 questions (`experiments/pages/questions.jsonl`): not run. No Kaggle

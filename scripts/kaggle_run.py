@@ -4,10 +4,12 @@ Pattern: the thesis repository's `tools/kaggle_run.py` (build, push, wait, fetch
 `kaggle` CLI you are already logged in with; this script never reads the credential files.
 
 Kernels are *generated*: a bundle of repository files (zip, base64) is embedded in a script
-template, so a kernel needs no Kaggle dataset. Two kernels exist today:
+template, so a kernel needs no Kaggle dataset. Kernels:
 
     serving  experiments/serving/kaggle_kernel.py.tmpl: vLLM (AWQ) and Ollama on one T4,
              concurrency benchmark of `experiments/serving/concurrency_bench.py`
+    reader   experiments/pages/kaggle_reader.py.tmpl: Qwen2.5-VL transcribes the pages of a
+             page manifest (#273); `--prompts` takes the manifest here
 
 Usage (from the repository root)::
 
@@ -46,6 +48,12 @@ KERNELS: dict[str, dict] = {
             "experiments/serving/concurrency_bench.py": "concurrency_bench.py",
         },
         "prompts_as": "prompts.jsonl",
+    },
+    "reader": {
+        "slug": "book-rag-page-reader",
+        "template": ROOT / "experiments" / "pages" / "kaggle_reader.py.tmpl",
+        "files": {"experiments/pages/reader_config.json": "reader_config.json"},
+        "prompts_as": "manifest.jsonl",
     },
 }
 FINAL_STATES = ("complete", "error", "cancel")
