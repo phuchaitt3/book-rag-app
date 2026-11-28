@@ -95,6 +95,22 @@ holds only Vietnamese prints of 1910 to 1925, not the brief's mix of layouts and
 
 The daytime-ask note in item 1 does not apply to a self-drive run (free quota).
 
+## VLM screen: choice on the dev pages (2026-11-28, before any held-out run)
+
+Kaggle T4, repository commit `3180e12`, no page failed or reached the token limit. Dev pages
+(n = 10), micro CER; raw outputs in `experiments/pages/results/vlm-dev/`.
+
+| Configuration | Micro CER (n = 10) | Without diacritics (n = 10) | Median seconds per page (n = 10) |
+|---|---|---|---|
+| en-1280 | 0.053 | 0.032 | 22.6 |
+| en-2560 | 0.037 | 0.020 | 28.2 |
+| vi-1280 | 0.164 | 0.144 | 21.0 |
+| vi-2560 | 0.156 | 0.140 | 25.5 |
+
+Tesseract on the same pages: 0.104 (n = 10). **Chosen by the rule above: en-2560** (no other
+configuration is within 0.002). These dev figures chose the configuration, so they are not a
+measure of its quality; the held-out pages are.
+
 ## Not done
 
 VLM reader and Hit@5 on the 40 questions (`experiments/pages/questions.jsonl`): not run. No Kaggle
