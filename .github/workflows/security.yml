@@ -59,7 +59,13 @@ jobs:
       - name: Check whether the image inputs changed
         id: inputs
         run: |
-          if [ "$GITHUB_EVENT_NAME" = pull_request ] && git diff --quiet HEAD^1 HEAD --               'apps/*/Dockerfile' .dockerignore               pyproject.toml 'apps/*/pyproject.toml' 'packages/*/pyproject.toml' uv.lock               package.json 'apps/*/package.json' pnpm-lock.yaml pnpm-workspace.yaml               .github/workflows/security.yml; then
+          inputs=(
+            'apps/*/Dockerfile' .dockerignore
+            pyproject.toml 'apps/*/pyproject.toml' 'packages/*/pyproject.toml' uv.lock
+            package.json 'apps/*/package.json' pnpm-lock.yaml pnpm-workspace.yaml
+            .github/workflows/security.yml
+          )
+          if [ "$GITHUB_EVENT_NAME" = pull_request ] && git diff --quiet HEAD^1 HEAD -- "${inputs[@]}"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No image input changed; the vulnerability gate is skipped for this pull request."
           else
