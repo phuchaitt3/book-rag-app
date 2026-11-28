@@ -118,6 +118,10 @@ Written while the `qwen2.5:3b-instruct` run was in progress, before any of its a
 - **Added comparison:** the paired difference 0.5B minus 3B per question (same bootstrap, seed 285) for the cited-answer hit, token F1, reference recall, citation validity, no-marker share and false-abstain rate. No threshold.
 - **Code:** the commits between the two arms may change only the default model and the run scripts; the section names both commit ids.
 
+### Owner's decision, 2026-11-28: the 3B run answers #285
+
+Made **after** the 3B result below had been read, so it replaces the amendment's "which figure answers #285" line with knowledge of that result. The 0.5B arm is not run for #285 and #285 closes on the `qwen2.5:3b-instruct` run, the model the 2026-11-16 pre-registration named. This is a one-time exception to the project rule that a task is done only after a run on the shipped model. The figures below still describe a model the app no longer uses by default; the answer quality of `qwen2.5:0.5b-instruct` stays unmeasured (#287).
+
 ### Result of the `qwen2.5:3b-instruct` run, 2026-11-28 (not the shipped model)
 
 All 208 questions were sent once through the running app with a real answer model. This is the first measurement of the app's answers; it describes the 3B model, which stopped being the default the same day. It does not describe what ships (see the amendment).
