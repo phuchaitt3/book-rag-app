@@ -114,7 +114,7 @@ jobs:
   dependency-review:
     # Runs only when the repository variable DEPENDENCY_GRAPH is 'true'. The action fails until the
     # owner turns on Settings > Advanced Security > Dependency graph; then set the variable
-    # (Settings > Variables > Actions) and this job starts running on PRs.
+    # (Settings > Secrets and variables > Actions > Variables) and this job starts running on PRs.
     if: github.event_name == 'pull_request' && vars.DEPENDENCY_GRAPH == 'true'
     runs-on: ubuntu-latest
     permissions:
