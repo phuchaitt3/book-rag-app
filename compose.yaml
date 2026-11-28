@@ -52,9 +52,9 @@ services:
       S3_ENDPOINT_URL: http://s3:8333
       # The host's Ollama, for the question embedding and the answer.
       OLLAMA_URL: http://host.docker.internal:11434
-      # The answer model; on a 6 GB GPU with the reranker, qwen2.5:3b-instruct stays loaded next to
-      # bge-m3 while the 7B default is swapped in and out (docs/benchmarks/serving-latency.md).
-      LLM_MODEL: ${LLM_MODEL:-qwen2.5:7b-instruct}
+      # The answer model. The small default stays loaded next to bge-m3 and the reranker on a 6 GB
+      # GPU; a 7B model is swapped in and out there (docs/benchmarks/serving-latency.md).
+      LLM_MODEL: ${LLM_MODEL:-qwen2.5:0.5b-instruct}
       # "openai" sends the answer to an OpenAI-compatible server (llama.cpp) at LLM_BASE_URL (#245).
       LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
       LLM_BASE_URL: ${LLM_BASE_URL:-http://host.docker.internal:8081}
