@@ -148,3 +148,57 @@ Written after the 3B results above and before any 0.5B run.
 - **Expectation, so it can be wrong:** the smaller model leaves more of the card for the key-value cache and spends less time per token, so the gaps at 16 in flight stay about the same size or shrink; vLLM's aggregate rate stays under 2 times Ollama's.
 - **Which figures answer #245:** both, each labelled with its model.
 
+## Results: Qwen2.5 0.5B, 2026-11-28 (the model the app ships)
+
+**Result.** With the 0.5B model the lead reverses with load. At 16 requests in flight Ollama's aggregate output rate is 1.63 times vLLM's (255.1 against 156.5 tokens/s), and it is better on three of the four latency figures and on decode speed. At one request at a time vLLM sends the first token sooner and Ollama decodes faster per request. No request failed in either arm (624 requests each).
+
+| In flight | Metric (95% interval; n = 208 requests per level) | vLLM, AWQ | Ollama, Q4_K_M | Verdict by the rule |
+|---|---|---|---|---|
+| 1 | Time to first token p50, s | 0.19 (0.19–0.19) | 0.32 (0.32–0.32) | vLLM better |
+| 1 | Time to first token p95, s | 0.23 (0.22–0.24) | 0.36 (0.35–0.36) | vLLM better |
+| 1 | Total latency p50, s | 0.35 (0.34–0.36) | 0.41 (0.39–0.42) | no clear difference |
+| 1 | Total latency p95, s | 1.07 (0.62–1.75) | 0.84 (0.65–1.35) | no clear difference |
+| 1 | Decode tokens/s per request, median | 144.72 (143.25–145.61) | 205.81 (203.31–207.37) | Ollama better |
+| 1 | Aggregate output tokens/s | 85.2 | 69.9 | ratio 1.22: no clear difference |
+| 1 | Errors (of 208) | 0 | 0 | |
+| 1 | Output tokens, all requests | 7549 | 6654 | |
+| 1 | Peak GPU memory, MiB (descriptive) | 13555 | 2225 | |
+| 4 | Time to first token p50, s | 0.23 (0.22–0.24) | 0.14 (0.13–0.16) | Ollama better |
+| 4 | Time to first token p95, s | 0.53 (0.43–0.58) | 0.25 (0.23–0.28) | Ollama better |
+| 4 | Total latency p50, s | 0.78 (0.73–0.87) | 0.51 (0.45–0.57) | Ollama better |
+| 4 | Total latency p95, s | 3.10 (1.97–4.40) | 3.03 (1.53–5.37) | no clear difference |
+| 4 | Decode tokens/s per request, median | 45.28 (42.01–51.03) | 53.63 (52.39–54.40) | no clear difference |
+| 4 | Aggregate output tokens/s | 135.9 | 164.1 | ratio 0.83: no clear difference |
+| 4 | Errors (of 208) | 0 | 0 | |
+| 4 | Output tokens, all requests | 7551 | 7130 | |
+| 4 | Peak GPU memory, MiB (descriptive) | 13679 | 2229 | |
+| 16 | Time to first token p50, s | 0.42 (0.39–0.43) | 0.21 (0.20–0.23) | Ollama better |
+| 16 | Time to first token p95, s | 1.31 (0.89–2.47) | 0.68 (0.48–0.69) | Ollama better |
+| 16 | Total latency p50, s | 2.51 (2.33–2.69) | 1.10 (0.96–1.30) | Ollama better |
+| 16 | Total latency p95, s | 10.33 (6.94–14.82) | 6.98 (3.93–9.13) | no clear difference |
+| 16 | Decode tokens/s per request, median | 11.17 (10.79–11.55) | 19.47 (18.45–20.54) | Ollama better |
+| 16 | Aggregate output tokens/s | 156.5 | 255.1 | ratio 0.61: Ollama better |
+| 16 | Errors (of 208) | 0 | 0 | |
+| 16 | Output tokens, all requests | 7502 | 6499 | |
+| 16 | Peak GPU memory, MiB (descriptive) | 13805 | 2229 | |
+
+"Ratio" on the aggregate rows is vLLM divided by Ollama.
+
+**The expectation was wrong** (n = 208 per level). It said the gaps at 16 in flight would stay about the same or shrink. vLLM's aggregate rate did stay under 2 times Ollama's, but the order reversed: with 3B it was 1.15 times Ollama's, with 0.5B it is 0.61 times.
+
+**No borderline cell** in this run (n = 208 per level): no verdict depends on which value the 20% is taken against.
+
+**Conditions.** As for the 3B run: Kaggle T4 (15 GB), one kernel (`serving-05b`) running the vLLM arm and then the Ollama arm; repository commit `42d60a7`; vLLM 0.10.2 with torch 2.8.0+cu128 and `Qwen/Qwen2.5-0.5B-Instruct-AWQ`; Ollama 0.40.13 with `qwen2.5:0.5b-instruct`, 16 slots of 8,192 tokens, no prompt truncated (n = 628 requests including warm-up). Same prompts file (sha256 above). Reproduce with `python scripts/kaggle_run.py build serving-05b --prompts experiments/serving/data/prompts-208.jsonl`, then `push serving-05b` and `wait serving-05b`.
+
+Raw data in [experiments/serving/results/](../../experiments/serving/results/): `concurrency-05b-*`.
+
+**Limits found by the run, besides those of the 3B section** (which hold here too, including vLLM's V0 engine).
+
+- One run per level, so the aggregate ratios have no interval.
+- The servers produced different amounts of text (6,499 to 7,551 output tokens per level over n = 208 requests; vLLM produced more at every level), so total latency compares answers of different lengths.
+- The cause of the reversal was not investigated. These figures do not show that Ollama is the faster server for small models in general.
+- Answer quality of neither 0.5B arm is graded here (#287).
+
+## What this means for the app
+
+The app ships `qwen2.5:0.5b-instruct` on Ollama. On this evidence (n = 208 questions per level, one T4) there is no throughput reason to move it to vLLM: vLLM did not do better under load, and it reserved about 13.8 GiB of the card against Ollama's 2.2 GiB (its reservation is a setting, not a need).
