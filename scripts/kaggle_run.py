@@ -1,7 +1,7 @@
 """Build, push, wait for and fetch a Kaggle GPU kernel from files in this repository (#245).
 
-Pattern: the thesis repository's `tools/kaggle_run.py` (build, push, wait, fetch). It uses the
-`kaggle` CLI you are already logged in with; this script never reads the credential files.
+Four steps: build, push, wait, fetch. It uses the `kaggle` CLI you are already logged in with;
+this script never reads the credential files.
 
 Kernels are *generated*: a bundle of repository files (zip, base64) is embedded in a script
 template, so a kernel needs no Kaggle dataset. Two kernels exist today:
