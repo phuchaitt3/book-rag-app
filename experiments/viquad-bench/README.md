@@ -7,7 +7,7 @@ It runs as a private Kaggle script kernel on a free T4 GPU with internet on, bec
 **Rerun**
 
 ```sh
-kaggle kernels push -p experiments/viquad-bench
+python ~/claude-config/scripts/kaggle_slots.py push -p experiments/viquad-bench
 kaggle kernels status <user>/book-rag-viquad-retrieval-bench
 kaggle kernels output <user>/book-rag-viquad-retrieval-bench -p <a git-ignored folder>
 ```
