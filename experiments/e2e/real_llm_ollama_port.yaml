@@ -1,0 +1,8 @@
+services:
+  api:
+    environment:
+      OLLAMA_URL: http://host.docker.internal:11435
+      CHAT_RATE_LIMIT: "0"
+  worker:
+    environment:
+      OLLAMA_URL: http://host.docker.internal:11435
