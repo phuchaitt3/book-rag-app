@@ -10,8 +10,15 @@ image; the other 30 are not checked. Numbers computed on these pages (#273) say 
 
 What is here (git): the scripts, the 40 drafted questions (`questions.jsonl`) and the DVC pointer
 `data/pages.dvc`. What is not in git: `data/pages/` (images, text, `manifest.jsonl`), which lives in
-DVC storage. This repository sets no DVC remote (a remote path is a local setting); set one with
-`dvc remote add -d --local <name> <url>`, then `dvc pull`.
+DVC storage. `.dvc/config` names the default remote, `book-rag-onedrive`, but not where it is (a
+path is a local setting). Define it once per machine, which covers every clone and worktree there:
+
+```sh
+dvc remote add --global book-rag-onedrive <shared folder>/dvc/book-rag-app
+dvc pull data/pages.dvc
+```
+
+Without access to that shared folder, point the name at storage of your own.
 
 ## Contents of `data/pages/`
 
