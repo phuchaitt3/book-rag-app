@@ -7,6 +7,8 @@ token F1 and reference recall, and the error counts. Intervals: bootstrap, 10,00
 the questions, seed 285. A row that abstained has no rank and counts as a miss, as in the harness.
 
   uv run python experiments/e2e/real_llm_report.py experiments/e2e/results/answer-eval-<label>.json
+
+A second file as argument adds the paired per-question difference, first minus second.
 """
 
 from __future__ import annotations
@@ -68,9 +70,47 @@ def summarise(results: Sequence[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def main(path: str) -> None:
+PAIRED: dict[str, Callable[[dict[str, Any]], float]] = {
+    "cited_answer_hit": lambda r: bool(r["cited_answer_hit"]),
+    "token_f1": lambda r: r["token_f1"],
+    "reference_recall": lambda r: r["reference_recall"],
+    "citation_valid": lambda r: bool(r["citation_valid"]),
+    "no_marker": lambda r: r["markers"] == 0,
+    "false_abstain": lambda r: bool(r["abstained"]),
+}
+
+
+def paired(
+    new: Sequence[dict[str, Any]], base: Sequence[dict[str, Any]]
+) -> dict[str, dict[str, Any]]:
+    """Mean per-question difference `new` minus `base`, over questions both runs scored."""
+    by_id = {r["id"]: r for r in base}
+    out: dict[str, dict[str, Any]] = {}
+    for name, value in PAIRED.items():
+        diffs: list[float] = []
+        for row in new:
+            other = by_id.get(row["id"])
+            if other is None:
+                continue
+            try:
+                diffs.append(float(value(row)) - float(value(other)))
+            except KeyError:  # not scored in one run (stream error, unanswerable)
+                continue
+        out[name] = (
+            {"n": len(diffs), "mean": sum(diffs) / len(diffs), "ci95": interval(diffs)}
+            if diffs
+            else {"n": 0}
+        )
+    return out
+
+
+def main(path: str, base: str | None = None) -> None:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     out = summarise(payload["results"])
+    if base:
+        other = json.loads(Path(base).read_text(encoding="utf-8"))["results"]
+        for name, value in paired(payload["results"], other).items():
+            out[f"minus_base_{name}"] = value
     Path(path).with_suffix(".ci.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
     for key, value in out.items():
         if isinstance(value, dict) and value.get("n"):
@@ -81,4 +121,4 @@ def main(path: str) -> None:
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(*sys.argv[1:3])
